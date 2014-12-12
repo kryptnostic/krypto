@@ -94,7 +94,7 @@ public:
         std::cout<<get( numBits )<<"]"<<std::endl;
     }
 private:
-    unsigned long bits[N];
+    unsigned long long bits[N];
  
 };
 
