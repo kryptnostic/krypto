@@ -15,6 +15,7 @@ class BitVector {
 public:
     BitVector(){}
     
+    //Generates a random vector, shoudl be improved to not just multiply two random longs together.
     static BitVector<N> randomVector() {
         srandom(time(NULL));
         BitVector<N> result;
