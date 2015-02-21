@@ -10,6 +10,7 @@
 #define krypto_BitVector_h
 #include <iostream>
 
+//N is number of 64 bit longs in the bitvector
 template<unsigned int N>
 class BitVector {
 public:
@@ -25,7 +26,7 @@ public:
         return result;
     }
     
-    long * elements(){ return bits; }
+    unsigned long long * elements(){ return bits; }
     int length() { return N<<6; }
     
     bool get( unsigned int n ) {
@@ -70,6 +71,20 @@ public:
             bits[i]^=rhs.bits[i];
         }
         return *this;
+    }
+    
+    const bool parity() {
+        unsigned long long accumulator;
+        for( unsigned int i = 0 ; i < N ; ++i) {
+            accumulator^=bits[i];
+        }
+        return __builtin_parityll( accumulator );
+    }
+    
+    void zero() {
+        for( unsigned int i = 0 ; i < N ; ++i) {
+            bits[i]^=0;
+        }
     }
     
     template<unsigned int M>

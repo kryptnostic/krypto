@@ -7,10 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		DBAD368E1A3ADF1300E13DBD /* MultivariatePolynomialFunction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DBAD368C1A3ADF1300E13DBD /* MultivariatePolynomialFunction.cpp */; };
 		DBAD368F1A3ADF1300E13DBD /* MultivariatePolynomialFunction.h in Headers */ = {isa = PBXBuildFile; fileRef = DBAD368D1A3ADF1300E13DBD /* MultivariatePolynomialFunction.h */; };
-		DBC798351A3A7DAE003E7EC8 /* BitVector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DBC798341A3A7DAE003E7EC8 /* BitVector.cpp */; };
 		DBC798591A3A88E3003E7EC8 /* BitVector.h in Headers */ = {isa = PBXBuildFile; fileRef = DBC798331A3A7CA0003E7EC8 /* BitVector.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DBFB97ED1A7811F500C95684 /* BitMatrix.h in Headers */ = {isa = PBXBuildFile; fileRef = DBFB97EC1A7811F500C95684 /* BitMatrix.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -25,11 +24,10 @@
 
 /* Begin PBXFileReference section */
 		DBAD36831A3A9EAE00E13DBD /* krypto-cli.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "krypto-cli.xcodeproj"; path = "../krypto-cli/krypto-cli.xcodeproj"; sourceTree = "<group>"; };
-		DBAD368C1A3ADF1300E13DBD /* MultivariatePolynomialFunction.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MultivariatePolynomialFunction.cpp; sourceTree = "<group>"; };
 		DBAD368D1A3ADF1300E13DBD /* MultivariatePolynomialFunction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultivariatePolynomialFunction.h; sourceTree = "<group>"; };
 		DBC7982C1A3A7C73003E7EC8 /* libkrypto.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libkrypto.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DBC798331A3A7CA0003E7EC8 /* BitVector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BitVector.h; sourceTree = "<group>"; };
-		DBC798341A3A7DAE003E7EC8 /* BitVector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BitVector.cpp; sourceTree = "<group>"; };
+		DBFB97EC1A7811F500C95684 /* BitMatrix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BitMatrix.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,10 +52,9 @@
 		DBC798231A3A7C72003E7EC8 = {
 			isa = PBXGroup;
 			children = (
-				DBAD368C1A3ADF1300E13DBD /* MultivariatePolynomialFunction.cpp */,
+				DBFB97EC1A7811F500C95684 /* BitMatrix.h */,
 				DBAD368D1A3ADF1300E13DBD /* MultivariatePolynomialFunction.h */,
 				DBAD36831A3A9EAE00E13DBD /* krypto-cli.xcodeproj */,
-				DBC798341A3A7DAE003E7EC8 /* BitVector.cpp */,
 				DBC798331A3A7CA0003E7EC8 /* BitVector.h */,
 				DBC7982D1A3A7C73003E7EC8 /* Products */,
 			);
@@ -78,6 +75,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DBFB97ED1A7811F500C95684 /* BitMatrix.h in Headers */,
 				DBAD368F1A3ADF1300E13DBD /* MultivariatePolynomialFunction.h in Headers */,
 				DBC798591A3A88E3003E7EC8 /* BitVector.h in Headers */,
 			);
@@ -155,8 +153,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DBAD368E1A3ADF1300E13DBD /* MultivariatePolynomialFunction.cpp in Sources */,
-				DBC798351A3A7DAE003E7EC8 /* BitVector.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
