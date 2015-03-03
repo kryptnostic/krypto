@@ -1,7 +1,0 @@
--shared
--Wl,-install_name,libmain.dylib
--o
-/Users/sinaiman/Dev/krypt-work/krypto/build/binaries/mainSharedLibrary/passing/libmain.dylib
-/Users/sinaiman/Dev/krypt-work/krypto/build/objs/mainSharedLibrary/passing/mainCpp/3vq4i7cf5vwppml70i7dic1am/BitVector.o
-/Users/sinaiman/Dev/krypt-work/krypto/build/objs/mainSharedLibrary/passing/mainCpp/a7a2de5p9wuyrntsddbt9tl2v/MultivariatePolynomialFunction.o
--m32

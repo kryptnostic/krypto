@@ -1,7 +1,0 @@
--x
-c++
--c
--I
-/Users/sinaiman/Dev/krypt-work/krypto/src/main/headers
--m32
--std=c++11
