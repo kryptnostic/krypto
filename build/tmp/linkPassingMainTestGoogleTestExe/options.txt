@@ -1,0 +1,8 @@
+-o
+/Users/sinaiman/Dev/krypt-work/krypto/build/binaries/mainTestGoogleTestExe/passing/mainTest
+/Users/sinaiman/Dev/krypt-work/krypto/build/objs/mainTestGoogleTestExe/passing/mainTestCpp/4cxejoq50yckvdyalpu1mu4mt/test_trivial.o
+/Users/sinaiman/Dev/krypt-work/krypto/build/objs/mainTestGoogleTestExe/passing/mainTestCpp/f4x5mjrz55zsdr5a0hut8h7hd/test_main.o
+/Users/sinaiman/Dev/krypt-work/krypto/build/objs/mainTestGoogleTestExe/passing/mainCpp/3vq4i7cf5vwppml70i7dic1am/BitVector.o
+/Users/sinaiman/Dev/krypt-work/krypto/build/objs/mainTestGoogleTestExe/passing/mainCpp/a7a2de5p9wuyrntsddbt9tl2v/MultivariatePolynomialFunction.o
+/Users/sinaiman/Dev/krypt-work/krypto/libs/googleTest/1.7.0/lib/osx/libgtest.a
+-m32

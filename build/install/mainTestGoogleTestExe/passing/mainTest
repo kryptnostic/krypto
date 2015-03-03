@@ -1,0 +1,6 @@
+
+#/bin/sh
+APP_BASE_NAME=`dirname "$0"`
+export DYLD_LIBRARY_PATH="$APP_BASE_NAME/lib"
+export LD_LIBRARY_PATH="$APP_BASE_NAME/lib"
+exec "$APP_BASE_NAME/lib/mainTest" "$@"
