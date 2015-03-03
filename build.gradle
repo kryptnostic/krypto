@@ -1,11 +1,9 @@
+apply plugin: "eclipse-cdt"
 apply plugin: "cpp"
-apply plugin: "eclipse"
 apply plugin: "google-test"
-
 
 // group = "com.kryptnostic"
 // version = 1.0
-
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.4-20150302230031+0000'
@@ -16,18 +14,22 @@ model {
         clang(Clang) {
             eachPlatform {
             		cppCompiler.withArguments { args ->
-            			args << "-std=c++11"
+            			args << "-std=c++1y"
             		}
             }
         }
     }
     flavors {
-        passing
+        debug
+        release
         failing
     }
     platforms {
         x86 {
             architecture "x86"
+        }
+        x64 {
+            architecture "x64"
         }
     }
     repositories {
@@ -45,6 +47,14 @@ model {
     components {
         main(NativeLibrarySpec) {
          	targetPlatform "x86"
+         	sources {
+                cpp {
+                    source {
+                        srcDir "src/krypto/cpp"
+                        include "**/*.cpp"
+                    }
+                }
+            }
             binaries.withType(SharedLibraryBinarySpec) {
                 // Define a preprocessor macro that only applies to shared libraries
                 cppCompiler.define "DLL_EXPORT"
@@ -52,9 +62,15 @@ model {
         }
     }
 }
+
+tasks.withType(GenerateMetadataFileTask) {
+	
+}
+
 // START SNIPPET configure-test-binary
 binaries.withType(GoogleTestTestSuiteBinarySpec) {
     lib library: "googleTest", linkage: "static"
+    lib library: "main", linkage: "static"
 
     if (flavor == flavors.failing) {
         cppCompiler.define "PLUS_BROKEN"
