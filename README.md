@@ -21,6 +21,6 @@ Use gradle to build with ``./gradlew build``
 Testing
 ==========
 
-Building will run all the unit tests in src/mainTest/cpp using the google-test framework. Do not modify test_main.cpp or add a main() function to any test script. Follow the format of test_trivial.cpp
+Building will run all the unit tests in src/mainTest/cpp using the google-test framework. test_main.cpp runs all other tests. In order to maintain this functionality, do not modify test_main.cpp or add a main() function to any test script. Please refer to the format of test_trivial.cpp for how to write tests and look at the google-test docs for more info.
 
 Test results are published to build/test-results and can be viewed within Eclipse by opening the xml results file.

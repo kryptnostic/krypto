@@ -47,14 +47,6 @@ model {
     components {
         main(NativeLibrarySpec) {
          	targetPlatform "x86"
-         	sources {
-                cpp {
-                    source {
-                        srcDir "src/main/cpp"
-                        include "**/*.cpp"
-                    }
-                }
-            }
             binaries.withType(SharedLibraryBinarySpec) {
                 // Define a preprocessor macro that only applies to shared libraries
                 cppCompiler.define "DLL_EXPORT"
