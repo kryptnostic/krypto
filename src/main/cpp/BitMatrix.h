@@ -10,7 +10,8 @@
 #define krypto_BitMatrix_h
 
 #include <vector>
-#include "BitVector.h"
+
+#include "../../main/cpp/BitVector.h"
 
 using namespace std;
 

@@ -10,7 +10,8 @@
 #define __krypto__MultivariatePolynomialFunction__
 
 #include <vector>
-#include "BitVector.h"
+
+#include "../../main/cpp/BitVector.h"
 
 using namespace std;
 

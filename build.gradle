@@ -50,7 +50,7 @@ model {
          	sources {
                 cpp {
                     source {
-                        srcDir "src/krypto/cpp"
+                        srcDir "src/main/cpp"
                         include "**/*.cpp"
                     }
                 }
