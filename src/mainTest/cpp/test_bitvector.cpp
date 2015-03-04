@@ -10,11 +10,7 @@ TEST(BitVectorTests, test_random) {
 
 TEST(BitVectorTests, test_clear) {
 	BitVector<1> bv = BitVector<1>::randomVector();
-	bv.print();
-	for (int i = 0; i < 64; i++) {
-		bv.clear(i);
-	}
-	bv.print();
+	bv.zero();
 	for (int i = 0; i < bv.length(); i++) {
 		std::cout << bv.get(i) << ", ";
 		ASSERT_FALSE(bv.get(i));
