@@ -1,4 +1,4 @@
-#include "../../../../contrib/gtest/gtest.h"
+#include "../../../contrib/gtest/gtest.h"
 #include "../../main/cpp/BitVector.h"
 
 using namespace testing;

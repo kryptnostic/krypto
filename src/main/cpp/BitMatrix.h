@@ -21,8 +21,23 @@ public:
 	BitMatrix(int numRows) :
 			_rows(numRows) {
 	}
+
 	BitMatrix(const vector<BitVector<COLS>> & rows) :
 			_rows(rows) {
+	}
+
+	static const BitMatrix & randomMatrix(const int numRows) {
+		vector<BitVector<COLS>> rows(numRows);
+
+		for (int i = 0; i < numRows; ++i) {
+			rows[i] = BitVector<COLS>::randomVector();
+		}
+
+		return BitMatrix(rows);
+	}
+
+	BitVector<COLS> & operator[](const int rowIndex) {
+		return _rows[rowIndex];
 	}
 
 	const BitVector<COLS> operator*(const BitVector<COLS> & v) const {

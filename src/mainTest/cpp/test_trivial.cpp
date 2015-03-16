@@ -1,4 +1,4 @@
-#include "../../../../contrib/gtest/gtest.h"
+#include "../../../contrib/gtest/gtest.h"
 
 using namespace testing;
 

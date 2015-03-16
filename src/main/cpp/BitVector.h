@@ -18,7 +18,7 @@ public:
 	}
 
 	//Generates a random vector, shoudl be improved to not just multiply two random longs together.
-	static BitVector<N> randomVector() {
+	static const BitVector<N> randomVector() {
 		srandom(time(NULL));
 		BitVector<N> result;
 		for (unsigned int i = 0; i < N; ++i) {
@@ -34,7 +34,7 @@ public:
 		return N << 6;
 	}
 
-	bool get(unsigned int n) {
+	bool get(unsigned int n) const {
 		return (_bits[n >> 6] & (1ul << (n & 63ul))) != 0;
 	}
 
@@ -51,6 +51,13 @@ public:
 		BitVector<N> result;
 		for (unsigned int i = 0; i < N; ++i) {
 			result._bits[i] = _bits[i] & rhs._bits[i];
+		}
+		return *this;
+	}
+
+	const BitVector<N> & operator=(const BitVector<N> & rhs) {
+		for (unsigned int i = 0; i < N; ++i) {
+			_bits[i] = rhs._bits[i];
 		}
 		return *this;
 	}
@@ -78,7 +85,20 @@ public:
 		return *this;
 	}
 
-	const bool parity() {
+//	BitVector<N> & operator=( const BitVector && rhs ) {
+//		std::swap(_bits, rhs._bits );
+//		return *this;
+//	}
+
+	const bool isZero() const {
+		for (unsigned int i = 0; i < N; ++i) {
+			if (_bits[i] != 0) {
+				return false;
+			}
+		}
+		return true;
+	}
+	const bool parity() const {
 		unsigned long long accumulator;
 		for (unsigned int i = 0; i < N; ++i) {
 			accumulator ^= _bits[i];
@@ -105,7 +125,7 @@ public:
 		return true;
 	}
 
-	void print() {
+	void print() const {
 		const unsigned int numBits = (N << 6) - 1;
 		std::cout << "[ ";
 		for (int i = 0; i < numBits; ++i) {
