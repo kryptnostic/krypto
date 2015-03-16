@@ -209,14 +209,14 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					/Users/mtamayo/repos/krypto/contrib,
+					./contrib,
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/krypto-brugrykonhqlaaaoxodhczavarho/Build/Products/Debug",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				"USER_HEADER_SEARCH_PATHS[arch=*]" = "../krypto/**";
+				"USER_HEADER_SEARCH_PATHS[arch=*]" = "../krypto-lib/**";
 			};
 			name = Debug;
 		};
@@ -226,14 +226,14 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					/Users/mtamayo/repos/krypto/contrib,
+					./contrib,
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/krypto-brugrykonhqlaaaoxodhczavarho/Build/Products/Debug",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				"USER_HEADER_SEARCH_PATHS[arch=*]" = "../krypto/**";
+				"USER_HEADER_SEARCH_PATHS[arch=*]" = "../krypto-lib/**";
 			};
 			name = Release;
 		};
