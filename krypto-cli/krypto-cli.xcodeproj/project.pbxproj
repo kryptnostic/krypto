@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DB3CA66F1AB6C0C700A0FBC7 /* test_bitmatrix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DB3CA66B1AB6C0C700A0FBC7 /* test_bitmatrix.cpp */; };
+		DB3CA6701AB6C0C700A0FBC7 /* test_bitvector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DB3CA66C1AB6C0C700A0FBC7 /* test_bitvector.cpp */; };
+		DB3CA6721AB6C0C700A0FBC7 /* test_trivial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DB3CA66E1AB6C0C700A0FBC7 /* test_trivial.cpp */; };
 		DBAD367D1A3A9EAE00E13DBD /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DBAD367C1A3A9EAE00E13DBD /* main.cpp */; };
 		DBAD368A1A3A9ECA00E13DBD /* libkrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DBAD36891A3A9ECA00E13DBD /* libkrypto.a */; };
 /* End PBXBuildFile section */
@@ -24,6 +27,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		DB3CA66B1AB6C0C700A0FBC7 /* test_bitmatrix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_bitmatrix.cpp; sourceTree = "<group>"; };
+		DB3CA66C1AB6C0C700A0FBC7 /* test_bitvector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_bitvector.cpp; sourceTree = "<group>"; };
+		DB3CA66E1AB6C0C700A0FBC7 /* test_trivial.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_trivial.cpp; sourceTree = "<group>"; };
 		DBAD36791A3A9EAE00E13DBD /* krypto-cli */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "krypto-cli"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DBAD367C1A3A9EAE00E13DBD /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		DBAD36891A3A9ECA00E13DBD /* libkrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libkrypto.a; path = "../../Library/Developer/Xcode/DerivedData/krypto-brugrykonhqlaaaoxodhczavarho/Build/Products/Debug/libkrypto.a"; sourceTree = "<group>"; };
@@ -41,9 +47,29 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		DB3CA6691AB6C0C700A0FBC7 /* mainTest */ = {
+			isa = PBXGroup;
+			children = (
+				DB3CA66A1AB6C0C700A0FBC7 /* cpp */,
+			);
+			name = mainTest;
+			path = "../krypto-lib/src/mainTest";
+			sourceTree = "<group>";
+		};
+		DB3CA66A1AB6C0C700A0FBC7 /* cpp */ = {
+			isa = PBXGroup;
+			children = (
+				DB3CA66B1AB6C0C700A0FBC7 /* test_bitmatrix.cpp */,
+				DB3CA66C1AB6C0C700A0FBC7 /* test_bitvector.cpp */,
+				DB3CA66E1AB6C0C700A0FBC7 /* test_trivial.cpp */,
+			);
+			path = cpp;
+			sourceTree = "<group>";
+		};
 		DBAD36701A3A9EAE00E13DBD = {
 			isa = PBXGroup;
 			children = (
+				DB3CA6691AB6C0C700A0FBC7 /* mainTest */,
 				DBAD36891A3A9ECA00E13DBD /* libkrypto.a */,
 				DBAD367B1A3A9EAE00E13DBD /* krypto-cli */,
 				DBAD367A1A3A9EAE00E13DBD /* Products */,
@@ -122,7 +148,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DB3CA66F1AB6C0C700A0FBC7 /* test_bitmatrix.cpp in Sources */,
 				DBAD367D1A3A9EAE00E13DBD /* main.cpp in Sources */,
+				DB3CA6721AB6C0C700A0FBC7 /* test_trivial.cpp in Sources */,
+				DB3CA6701AB6C0C700A0FBC7 /* test_bitvector.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
