@@ -49,7 +49,7 @@ TEST(BitVectorTests, test_equals) {
 }
 
 TEST(BitVectorTests, test_zero) {
-    BitVector<1> v = BitVector<1>::zeroVector();
+    BitVector<1> v;
     ASSERT_TRUE(v.isZero());
 }
 
@@ -71,3 +71,22 @@ TEST(BitVectorTests, test_xor) {
     ASSERT_TRUE( (v2^v3).elements()[0] == (v2.elements()[0]^v3.elements()[0]) );
 }
 
+TEST(BitVectorTests, test_or) {
+    BitVector<1> v1;
+    BitVector<1> v2 = BitVector<1>::randomVector();
+    BitVector<1> v3 = BitVector<1>::randomVector();
+    ASSERT_EQ(v2, v1|v2);
+    
+    ASSERT_TRUE( (v2|v3).elements()[0] == (v2.elements()[0]|v3.elements()[0]) );
+}
+
+TEST(BitVectorTests, test_parity) {
+    BitVector<1> v;
+    ASSERT_FALSE(v.parity());
+    
+    v.elements()[ 0 ] = 0x1;
+    ASSERT_TRUE( v.parity() );
+    
+    v.elements()[ 0 ] = 0xFF;
+    ASSERT_FALSE( v.parity() );
+}

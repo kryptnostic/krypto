@@ -10,8 +10,11 @@
 #define krypto_BitVector_h
 #include <iostream>
 
+//TODO: Wrap this in a class that can release the file handle and automatically select a good source of randomness on Windows.
+
 static FILE * urandom = std::fopen("/dev/urandom", "rb" );
-//N is number of 64 bit longs in the bitvector
+
+//N is number of 64 bit longs in the bitvector. N<<6 is the total number of bits in a bitvector
 template<unsigned int N>
 class BitVector {
 public:
@@ -30,7 +33,6 @@ public:
             _bits[i] = v._bits[i];
         }
     }
-
     
 	unsigned long long * elements() {
 		return _bits;
@@ -106,12 +108,17 @@ public:
 		}
 		return true;
 	}
+    
+    /*
+     * Returns 1 if number of bits set in bitvector is odd
+     * Returns 0 otherwise.
+     */
 	const bool parity() const {
-		unsigned long long accumulator;
+		unsigned long long accumulator = 0;
 		for (unsigned int i = 0; i < N; ++i) {
 			accumulator ^= _bits[i];
 		}
-		return __builtin_parityll(accumulator);
+        return __builtin_parityll(accumulator)==1;
 	}
 
 	void zero() {
