@@ -46,7 +46,7 @@ int main(int argc, char * argv[]) {
     
     auto total =std::chrono::duration_cast<std::chrono::nanoseconds>(stop-start).count();
 
-    std::cout<<"Total time: "<< total <<" nanos"<<std::endl;
-    std::cout<<"Mean time: "<< total/double(numInputs) <<" nanos"<<std::endl;
+    std::cout<<"Total time: "<< total <<" ms"<<std::endl;
+    std::cout<<"Mean time: "<< total/double(numInputs) <<" ms"<<std::endl;
     return 0;
 }
