@@ -52,8 +52,8 @@ public:
 
 		return f;
 	}
-
-	const BitVector<NUM_OUTPUTS> operator()(
+      
+    const BitVector<NUM_OUTPUTS> operator()(
 			const BitVector<NUM_INPUTS> & input) {
 		BitVector<NUM_OUTPUTS> result;
 		for (int i = 0; i < maxMonomialCount; ++i) {
@@ -64,6 +64,19 @@ public:
 		}
 		return result;
 	}
+    
+    template<unsigned INNER_INPUT_LENGTH>
+    const MultivariatePolynomialFunction<INNER_INPUT_LENGTH,NUM_OUTPUTS> operator()(
+                                            const MultivariatePolynomialFunction<INNER_INPUT_LENGTH,NUM_INPUTS> & input) {
+        BitVector<NUM_OUTPUTS> result;
+        for (int i = 0; i < maxMonomialCount; ++i) {
+            BitVector<NUM_INPUTS> inputMask = _monomials[i] & input;
+            if (inputMask == input) {
+                result ^= _contributions[i];
+            }
+        }
+        return result;
+    }
 
 private:
 	vector<BitVector<NUM_INPUTS>> _monomials;
