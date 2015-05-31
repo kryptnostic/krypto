@@ -6,7 +6,7 @@ apply plugin: "google-test"
 // version = 1.0
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.4-20150302230031+0000'
+    gradleVersion = '2.4'
 }
 
 model {
