@@ -104,6 +104,8 @@ public:
 	const size_t colCount() const {
 		return COLS << 6;
 	}
+    
+    static rowReduceEchelonForm( BitMatrix)
 
 private:
 	vector<BitVector<COLS>> _rows;

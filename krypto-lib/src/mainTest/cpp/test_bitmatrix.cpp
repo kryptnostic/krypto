@@ -13,6 +13,9 @@ using namespace testing;
 
 TEST(BitMatrixTests, testRandomMatrix) {
 	BitMatrix<1> m = BitMatrix<1>::randomMatrix(64);
+    BitVector<1> v = BitVector<1>::randomVector();
+    
+    
 	ASSERT_TRUE( 1+1 == 2 );
 	/*
 	printf("Generated random matrix.");
