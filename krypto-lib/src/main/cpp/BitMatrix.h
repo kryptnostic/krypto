@@ -105,7 +105,7 @@ public:
 		return COLS << 6;
 	}
     
-    static rowReduceEchelonForm( BitMatrix)
+//    static rowReduceEchelonForm( BitMatrix)
 
 private:
 	vector<BitVector<COLS>> _rows;
