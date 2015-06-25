@@ -17,6 +17,7 @@ TEST(BitMatrixTests, testRandomMatrix) {
     
     
 	ASSERT_TRUE( 1+1 == 2 );
+    ASSERT_TRUE( 1+2 == 3);
 	/*
 	printf("Generated random matrix.");
 	{
