@@ -9,6 +9,10 @@ task wrapper(type: Wrapper) {
     gradleVersion = '2.4'
 }
 
+task buildGoogleTest(type: Exec) {
+    commandLine './buildGoogleTest.sh'
+}
+
 model {
 	toolChains {
         clang(Clang) {
@@ -76,6 +80,7 @@ tasks.withType(RunTestExecutable) {
 }
 
 def findGoogleTestCoreLibForPlatform(Platform platform) {
+
     if (platform.operatingSystem.windows) {
         return "vs2013/gtest.lib"
 //        return "vs2013/gtest-core.lib"
