@@ -10,7 +10,7 @@ task wrapper(type: Wrapper) {
 }
 
 model {
-	toolChains {
+	/*toolChains {
         clang(Clang) {
             eachPlatform {
             		cppCompiler.withArguments { args ->
@@ -18,7 +18,7 @@ model {
             		}
             }
         }
-    }
+    }*/
     flavors {
         debug
         release
