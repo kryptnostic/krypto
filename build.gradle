@@ -9,6 +9,12 @@ task wrapper(type: Wrapper) {
     gradleVersion = '2.4'
 }
 
+
+
+task buildGoogleTestMac(type: Exec) {
+    commandLine './buildGoogleTestMac.sh'
+}
+
 task buildGoogleTest(type: Exec) {
     commandLine './buildGoogleTest.sh'
 }
