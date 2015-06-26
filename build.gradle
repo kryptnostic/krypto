@@ -14,7 +14,7 @@ task buildGoogleTest(type: Exec) {
 }
 
 model {
-	toolChains {
+	/*toolChains {
         gcc(Gcc) {
             cppCompiler.withArguments { args ->
                         args << "-std=c++1y"
@@ -27,7 +27,7 @@ model {
             		}
             }
         }
-    }
+    }*/
     flavors {
         debug
         release
