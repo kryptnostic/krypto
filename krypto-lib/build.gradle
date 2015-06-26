@@ -11,11 +11,11 @@ task wrapper(type: Wrapper) {
 
 model {
 	toolChains {
-        gcc(Gcc) {
+        /*gcc(Gcc) {
             cppCompiler.withArguments { args ->
                         args << "-std=c++1y"
                     }
-        }
+        }*/
         clang(Clang) {
             eachPlatform {
             		cppCompiler.withArguments { args ->
