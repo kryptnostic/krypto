@@ -2,14 +2,9 @@ apply plugin: "eclipse-cdt"
 apply plugin: "cpp"
 apply plugin: "google-test"
 
-// group = "com.kryptnostic"
-// version = 1.0
-
 task wrapper(type: Wrapper) {
     gradleVersion = '2.4'
 }
-
-
 
 task buildGoogleTestMac(type: Exec) {
     commandLine './buildGoogleTestMac.sh'
@@ -29,7 +24,7 @@ model {
         clang(Clang) {
             eachPlatform {
             		cppCompiler.withArguments { args ->
-            			args << "-std=c++14"
+            			args << "-std=c++1y"
             		}
             }
         }
