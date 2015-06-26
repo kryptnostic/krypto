@@ -17,13 +17,13 @@ model {
 	toolChains {
         /*gcc(Gcc) {
             cppCompiler.withArguments { args ->
-                        args << "-std=c++1y"
+                        args << "-std=c++14"
                     }
         }*/
         clang(Clang) {
             eachPlatform {
             		cppCompiler.withArguments { args ->
-            			args << "-std=c++1y"
+            			args << "-std=c++14"
             		}
             }
         }

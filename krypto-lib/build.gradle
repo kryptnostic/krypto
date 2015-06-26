@@ -19,7 +19,7 @@ model {
         clang(Clang) {
             eachPlatform {
             		cppCompiler.withArguments { args ->
-            			args << "-std=c++1y"
+            			args << "-std=c++14"
             		}
             }
         }
