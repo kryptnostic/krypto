@@ -2,21 +2,12 @@ apply plugin: "eclipse-cdt"
 apply plugin: "cpp"
 apply plugin: "google-test"
 
-// group = "com.kryptnostic"
-// version = 1.0
-
 task wrapper(type: Wrapper) {
     gradleVersion = '2.4'
 }
 
 model {
 	toolChains {
-        /*
-        gcc(Gcc) {
-            cppCompiler.withArguments { args ->
-                        args << "-std=c++1y"
-                    }
-        }*/
         clang(Clang) {
             eachPlatform {
             		cppCompiler.withArguments { args ->
@@ -65,7 +56,6 @@ tasks.withType(GenerateMetadataFileTask) {
 	
 }
 
-// START SNIPPET configure-test-binary
 binaries.withType(GoogleTestTestSuiteBinarySpec) {
     lib library: "googleTest", linkage: "static"
     lib library: "main", linkage: "static"
@@ -74,8 +64,6 @@ binaries.withType(GoogleTestTestSuiteBinarySpec) {
         cppCompiler.define "PLUS_BROKEN"
     }
 }
-// END SNIPPET configure-test-binary
-// END SNIPPET complete-example
 
 tasks.withType(RunTestExecutable) {
     args "--gtest_output=xml:test_detail.xml"

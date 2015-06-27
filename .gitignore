@@ -4,3 +4,5 @@ build/
 /Debug/
 krypto-lib/libs/googleTest/1.7.0/lib/osx/
 krypto-lib/libs/googleTest/1.7.0/lib/linux/
+libs/googleTest/1.7.0/lib/osx/
+libs/googleTest/1.7.0/lib/linux/
