@@ -67,6 +67,9 @@ binaries.withType(GoogleTestTestSuiteBinarySpec) {
 
 tasks.withType(RunTestExecutable) {
     args "--gtest_output=xml:test_detail.xml"
+    doLast {
+        sleep(5 * 1000)
+    }
 }
 
 def findGoogleTestCoreLibForPlatform(Platform platform) {
