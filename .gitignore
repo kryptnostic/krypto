@@ -6,3 +6,9 @@ krypto-lib/libs/googleTest/1.7.0/lib/osx/
 krypto-lib/libs/googleTest/1.7.0/lib/linux/
 libs/googleTest/1.7.0/lib/osx/
 libs/googleTest/1.7.0/lib/linux/
+gtest-1.7.0/CMakeCache.txt
+gtest-1.7.0/CMakeFiles/
+gtest-1.7.0/Makefile
+gtest-1.7.0/cmake_install.cmake
+gtest-1.7.0/libgtest.a
+gtest-1.7.0/libgtest_main.a
