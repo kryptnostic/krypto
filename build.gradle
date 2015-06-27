@@ -13,9 +13,11 @@ task buildGoogleTest(type: Exec) {
 def osname = System.properties['os.name'].toLowerCase().toLowerCase()
 
 if (osname.contains('windows')) {
-    println "Too close for missiles switching to guns."
+    print "Too close for missiles switching to guns."
 } else if (osname.contains('mac') ) {
+    print "build for mac"
     build.dependsOn buildGoogleTestMac
 } else {
+    print "Building for linux."
     build.dependsOn buildGoogleTest
 }
