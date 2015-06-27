@@ -1,5 +1,4 @@
 apply plugin: "eclipse-cdt"
-apply plugin: "cpp"
 apply plugin: "google-test"
 
 task wrapper(type: Wrapper) {
