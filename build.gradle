@@ -14,6 +14,8 @@ task buildGoogleTest(type: Exec) {
     commandLine './buildGoogleTest.sh'
 }
 
+//Determine OS 
+//TODO: Add Windows support.
 def osname = System.properties['os.name'].toLowerCase().toLowerCase()
 
 if (osname.contains('windows')) {
