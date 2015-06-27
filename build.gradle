@@ -9,3 +9,13 @@ task buildGoogleTestMac(type: Exec) {
 task buildGoogleTest(type: Exec) {
     commandLine './buildGoogleTest.sh'
 }
+
+def osname = System.properties['os.name'].toLowerCase().toLowerCase()
+
+if (osname.contains('windows')) {
+    println "Too close for missiles switching to guns."
+} else if (osname.contains('mac') ) {
+    build.dependsOn buildGoogleTestMac
+} else {
+    build.dependsOn buildGoogleTest
+}
