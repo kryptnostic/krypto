@@ -1,5 +1,7 @@
 apply plugin: "cpp"
 
+// The cpp plugin is required so tahat the assemble task can be set to depend on the OS appropriate google test build task
+
 task wrapper(type: Wrapper) {
     gradleVersion = '2.4'
 }
