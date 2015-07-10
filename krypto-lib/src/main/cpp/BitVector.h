@@ -9,6 +9,8 @@
 #ifndef krypto_BitVector_h
 #define krypto_BitVector_h
 #include <iostream>
+#include <stdio.h>
+#include <string.h>
 
 //TODO: Wrap this in a class that can release the file handle and automatically select a good source of randomness on Windows.
 
