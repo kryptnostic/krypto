@@ -12,6 +12,7 @@
 #include <vector>
 #include <fstream>
 #include "../../main/cpp/BitVector.h"
+#include "../../../contrib/gtest/gtest.h"
 
 using namespace std;
 
@@ -76,40 +77,32 @@ public:
 	 * Determinant of a non-square matrix possible? http://math.stackexchange.com/questions/854180/determinant-of-a-non-square-matrix
 	 * Read into this later: http://journals.cambridge.org/download.php?file=%2FBAZ%2FBAZ21_01%2FS0004972700011369a.pdf&code=1807973f2c6d49bc4579326df0a7aa58
 	 */
-	bool det() const{
-		ASSERT(rowCount() == colCount(), "Matrix dimension mismatch!");				
+	bool det() const{ //assert->ASSERT
+		//ASSERT(rowCount() == colCount(), "determinant not applicable to non-square matrix!");				
+		assert(rowCount() == colCount());
 		return rref().getRightBottomCorner();
 	} 
 
-	bool get(int rowIndex, int colIndex) const{
-		ASSERT(rowIndex >= 0 && rowIndex < rowCount(), "rowIndex out of bound!");
-		ASSERT(colIndex >= 0 && colIndex < colCount(), "colIndex out of bound!");
+	bool get(int rowIndex, int colIndex) const{ //assert->ASSERT
+		assert(rowIndex >= 0 && rowIndex < rowCount()); //"rowIndex out of bound!"
+		assert(colIndex >= 0 && colIndex < colCount()); //"colIndex out of bound!"
 		return _rows[rowIndex].get(colIndex);
 	}
 
-	void set(int rowIndex, int colIndex){
-		assert(rowIndex >= 0 && rowIndex < rowCount());
-		assert(colIndex >= 0 && colIndex < colCount());	
+	void set(int rowIndex, int colIndex){ //assert->ASSERT
+		assert(rowIndex >= 0 && rowIndex < rowCount()); //"rowIndex out of bound!"
+		assert(colIndex >= 0 && colIndex < colCount());	//"colIndex out of bound!"
 		_rows[rowIndex].set(colIndex);	
 	}
 
-	void clear(int rowIndex, int colIndex){
-		assert(rowIndex >= 0 && rowIndex < rowCount());
-		assert(colIndex >= 0 && colIndex < colCount());	
+	void clear(int rowIndex, int colIndex){ //assert->ASSERT
+		assert(rowIndex >= 0 && rowIndex < rowCount()); //"rowIndex out of bound!"
+		assert(colIndex >= 0 && colIndex < colCount());	//"colIndex out of bound!"
 		_rows[rowIndex].clear(colIndex);		
 	}
 
-/*
-	bool & operator==(const BitMatrix<COLS> & rhs){
-		int numRows = rowCount();
-		for(int i = 0; i < numRows; ++i){
-			if(_rows[i] != rhs[i]) return false;
-		}
-		return true;
-	}
-*/
-
-	BitVector<COLS> & operator[](const int rowIndex) {
+	BitVector<COLS> & operator[](const int rowIndex) { //assert->ASSERT
+		assert(rowIndex >= 0 && rowIndex < rowCount()); //"rowIndex out of bound!"
 		return _rows[rowIndex];
 	}
 
@@ -131,13 +124,14 @@ public:
 		size_t numRows = rowCount();
 		const size_t numCols = colCount();
 
-		ASSERT(numCols == rhs.rowCount(), "Matrix dimension mismatch!");
-
+		//ASSERT(numCols == rhs.rowCount(), "Matrix dimension mismatch!");
+		assert(numCols == rhs.rowCount());
 		BitMatrix<COLS> result(numRows);
 
 		for (size_t row = 0; row < numRows; row++) {
 			for (size_t col = 0; col < numCols; ++col) {
-				if (_rows[row].getBit(col)) {
+				if(get(row, col)){
+				//if (_rows[row].getBit(col)) {
 					result._rows[row] ^= rhs._rows[col];
 				}
 			}
@@ -185,15 +179,14 @@ public:
 		int l = 0;
 		BitMatrix<COLS> A = *this;
 		for(int k = 0; k < m && l < n; ++k){
-			int pos = -1, i = 1;
+			int pos = -1, i = l;
 			while(i < n){
 				if(A.get(i, k)){pos = i; break;}
 				++i;
 			}
 			if(pos != -1){
 				if(pos != l){
-					A.swapRow(pos, l);
-					b.swap(pos, l);					
+					A.swapRows(pos, l);
 				}
 				for(int i = l+1; i < n; ++i) if(A.get(i, k)){
 					A.setRow(i, A[i] ^ A[k]);
@@ -201,15 +194,16 @@ public:
 				++l;
 			}
 		}
-		return A; //TODO
+		return A; 
 	}
 
-	//Input: A; Output: A^-1 or NULL if A is singular
+	//Input: A; Output: A^-1, here, A must be invertible
 	//By Gaussian elimination
 	//assume square matrix for now, generalize later
-	BitMatrix<COLS> inv() const{
+	BitMatrix<COLS> inv() const{ //assert->ASSERT
 		size_t n = rowCount();
-		ASSERT(n != colCount(), "Matrix dimension mismatch!");
+		//ASSERT(n == colCount(), "Matrix dimension mismatch!");
+		assert(n == colCount());
 		BitMatrix<COLS> A = *this;
 		BitMatrix<COLS> I = BitMatrix<COLS>::squareIdentityMatrix();
 		for(int k = 0; k < n; ++k){
@@ -220,33 +214,82 @@ public:
 			}
 			if(pos != -1){
 				if(pos != k) {
-					A.swapRow(pos, k);
-					b.swap(pos, k);
+					A.swapRows(pos, k);
+					I.swapRows(pos, k);
 				}
 				for(int i = k+1; i < n; ++i) if(A.get(i, k)){
 					A.setRow(i, A[i] ^ A[k]);
 					I.setRow(i, I[i] ^ I[k]);
 				}
-			} else return NULL; //this is when A is singular 
+			} else {
+				cerr << "Error: inversing a nonsingular matrix!" << endl;
+				return BitMatrix<COLS>::squareZeroMatrix(); //this is when A is singular, and really shouldn't happen 
+			}
 		}
 		BitVector<COLS> x = BitVector<COLS>::zeroVector();
 		BitMatrix<COLS> X = BitMatrix<COLS>::squareZeroMatrix();
 		for(int j = 0; j < n; ++j){
-			for(int i = n-1; n >= 0; --n){
-				x[i] = x.dot(A[i]) ^ I.get(i,j);
+			x.zero();
+			for(int i = n-1; i >= 0; --i){
+				bool b = x.dot(A[i]) ^ I.get(i,j);
+				b ? x.set(i) : x.clear(i);
 			}
 			X.setCol(j, x);
 		}
 		return X;
 	}
 
-	/**
-	 * Input: v; Output: A^-1*v;
-	 * Usage: x = A.solve(v); means Ax = v
-	 */
-	BitVector<COLS> solve (const BitVector<COLS> & rhs) const{
+	//Finding the inverse of A if possible, and if not, reflect that in the invertible variable
+	BitMatrix<COLS> inv(bool & invertible) const{ //assert->ASSERT
 		size_t n = rowCount();
-		ASSERT(n != colCount(), "Matrix dimension mismatch!");
+		//ASSERT(n == colCount(), "Matrix dimension mismatch!");
+		assert(n == colCount());
+		BitMatrix<COLS> A = *this;
+		BitMatrix<COLS> I = BitMatrix<COLS>::squareIdentityMatrix();
+		for(int k = 0; k < n; ++k){
+			int pos = -1, i = k;
+			while(i < n){//find the first pos >= k when A[pos, k] == 1
+				if(A.get(i, k)){pos = i; break;}
+				++i;
+			}
+			if(pos != -1){
+				if(pos != k) {
+					A.swapRows(pos, k);
+					I.swapRows(pos, k);
+				}
+				for(int i = k+1; i < n; ++i) if(A.get(i, k)){
+					A.setRow(i, A[i] ^ A[k]);
+					I.setRow(i, I[i] ^ I[k]);
+				}
+			} else {
+				cerr << "Error: inversing a nonsingular matrix!" << endl;
+				invertible = false;
+				return BitMatrix<COLS>::squareZeroMatrix(); 
+			}
+		}
+		BitVector<COLS> x = BitVector<COLS>::zeroVector();
+		BitMatrix<COLS> X = BitMatrix<COLS>::squareZeroMatrix();
+		for(int j = 0; j < n; ++j){
+			x.zero();
+			for(int i = n-1; i >= 0; --i){
+				bool b = x.dot(A[i]) ^ I.get(i,j);
+				b ? x.set(i) : x.clear(i);
+			}
+			X.setCol(j, x);
+		}
+		invertible = true;
+		return X;
+	}
+
+	/**
+	 * A should be invertible in this case. This can be ensured by inializing an inverible matrix.
+	 * Input: v; Output: A^-1*v;
+	 * Usage: x = A.solve(v, solvable); means Ax = v
+	 */
+	BitVector<COLS> solve (const BitVector<COLS> & rhs) const{ //assert->ASSERT
+		size_t n = rowCount();
+		//ASSERT(n == colCount(), "Matrix dimension mismatch!");
+		assert(n == colCount());
 		BitMatrix<COLS> A = *this;
 		BitVector<COLS> b = rhs;
 		for(int k = 0; k < n; ++k){
@@ -257,37 +300,83 @@ public:
 			}
 			if(pos != -1){
 				if(pos != k) {
-					A.swapRow(pos, k);
+					A.swapRows(pos, k);
 					b.swap(pos, k);
 				}
 				for(int i = k+1; i < n; ++i) if(A.get(i, k)){
 					A.setRow(i, A[i] ^ A[k]); 
 					(b[i]^b[k]) ? b.set(i) : b.clear(i);
 				}
-			} else return NULL; //this is when A is singular
+			} else {
+				cerr << "Error: solving system of a nonsingular matrix!" << endl;
+				return BitVector<COLS>::zeroVector(); //this is when A is singular
+			}
 		}
 		BitVector<COLS> x = BitVector<COLS>::zeroVector();
 		for(int i = n-1; i >= 0; --i){
-			x[i] = x.dot(A[i]) + b[i]; //TODO: implement dot
+			bool f = x.dot(A[i]) ^ b[i];
+			f ? x.set(i) : x.clear(i);
 		}
 		return x;
 	}
 
-	//BitVector<rowCount()> T() const{return the transpose}
+	/**
+	 * Input: v; Output: A^-1*v;
+	 * Usage: x = A.solve(v, solvable); means Ax = v
+	 */
+	BitVector<COLS> solve (const BitVector<COLS> & rhs, bool & solvable) const{ //assert->ASSERT
+		size_t n = rowCount();
+		//ASSERT(n == colCount(), "Matrix dimension mismatch!");
+		assert(n == colCount());
+		BitMatrix<COLS> A = *this;
+		BitVector<COLS> b = rhs;
+		for(int k = 0; k < n; ++k){
+			int pos = -1, i = k;
+			while(i < n){ //find the first pos >= k with A[pos,k] == 1
+				if(A.get(i, k)){pos = i; break;} 
+				++i;
+			}
+			if(pos != -1){
+				if(pos != k) {
+					A.swapRows(pos, k);
+					b.swap(pos, k);
+				}
+				for(int i = k+1; i < n; ++i) if(A.get(i, k)){
+					A.setRow(i, A[i] ^ A[k]); 
+					(b[i]^b[k]) ? b.set(i) : b.clear(i);
+				}
+			} else {
+				cerr << "Error: solving system of a nonsingular matrix!" << endl;
+				solvable = false;
+				return BitVector<COLS>::zeroVector(); //this is when A is singular
+			}
+		}
+		BitVector<COLS> x = BitVector<COLS>::zeroVector();
+		for(int i = n-1; i >= 0; --i){
+			bool f = x.dot(A[i]) ^ b[i];
+			f ? x.set(i) : x.clear(i);
+		}
+		solvable = true;
+		return x;
+	}
 
 	/* Functions below will be shifted to the private section after tested */
 
 	/***Elementary row operations***/
 
-	void addRow(int dstIndex, int srcIndex){
-		ASSERT(dstIndex >= 0 && dstIndex < rowCount(), "dstIndex out of bound!");
-		ASSERT(srcIndex >= 0 && srcIndex < rowCount(), "srcIndex out of bound!");
+	void addRow(int dstIndex, int srcIndex){ //assert->ASSERT
+		//ASSERT(dstIndex >= 0 && dstIndex < rowCount(), "dstIndex out of bound!");
+		//ASSERT(srcIndex >= 0 && srcIndex < rowCount(), "srcIndex out of bound!");
+		assert(dstIndex >= 0 && dstIndex < rowCount());
+		assert(srcIndex >= 0 && srcIndex < rowCount());
 		_rows[dstIndex] ^= _rows[srcIndex];
 	}
 
-	void swapRow(int firstIndex, int secondIndex){
-		ASSERT(firstIndex >= 0 && firstIndex < rowCount(), "firstIndex out of bound!");
-		ASSERT(secondIndex >= 0 && secondIndex < rowCount(), "secondIndex out of bound!");
+	void swapRows(int firstIndex, int secondIndex){ //assert->ASSERT
+		//ASSERT(firstIndex >= 0 && firstIndex < rowCount(), "firstIndex out of bound!");
+		//ASSERT(secondIndex >= 0 && secondIndex < rowCount(), "secondIndex out of bound!");
+		assert(firstIndex >= 0 && firstIndex < rowCount());
+		assert(secondIndex >= 0 && secondIndex < rowCount());
 		BitVector<COLS> tmp = _rows[firstIndex];
 		_rows[firstIndex] = _rows[secondIndex];
 		_rows[secondIndex] = tmp;
@@ -295,34 +384,48 @@ public:
 
 	/***Acecss/Modify individual cols/rows***/
 
-	void setRow(int rowIndex, BitVector<COLS> v){
-		ASSERT(rowIndex >= 0 && rowIndex < rowCount(), "rowIndex out of bound!");
+	void setRow(int rowIndex, BitVector<COLS> v){ //assert->ASSERT
+		//ASSERT(rowIndex >= 0 && rowIndex < rowCount(), "rowIndex out of bound!");
+		assert(rowIndex >= 0 && rowIndex < rowCount());
 		_rows[rowIndex] = v;
 	}
 
-	void setCol(int colIndex, BitVector<rowCount()> v){ //TODO: check the usage of rowCount() here
-		ASSERT(colIndex >= 0 && colIndex < colCount(), "colIndex out of bound!");
-		int numRows = rowCount();
+	//TODO: enable COLS to be a variable, for now, it is just COLS to be able to executed by the compiler
+	void setCol(int colIndex, BitVector<COLS> v){ //assert->ASSERT
+		//ASSERT(colIndex >= 0 && colIndex < colCount(), "colIndex out of bound!");
+		int numRows = COLS << 6;//rowCount();
 		for(int i = 0; i < numRows; ++i){
-			v[i] ? v.set(i, colIndex) : v.clear(i, colIndex);
+			v[i] ? set(i, colIndex) : clear(i, colIndex);
 		}
 	}
 
 	/***File/terminal input/output***/
 
-	void printRow(int rowIndex) const {
+	void printRow(int rowIndex) const { //assert->ASSERT
 		const int n = rowCount();
-		ASSERT(rowIndex >= 0 && rowIndex < n, "rowIndex out of bound!");
-		//TODO
+		//ASSERT(rowIndex >= 0 && rowIndex < n, "rowIndex out of bound!");
+		assert(rowIndex >= 0 && rowIndex < n);
+		const int m = colCount();
+		cout << get(rowIndex, 0);
+		for(int i = 1; i < m; ++i){
+			cout << " " << get(rowIndex, i);
+		}
+		cout << endl;
 	}
 
-	void printCol(int colIndex) const {
+	void printCol(int colIndex) const { //assert->ASSERT
 		const int m = colCount();
-		ASSERT(colIndex >= 0 && colIndex < m, "colIndex out of bound!");
-		//TODO
+		//ASSERT(colIndex >= 0 && colIndex < m, "colIndex out of bound!");
+		assert(colIndex >= 0 && colIndex < m);
+		const int n = rowCount();
+		cout << get(0, colIndex);
+		for(int i = 1; i < n; ++i){
+			cout << " " << get(i, colIndex);
+		}
+		cout << endl;
 	}	
 
-	//write matrix into a file for checking against magma results
+	//write matrix into a file to check against magma results
 	void writeMatrix(const string filename) const{
 		int n = rowCount(), m = colCount();
 		ofstream ofs;
@@ -330,7 +433,7 @@ public:
 		for(int i = 0; i < n; ++i){
 			ofs << get(i, 0);
 			for(int j = 1; j < m; ++j){
-				ofs << get(i, j) << " ";
+				ofs << " " << get(i, j);
 			}
 			ofs << endl;
 		}
@@ -347,10 +450,11 @@ private:
 
 	//adapted from: https://www.cs.umd.edu/~gasarch/TOPICS/factoring/fastgauss.pdf
 	//assume square matrix for now, generalize later
-	BitMatrix<COLS> rrefFastGauss() const{
+	BitMatrix<COLS> rrefFastGauss() const{ //assert->ASSERT
 		BitMatrix<COLS> A = *this;
 		size_t n = rowCount();
-		ASSERT(colCount() == n, "Matrix dimension mismatch!");
+		//ASSERT(colCount() == n, "Matrix dimension mismatch!");
+		assert(colCount() == n);
 		for(int j = 0; j < n; ++j){
 			int i = -1;
 			while(i < n){

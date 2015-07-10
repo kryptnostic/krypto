@@ -38,7 +38,7 @@ public:
 		return _bits;
 	}
     
-	int length() {
+	int length() const {
 		return N << 6;
 	}
 
@@ -55,8 +55,9 @@ public:
 		return *this;
 	}
 
-	void clear(unsigned int n) {
+	BitVector & /*void*/ clear(unsigned int n) {
 		_bits[n >> 6ul] &= ~(1ul << (n & 63ul));
+		return *this; //added
 	}
     
 	BitVector<N> operator&(const BitVector<N> & rhs) {
@@ -104,7 +105,7 @@ public:
         return *this;
     }
 
-    bool dot(const BitVector<N> & rhs){
+    bool dot(const BitVector<N> & rhs) const {
     	int n = length();
     	assert(n == rhs.length());
     	bool result = 0;
@@ -114,27 +115,18 @@ public:
     	return result;
     }
 
-/*
-    bool & operator==(const BitVector<N> & rhs){
-    	unsigned long long *b = rhs.elements();
-    	for (unsigned int i = 0; i < N; ++i){
-    		if(_bits[i] != b[i]) return false;
+    bool equals(const BitVector<N> & rhs) const {
+    	int n = length();
+    	assert(n == rhs.length());
+    	for(int i = 0; i < n; ++i){
+    		if(get(i) ^ rhs.get(i)) return false;
     	}
     	return true;
     }
 
-    bool & operator!=(const BitVector<N> & rhs){
-    	unsigned long long *b = rhs.elements();
-    	for (unsigned int i = 0; i < N; ++i){
-    		if(_bits[i] != b[i]) return true;
-    	}
-    	return false;
-    }
-*/
-
     void swap(int firstIndex, int secondIndex){
-    	bool firstOld = _bits[firstIndex];
-    	bool secondOld = _bits[secondIndex];
+    	bool firstOld = get(firstIndex);
+    	bool secondOld = get(secondIndex);
     	firstOld ? set(secondIndex) : clear(secondIndex);
     	secondOld ? set(firstIndex) : clear(firstIndex);
     }
@@ -148,16 +140,33 @@ public:
     	return result;
     }
 
+    void setBits(const unsigned long long *bits){
+    	_bits = bits;
+    }
+
     //TODO: to be merged with elements
     const unsigned long long *elements_C() const {
     	return _bits;
+    }
+
+    void proj2(BitVector<(N>>1)> & v1, BitVector<(N>>1)> & v2) const{
+    	unsigned int M = (N >> 1);
+    	memcpy(v1.elements(), _bits, M*sizeof(unsigned long long));
+    	memcpy(v2.elements(), _bits+M, M*sizeof(unsigned long long));
+    }
+
+    BitVector<(N >> 1)> proj2(int part) const{//part = 0 or 1
+    	BitVector<(N>>1)> r;
+    	unsigned int M = (N >> 1);
+    	memcpy(r.elements(), _bits+(part*M), M*sizeof(unsigned long long));
+    	return r;
     }
 
     static const BitVector<N> proj(const BitVector<2*N> & v, int part){
     	BitVector<N> r;
     	unsigned long long *rbits = r.elements();
     	const unsigned long long *vbits = v.elements_C();
-    	memcpy(rbits, vbits, N*sizeof(unsigned long long));
+    	memcpy(rbits, vbits+(part*N), N*sizeof(unsigned long long));
     	return r;
     }
 
