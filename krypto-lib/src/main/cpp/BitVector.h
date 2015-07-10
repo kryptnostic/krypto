@@ -46,6 +46,10 @@ public:
 		return (_bits[n >> 6] & (1ul << (n & 63ul))) != 0;
 	}
 
+   	bool operator[](unsigned int n) const{
+   		return get(n);
+   	}
+
 	BitVector & set(unsigned int n) {
 		_bits[n >> 6] |= (1ul << (n & 63ul));
 		return *this;
@@ -98,6 +102,63 @@ public:
             _bits[i] &= rhs._bits[i];
         }
         return *this;
+    }
+
+    bool dot(const BitVector<N> & rhs){
+    	int n = length();
+    	assert(n == rhs.length());
+    	bool result = 0;
+    	for(int i = 0; i < n; ++i){
+    		result ^= (get(i) & rhs.get(i));
+    	}
+    	return result;
+    }
+
+/*
+    bool & operator==(const BitVector<N> & rhs){
+    	unsigned long long *b = rhs.elements();
+    	for (unsigned int i = 0; i < N; ++i){
+    		if(_bits[i] != b[i]) return false;
+    	}
+    	return true;
+    }
+
+    bool & operator!=(const BitVector<N> & rhs){
+    	unsigned long long *b = rhs.elements();
+    	for (unsigned int i = 0; i < N; ++i){
+    		if(_bits[i] != b[i]) return true;
+    	}
+    	return false;
+    }
+*/
+
+    void swap(int firstIndex, int secondIndex){
+    	bool firstOld = _bits[firstIndex];
+    	bool secondOld = _bits[secondIndex];
+    	firstOld ? set(secondIndex) : clear(secondIndex);
+    	secondOld ? set(firstIndex) : clear(firstIndex);
+    }
+
+    BitVector<2*N> vcat(BitVector<N> & rhs){
+    	BitVector<2*N> result;
+    	unsigned long long *b1 = _bits;
+    	unsigned long long *b2 = rhs.elements();
+    	memcpy(result.elements(), b1, N*sizeof(unsigned long long));
+        memcpy(result.elements() + 1, b2, N*sizeof(unsigned long long));
+    	return result;
+    }
+
+    //TODO: to be merged with elements
+    const unsigned long long *elements_C() const {
+    	return _bits;
+    }
+
+    static const BitVector<N> proj(const BitVector<2*N> & v, int part){
+    	BitVector<N> r;
+    	unsigned long long *rbits = r.elements();
+    	const unsigned long long *vbits = v.elements_C();
+    	memcpy(rbits, vbits, N*sizeof(unsigned long long));
+    	return r;
     }
 
 	const bool isZero() const {
