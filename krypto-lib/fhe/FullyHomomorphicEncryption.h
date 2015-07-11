@@ -48,6 +48,8 @@ public:
 		return _B.solve(x1 ^ (Aix2 ^ fAix2)); 
 	}
 
+	//const BitVector<N> xorHom()
+
 private:
 	BitMatrix<N> _A;	
 	BitMatrix<N> _B;

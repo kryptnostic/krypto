@@ -4,19 +4,6 @@ using namespace std;
 
 #define N 1
 
-void testIdentity(){
-	BitMatrix<N> I = BitMatrix<N>::squareIdentityMatrix();
-	assert(I.isIdentity());
-	I.swapRows(1,2);
-	assert(!I.isIdentity());
-	I.swapRows(1,2);
-	assert(I.isIdentity());
-	BitMatrix<N> Ii = I.inv();
-	assert(Ii.isIdentity());
-	assert(I.rref().isIdentity());
-	cout << "Passed identity test" << endl;
-}
-
 void testAssignment(){
 	BitMatrix<N> A = BitMatrix<N>::randomInvertibleMatrix(N<<6);
 	A.set(0,0), A.set(1,1), A.set((N<<6)-1,(N<<6)-1);
@@ -63,7 +50,6 @@ void testFHE(){
 }
 
 int main(){
-	testIdentity();
 	testAssignment();
 	testSolve();
 	testInv();

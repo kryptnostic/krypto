@@ -362,37 +362,16 @@ public:
 
 	/* Functions below will be shifted to the private section after tested */
 
-	/***Elementary row operations***/
-
-	void addRow(int dstIndex, int srcIndex){ //assert->ASSERT
-		//ASSERT(dstIndex >= 0 && dstIndex < rowCount(), "dstIndex out of bound!");
-		//ASSERT(srcIndex >= 0 && srcIndex < rowCount(), "srcIndex out of bound!");
-		assert(dstIndex >= 0 && dstIndex < rowCount());
-		assert(srcIndex >= 0 && srcIndex < rowCount());
-		_rows[dstIndex] ^= _rows[srcIndex];
-	}
-
-	void swapRows(int firstIndex, int secondIndex){ //assert->ASSERT
-		//ASSERT(firstIndex >= 0 && firstIndex < rowCount(), "firstIndex out of bound!");
-		//ASSERT(secondIndex >= 0 && secondIndex < rowCount(), "secondIndex out of bound!");
-		assert(firstIndex >= 0 && firstIndex < rowCount());
-		assert(secondIndex >= 0 && secondIndex < rowCount());
-		BitVector<COLS> tmp = _rows[firstIndex];
-		_rows[firstIndex] = _rows[secondIndex];
-		_rows[secondIndex] = tmp;
-	}	
-
 	/***Acecss/Modify individual cols/rows***/
 
-	void setRow(int rowIndex, BitVector<COLS> v){ //assert->ASSERT
-		//ASSERT(rowIndex >= 0 && rowIndex < rowCount(), "rowIndex out of bound!");
+	void setRow(int rowIndex, BitVector<COLS> v){ 
 		assert(rowIndex >= 0 && rowIndex < rowCount());
 		_rows[rowIndex] = v;
 	}
 
 	//TODO: enable COLS to be a variable, for now, it is just COLS to be able to executed by the compiler
-	void setCol(int colIndex, BitVector<COLS> v){ //assert->ASSERT
-		//ASSERT(colIndex >= 0 && colIndex < colCount(), "colIndex out of bound!");
+	void setCol(int colIndex, BitVector<COLS> v){ 
+		assert(colIndex >= 0 && colIndex < colCount());
 		int numRows = COLS << 6;//rowCount();
 		for(int i = 0; i < numRows; ++i){
 			v[i] ? set(i, colIndex) : clear(i, colIndex);
@@ -401,9 +380,8 @@ public:
 
 	/***File/terminal input/output***/
 
-	void printRow(int rowIndex) const { //assert->ASSERT
+	void printRow(int rowIndex) const { 
 		const int n = rowCount();
-		//ASSERT(rowIndex >= 0 && rowIndex < n, "rowIndex out of bound!");
 		assert(rowIndex >= 0 && rowIndex < n);
 		const int m = colCount();
 		cout << get(rowIndex, 0);
@@ -413,9 +391,8 @@ public:
 		cout << endl;
 	}
 
-	void printCol(int colIndex) const { //assert->ASSERT
+	void printCol(int colIndex) const { 
 		const int m = colCount();
-		//ASSERT(colIndex >= 0 && colIndex < m, "colIndex out of bound!");
 		assert(colIndex >= 0 && colIndex < m);
 		const int n = rowCount();
 		cout << get(0, colIndex);
@@ -447,6 +424,23 @@ private:
 	bool getRightBottomCorner(){
 		return get(rowCount()-1, colCount()-1);
 	}
+
+	/***Elementary row operations***/
+
+	void addRow(int dstIndex, int srcIndex){ //assert->ASSERT
+		assert(dstIndex >= 0 && dstIndex < rowCount());
+		assert(srcIndex >= 0 && srcIndex < rowCount());
+		_rows[dstIndex] ^= _rows[srcIndex];
+	}
+
+	void swapRows(int firstIndex, int secondIndex){ //assert->ASSERT
+		assert(firstIndex >= 0 && firstIndex < rowCount());
+		assert(secondIndex >= 0 && secondIndex < rowCount());
+		BitVector<COLS> tmp = _rows[firstIndex];
+		_rows[firstIndex] = _rows[secondIndex];
+		_rows[secondIndex] = tmp;
+	}	
+
 
 	//adapted from: https://www.cs.umd.edu/~gasarch/TOPICS/factoring/fastgauss.pdf
 	//assume square matrix for now, generalize later
