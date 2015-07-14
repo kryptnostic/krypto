@@ -72,18 +72,28 @@ public:
 		return BitMatrix(rows);
 	}
 
+/*
+	bool equals(const BitMatrix<COLS> & rhs) const{
+		int n = rowCount();
+		assert(n == rhs.rowCount());
+		for(int i = 0; i < n; ++i){
+			if(!_rows[i].equals(rhs[i])) return false;
+		}
+		return true;
+	}
+*/
+
 	/**
 	 * Returns the determinant of a given (square) matrix, which is 1 iff the right bottom corner of its rref is 1. 
 	 * Determinant of a non-square matrix possible? http://math.stackexchange.com/questions/854180/determinant-of-a-non-square-matrix
 	 * Read into this later: http://journals.cambridge.org/download.php?file=%2FBAZ%2FBAZ21_01%2FS0004972700011369a.pdf&code=1807973f2c6d49bc4579326df0a7aa58
 	 */
-	bool det() const{ //assert->ASSERT
-		//ASSERT(rowCount() == colCount(), "determinant not applicable to non-square matrix!");				
+	bool det() const{ 
 		assert(rowCount() == colCount());
 		return rref().getRightBottomCorner();
 	} 
 
-	bool get(int rowIndex, int colIndex) const{ //assert->ASSERT
+	bool get(int rowIndex, int colIndex) const{ 
 		assert(rowIndex >= 0 && rowIndex < rowCount()); //"rowIndex out of bound!"
 		assert(colIndex >= 0 && colIndex < colCount()); //"colIndex out of bound!"
 		return _rows[rowIndex].get(colIndex);
@@ -286,7 +296,7 @@ public:
 	 * Input: v; Output: A^-1*v;
 	 * Usage: x = A.solve(v, solvable); means Ax = v
 	 */
-	BitVector<COLS> solve (const BitVector<COLS> & rhs) const{ //assert->ASSERT
+	const BitVector<COLS> solve (const BitVector<COLS> & rhs) const{ //assert->ASSERT
 		size_t n = rowCount();
 		//ASSERT(n == colCount(), "Matrix dimension mismatch!");
 		assert(n == colCount());
@@ -324,7 +334,7 @@ public:
 	 * Input: v; Output: A^-1*v;
 	 * Usage: x = A.solve(v, solvable); means Ax = v
 	 */
-	BitVector<COLS> solve (const BitVector<COLS> & rhs, bool & solvable) const{ //assert->ASSERT
+	const BitVector<COLS> solve (const BitVector<COLS> & rhs, bool & solvable) const{ //assert->ASSERT
 		size_t n = rowCount();
 		//ASSERT(n == colCount(), "Matrix dimension mismatch!");
 		assert(n == colCount());
@@ -401,6 +411,13 @@ public:
 		}
 		cout << endl;
 	}	
+
+	void print() const {
+		const int n = rowCount();
+		for(int i = 0; i < n; ++i){
+			printRow(i);
+		}
+	}
 
 	//write matrix into a file to check against magma results
 	void writeMatrix(const string filename) const{

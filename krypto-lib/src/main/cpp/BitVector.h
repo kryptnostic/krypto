@@ -78,7 +78,7 @@ public:
 		return result;
 	}
 
-	BitVector<N> operator^(const BitVector<N> & rhs) {
+	BitVector<N> operator^(const BitVector<N> & rhs) const {
 		BitVector<N> result;
 		for (unsigned int i = 0; i < N; ++i) {
 			result._bits[i] = _bits[i] ^ rhs._bits[i];
@@ -142,6 +142,26 @@ public:
     	return result;
     }
 
+    static const BitVector<2*N> vcat2(BitVector<N> & v1, BitVector<N> & v2){
+        BitVector<2*N> result;
+        unsigned long long *b1 = v1.elements();
+        unsigned long long *b2 = v2.elements();
+        memcpy(result.elements(), b1, N*sizeof(unsigned long long));
+        memcpy(result.elements() + 1, b2, N*sizeof(unsigned long long));
+        return result;
+    }
+
+    static const BitVector<3*N> vcat3(BitVector<N> & v1, BitVector<N> & v2, BitVector<N> & v3){
+        BitVector<3*N> result;
+        unsigned long long *b1 = v1.elements();
+        unsigned long long *b2 = v2.elements();
+        unsigned long long *b3 = v3.elements();
+        memcpy(result.elements(), b1, N*sizeof(unsigned long long));
+        memcpy(result.elements() + 1, b2, N*sizeof(unsigned long long));
+        memcpy(result.elements() + 2, b3, N*sizeof(unsigned long long));
+        return result;
+    }
+
     void setBits(const unsigned long long *bits){
     	_bits = bits;
     }
@@ -156,6 +176,13 @@ public:
     	memcpy(v1.elements(), _bits, M*sizeof(unsigned long long));
     	memcpy(v2.elements(), _bits+M, M*sizeof(unsigned long long));
     }
+
+    void proj3(BitVector<(N/3)> & v1, BitVector<(N/3)> & v2, BitVector<(N/3)> & v3) const{
+        unsigned int M = N/3;
+        memcpy(v1.elements(), _bits, M*sizeof(unsigned long long));
+        memcpy(v2.elements(), _bits+M, M*sizeof(unsigned long long));
+        memcpy(v3.elements(), _bits+2*M, M*sizeof(unsigned long long));
+    }    
 
     BitVector<(N >> 1)> proj2(int part) const{//part = 0 or 1
     	BitVector<(N>>1)> r;

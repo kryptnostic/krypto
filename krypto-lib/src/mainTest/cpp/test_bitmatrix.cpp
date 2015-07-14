@@ -44,6 +44,27 @@ TEST(BitMatrixTests, testAssignment){
 	ASSERT_TRUE(A.get(0,0) && A.get(1,1) && A.get((N<<6)-1,(N<<6)-1));
 }
 
+/*
+TEST(BitMatrixTests, testEquality){
+	BitMatrix<N> S = BitMatrix<N>::randomInvertibleMatrix(N<<6);
+	BitMatrix<N> Z = BitMatrix<N>::squareZeroMatrix();
+	BitMatrix<N> I = BitMatrix<N>::squareIdentityMatrix();
+	ASSERT_TRUE(S.equals(S));
+	ASSERT_TRUE(Z.equals(Z));
+	ASSERT_TRUE(I.equals(I));
+	BitMatrix<N> Z_C = BitMatrix<N>::squareZeroMatrix();
+	BitMatrix<N> I_C = BitMatrix<N>::squareIdentityMatrix(); 
+	ASSERT_TRUE(Z.equals(Z_C));
+	ASSERT_TRUE(Z_C.equals(Z));
+	ASSERT_TRUE(I.equals(I_C));
+	ASSERT_TRUE(I_C.equals(I));
+	ASSERT_FALSE(I.equals(Z));
+	ASSERT_FALSE(S.equals(Z));
+	ASSERT_FALSE(Z.equals(I));
+	ASSERT_FALSE(Z.equals(S));
+}
+*/
+
 TEST(BitMatrixTests, testSolve) {
  ASSERT_TRUE( 1+5 == 6 );
 	BitVector<N> v = BitVector<N>::randomVector();
