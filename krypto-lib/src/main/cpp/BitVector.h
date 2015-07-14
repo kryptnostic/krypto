@@ -62,7 +62,7 @@ public:
 		return *this; //added
 	}
     
-	BitVector<N> operator&(const BitVector<N> & rhs) {
+	BitVector<N> operator&(const BitVector<N> & rhs) const {
 		BitVector<N> result;
 		for (unsigned int i = 0; i < N; ++i) {
 			result._bits[i] = _bits[i] & rhs._bits[i];

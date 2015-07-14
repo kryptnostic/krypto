@@ -99,24 +99,24 @@ public:
 		return _rows[rowIndex].get(colIndex);
 	}
 
-	void set(int rowIndex, int colIndex){ //assert->ASSERT
+	void set(int rowIndex, int colIndex){
 		assert(rowIndex >= 0 && rowIndex < rowCount()); //"rowIndex out of bound!"
 		assert(colIndex >= 0 && colIndex < colCount());	//"colIndex out of bound!"
 		_rows[rowIndex].set(colIndex);	
 	}
 
-	void clear(int rowIndex, int colIndex){ //assert->ASSERT
+	void clear(int rowIndex, int colIndex){
 		assert(rowIndex >= 0 && rowIndex < rowCount()); //"rowIndex out of bound!"
 		assert(colIndex >= 0 && colIndex < colCount());	//"colIndex out of bound!"
 		_rows[rowIndex].clear(colIndex);		
 	}
 
-	BitVector<COLS> & operator[](const int rowIndex) { //assert->ASSERT
+	BitVector<COLS> & operator[](const int rowIndex) const {
 		assert(rowIndex >= 0 && rowIndex < rowCount()); //"rowIndex out of bound!"
 		return _rows[rowIndex];
 	}
 
-	const BitVector<COLS> operator*(const BitVector<COLS> & v) {
+	const BitVector<COLS> operator*(const BitVector<COLS> & v) const {
 		//const BitVector<COLS> operator*(const BitVector<COLS> & v) const
 		BitVector<COLS> result;
 		size_t numRows = _rows.size();
@@ -184,7 +184,7 @@ public:
 	}   
 
 	//for generalized matrix
-	BitMatrix<COLS> rref() const{
+	const BitMatrix<COLS> rref() const{
 		size_t n = rowCount(), m = colCount();
 		int l = 0;
 		BitMatrix<COLS> A = *this;
@@ -207,10 +207,11 @@ public:
 		return A; 
 	}
 
-	//Input: A; Output: A^-1, here, A must be invertible
-	//By Gaussian elimination
-	//assume square matrix for now, generalize later
-	BitMatrix<COLS> inv() const{ //assert->ASSERT
+	/**
+	 * Input: A; Output: A^-1, here, A must be invertible
+	 * By Gaussian elimination; assume square matrix for now, generalize later
+	 */
+	const BitMatrix<COLS> inv() const{ 
 		size_t n = rowCount();
 		//ASSERT(n == colCount(), "Matrix dimension mismatch!");
 		assert(n == colCount());
@@ -250,7 +251,7 @@ public:
 	}
 
 	//Finding the inverse of A if possible, and if not, reflect that in the invertible variable
-	BitMatrix<COLS> inv(bool & invertible) const{ //assert->ASSERT
+	const BitMatrix<COLS> inv(bool & invertible) const{ //assert->ASSERT
 		size_t n = rowCount();
 		//ASSERT(n == colCount(), "Matrix dimension mismatch!");
 		assert(n == colCount());
@@ -296,10 +297,9 @@ public:
 	 * Input: v; Output: A^-1*v;
 	 * Usage: x = A.solve(v, solvable); means Ax = v
 	 */
-	const BitVector<COLS> solve (const BitVector<COLS> & rhs) const{ //assert->ASSERT
+	const BitVector<COLS> solve (const BitVector<COLS> & rhs) const{
 		size_t n = rowCount();
-		//ASSERT(n == colCount(), "Matrix dimension mismatch!");
-		assert(n == colCount());
+		assert(n == colCount()); //"Matrix dimension mismatch!"
 		BitMatrix<COLS> A = *this;
 		BitVector<COLS> b = rhs;
 		for(int k = 0; k < n; ++k){
@@ -379,7 +379,7 @@ public:
 		_rows[rowIndex] = v;
 	}
 
-	//TODO: enable COLS to be a variable, for now, it is just COLS to be able to executed by the compiler
+	//TODO: enable COLS to be the variable numRows(), for now, it is just COLS to be able to executed by the compiler
 	void setCol(int colIndex, BitVector<COLS> v){ 
 		assert(colIndex >= 0 && colIndex < colCount());
 		int numRows = COLS << 6;//rowCount();
@@ -438,7 +438,7 @@ private:
 	vector<BitVector<COLS>> _rows;
 	//static const _rowCount = _rows.size(); (check if it is possible to do so)
 	//static const _colCount = COLS << 6; (check if it is possible to do so)
-	bool getRightBottomCorner(){
+	bool getRightBottomCorner() const{
 		return get(rowCount()-1, colCount()-1);
 	}
 

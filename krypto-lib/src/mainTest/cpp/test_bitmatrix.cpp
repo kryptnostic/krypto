@@ -66,7 +66,7 @@ TEST(BitMatrixTests, testEquality){
 */
 
 TEST(BitMatrixTests, testSolve) {
- ASSERT_TRUE( 1+5 == 6 );
+	ASSERT_TRUE( 1+5 == 6 );
 	BitVector<N> v = BitVector<N>::randomVector();
 	BitMatrix<N> M = BitMatrix<N>::randomInvertibleMatrix(N << 6);
 	BitVector<N> x = M.solve(v);

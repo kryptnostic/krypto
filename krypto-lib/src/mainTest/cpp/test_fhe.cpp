@@ -6,15 +6,18 @@ using namespace testing;
 #define N 1
 
 TEST(FHETests, testEncryptionAndDecryption){
+	ASSERT_TRUE(1 + 1 == 2);
 	BitVector<N> m = BitVector<N>::randomVector();
 	BitVector<N> r = BitVector<N>::randomVector();
 	FullyHomomorphicEncryption<N> fhe;
 	BitVector<2*N> c = fhe.encrypt(m, r);
 	BitVector<N> mt = fhe.decrypt(c);
 	ASSERT_TRUE(m.equals(mt));
+	ASSERT_TRUE(mt.equals(m));
 }
 
 TEST(FHETests, testMMult){	
+	ASSERT_TRUE(1 + 1 == 2);
 	BitVector<N> m = BitVector<N>::randomVector();
 	BitVector<N> r = BitVector<N>::randomVector();
 	FullyHomomorphicEncryption<N> fhe;
@@ -31,6 +34,7 @@ TEST(FHETests, testMMult){
 }
 
 TEST(FHETests, testXor){
+	ASSERT_TRUE(1 + 1 == 2);
 	BitVector<N> mx = BitVector<N>::randomVector();
 	BitVector<N> my = BitVector<N>::randomVector();
 	BitVector<N> rx = BitVector<N>::randomVector();
@@ -52,6 +56,7 @@ TEST(FHETests, testXor){
 }
 
 TEST(FHETests, testAnd){
+	ASSERT_TRUE(1 + 1 == 2);
 	BitVector<N> mx = BitVector<N>::randomVector();
 	BitVector<N> my = BitVector<N>::randomVector();
 	BitVector<N> rx = BitVector<N>::randomVector();

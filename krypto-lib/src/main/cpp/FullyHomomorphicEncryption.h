@@ -26,9 +26,9 @@ public:
 		_B(BitMatrix<N>::randomInvertibleMatrix(N<<6)),
 		_f1(MultivariatePolynomialFunction<N,N>::denseRandomMultivariateFunctions()),
 		_f2(MultivariatePolynomialFunction<N,N>::denseRandomMultivariateFunctions()),
-		_C1u(BitMatrix<2*N>::randomInvertibleMatrix((2*N)<<6)),
+		_C1u(BitMatrix<2*N>::randomInvertibleMatrix((2*N)<<6)), //_Ciu for unary
 		_C2u(BitMatrix<2*N>::randomInvertibleMatrix((2*N)<<6)), 
-		_C1b(BitMatrix<3*N>::randomInvertibleMatrix((3*N)<<6)), 
+		_C1b(BitMatrix<3*N>::randomInvertibleMatrix((3*N)<<6)), //_Cib for binary
 		_C2b(BitMatrix<3*N>::randomInvertibleMatrix((3*N)<<6)){
 	}
 
@@ -36,19 +36,19 @@ public:
 	 * Input: plaintext in F^N
 	 * Output: ciphertext in F^{2N}
 	 */
-	const BitVector<2*N> encrypt(const BitVector<N> & x, const BitVector<N> & r){
+	const BitVector<2*N> encrypt(const BitVector<N> & x, const BitVector<N> & r) {
 		BitVector<N> fr = _f2(_f1(r));
 		BitVector<N> Bx = _B*x;
 		BitVector<N> top = Bx ^ (r ^ fr);
 		BitVector<N> bottom = _A*r;
-		return top.vcat(bottom);
+		return BitVector<N>::vcat2(top, bottom);
 	}
 	
 	/**
 	 * Input: ciphertext in F^{2N}
 	 * Output: plaintext in F^N
 	 */
-	const BitVector<N> decrypt(const BitVector<2*N> & x){
+	const BitVector<N> decrypt(const BitVector<2*N> & x) {
 		BitVector<N> x1, x2;
 		x.proj2(x1, x2);
 		BitVector<N> Aix2 = _A.solve(x2); 
@@ -170,9 +170,6 @@ private:
 	BitMatrix<2*N> _C2u;
 	BitMatrix<3*N> _C1b;
 	BitMatrix<3*N> _C2b;	
-	//vector<BitMatrix<(N<<1)>> C; //chain of obfuscation matrix
-	//vector<MultivariatePolynomialFunction<N,N>> _f(_l); //length: l (the length of the obfuscation chain)
-
 };
 
 #endif /* defined(__krypto__FullyHomomorphicEncryption__) */
