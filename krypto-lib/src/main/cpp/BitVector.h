@@ -126,6 +126,7 @@ public:
     	return true;
     }
 
+    //TODO: change it to pointer rewiring instead of copying and pasting
     void swap(int firstIndex, int secondIndex){
     	bool firstOld = get(firstIndex);
     	bool secondOld = get(secondIndex);

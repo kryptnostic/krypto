@@ -56,30 +56,29 @@ public:
 		return _B.solve(x1 ^ (Aix2 ^ fAix2)); 
 	}
 
-	//TODO: make R const (that requires * to be const at the back)
-	const BitVector<N> randUnary(BitMatrix<N> & R, const BitVector<2*N> & x){
+	const BitVector<N> randUnary(const BitMatrix<N> & R, const BitVector<2*N> & x){
 		BitVector<N> x1, x2;
 		x.proj2(x1, x2);	
 		BitVector<N> Aix2 = _A.solve(x2);	
 		return R * Aix2;
 	}
 
-	//TODO: make Rx, Ry const (that requires * to be const at the back)
-	const BitVector<N> randBinary(BitMatrix<N> & Rx, BitMatrix<N> & Ry, BitVector<2*N> & cx, BitVector<2*N> & cy){
+	const BitVector<N> randBinary(const BitMatrix<N> & Rx, const BitMatrix<N> & Ry, BitVector<2*N> & cx, BitVector<2*N> & cy){
 		BitVector<N> cx1, cx2, cy1, cy2;
 		cx.proj2(cx1, cx2);
 		cy.proj2(cy1, cy2);
 		return Rx*_A.solve(cx2) ^ Ry*_A.solve(cy2);
 	}
 
-	const BitVector<2*N> Obfuscate_Unary(const BitVector<2*N> & x, BitMatrix<N> & R){ //TODO: output obfuscation chain
+	//TODO: output obfuscation chain
+	const BitVector<2*N> Obfuscate_Unary(const BitVector<2*N> & x, const BitMatrix<N> & R){ 
 		BitVector<N> x1, x2;
 		x.proj2(x1, x2);
 		BitVector<N> Aix2 = _A.solve(x2); 
 		BitVector<N> fAix2 = _f2(_f1(Aix2));
 		BitVector<N> RAix2 = R*Aix2;
 		BitVector<N> fRAix2 = _f2(_f1(RAix2));
-		BitVector<2*N> v = fAix2.vcat(fRAix2);
+		BitVector<2*N> v = BitVector<N>::vcat2(fAix2, fRAix2);
 		return _C2u * v;		
 	}
 
@@ -100,11 +99,7 @@ public:
 		return _C2b * BitVector<N>::vcat3(f2v1, f2v2, f2v3);
 	}
 
-
-	/**
-	 * Input: random matrix K, R //TODO make const 
-	 */
-	const BitVector<2*N> MMult_Hom(BitMatrix<N> & K, const BitVector<2*N> & x, BitMatrix<N> & R){
+	const BitVector<2*N> MMult_Hom(const BitMatrix<N> & K, const BitVector<2*N> & x, const BitMatrix<N> & R){
 		BitVector<2*N> t = Obfuscate_Unary(x, R);
 		BitVector<N> x1, x2;
 		x.proj2(x1, x2);
@@ -115,7 +110,7 @@ public:
 		const BitVector<N> RAix2 = R*Aix2;
 		BitVector<N> top = (_B*(K*_B.solve((x1 ^ Aix2) ^ C2it1)) ^ C2it2) ^ RAix2;
 		BitVector<N> bottom = _A*RAix2;
-		return top.vcat(bottom);
+		return BitVector<N>::vcat2(top, bottom);
 	}
 
 	const BitVector<2*N> Xor_Hom(const BitVector<2*N> & x, const BitVector<2*N> & y, BitMatrix<N> & Rx, BitMatrix<N> & Ry){

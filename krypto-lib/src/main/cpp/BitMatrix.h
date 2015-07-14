@@ -111,7 +111,7 @@ public:
 		_rows[rowIndex].clear(colIndex);		
 	}
 
-	BitVector<COLS> & operator[](const int rowIndex) const {
+	BitVector<COLS> & operator[](const int rowIndex){
 		assert(rowIndex >= 0 && rowIndex < rowCount()); //"rowIndex out of bound!"
 		return _rows[rowIndex];
 	}
@@ -168,11 +168,6 @@ public:
 			}
 		}
 		return true;
-	}
-
-	void zero() {
-		for (size_t i = 0; i < rowCount(); i++)
-			_rows[i].zero();
 	}
 
 	const size_t rowCount() const {
@@ -373,12 +368,6 @@ public:
 	/* Functions below will be shifted to the private section after tested */
 
 	/***Acecss/Modify individual cols/rows***/
-
-	void setRow(int rowIndex, BitVector<COLS> v){ 
-		assert(rowIndex >= 0 && rowIndex < rowCount());
-		_rows[rowIndex] = v;
-	}
-
 	//TODO: enable COLS to be the variable numRows(), for now, it is just COLS to be able to executed by the compiler
 	void setCol(int colIndex, BitVector<COLS> v){ 
 		assert(colIndex >= 0 && colIndex < colCount());
@@ -442,8 +431,19 @@ private:
 		return get(rowCount()-1, colCount()-1);
 	}
 
-	/***Elementary row operations***/
+	/***Acecss/Modify individual cols/rows***/
+	void setRow(int rowIndex, BitVector<COLS> v){ 
+		assert(rowIndex >= 0 && rowIndex < rowCount());
+		_rows[rowIndex] = v;
+	}
 
+	//clears all the entries 
+	void zero() { 
+		for (size_t i = 0; i < rowCount(); i++)
+			_rows[i].zero();
+	}
+
+	/***Elementary row operations***/
 	void addRow(int dstIndex, int srcIndex){ //assert->ASSERT
 		assert(dstIndex >= 0 && dstIndex < rowCount());
 		assert(srcIndex >= 0 && srcIndex < rowCount());
@@ -457,6 +457,7 @@ private:
 		_rows[firstIndex] = _rows[secondIndex];
 		_rows[secondIndex] = tmp;
 	}	
+
 
 
 	//adapted from: https://www.cs.umd.edu/~gasarch/TOPICS/factoring/fastgauss.pdf
