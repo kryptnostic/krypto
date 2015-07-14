@@ -57,7 +57,7 @@ public:
 		return *this;
 	}
 
-	BitVector & /*void*/ clear(unsigned int n) {
+	BitVector & clear(unsigned int n) {
 		_bits[n >> 6ul] &= ~(1ul << (n & 63ul));
 		return *this; //added
 	}
@@ -126,21 +126,11 @@ public:
     	return true;
     }
 
-    //TODO: change it to pointer rewiring instead of copying and pasting
     void swap(int firstIndex, int secondIndex){
     	bool firstOld = get(firstIndex);
     	bool secondOld = get(secondIndex);
     	firstOld ? set(secondIndex) : clear(secondIndex);
     	secondOld ? set(firstIndex) : clear(firstIndex);
-    }
-
-    BitVector<2*N> vcat(BitVector<N> & rhs){
-    	BitVector<2*N> result;
-    	unsigned long long *b1 = _bits;
-    	unsigned long long *b2 = rhs.elements();
-    	memcpy(result.elements(), b1, N*sizeof(unsigned long long));
-        memcpy(result.elements() + 1, b2, N*sizeof(unsigned long long));
-    	return result;
     }
 
     static const BitVector<2*N> vcat2(BitVector<N> & v1, BitVector<N> & v2){
@@ -163,15 +153,6 @@ public:
         return result;
     }
 
-    void setBits(const unsigned long long *bits){
-    	_bits = bits;
-    }
-
-    //TODO: to be merged with elements
-    const unsigned long long *elements_C() const {
-    	return _bits;
-    }
-
     void proj2(BitVector<(N>>1)> & v1, BitVector<(N>>1)> & v2) const{
     	unsigned int M = (N >> 1);
     	memcpy(v1.elements(), _bits, M*sizeof(unsigned long long));
@@ -192,12 +173,11 @@ public:
     	return r;
     }
 
-    static const BitVector<N> proj(const BitVector<2*N> & v, int part){
-    	BitVector<N> r;
-    	unsigned long long *rbits = r.elements();
-    	const unsigned long long *vbits = v.elements_C();
-    	memcpy(rbits, vbits+(part*N), N*sizeof(unsigned long long));
-    	return r;
+    BitVector<(N/3)> proj3(int part) const{//part = 0, 1, or 2
+        BitVector<(N/3)> r;
+        unsigned int M = (N/3);
+        memcpy(r.elements(), _bits+(part*M), M*sizeof(unsigned long long));
+        return r;
     }
 
 	const bool isZero() const {

@@ -18,7 +18,6 @@ using namespace std;
 
 template<unsigned int COLS>
 class BitMatrix {
-//friend class BitMatrixTest;
 public:
 	BitMatrix(int numRows) :
 			_rows(numRows) {
