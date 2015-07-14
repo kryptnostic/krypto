@@ -41,6 +41,7 @@ public:
 		BitVector<N> Bx = _B*x;
 		BitVector<N> top = Bx ^ (r ^ fr);
 		BitVector<N> bottom = _A*r;
+		BitVector<2*N> result = BitVector<N>::vcat2(top, bottom);
 		return BitVector<N>::vcat2(top, bottom);
 	}
 	
@@ -51,7 +52,7 @@ public:
 	const BitVector<N> decrypt(const BitVector<2*N> & x) {
 		BitVector<N> x1, x2;
 		x.proj2(x1, x2);
-		BitVector<N> Aix2 = _A.solve(x2); 
+		BitVector<N> Aix2 = _A.solve(x2);
 		BitVector<N> fAix2 = _f2(_f1(Aix2));
 		return _B.solve(x1 ^ (Aix2 ^ fAix2)); 
 	}

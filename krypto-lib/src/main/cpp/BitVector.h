@@ -12,6 +12,8 @@
 #include <stdio.h>
 #include <string.h>
 
+using namespace std;
+
 //TODO: Wrap this in a class that can release the file handle and automatically select a good source of randomness on Windows.
 
 static FILE * urandom = std::fopen("/dev/urandom", "rb" );
@@ -138,7 +140,7 @@ public:
         unsigned long long *b1 = v1.elements();
         unsigned long long *b2 = v2.elements();
         memcpy(result.elements(), b1, N*sizeof(unsigned long long));
-        memcpy(result.elements() + 1, b2, N*sizeof(unsigned long long));
+        memcpy(result.elements() + N, b2, N*sizeof(unsigned long long));
         return result;
     }
 
@@ -148,8 +150,8 @@ public:
         unsigned long long *b2 = v2.elements();
         unsigned long long *b3 = v3.elements();
         memcpy(result.elements(), b1, N*sizeof(unsigned long long));
-        memcpy(result.elements() + 1, b2, N*sizeof(unsigned long long));
-        memcpy(result.elements() + 2, b3, N*sizeof(unsigned long long));
+        memcpy(result.elements() + N, b2, N*sizeof(unsigned long long));
+        memcpy(result.elements() + 2*N, b3, N*sizeof(unsigned long long));
         return result;
     }
 

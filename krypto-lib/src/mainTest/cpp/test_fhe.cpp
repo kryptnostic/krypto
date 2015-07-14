@@ -3,7 +3,7 @@
 #include <string>
 using namespace testing;
 
-#define N 1
+#define N 2
 
 TEST(FHETests, testEncryptionAndDecryption){
 	ASSERT_TRUE(1 + 1 == 2);
@@ -15,6 +15,7 @@ TEST(FHETests, testEncryptionAndDecryption){
 	ASSERT_TRUE(m.equals(mt));
 	ASSERT_TRUE(mt.equals(m));
 }
+
 
 TEST(FHETests, testMMult){	
 	ASSERT_TRUE(1 + 1 == 2);

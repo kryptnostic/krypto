@@ -104,8 +104,8 @@ public:
 		BitVector<NUM_OUTPUTS> result;
 		for (int i = 0; i < maxMonomialCount; ++i) { 
 			BitVector<NUM_INPUTS> inputMask = _monomials[i] & input;
-			//if (inputMask == input) { 
-			if(inputMask == _monomials[i]){
+			if (inputMask == input) { 
+			//if(inputMask == _monomials[i]){
 				result ^= _contributions[i]; 
 			}
 		}
@@ -118,8 +118,8 @@ public:
         BitVector<NUM_OUTPUTS> result;
         for (int i = 0; i < maxMonomialCount; ++i) {
             BitVector<NUM_INPUTS> inputMask = _monomials[i] & input;
-            //if (inputMask == input) {
-            if(inputMask == _monomials[i]){
+            if (inputMask == input) {
+            //if(inputMask == _monomials[i]){
                 result ^= _contributions[i];
             }
         }
