@@ -4,8 +4,8 @@
 #include <ctime>
 using namespace testing;
 
-#define N 2
-#define C 100 //runtime average over C times
+#define N 1
+#define C 5 //runtime average over C times
 
 TEST(FHETests, testEncryptionAndDecryption){
 	ASSERT_TRUE(1 + 1 == 2);
@@ -38,8 +38,8 @@ TEST(FHETests, testMultipleEncryptionAndDecryptions){
 	}
 	double average_time_E = total_time_E/static_cast<double>(C);
 	double average_time_D = total_time_D/static_cast<double>(C);
-	std::cout << "Runtime for Encryption [average]: " << average_time_E << " sec" << std::endl;
-    std::cout << "Runtime for Decryption [average]: " << average_time_D << " sec" << std::endl;	
+	std::cout << "Encryption [average]: " << average_time_E << std::endl;
+    std::cout << "Decryption [average]: " << average_time_D << std::endl;	
 }
 
 
@@ -82,7 +82,7 @@ TEST(FHETests, testMultipleMMults){
 		total_time += (end - begin)/static_cast<double>(CLOCKS_PER_SEC);
 	}
 	double average_time = total_time/static_cast<double>(C);
-	std::cout << "Runtime for MMult_Hom [average]: " << average_time << " sec" << endl;
+	std::cout << "MMult_Hom [average]: " << average_time << endl;
 }
 
 TEST(FHETests, testXor){
@@ -134,7 +134,7 @@ TEST(FHETests, testMultipleXors){
 		total_time += (end - begin)/static_cast<double>(CLOCKS_PER_SEC);
 	}
 	double average_time = total_time/static_cast<double>(C);
-	std::cout << "Runtime for Xor_Hom [average]: " << average_time << endl;
+	std::cout << "Xor_Hom [average]: " << average_time << std::endl;
 }
 
 TEST(FHETests, testAnd){
@@ -186,5 +186,5 @@ TEST(FHETests, testMultipleAnds){
 		total_time += (end - begin)/static_cast<double>(CLOCKS_PER_SEC);
 	}
 	double average_time = total_time/static_cast<double>(C);
-	std::cout << "Runtime for And_Hom [average]: " << average_time << " sec" << endl;	
+	std::cout << "And_Hom [average]: " << average_time << endl;	
 }
