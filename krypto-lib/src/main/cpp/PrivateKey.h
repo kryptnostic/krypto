@@ -19,8 +19,15 @@ public:
 		generateObfuscationFunctionChain();
 		generateObfuscationMatrixChains();
 	}
-	BitMatrix<N> getA(){
-		return _A;
+	const BitVector<2*N> encrypt(BitVector<N> m) const{//returns x = E(m, r) given a plaintext m 
+		//For now, we assume that m is padded and hashed. These operations will be included later.
+		BitVector<N> r = BitVector<N>::randomVector();
+		BitVector<N> fr = eval(_f, r); //TODO: shift this to another class
+		BitVector<N> Bm = _B*m;
+		BitVector<N> top = Bm ^ (r ^ fr);
+		BitVector<N> bottom = _A*r;
+		BitVector<2*N> result = BitVector<N>::vcat2(top, bottom);
+		return BitVector<N>::vcat2(top, bottom);
 	}
 private:
 	BitMatrix<N> _A, _B; //SL_n(F_2)
@@ -37,6 +44,15 @@ private:
 			_C_u.push_back(BitMatrix<(2*N)>::randomInvertibleMatrix(N<<7));
 			_C_b.push_back(BitMatrix<(3*N)>::randomInvertibleMatrix((3*N)<<6));
 		}
+	}
+	const BitVector<N> eval(vector<MultivariatePolynomialFunction<N,N> > f, BitVector<N> m) const{
+		BitVector<N> result = m;
+		int l = _f.size();
+		for(int i = 0; i < l; ++i){
+			MultivariatePolynomialFunction<N,N> ff = f[i];
+			result = ff(result);
+		}
+		return result;
 	}
 };
 
