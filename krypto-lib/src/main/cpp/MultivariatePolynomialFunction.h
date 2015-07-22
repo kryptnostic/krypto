@@ -51,14 +51,12 @@ public:
 			const vector<BitVector<NUM_INPUTS> > & monomials,
 			const vector<BitVector<NUM_OUTPUTS> > & contributions) :
 			_monomials(monomials), _contributions(contributions) {
-
 	}
 
 	MultivariatePolynomialFunction(
 			const vector<BitVector<NUM_INPUTS>> && monomials,
 			const vector<BitVector<NUM_OUTPUTS> > && contributions) :
 			_monomials(monomials), _contributions(contributions) {
-
 	}
 
 	static MultivariatePolynomialFunction denseRandomMultivariateFunctions() {
@@ -82,8 +80,6 @@ public:
 		return f;
 	}
 
-	//added
-	//TODO: thorough test
 	const MultivariatePolynomialFunction<NUM_INPUTS, NUM_OUTPUTS> operator^
 		(const MultivariatePolynomialFunction<NUM_INPUTS, NUM_OUTPUTS> & rhs){
 		MultivariatePolynomialFunction<NUM_INPUTS, NUM_OUTPUTS> result = rhs;
@@ -104,26 +100,83 @@ public:
 		BitVector<NUM_OUTPUTS> result;
 		for (int i = 0; i < maxMonomialCount; ++i) { 
 			BitVector<NUM_INPUTS> inputMask = _monomials[i] & input;
-			if (inputMask == input) { 
-			//if(inputMask == _monomials[i]){
+			//if (inputMask == input) { 
+			if(inputMask == _monomials[i]){
 				result ^= _contributions[i]; 
 			}
 		}
 		return result;
 	}
     
+    /**
+     * This function computes the functional expression of the composition of two MVQ polynomial functions
+     * f_1: F_2^{INNER_INPUT_LENGTH << 6} -> F_2^{NUM_INPUTS << 6}
+     * f_2: F_2^{NUM_INPUTS << 6} -> F_2^{NUM_OUTPUTS << 6}
+     * f_2(f_1): F_2^{INNER_INPUT_LENGTH << 6} -> F_2^{NUM_OUTPUTS << 6}
+     * Usage (this function applies on f_2, with input variable f_1):
+     * MultivariatePolynomialFunction<INNER_INPUT_LENGTH,NUM_INPUTS> f_1 = MultivariatePolynomialFunction<INNER_INPUT_LENGTH, NUM_INPUTS>::denseRandomMultivariateFunctions();
+     * MultivariatePolynomialFunction<NUM_INPUTS, NUM_OUTPUTS> f_2 = MultivariatePolynomialFunction<NUM_INPUTS, NUM_OUTPUTS>::denseRandomMultivariateFunctions();
+     * MultivariatePolynomialFunction<INNER_INPUT_LENGTH, NUM_OUTPUTS> f = f_2(f_1);
+     */
+
     template<unsigned INNER_INPUT_LENGTH>
     const MultivariatePolynomialFunction<INNER_INPUT_LENGTH,NUM_OUTPUTS> operator()(
-                                            const MultivariatePolynomialFunction<INNER_INPUT_LENGTH,NUM_INPUTS> & input) {
+                                            const MultivariatePolynomialFunction<INNER_INPUT_LENGTH,NUM_INPUTS> & input) {                
+		vector<BitVector<NUM_INPUTS> > monomials(maxMonomialCount);
+		unsigned int index = 0;
+		for (int i = 0; i < numInputBits; ++i) {
+			for (int j = i; j < numInputBits; ++j) {
+				BitVector<NUM_INPUTS> v;
+				v.set(i).set(j);
+				monomials[index] = v;
+				index++;
+			}
+		}		
+		vector<BitVector<NUM_OUTPUTS> > contributions(maxMonomialCount);
+    	MultivariatePolynomialFunction<INNER_INPUT_LENGTH, NUM_OUTPUTS> f;
+    	index = 0;
+    	//note that maxMonomialCount = (numInputBits + 1)*numInputBits/2; 
+    	for(int i= 0; i < numInputBits; ++i){//go across each chunk of {x_i, x_ix_{i+1}, ..., x_ix_n}
+    		//xor those related to x_j to the resulting vector (of length )
+    		int start_index = maxMonomialCount - (numInputBits - i)*(numInputBits - i + 1)/2;
+    		int end_index = start_index + (numInputBits - i);
+    		for(int j = i; j < numInputBits; ++i){
+    			//monomial_index is just the index for x_ix_j, exists solely for checking purpose (it should be equal to index). For j = numInputBits, we have monomial_index = end_index
+    			int monomial_index = start_index + (j - i);
+    			assert(monomial_index == index);
+    			BitVector<NUM_OUTPUTS> v = _contributions(index);
+    			//TODO: treat things specially when j = i, this is when the corresponding monomoial is x_i
+    			//when j != i, the corresponding monomial is just x_ix_j
+    			//the involvment of x_ix_j across all numOutputBits
+
+    			//if(v.get(j)){//this is when x_ix_j is present in the 
+
+    			//}
+    			index++;
+    		}
+    	}
+
+    	//vector<BitVector<INNER_INPUT_LENGTH>> B = substitution(numInputBits, input.getMonomials); 
+    	//numInputBits here is the intermediate dimension
+    	//input here is the second
+    	
+    	//contributions = _contributions.T() * B;
+    	//TODO: to implement T() and to find B
+    	//TODO: implement substitution function
+    	//TODO: implement substitution by row function
+    	return f(monomials, contributions);
+    	/*
         BitVector<NUM_OUTPUTS> result;
         for (int i = 0; i < maxMonomialCount; ++i) {
             BitVector<NUM_INPUTS> inputMask = _monomials[i] & input;
-            if (inputMask == input) {
-            //if(inputMask == _monomials[i]){
+            //if (inputMask == input) {
+            if(inputMask == _monomials[i]){
+
                 result ^= _contributions[i];
             }
         }
-        return result;                                                                                                                                             
+        return result;
+        */                                                                                                                                             
     }
 
     static vector<BitVector<NUM_OUTPUTS>> getRandomContributions(){
