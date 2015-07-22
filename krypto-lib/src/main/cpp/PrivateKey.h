@@ -29,7 +29,6 @@ public:
 		return BitVector<N>::vcat2(top, bottom);
 	}
 	
-	
 	const BitVector<N> decrypt(const BitVector<2*N> x) const{//returns m = D(x) given a ciphertext x
 		BitVector<N> x1, x2;
 		x.proj2(x1, x2);
