@@ -96,7 +96,7 @@ public:
 	}
       
     const BitVector<NUM_OUTPUTS> operator()(
-			const BitVector<NUM_INPUTS> & input) {
+			const BitVector<NUM_INPUTS> & input) const {
 		BitVector<NUM_OUTPUTS> result;
 		for (int i = 0; i < maxMonomialCount; ++i) { 
 			BitVector<NUM_INPUTS> inputMask = _monomials[i] & input;

@@ -31,8 +31,7 @@ public:
 	const BitVector<N> operator()(const BitVector<N> m) const{
 		BitVector<N> result = m;
 		for(int i = 0; i < L; ++i){
-			MultivariatePolynomialFunction<N,N> ff = _tuple[i];
-			result = ff(result);
+			result = (_tuple[i])(result);
 		}
 		return result;
 	}    
