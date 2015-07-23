@@ -218,7 +218,7 @@ public:
 	 */
 	const BitMatrix<COLS> inv() const{
 		bool invertible;
-		return /**this.*/inv(invertible);
+		return inv(invertible);
 	}
 
 	//Finding the inverse of A if possible, and if not, reflect that in the invertible variable
@@ -270,7 +270,7 @@ public:
 	 */
 	const BitVector<COLS> solve (const BitVector<COLS> & rhs) const{
 		bool solvable;
-		return /**this.*/solve(rhs, solvable);
+		return solve(rhs, solvable);
 	}
 
 	/**
