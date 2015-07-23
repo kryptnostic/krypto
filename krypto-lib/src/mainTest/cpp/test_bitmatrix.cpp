@@ -85,6 +85,15 @@ TEST(BitMatrixTests, testInv) {
 	BitVector<N> x = BitVector<N>::randomVector();
 	BitVector<N> mix = Mi*x;
 	ASSERT_TRUE(mix.equals(M.solve(x)));
+
+/*
+	BitMatrix<N> X = BitMatrix<N>::randomInvertibleMatrix(N << 6);
+	BitMatrix<N> R1 = Mi * X;
+	BitMatrix<N> R2 = Mi.solve(X);
+	BitMatrix<N> r1 = R1[2];
+	BitMatrix<N> r2 = R2[2];
+	ASSERT_TRUE(r1.equals(r2));
+*/
 }
 
 TEST(BitMatrixTests, testIdentity){

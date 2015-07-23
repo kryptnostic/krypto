@@ -13,7 +13,6 @@ using namespace std;
 template<unsigned int N, unsigned int L>
 class BridgeKey{
 public:
-	//BridgeKey(){}
 	BridgeKey(PrivateKey<N,L> pk, BitMatrix<N> K) : 
 	_R(BitMatrix<N>::randomInvertibleMatrix(N<<6)),
 	_BKBi(pk.getB() * K * pk.getB().inv()),
@@ -21,6 +20,12 @@ public:
 	_ARAi(pk.getA() * _R * pk.getA().inv())
 	{
 	}	
+
+/*
+	const BitMatrix<2*N> getX() const{
+
+	}
+*/
 
 private:
 	BitMatrix<N> _R; //TODO: delegate the random matrix generation task to some other class?

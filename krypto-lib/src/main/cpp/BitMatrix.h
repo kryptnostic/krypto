@@ -115,6 +115,17 @@ public:
 		return _rows[rowIndex];
 	}
 
+	//TODO: make it possible for numRow != numCol
+	/*
+	BitVector<COLS> getCol(const int colIndex){
+		assert(colIndex >= 0 && colIndex < colCount());
+		BitVector<COLS> v = BitVector<COLS>::zeroVector();
+		for(int i = 0; i < COLS; ++i){
+			if(get(i, colIndex)) v.set(i); 
+		}
+		return v;
+	}*/
+
 	const BitVector<COLS> operator*(const BitVector<COLS> & v) const {
 		//const BitVector<COLS> operator*(const BitVector<COLS> & v) const
 		BitVector<COLS> result;
@@ -289,7 +300,7 @@ public:
 	/**
 	 * A should be invertible in this case. This can be ensured by inializing an inverible matrix.
 	 * Input: v; Output: A^-1*v;
-	 * Usage: x = A.solve(v, solvable); means Ax = v
+	 * Usage: x = A.solve(v); means Ax = v
 	 */
 	const BitVector<COLS> solve (const BitVector<COLS> & rhs) const{
 		size_t n = rowCount();
@@ -363,6 +374,26 @@ public:
 		solvable = true;
 		return x;
 	}
+
+	/**
+	 * A should be invertible in this case. This can be ensured by inializing an inverible matrix.
+	 * Input: v; Output: A^-1*B;
+	 * Usage: C = A.solve(B); means AC = B
+	 */
+	/*	
+	const BitMatrix<COLS> solve (const BitMatrix<COLS> & rhs) const{
+		size_t n = rowCount();
+		assert(n == colCount()); //"Matrix dimension mismatch!"	
+		BitMatrix<COLS> A = *this;
+		BitMatrix<COLS> B = rhs;
+		BitMatrix<COLS> C = BitMatrix<COLS>::squareZeroMatrix();
+		for(int i = 0; i < COLS; ++i){
+			BitVector<COLS> b = B.getCol(i); 
+			BitVector<COLS> c = A.solve(b);
+			C.setCol(i, c);
+		}	
+		return C;
+	}*/
 
 	/* Functions below will be shifted to the private section after tested */
 
