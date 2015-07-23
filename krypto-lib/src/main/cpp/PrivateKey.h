@@ -40,8 +40,7 @@ public:
 		return _B.solve(x1 ^ (Aix2 ^ fAix2)); 
 	}
 
-/*protected:*/
-	/****************TODO: make the following protected functions only accessible to BridgeKey*************/
+protected:
 	const BitMatrix<N> getA() const{
 		return _A;
 	}
@@ -65,7 +64,7 @@ public:
 	const vector<BitMatrix<3*N> > getBinaryObfChain() const{
 		return _C_b;
 	}
-	/****************** end of TODO ******************************/
+
 private:
 	BitMatrix<N> _A, _B; //SL_n(F_2)
 	BitMatrix<2*N> _M; //SL_{2n}(F_2)
