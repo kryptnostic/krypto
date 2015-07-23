@@ -16,6 +16,8 @@
 
 using namespace std;
 
+// TODO: possibly uniformize template/parameter for col/row
+
 template<unsigned int COLS>
 class BitMatrix {
 public:
