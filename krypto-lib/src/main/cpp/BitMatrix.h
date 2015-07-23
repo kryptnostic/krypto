@@ -205,43 +205,9 @@ public:
 	 * Input: A; Output: A^-1, here, A must be invertible
 	 * By Gaussian elimination; assume square matrix for now, generalize later
 	 */
-	const BitMatrix<COLS> inv() const{ 
-		size_t n = rowCount();
-		//ASSERT(n == colCount(), "Matrix dimension mismatch!");
-		assert(n == colCount());
-		BitMatrix<COLS> A = *this;
-		BitMatrix<COLS> I = BitMatrix<COLS>::squareIdentityMatrix();
-		for(int k = 0; k < n; ++k){
-			int pos = -1, i = k;
-			while(i < n){//find the first pos >= k when A[pos, k] == 1
-				if(A.get(i, k)){pos = i; break;}
-				++i;
-			}
-			if(pos != -1){
-				if(pos != k) {
-					A.swapRows(pos, k);
-					I.swapRows(pos, k);
-				}
-				for(int i = k+1; i < n; ++i) if(A.get(i, k)){
-					A.setRow(i, A[i] ^ A[k]);
-					I.setRow(i, I[i] ^ I[k]);
-				}
-			} else {
-				cerr << "Error: inversing a nonsingular matrix!" << endl;
-				return BitMatrix<COLS>::squareZeroMatrix(); //this is when A is singular, and really shouldn't happen 
-			}
-		}
-		BitVector<COLS> x = BitVector<COLS>::zeroVector();
-		BitMatrix<COLS> X = BitMatrix<COLS>::squareZeroMatrix();
-		for(int j = 0; j < n; ++j){
-			x.zero();
-			for(int i = n-1; i >= 0; --i){
-				bool b = x.dot(A[i]) ^ I.get(i,j);
-				b ? x.set(i) : x.clear(i);
-			}
-			X.setCol(j, x);
-		}
-		return X;
+	const BitMatrix<COLS> inv() const{
+		bool invertible;
+		return *this.inv(invertible);
 	}
 
 	//Finding the inverse of A if possible, and if not, reflect that in the invertible variable
@@ -287,41 +253,13 @@ public:
 	}
 
 	/**
-	 * A should be invertible in this case. This can be ensured by initalizing an inverible matrix.
+	 * A should be invertible in this case. This can be ensured by initializing an inverible matrix.
 	 * Input: v; Output: A^-1*v;
 	 * Usage: x = A.solve(v, solvable); means Ax = v
 	 */
 	const BitVector<COLS> solve (const BitVector<COLS> & rhs) const{
-		size_t n = rowCount();
-		assert(n == colCount()); //"Matrix dimension mismatch!"
-		BitMatrix<COLS> A = *this;
-		BitVector<COLS> b = rhs;
-		for(int k = 0; k < n; ++k){
-			int pos = -1, i = k;
-			while(i < n){ //find the first pos >= k with A[pos,k] == 1
-				if(A.get(i, k)){pos = i; break;} 
-				++i;
-			}
-			if(pos != -1){
-				if(pos != k) {
-					A.swapRows(pos, k);
-					b.swap(pos, k);
-				}
-				for(int i = k+1; i < n; ++i) if(A.get(i, k)){
-					A.setRow(i, A[i] ^ A[k]); 
-					(b[i]^b[k]) ? b.set(i) : b.clear(i);
-				}
-			} else {
-				cerr << "Error: solving system of a nonsingular matrix!" << endl;
-				return BitVector<COLS>::zeroVector(); //this is when A is singular
-			}
-		}
-		BitVector<COLS> x = BitVector<COLS>::zeroVector();
-		for(int i = n-1; i >= 0; --i){
-			bool f = x.dot(A[i]) ^ b[i];
-			f ? x.set(i) : x.clear(i);
-		}
-		return x;
+		bool solvable;
+		return *this.solve(rhs, solvable);
 	}
 
 	/**
