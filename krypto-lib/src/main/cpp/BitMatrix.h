@@ -287,7 +287,7 @@ public:
 	}
 
 	/**
-	 * A should be invertible in this case. This can be ensured by inializing an inverible matrix.
+	 * A should be invertible in this case. This can be ensured by initalizing an inverible matrix.
 	 * Input: v; Output: A^-1*v;
 	 * Usage: x = A.solve(v, solvable); means Ax = v
 	 */
