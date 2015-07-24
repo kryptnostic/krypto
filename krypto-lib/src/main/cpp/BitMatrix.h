@@ -316,6 +316,7 @@ public:
 		return x;
 	}
 
+	//Augments two matrices together horizontally
 	template <unsigned int COLS1, unsigned int COLS2>
 	static const BitMatrix<COLS1 + COLS2> aug_h (const BitMatrix<COLS1> & lhs, const BitMatrix<COLS2> & rhs){
 		//untested!
@@ -326,6 +327,19 @@ public:
 		vector<BitVector<COLS1 + COLS2>> rows(l_rows);		
 		for(int i = 0; i < l_rows; ++i){
 			rows[i] = BitVector<COLS1 + COLS2>::vcat2((lhs._rows)[i], (rhs.rows)[i]);
+		}
+		return BitMatrix(rows);
+	}
+
+	//Augments two matrices together vertically
+	static const BitMatrix<COLS> aug_v (const BitMatrix<COLS> & top, const BitMatrix<COLS> & bottom){
+		//untested!
+		int t_rows = top.rowCount();
+		int b_rows = bottom.rowCount();
+		vector<BitVector<COLS>> rows(t_rows + b_rows);
+		rows = top._rows;
+		for(int i = 0; i < b_rows; ++i){
+			rows[t_rows + i] = bottom._rows[i];
 		}
 		return BitMatrix(rows);
 	}
