@@ -32,7 +32,7 @@ public:
 
 	const BitMatrix<2*N> get_LMM_Z() const{
 		// untested!
-		BitMatrix<N> zeroN = BitMatrix<N>::zeroMatrix(N);
+		BitMatrix<N> zeroN = BitMatrix<N>::zeroMatrix(N << 6);
 
 		BitMatrix<2*N> X_top = BitMatrix<N>::aug_h(_BKBi, _BKBiAi);
 		BitMatrix<2*N> X_bottom = BitMatrix<N>::aug_h(zeroN, _ARAi);
@@ -62,7 +62,7 @@ public:
 		BitMatrix<N> idN = BitMatrix<N>::squareIdentityMatrix();
 
 		BitMatrix<2*N> X_top = BitMatrix<N>::aug_h(idN, (idN + _Rx) * pk.getA.inv());
-		BitMatrix<2*N> X_bottom = BitMatrix<N>::aug_h(zeroN, _ARxAi);
+		BitMatrix<2*N> X_bottom = BitMatrix<N>::aug_h(BitMatrix<N>::aug_h(BitMatrix<N>::zeroMatrix(N << 6), _ARxAi);
 		return BitMatrix<2*N>::aug_v(X_top, X_bottom) * _M.inv();
 	}
 
@@ -70,7 +70,7 @@ public:
 		BitMatrix<N> idN = BitMatrix<N>::squareIdentityMatrix();
 
 		BitMatrix<2*N> X_top = BitMatrix<N>::aug_h(idN, (idN + _Ry) * pk.getA.inv());
-		BitMatrix<2*N> X_bottom = BitMatrix<N>::aug_h(zeroN, _ARyAi);
+		BitMatrix<2*N> X_bottom = BitMatrix<N>::aug_h(BitMatrix<N>::zeroMatrix(N << 6), _ARyAi);
 		return BitMatrix<2*N>::aug_v(X_top, X_bottom) * _M.inv();
 	}
 
