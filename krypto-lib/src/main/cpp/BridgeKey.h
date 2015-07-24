@@ -27,7 +27,16 @@ public:
 /* Left Matrix Multiplication */
 
 	const BitMatrix<2*N> get_LMM_Z() const{
-		return BitMatrix<2*N>::aug_h(getX(), getY());
+		BitMatrix<N> zeroN = BitMatrix<N>::zeroMatrix(N);
+
+		BitMatrix<2*N> X_top = BitMatrix<N, N>::aug_h(_BKBi, _BKBiAi);
+		BitMatrix<2*N> X_bottom = BitMatrix<N, N>::aug_h(zeroN, _ARAi);
+		BitMatrix<2*N> X = BitMatrix<2*N>::aug_v(X_top, X_bottom) * _M.inv();
+
+		BitMatrix<2*N> Y_top = BitMatrix<N, N>::aug_h(_BKBi, BitMatrix<N>::squareIdentityMatrix());
+		BitMatrix<2*N> Y_bottom = BitMatrix<N, N>::aug_h(zeroN, zeroN);
+		BitMatrix<2*N> Y = BitMatrix<2*N>::aug_v(X_top, X_bottom) * _C2.inv();
+		return BitMatrix<2*N>::aug_h(X, Y);
 	}
 
 	const BitMatrix<N> get_LMM_g1() const{
@@ -122,21 +131,6 @@ private:
 	PolynomialFunctionTupleChain<2*N,L> _g_u; //obsfucated chain for unary operations
 	PolynomialFunctionTupleChain<3*N,L> _g_b; //obsfucated chain for binary operations
 	int _dim_quad = 64; //dimension of bitmatrix used to represent quadratic poly's
-
-	// Computes matrix X used in the computation of Z
-	const BitMatrix<2*N> getX() const{
-		BitMatrix<2*N> X_top = BitMatrix<N, N>::aug_h(_BKBi, _BKBiAi);
-		BitMatrix<2*N> X_bottom = BitMatrix<N, N>::aug_h(BitMatrix<N>::zeroMatrix(N), _ARAi);
-		return BitMatrix<2*N>::aug_v(X_top, X_bottom) * _M.inv();
-	}
-
-	// Computes matrix Y used in the computation of Z
-	const BitMatrix<2*N> getY() const{
-		BitMatrix<2*N> Y_top = BitMatrix<N, N>::aug_h(_BKBi, BitMatrix<N>::squareIdentityMatrix());
-		BitMatrix<N> zeroN = BitMatrix<N>::zeroMatrix(N);
-		BitMatrix<2*N> Y_bottom = BitMatrix<N, N>::aug_h(zeroN, zeroN);
-		return BitMatrix<2*N>::aug_v(X_top, X_bottom) * _C2.inv();
-	}
 };
 
 #endif
