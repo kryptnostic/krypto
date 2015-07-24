@@ -316,12 +316,12 @@ public:
 		return x;
 	}
 
-template <unsigned int COLS1, unsigned int COLS2>
+	template <unsigned int COLS1, unsigned int COLS2>
 	static const BitMatrix<COLS1 + COLS2> aug_h (const BitMatrix<COLS1> & lhs, const BitMatrix<COLS2> & rhs){
 		//untested!
 		int l_rows = lhs.rowCount();
 		int r_rows = rhs.rowCount();
-		//ASSERT(l_rows == r_rows); //same height
+		assert(l_rows == r_rows); //same height
 
 		vector<BitVector<COLS1 + COLS2>> rows(l_rows);		
 		for(int i = 0; i < l_rows; ++i){
