@@ -14,6 +14,7 @@ template<unsigned int N, unsigned int L>
 class BridgeKey{
 public:
 	BridgeKey(PrivateKey<N,L> pk, BitMatrix<N> K) : 
+	_pk(pk),
 	_R(BitMatrix<N>::randomInvertibleMatrix(N<<6)),
 	_Rx(BitMatrix<N>::randomInvertibleMatrix(N<<6)),
 	_Ry(BitMatrix<N>::randomInvertibleMatrix(N<<6)),
@@ -61,15 +62,15 @@ public:
 		//untested!
 		BitMatrix<N> idN = BitMatrix<N>::squareIdentityMatrix();
 
-		BitMatrix<2*N> X_top = BitMatrix<N>::aug_h(idN, (idN + _Rx) * pk.getA.inv());
-		BitMatrix<2*N> X_bottom = BitMatrix<N>::aug_h(BitMatrix<N>::aug_h(BitMatrix<N>::zeroMatrix(N << 6), _ARxAi);
+		BitMatrix<2*N> X_top = BitMatrix<N>::aug_h(idN, (idN + _Rx) * _pk.getA.inv());
+		BitMatrix<2*N> X_bottom = BitMatrix<N>::aug_h(BitMatrix<N>::zeroMatrix(N << 6), _ARxAi);
 		return BitMatrix<2*N>::aug_v(X_top, X_bottom) * _M.inv();
 	}
 
 	const BitMatrix<2*N> get_XOR_Xy() const{
 		BitMatrix<N> idN = BitMatrix<N>::squareIdentityMatrix();
 
-		BitMatrix<2*N> X_top = BitMatrix<N>::aug_h(idN, (idN + _Ry) * pk.getA.inv());
+		BitMatrix<2*N> X_top = BitMatrix<N>::aug_h(idN, (idN + _Ry) * _pk.getA.inv());
 		BitMatrix<2*N> X_bottom = BitMatrix<N>::aug_h(BitMatrix<N>::zeroMatrix(N << 6), _ARyAi);
 		return BitMatrix<2*N>::aug_v(X_top, X_bottom) * _M.inv();
 	}
@@ -134,6 +135,7 @@ public:
 
 
 private:
+	PrivateKey<N,L> _pk;
 	BitMatrix<N> _R; //TODO: delegate the random matrix generation task to some other class?
 	BitMatrix<N> _Rx;
 	BitMatrix<N> _Ry;

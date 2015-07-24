@@ -24,6 +24,7 @@ public:
 	}
 
 	/**
+     * Is this needed?
 	 * The constant monomial matrix
 	 * e.g. if there are 3 variables (x_1,x_2,x_3), i.e. numInputBits = 3
 	 * The resulting matrix would be
