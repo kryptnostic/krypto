@@ -130,7 +130,6 @@ public:
 	}*/
 
 	const BitVector<COLS> operator*(const BitVector<COLS> & v) const {
-		//const BitVector<COLS> operator*(const BitVector<COLS> & v) const
 		BitVector<COLS> result;
 		size_t numRows = _rows.size();
 		for (size_t i = 0; i < numRows; ++i) {
@@ -139,7 +138,44 @@ public:
 				result.set(i);
 			}
 		}
+		return result;
+	}
 
+	/*
+	//A in F_2^{m * n}, v in F_2^n; so A*v in F_2^m
+	To include in the next version
+	template<NUMROWS>
+	const BitVector<NUMROWS> operator*(const BitVector<COLS> & v) const {
+		BitVector<COLS> result;
+		size_t numRows = _rows.size();
+		assert(numRows == NUMROWS);
+		for (size_t i = 0; i < numRows; ++i) {
+			BitVector<COLS> prod = _rows[i] & v;
+			if (prod.parity()) {
+				result.set(i);
+			}
+		}
+		return result;
+	}
+	*/
+
+	/**
+	 * A in F_2^{n \times m}, v in F_2{n}
+	 * A.tMult(v) := A^T*v in F_2^{m}
+	 */
+	template<unsigned int ROWS>
+	const BitVector<COLS> tMult(const BitVector<ROWS> & v) const {
+		size_t numRows = _rows.size(); //n
+ 		assert(numRows == ROWS << 6);
+		BitVector<COLS> result;
+		int numCols = COLS << 6; //m
+		for(int j = 0; j < numCols; ++j){
+			bool bit = 0;
+			for(int i = 0; i < numRows; ++i){
+				bit ^= (get(i, j)&v.get(i));
+			}
+			if(bit) result.set(j);
+		}
 		return result;
 	}
 
