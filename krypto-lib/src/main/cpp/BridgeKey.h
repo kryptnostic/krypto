@@ -29,12 +29,12 @@ public:
 	const BitMatrix<2*N> get_LMM_Z() const{
 		BitMatrix<N> zeroN = BitMatrix<N>::zeroMatrix(N);
 
-		BitMatrix<2*N> X_top = BitMatrix<N, N>::aug_h(_BKBi, _BKBiAi);
-		BitMatrix<2*N> X_bottom = BitMatrix<N, N>::aug_h(zeroN, _ARAi);
+		BitMatrix<2*N> X_top = BitMatrix<N>::aug_h(_BKBi, _BKBiAi);
+		BitMatrix<2*N> X_bottom = BitMatrix<N>::aug_h(zeroN, _ARAi);
 		BitMatrix<2*N> X = BitMatrix<2*N>::aug_v(X_top, X_bottom) * _M.inv();
 
-		BitMatrix<2*N> Y_top = BitMatrix<N, N>::aug_h(_BKBi, BitMatrix<N>::squareIdentityMatrix());
-		BitMatrix<2*N> Y_bottom = BitMatrix<N, N>::aug_h(zeroN, zeroN);
+		BitMatrix<2*N> Y_top = BitMatrix<N>::aug_h(_BKBi, BitMatrix<N>::squareIdentityMatrix());
+		BitMatrix<2*N> Y_bottom = BitMatrix<N>::aug_h(zeroN, zeroN);
 		BitMatrix<2*N> Y = BitMatrix<2*N>::aug_v(X_top, X_bottom) * _C2.inv();
 		return BitMatrix<2*N>::aug_h(X, Y);
 	}
