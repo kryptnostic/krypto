@@ -161,10 +161,10 @@ public:
 
 	/**
 	 * A in F_2^{n \times m}, v in F_2{n}
-	 * A.tMult(v) := A^T*v in F_2^{m}
+	 * A#v := A^T*v in F_2^{m}
 	 */
 	template<unsigned int ROWS>
-	const BitVector<COLS> tMult(const BitVector<ROWS> & v) const {
+	const BitVector<COLS> operator#(const BitVector<ROWS> & v) const {
 		size_t numRows = _rows.size(); //n
  		assert(numRows == ROWS << 6);
 		BitVector<COLS> result;
