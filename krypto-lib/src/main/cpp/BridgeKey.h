@@ -52,71 +52,72 @@ public:
 
 /* XOR */
 
-	const BitVector<2*N> get_XOR_z() const{
-		//to be implemented
-		return BitVector<2*N>::randomVector();
-	}
-
-	const BitMatrix<2*N> get_XOR_X() const{
-		//to be implemented
-		return BitMatrix<2*N>::randomInvertibleMatrix(N<<6);
-	}
-
-	const BitMatrix<3*N> get_XOR_Y1() const{
-		//to be implemented
-		return BitMatrix<3*N>::randomInvertibleMatrix(N<<6);
-	}
-
-	const BitMatrix<3*N> get_XOR_Y2() const{
-		//to be implemented
-		return BitMatrix<3*N>::randomInvertibleMatrix(N<<6);
-	}
-
-	const BitMatrix<N> get_XOR_Z1() const{
-		//to be implemented
-		return BitMatrix<N>::randomInvertibleMatrix(N<<6);
-	}
-
-	const BitMatrix<N> get_XOR_Z2() const{
-		//to be implemented
-		return BitMatrix<N>::randomInvertibleMatrix(N<<6);
-	}
-
-	const BitMatrix<N> get_XOR_g1() const{
-		//to be implemented
-		return BitMatrix<N>::randomInvertibleMatrix(_dim_quad<<6);
-	}
-
-	const BitMatrix<N> get_XOR_g2() const{
-		//to be implemented
-		return BitMatrix<N>::randomInvertibleMatrix(_dim_quad<<6);
-	}
-
-/* AND */
-
-	const BitMatrix<2*N> get_AND_Xx() const{
+	const BitMatrix<2*N> get_XOR_Xx() const{
 		//to be implemented
 		return BitMatrix<2*N>::randomInvertibleMatrix(N<<7);
 	}
 
-	const BitMatrix<2*N> get_AND_Xy() const{
+	const BitMatrix<2*N> get_XOR_Xy() const{
 		//to be implemented
 		return BitMatrix<2*N>::randomInvertibleMatrix(N<<7);
 	}
 
-	const BitMatrix<3*N> get_AND_Y() const{
+	const BitMatrix<3*N> get_XOR_Y() const{
 		//to be implemented
 		return BitMatrix<3*N>::randomInvertibleMatrix(N<<7);
 	}
 
-	const BitMatrix<3*N> get_AND_g1() const{
+	const BitMatrix<3*N> get_XOR_g1() const{
 		//to be implemented
 		return BitMatrix<3*N>::randomInvertibleMatrix(_dim_quad<<6);
 	}
 
-	const BitMatrix<3*N> get_AND_g2() const{
+	const BitMatrix<3*N> get_XOR_g2() const{
 		//to be implemented
 		return BitMatrix<3*N>::randomInvertibleMatrix(_dim_quad<<6);
+	}
+
+
+/* AND */
+
+	const BitVector<2*N> get_AND_z() const{
+		//to be implemented
+		return BitVector<2*N>::randomVector();
+	}
+
+	const BitMatrix<2*N> get_AND_X() const{
+		//to be implemented
+		return BitMatrix<2*N>::randomInvertibleMatrix(N<<6);
+	}
+
+	const BitMatrix<3*N> get_AND_Y1() const{
+		//to be implemented
+		return BitMatrix<3*N>::randomInvertibleMatrix(N<<6);
+	}
+
+	const BitMatrix<3*N> get_AND_Y2() const{
+		//to be implemented
+		return BitMatrix<3*N>::randomInvertibleMatrix(N<<6);
+	}
+
+	const BitMatrix<N> get_AND_Z1() const{
+		//to be implemented
+		return BitMatrix<N>::randomInvertibleMatrix(N<<6);
+	}
+
+	const BitMatrix<N> get_AND_Z2() const{
+		//to be implemented
+		return BitMatrix<N>::randomInvertibleMatrix(N<<6);
+	}
+
+	const BitMatrix<N> get_AND_g1() const{
+		//to be implemented
+		return BitMatrix<N>::randomInvertibleMatrix(_dim_quad<<6);
+	}
+
+	const BitMatrix<N> get_AND_g2() const{
+		//to be implemented
+		return BitMatrix<N>::randomInvertibleMatrix(_dim_quad<<6);
 	}
 
 
