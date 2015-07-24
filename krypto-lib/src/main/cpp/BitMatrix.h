@@ -373,10 +373,8 @@ public:
 		int t_rows = top.rowCount();
 		int b_rows = bottom.rowCount();
 		vector<BitVector<COLS>> rows(t_rows + b_rows);
-		rows = top._rows;
-		for(int i = 0; i < b_rows; ++i){
-			rows[t_rows + i] = bottom._rows[i];
-		}
+		rows.insert(rows.end(), top.begin(), top.end());
+		rows.insert(rows.end(), bottom.begin(), bottom.end());
 		return BitMatrix(rows);
 	}
 

@@ -15,17 +15,33 @@ class BridgeKey{
 public:
 	BridgeKey(PrivateKey<N,L> pk, BitMatrix<N> K) : 
 	_R(BitMatrix<N>::randomInvertibleMatrix(N<<6)),
+	_Rx(BitMatrix<N>::randomInvertibleMatrix(N<<6)),
+	_Ry(BitMatrix<N>::randomInvertibleMatrix(N<<6)),
+	_M(pk.getM()),
+	_C1(pk.getUnaryObfChain()[1]),
+	_C2(pk.getUnaryObfChain()[2]),
 	_BKBi(pk.getB() * K * pk.getB().inv()),
 	_BKBiAi(_BKBi * pk.getA().inv()),
-	_ARAi(pk.getA() * _R * pk.getA().inv())
+	_ARAi(pk.getA() * _R * pk.getA().inv()),
+	_ARxAi(pk.getA() * _Rx * pk.getA().inv()),
+	_ARyAi(pk.getA() * _Ry * pk.getA().inv())
 	{
 	}	
 
 /* Left Matrix Multiplication */
 
 	const BitMatrix<2*N> get_LMM_Z() const{
-		//to be implemented
-		return BitMatrix<N>::randomInvertibleMatrix(N<<7);
+		// untested!
+		BitMatrix<N> zeroN = BitMatrix<N>::zeroMatrix(N << 6);
+
+		BitMatrix<2*N> X_top = BitMatrix<N>::aug_h(_BKBi, _BKBiAi);
+		BitMatrix<2*N> X_bottom = BitMatrix<N>::aug_h(zeroN, _ARAi);
+		BitMatrix<2*N> X = BitMatrix<2*N>::aug_v(X_top, X_bottom) * _M.inv();
+
+		BitMatrix<2*N> Y_top = BitMatrix<N>::aug_h(_BKBi, BitMatrix<N>::squareIdentityMatrix());
+		BitMatrix<2*N> Y_bottom = BitMatrix<N>::aug_h(zeroN, zeroN);
+		BitMatrix<2*N> Y = BitMatrix<2*N>::aug_v(X_top, X_bottom) * _C2.inv();
+		return BitMatrix<2*N>::aug_h(X, Y);
 	}
 
 	const BitMatrix<N> get_LMM_g1() const{
@@ -41,94 +57,97 @@ public:
 
 /* XOR */
 
-	const BitVector<2*N> get_XOR_z() const{
-		//to be implemented
-		return BitVector<2*N>::randomVector();
+	const BitMatrix<2*N> get_XOR_Xx() const{
+		//untested!
+		BitMatrix<N> idN = BitMatrix<N>::squareIdentityMatrix();
+
+		BitMatrix<2*N> X_top = BitMatrix<N>::aug_h(idN, (idN + _Rx) * pk.getA.inv());
+		BitMatrix<2*N> X_bottom = BitMatrix<N>::aug_h(BitMatrix<N>::aug_h(BitMatrix<N>::zeroMatrix(N << 6), _ARxAi);
+		return BitMatrix<2*N>::aug_v(X_top, X_bottom) * _M.inv();
 	}
 
-	const BitMatrix<2*N> get_XOR_X() const{
-		//to be implemented
-		return BitMatrix<2*N>::randomInvertibleMatrix(N<<6);
+	const BitMatrix<2*N> get_XOR_Xy() const{
+		BitMatrix<N> idN = BitMatrix<N>::squareIdentityMatrix();
+
+		BitMatrix<2*N> X_top = BitMatrix<N>::aug_h(idN, (idN + _Ry) * pk.getA.inv());
+		BitMatrix<2*N> X_bottom = BitMatrix<N>::aug_h(BitMatrix<N>::zeroMatrix(N << 6), _ARyAi);
+		return BitMatrix<2*N>::aug_v(X_top, X_bottom) * _M.inv();
 	}
 
-	const BitMatrix<3*N> get_XOR_Y1() const{
-		//to be implemented
-		return BitMatrix<3*N>::randomInvertibleMatrix(N<<6);
-	}
-
-	const BitMatrix<3*N> get_XOR_Y2() const{
-		//to be implemented
-		return BitMatrix<3*N>::randomInvertibleMatrix(N<<6);
-	}
-
-	const BitMatrix<N> get_XOR_Z1() const{
-		//to be implemented
-		return BitMatrix<N>::randomInvertibleMatrix(N<<6);
-	}
-
-	const BitMatrix<N> get_XOR_Z2() const{
-		//to be implemented
-		return BitMatrix<N>::randomInvertibleMatrix(N<<6);
-	}
-
-	const BitMatrix<N> get_XOR_g1() const{
-		//to be implemented
-		return BitMatrix<N>::randomInvertibleMatrix(_dim_quad<<6);
-	}
-
-	const BitMatrix<N> get_XOR_g2() const{
-		//to be implemented
-		return BitMatrix<N>::randomInvertibleMatrix(_dim_quad<<6);
-	}
-
-/* AND */
-
-	const BitMatrix<2*N> get_AND_Xx() const{
-		//to be implemented
-		return BitMatrix<2*N>::randomInvertibleMatrix(N<<7);
-	}
-
-	const BitMatrix<2*N> get_AND_Xy() const{
-		//to be implemented
-		return BitMatrix<2*N>::randomInvertibleMatrix(N<<7);
-	}
-
-	const BitMatrix<3*N> get_AND_Y() const{
+	const BitMatrix<3*N> get_XOR_Y() const{
 		//to be implemented
 		return BitMatrix<3*N>::randomInvertibleMatrix(N<<7);
 	}
 
-	const BitMatrix<3*N> get_AND_g1() const{
+	const BitMatrix<3*N> get_XOR_g1() const{
 		//to be implemented
 		return BitMatrix<3*N>::randomInvertibleMatrix(_dim_quad<<6);
 	}
 
-	const BitMatrix<3*N> get_AND_g2() const{
+	const BitMatrix<3*N> get_XOR_g2() const{
 		//to be implemented
 		return BitMatrix<3*N>::randomInvertibleMatrix(_dim_quad<<6);
+	}
+
+
+/* AND */
+
+	const BitVector<2*N> get_AND_z() const{
+		//to be implemented
+		return BitVector<2*N>::randomVector();
+	}
+
+	const BitMatrix<2*N> get_AND_X() const{
+		//to be implemented
+		return BitMatrix<2*N>::randomInvertibleMatrix(N<<6);
+	}
+
+	const BitMatrix<3*N> get_AND_Y1() const{
+		//to be implemented
+		return BitMatrix<3*N>::randomInvertibleMatrix(N<<6);
+	}
+
+	const BitMatrix<3*N> get_AND_Y2() const{
+		//to be implemented
+		return BitMatrix<3*N>::randomInvertibleMatrix(N<<6);
+	}
+
+	const BitMatrix<N> get_AND_Z1() const{
+		//to be implemented
+		return BitMatrix<N>::randomInvertibleMatrix(N<<6);
+	}
+
+	const BitMatrix<N> get_AND_Z2() const{
+		//to be implemented
+		return BitMatrix<N>::randomInvertibleMatrix(N<<6);
+	}
+
+	const BitMatrix<N> get_AND_g1() const{
+		//to be implemented
+		return BitMatrix<N>::randomInvertibleMatrix(_dim_quad<<6);
+	}
+
+	const BitMatrix<N> get_AND_g2() const{
+		//to be implemented
+		return BitMatrix<N>::randomInvertibleMatrix(_dim_quad<<6);
 	}
 
 
 private:
 	BitMatrix<N> _R; //TODO: delegate the random matrix generation task to some other class?
+	BitMatrix<N> _Rx;
+	BitMatrix<N> _Ry;
+	BitMatrix<N> _M;
+	BitMatrix<N> _C1;
+	BitMatrix<N> _C2;
 	BitMatrix<N> _BKBi; 
 	BitMatrix<N> _BKBiAi;
 	BitMatrix<N> _ARAi;
+	BitMatrix<N> _ARxAi;
+	BitMatrix<N> _ARyAi;
 	PolynomialFunctionTupleChain<2*N,L> _g_u; //obsfucated chain for unary operations
 	PolynomialFunctionTupleChain<3*N,L> _g_b; //obsfucated chain for binary operations
 	int _dim_quad = 64; //dimension of bitmatrix used to represent quadratic poly's
-
-	// Computes matrix X used in the computation of Z
-	const BitMatrix<2*N> getX() const{
-		//to be implemented
-		return _R;
-	}
-
-	// Computes matrix Y used in the computation of Z
-	const BitMatrix<2*N> getY() const{
-		//to be implemented
-		return _R;
-	}
 };
 
 #endif
