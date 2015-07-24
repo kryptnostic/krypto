@@ -136,6 +136,7 @@ public:
     	secondOld ? set(firstIndex) : clear(firstIndex);
     }
 
+    //change to concatenating variable length vectors?
     static const BitVector<2*N> vcat2(BitVector<N> & v1, BitVector<N> & v2){
         BitVector<2*N> result;
         unsigned long long *b1 = v1.elements();
