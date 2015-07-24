@@ -15,6 +15,9 @@ class BridgeKey{
 public:
 	BridgeKey(PrivateKey<N,L> pk, BitMatrix<N> K) : 
 	_R(BitMatrix<N>::randomInvertibleMatrix(N<<6)),
+	_M(pk.getM()),
+	_C1(pk.getUnaryObfChain()[1]),
+	_C2(pk.getUnaryObfChain()[2]),
 	_BKBi(pk.getB() * K * pk.getB().inv()),
 	_BKBiAi(_BKBi * pk.getA().inv()),
 	_ARAi(pk.getA() * _R * pk.getA().inv())
@@ -24,8 +27,7 @@ public:
 /* Left Matrix Multiplication */
 
 	const BitMatrix<2*N> get_LMM_Z() const{
-		//to be implemented
-		return BitMatrix<N>::randomInvertibleMatrix(N<<7);
+		return BitMatrix<2*N>::aug_h(getX(), getY());
 	}
 
 	const BitMatrix<N> get_LMM_g1() const{
@@ -111,6 +113,9 @@ public:
 
 private:
 	BitMatrix<N> _R; //TODO: delegate the random matrix generation task to some other class?
+	BitMatrix<N> _M;
+	BitMatrix<N> _C1;
+	BitMatrix<N> _C2;
 	BitMatrix<N> _BKBi; 
 	BitMatrix<N> _BKBiAi;
 	BitMatrix<N> _ARAi;
@@ -120,14 +125,17 @@ private:
 
 	// Computes matrix X used in the computation of Z
 	const BitMatrix<2*N> getX() const{
-		//to be implemented
-		return _R;
+		BitMatrix<2*N> X_top = BitMatrix<N, N>::aug_h(_BKBi, _BKBiAi);
+		BitMatrix<2*N> X_bottom = BitMatrix<N, N>::aug_h(BitMatrix<N>::zeroMatrix(N), _ARAi);
+		return BitMatrix<2*N>::aug_v(X_top, X_bottom) * _M.inv();
 	}
 
 	// Computes matrix Y used in the computation of Z
 	const BitMatrix<2*N> getY() const{
-		//to be implemented
-		return _R;
+		BitMatrix<2*N> Y_top = BitMatrix<N, N>::aug_h(_BKBi, BitMatrix<N>::squareIdentityMatrix());
+		BitMatrix<N> zeroN = BitMatrix<N>::zeroMatrix(N);
+		BitMatrix<2*N> Y_bottom = BitMatrix<N, N>::aug_h(zeroN, zeroN);
+		return BitMatrix<2*N>::aug_v(X_top, X_bottom) * _C2.inv();
 	}
 };
 
