@@ -68,6 +68,7 @@ public:
 	}
 
 	const BitMatrix<2*N> get_XOR_Xy() const{
+		//untested!
 		BitMatrix<N> idN = BitMatrix<N>::squareIdentityMatrix();
 
 		BitMatrix<2*N> X_top = BitMatrix<N>::aug_h(idN, (idN + _Ry) * _pk.getA.inv());
@@ -76,8 +77,9 @@ public:
 	}
 
 	const BitMatrix<3*N> get_XOR_Y() const{
-		//to be implemented
-		return BitMatrix<3*N>::randomInvertibleMatrix(N<<7);
+		//untested
+		BitMatrix<3*N> Y_top = BitMatrix<N>::aug_h(idN, BitMatrix<N>::aug_h(idN, idN));
+		return BitMatrix<3*N>::aug_v(Y_top, BitMatrix<3*N>::zeroMatrix(N << 6)) * _C2.inv();
 	}
 
 	const BitMatrix<3*N> get_XOR_g1() const{
