@@ -136,24 +136,24 @@ public:
     	secondOld ? set(firstIndex) : clear(firstIndex);
     }
 
-    //change to concatenating variable length vectors?
-    static const BitVector<2*N> vcat2(BitVector<N> & v1, BitVector<N> & v2){
+    template <unsigned int N1, unsigned int N2>
+    static const BitVector<N1 + N2> vcat2(BitVector<N1> & v1, BitVector<N2> & v2){
         BitVector<2*N> result;
         unsigned long long *b1 = v1.elements();
         unsigned long long *b2 = v2.elements();
-        memcpy(result.elements(), b1, N*sizeof(unsigned long long));
-        memcpy(result.elements() + N, b2, N*sizeof(unsigned long long));
+        memcpy(result.elements(), b1, N1*sizeof(unsigned long long));
+        memcpy(result.elements() + N1, b2, N2*sizeof(unsigned long long));
         return result;
     }
-
-    static const BitVector<3*N> vcat3(BitVector<N> & v1, BitVector<N> & v2, BitVector<N> & v3){
+    template <unsigned int N1, unsigned int N2, unsigned int N3>
+    static const BitVector<N1 + N2 + N3> vcat3(BitVector<N1> & v1, BitVector<N2> & v2, BitVector<N3> & v3){
         BitVector<3*N> result;
         unsigned long long *b1 = v1.elements();
         unsigned long long *b2 = v2.elements();
         unsigned long long *b3 = v3.elements();
-        memcpy(result.elements(), b1, N*sizeof(unsigned long long));
-        memcpy(result.elements() + N, b2, N*sizeof(unsigned long long));
-        memcpy(result.elements() + 2*N, b3, N*sizeof(unsigned long long));
+        memcpy(result.elements(), b1, N1*sizeof(unsigned long long));
+        memcpy(result.elements() + N1, b2, N2*sizeof(unsigned long long));
+        memcpy(result.elements() + N1 + N2, b3, N3*sizeof(unsigned long long));
         return result;
     }
 
