@@ -78,6 +78,8 @@ public:
 
 	const BitMatrix<3*N> get_XOR_Y() const{
 		//untested
+		BitMatrix<N> idN = BitMatrix<N>::squareIdentityMatrix();
+		
 		BitMatrix<3*N> Y_top = BitMatrix<N>::aug_h(idN, BitMatrix<N>::aug_h(idN, idN));
 		return BitMatrix<3*N>::aug_v(Y_top, BitMatrix<3*N>::zeroMatrix(N << 6)) * _C2.inv();
 	}
