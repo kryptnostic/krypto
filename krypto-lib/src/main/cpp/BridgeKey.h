@@ -120,15 +120,15 @@ public:
 	const BitMatrix<2*N> get_AND_Z1() const{
 		//untested!
 		BitMatrix<2*N> M2 = _M.split_v(1, 2);
-		BitMatrix<2*N> top = _Rx * pk.getA().inv() * M2;
-		BitMatrix<2*N> bottom = pk.getA() * top;
+		BitMatrix<2*N> top = _Rx * _pk.getA().inv() * M2;
+		BitMatrix<2*N> bottom = _pk.getA() * top;
 		return BitMatrix<N>::aug_v(top, bottom);
 	}
 
 	const BitMatrix<N> get_AND_Z2() const{
-		/BitMatrix<2*N> M2 = _M.split_v(1, 2);
-		BitMatrix<2*N> top = _Ry * pk.getA().inv() * M2;
-		BitMatrix<2*N> bottom = pk.getA() * top;
+		BitMatrix<2*N> M2 = _M.split_v(1, 2);
+		BitMatrix<2*N> top = _Ry * _pk.getA().inv() * M2;
+		BitMatrix<2*N> bottom = _pk.getA() * top;
 		return BitMatrix<N>::aug_v(top, bottom);
 	}
 
