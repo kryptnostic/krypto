@@ -40,6 +40,20 @@ public:
 		return paddedContributions.tMult(t); 
 	}
 
+	/**
+	 * Fuctional tuple evaluation composed with left matrix multiplication
+	 * C, fC in F_2^{paddedMonomialCount \times numOutputBits}
+	 * Example usage:
+	 * MultivariateQuadraticFunctionTuple<2, 3> f = MultivariateQuadraticFunctionTuple<2, 3>::randomMultivariateQuadraticFunctionTuple();
+	 * BitMatrix<129> C = BitMatrix<129>::randomMatrix(129<<6);
+	 * Usage: MultivariateQuadraticFunctionTuple<2, 3> g = f(C);
+	 */
+	const MultivariateQuadraticFunctionTuple<NUM_INPUTS, NUM_OUTPUTS> operator()(BitMatrix<NUM_OUTPUTS> C){
+		BitMatrix<NUM_OUTPUTS> fC = BitMatrix<NUM_OUTPUTS>::randomMatrix(paddedMonomialCount); //TODO: implement section 3.2.1 in implementation.pdf
+		MultivariateQuadraticFunctionTuple<NUM_INPUTS, NUM_OUTPUTS> g(fC);
+		return g;
+	}
+
 private:
 	BitMatrix<NUM_OUTPUTS> _contributions;
 	static const bool needPadding = (NUM_INPUTS % 2 == 0);
