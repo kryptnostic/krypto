@@ -149,8 +149,8 @@ private:
 	//can be combined into get_z
 	const BitMatrix<2*N> get_AND_X() const{
 		//untested!
-		BitMatrix<2*N> inner = BitMatrix<2*N>::aug_h(BitMatrix<2*N>::squareIdentityMatrix(), pk.getA().inv());
-		return pk.getB().inv() * inner * _M.inv();
+		BitMatrix<2*N> inner = BitMatrix<2*N>::aug_h(BitMatrix<2*N>::squareIdentityMatrix(), _pk.getA().inv());
+		return _pk.getB().inv() * inner * _M.inv();
 	}
 
 	const BitMatrix<3*N> get_AND_Y1() const{
