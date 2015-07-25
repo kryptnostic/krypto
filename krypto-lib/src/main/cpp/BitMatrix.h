@@ -378,6 +378,23 @@ public:
 		return BitMatrix(rows);
 	}
 
+	//Splits a bitmatrix into den-many pieces vertically and returns the index-th submatrix (0 to den - 1)
+	//Assumes that den divides the row count
+	static const BitMatrix<COLS> split_v (int index, int den){
+		//untested!
+		assert(index >= 0 && index < den); //index not OB
+		int sub_rowCount = _rows.size() / den;
+		vector<BitVector<COLS>>::const_iterator first = myVec.begin() + index * sub_rowCount;
+		vector<BitVector<COLS>>::const_iterator last = myVec.begin() + (index + 1) * sub_rowCount;
+		vector<BitVector<COLS>> subv(first, last);
+		return BitMatrix(subv);
+
+		// vector<BitVector<COLS>> rows(t_rows + b_rows);
+		// rows.insert(rows.end(), top.begin(), top.end());
+		// rows.insert(rows.end(), bottom.begin(), bottom.end());
+		// return BitMatrix(rows);
+	}
+
 	/**
 	 * A should be invertible in this case. This can be ensured by inializing an inverible matrix.
 	 * Input: v; Output: A^-1*B;
