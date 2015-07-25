@@ -45,12 +45,40 @@ public:
 	 * C, fC in F_2^{paddedMonomialCount \times numOutputBits}
 	 * Example usage:
 	 * MultivariateQuadraticFunctionTuple<2, 3> f = MultivariateQuadraticFunctionTuple<2, 3>::randomMultivariateQuadraticFunctionTuple();
-	 * BitMatrix<129> C = BitMatrix<129>::randomMatrix(129<<6);
-	 * Usage: MultivariateQuadraticFunctionTuple<2, 3> g = f(C);
+	 * BitMatrix<2> C = BitMatrix<129>::randomMatrix(2<<6);
+	 * Usage: MultivariateQuadraticFunctionTuple<2, 3> g = f*C; //not using f(C) to avoid confusion with contribution matrix input variable
+	 * This means: g(x) = f(C(x))
 	 */
-	const MultivariateQuadraticFunctionTuple<NUM_INPUTS, NUM_OUTPUTS> operator()(BitMatrix<NUM_OUTPUTS> C){
-		BitMatrix<NUM_OUTPUTS> fC = BitMatrix<NUM_OUTPUTS>::randomMatrix(paddedMonomialCount); //TODO: implement section 3.2.1 in implementation.pdf
-		MultivariateQuadraticFunctionTuple<NUM_INPUTS, NUM_OUTPUTS> g(fC);
+	const MultivariateQuadraticFunctionTuple<NUM_INPUTS, NUM_OUTPUTS> operator*(const BitMatrix<NUM_INPUTS> & C) const{
+		const unsigned int NUM_MONOMIALS = paddedMonomialCount >> 6; //dimension for the matrix CC := \mathcal{C}
+		BitMatrix<NUM_MONOMIALS> CC_T = BitMatrix<NUM_MONOMIALS>::squareZeroMatrix(); 
+		//constructs the padded version of \mathcal{C}^T section 3.2.1 in implementation.pdf 
+		int count_i = 0;
+		for(int i = 0; i < numInputBits; ++i){
+			for(int ii = i; ii < numInputBits; ++ii){
+				int count_j = 0;
+				for(int j = 0; j < numInputBits; ++j){
+					for(int jj = j; jj < numInputBits; ++jj){
+						if(i == ii){
+							if(j == jj){
+								if(C.get(i, j)) CC_T.set(count_j, count_i); //C_{i,j}
+							} //else the bit is zero
+						} else {
+							if(j == jj){
+								if(C.get(i, j) & C.get(ii, j)) CC_T.set(count_j, count_i); //C_{i,j}*C_{ii,j}
+							} else {
+								if((C.get(i, j) & C.get(ii, jj)) ^ (C.get(i, jj) ^ C.get(ii, j)))CC_T.set(count_j, count_i); //(C_{i,j}*C_{ii,jj})+(C_{i,jj}*C_{ii,j})
+							}
+						}
+						++count_j;
+					}
+				}
+			}
+			++count_i;
+		}
+		BitMatrix<NUM_OUTPUTS> AA_T = getPaddedContribution(); //this is actually A^T
+		BitMatrix<NUM_OUTPUTS> AACC_T = CC_T*AA_T; //this should be (AC)^T = C^TA^T
+		MultivariateQuadraticFunctionTuple<NUM_INPUTS, NUM_OUTPUTS> g(CC_T*AA_T); //TODO:just to be careful, check the padding implementation again
 		return g;
 	}
 
