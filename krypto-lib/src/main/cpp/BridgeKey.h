@@ -32,7 +32,7 @@ public:
 /* Left Matrix Multiplication */
 
 	const BitMatrix<2*N> get_LMM_Z() const{
-		// untested!
+		//untested!
 		BitMatrix<N> zeroN = BitMatrix<N>::zeroMatrix(N << 6);
 
 		BitMatrix<2*N> X_top = BitMatrix<N>::aug_h(_BKBi, _BKBiAi);
@@ -77,9 +77,9 @@ public:
 	}
 
 	const BitMatrix<3*N> get_XOR_Y() const{
-		//untested
+		//untested!
 		BitMatrix<N> idN = BitMatrix<N>::squareIdentityMatrix();
-		
+
 		BitMatrix<3*N> Y_top = BitMatrix<N>::aug_h(idN, BitMatrix<N>::aug_h(idN, idN));
 		return BitMatrix<3*N>::aug_v(Y_top, BitMatrix<3*N>::zeroMatrix(N << 6)) * _C2.inv();
 	}
@@ -102,29 +102,19 @@ public:
 		return BitVector<2*N>::randomVector();
 	}
 
-	const BitMatrix<2*N> get_AND_X() const{
-		//to be implemented
-		return BitMatrix<2*N>::randomInvertibleMatrix(N<<6);
-	}
-
-	const BitMatrix<3*N> get_AND_Y1() const{
-		//to be implemented
-		return BitMatrix<3*N>::randomInvertibleMatrix(N<<6);
-	}
-
-	const BitMatrix<3*N> get_AND_Y2() const{
-		//to be implemented
-		return BitMatrix<3*N>::randomInvertibleMatrix(N<<6);
-	}
-
-	const BitMatrix<N> get_AND_Z1() const{
-		//to be implemented
-		return BitMatrix<N>::randomInvertibleMatrix(N<<6);
+	const BitMatrix<2*N> get_AND_Z1() const{
+		//untested!
+		BitMatrix<2*N> M2 = _M.split_v(1, 2);
+		BitMatrix<2*N> top = _Rx * _pk.getA().inv() * M2;
+		BitMatrix<2*N> bottom = _pk.getA() * top;
+		return BitMatrix<N>::aug_v(top, bottom);
 	}
 
 	const BitMatrix<N> get_AND_Z2() const{
-		//to be implemented
-		return BitMatrix<N>::randomInvertibleMatrix(N<<6);
+		BitMatrix<2*N> M2 = _M.split_v(1, 2);
+		BitMatrix<2*N> top = _Ry * _pk.getA().inv() * M2;
+		BitMatrix<2*N> bottom = _pk.getA() * top;
+		return BitMatrix<N>::aug_v(top, bottom);
 	}
 
 	const BitMatrix<N> get_AND_g1() const{
@@ -154,6 +144,24 @@ private:
 	PolynomialFunctionTupleChain<2*N,L> _g_u; //obsfucated chain for unary operations
 	PolynomialFunctionTupleChain<3*N,L> _g_b; //obsfucated chain for binary operations
 	int _dim_quad = 64; //dimension of bitmatrix used to represent quadratic poly's
+
+
+	//can be combined into get_z
+	const BitMatrix<2*N> get_AND_X() const{
+		//untested!
+		BitMatrix<2*N> inner = BitMatrix<2*N>::aug_h(BitMatrix<2*N>::squareIdentityMatrix(), pk.getA().inv());
+		return pk.getB().inv() * inner * _M.inv();
+	}
+
+	const BitMatrix<3*N> get_AND_Y1() const{
+		//to be implemented
+		return BitMatrix<3*N>::randomInvertibleMatrix(N<<6);
+	}
+
+	const BitMatrix<3*N> get_AND_Y2() const{
+		//to be implemented
+		return BitMatrix<3*N>::randomInvertibleMatrix(N<<6);
+	}
 };
 
 #endif
