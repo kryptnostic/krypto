@@ -12,6 +12,7 @@
 #include <vector>
 #include <fstream>
 #include "../../main/cpp/BitVector.h"
+//#include "MultivariateQuadraticFunctionTuple.h"
 #include "../../../contrib/gtest/gtest.h"
 
 using namespace std;
@@ -141,6 +142,27 @@ public:
 		return result;
 	}
 
+	template<unsigned int ROWS>
+	const BitMatrix<ROWS> T() const{
+		assert(_rows.size() == ROWS << 6);
+		BitMatrix<ROWS> Mt = BitMatrix<ROWS>::zeroMatrix(COLS << 6);
+		int numRows = rowCount();
+		int numCols = colCount();
+		for(int i = 0; i < numRows; ++i){
+			for(int j = 0; j < numCols; ++j){
+				if(get(i, j)) Mt.set(j, i);
+			}
+		}
+		return Mt;
+	}
+/*wait for aug_v/h to be fixed
+	template<unsigned int NUM_INPUTS>
+	const MultivariateQuadraticFunctionTuple<NUM_INPUTS, COLS> operator*(const MultivariateQuadraticFunctionTuple<NUM_INPUTS, COLS> & f) const{
+		BitMatrix<COLS> Cf = f.getPaddedContribution() * T();
+		MultivariateQuadraticFunctionTuple<NUM_INPUTS, COLS> g(Cf);
+		return g;
+	}
+*/
 	/*
 	//A in F_2^{m * n}, v in F_2^n; so A*v in F_2^m
 	To include in the next version
@@ -415,6 +437,9 @@ public:
 		return C;
 	}*/
 
+
+
+
 	/* Functions below will be shifted to the private section after tested */
 
 	/***Acecss/Modify individual cols/rows***/
@@ -507,7 +532,6 @@ private:
 		_rows[firstIndex] = _rows[secondIndex];
 		_rows[secondIndex] = tmp;
 	}	
-
 
 
 	//adapted from: https://www.cs.umd.edu/~gasarch/TOPICS/factoring/fastgauss.pdf
