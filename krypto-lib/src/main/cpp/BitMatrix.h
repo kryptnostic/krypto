@@ -378,21 +378,30 @@ public:
 		return BitMatrix(rows);
 	}
 
+	//Splits a bitmatrix into den-many pieces horizontally and returns the index-th submatrix (0 to den - 1)
+	//Assumes that den divides the row count
+	const BitMatrix<COLS> split_h (int index, int den){
+		//untested!
+		assert(index >= 0 && index < den); //index not OB
+		const int sub_colCount = COLS / den;
+		vector<BitVector<COLS>> new_rows(this);
+		for(int i = 0; i < rowCount(); ++i){
+			BitVector<sub_colCount> new_vector(_rows[i]);
+			new_rows[i] = new_vector;
+		}
+		return BitMatrix(new_rows);
+	}
+
 	//Splits a bitmatrix into den-many pieces vertically and returns the index-th submatrix (0 to den - 1)
 	//Assumes that den divides the row count
 	const BitMatrix<COLS> split_v (int index, int den){
 		//untested!
 		assert(index >= 0 && index < den); //index not OB
-		int sub_rowCount = _rows.size() / den;
+		const int sub_rowCount = _rows.size() / den;
 		const BitVector<COLS> first = _rows.begin() + index * sub_rowCount;
 		const BitVector<COLS> last = _rows.begin() + (index + 1) * sub_rowCount;
-		vector<BitVector<COLS>> subv(first, last);
-		return BitMatrix(subv);
-
-		// vector<BitVector<COLS>> rows(t_rows + b_rows);
-		// rows.insert(rows.end(), top.begin(), top.end());
-		// rows.insert(rows.end(), bottom.begin(), bottom.end());
-		// return BitMatrix(rows);
+		vector<BitVector<COLS>> sub_rows(first, last);
+		return BitMatrix(sub_rows);
 	}
 
 	/**
