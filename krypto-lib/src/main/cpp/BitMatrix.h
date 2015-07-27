@@ -403,20 +403,20 @@ public:
 
 	//Splits a bitmatrix into den-many pieces horizontally and returns the index-th submatrix (0 to den - 1)
 	//Assumes that den divides the row count
-	const BitMatrix<COLS / 2> split_h (int index, int den){
-		//untested!
-		//need to figure out template to return COLS / den
-		
-		//assert(index >= 0 && index < den); //index not OB
+	//assume den == 2
+	const BitMatrix<COLS/2> split_h (int index){
+		assert(index >= 0 && index < 2); //index not OB
 		//const int sub_colCount = COLS / den;
-		const int sub_colCount = COLS / 2;
-		vector<BitVector<sub_colCount>> new_rows;
+		const int SUBCOLS = COLS / 2;
+		BitMatrix<SUBCOLS> result = BitMatrix<SUBCOLS>::squareZeroMatrix();
+		int numRows = rowCount();
 		for(int i = 0; i < rowCount(); ++i){
+
 			//BitVector<sub_colCount> new_vector(_rows[i]);
 
-			BitVector<COLS / 2>::vcopy(new_rows[i], _rows[i]);
+			BitVector<SUBCOLS>::vcopy(new_rows[i], _rows[i]);
 		}
-		return BitMatrix<COLS / 2>(new_rows);
+		//return BitMatrix<sub_colCount>(new_rows);
 	}
 
 	// const BitMatrix<COLS / den> split_h (int index, int den){
@@ -434,10 +434,13 @@ public:
 
 	//Splits a bitmatrix into den-many pieces vertically and returns the index-th submatrix (0 to den - 1)
 	//Assumes that den divides the row count
-	const BitMatrix<COLS> split_v (int index, int den){
+	//assume den = 2 for now, template later
+	const BitMatrix<COLS> split_v (int index){
 		//untested!
-		assert(index >= 0 && index < den); //index not OB
-		const int sub_rowCount = _rows.size() / den;
+		//assert(index >= 0 && index < den); //index not OB
+		assert(index >= 0 && index < 2);
+		//const int sub_rowCount = _rows.size() / den;
+		const int sub_rowCount = _rows.size() / 2;
 		const typename vector<BitVector<COLS>>::iterator first = _rows.begin() + index * sub_rowCount;
 		const typename vector<BitVector<COLS>>::iterator last = _rows.begin() + (index + 1) * sub_rowCount;
 		vector<BitVector<COLS>> sub_rows(first, last);
@@ -463,16 +466,6 @@ public:
 		}	
 		return C;
 	}*/
-
-	/***Acecss/Modify individual cols/rows***/
-	template <unsigned int ROWS>
-	void setCol(int colIndex, BitVector<ROWS> v){
-		assert(colIndex >= 0 && colIndex < colCount());
-		int numRows = ROWS << 6;
-		for(int i = 0; i < numRows; ++i){
-			v[i] ? set(i, colIndex) : clear(i, colIndex);
-		}
-	}
 
 	/* Functions below will be shifted to the private section after tested */
 
@@ -534,6 +527,15 @@ private:
 	void setRow(int rowIndex, BitVector<COLS> v){ 
 		assert(rowIndex >= 0 && rowIndex < rowCount());
 		_rows[rowIndex] = v;
+	}
+
+	template <unsigned int ROWS>
+	void setCol(int colIndex, BitVector<ROWS> v){
+		assert(colIndex >= 0 && colIndex < colCount());
+		int numRows = ROWS << 6;
+		for(int i = 0; i < numRows; ++i){
+			v[i] ? set(i, colIndex) : clear(i, colIndex);
+		}
 	}
 
 	//clears all the entries 
