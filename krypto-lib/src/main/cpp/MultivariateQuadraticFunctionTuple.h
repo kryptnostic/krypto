@@ -49,7 +49,7 @@ public:
 	 * Usage: MultivariateQuadraticFunctionTuple<2, 3> g = f*C; //not using f(C) to avoid confusion with contribution matrix input variable
 	 * This means: g(x) = f(C(x))
 	 */
-	const MultivariateQuadraticFunctionTuple<NUM_INPUTS, NUM_OUTPUTS> operator*(const BitMatrix<NUM_INPUTS> & C) const{
+	const MultivariateQuadraticFunctionTuple<NUM_INPUTS, NUM_OUTPUTS> operator*(const BitMatrix<NUM_OUTPUTS> & C) const{
 		const unsigned int NUM_MONOMIALS = paddedMonomialCount >> 6; //dimension for the matrix CC := \mathcal{C}
 		BitMatrix<NUM_MONOMIALS> CC_T = BitMatrix<NUM_MONOMIALS>::squareZeroMatrix(); 
 		//Warning: Untested!
@@ -81,6 +81,19 @@ public:
 		BitMatrix<NUM_OUTPUTS> AACC_T = CC_T*AA_T; //this should be (AC)^T = C^TA^T
 		MultivariateQuadraticFunctionTuple<NUM_INPUTS, NUM_OUTPUTS> g(CC_T*AA_T); //TODO:just to be careful, check the padding implementation again
 		return g;
+	}
+
+	/**
+	 * Composition from the right, TODO: make this more user intuitive
+	 * f.rMult(C) := Cf(*)
+	 * //TODO: TEST!
+	 */
+	const MultivariateQuadraticFunctionTuple<NUM_INPUTS, NUM_OUTPUTS> rMult(const BitMatrix<NUM_OUTPUTS> & C) {
+		int numCols = C.colCount();
+		assert(NUM_OUTPUTS << 6 == numCols);
+		BitMatrix<NUM_OUTPUTS> Cf = C.T() * getPaddedContribution();
+		MultivariateQuadraticFunctionTuple<NUM_INPUTS, NUM_OUTPUTS> g(Cf);
+		return g;                     
 	}
 
 	/**
