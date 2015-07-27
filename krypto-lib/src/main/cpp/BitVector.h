@@ -136,6 +136,16 @@ public:
     	secondOld ? set(firstIndex) : clear(firstIndex);
     }
 
+    //Returns a subvector
+    //doesn't work, need some implementation
+    // BitVector<len> subv(unsigned int len){
+    //     BitVector<len> new_bits;
+    //     for (unsigned int i = 0; i < len; ++i) {
+    //         new_bits[i] = _bits[i];
+    //     }
+    //     return new_bits;
+    // }
+
     template <unsigned int N1, unsigned int N2>
     static const BitVector<N1 + N2> vcat2(BitVector<N1> & v1, BitVector<N2> & v2){
         BitVector<2*N> result;
@@ -145,6 +155,7 @@ public:
         memcpy(result.elements() + N1, b2, N2*sizeof(unsigned long long));
         return result;
     }
+
     template <unsigned int N1, unsigned int N2, unsigned int N3>
     static const BitVector<N1 + N2 + N3> vcat3(BitVector<N1> & v1, BitVector<N2> & v2, BitVector<N3> & v3){
         BitVector<3*N> result;

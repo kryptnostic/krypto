@@ -100,3 +100,19 @@ TEST(BitMatrixTests, testIdentity){
 	BitMatrix<N> I = BitMatrix<N>::squareIdentityMatrix();
 	ASSERT_TRUE(I.rref().isIdentity());
 }
+
+TEST(BitMatrixTests, testSplit) {
+	BitMatrix<2*N> I = BitMatrix<2*N>::squareIdentityMatrix();
+	BitMatrix<2*N> Il = I.split_v(1, 2);
+	BitMatrix<N> Ir = Il.split_h(1, 2);
+	ASSERT_TRUE(Ir.isIdentity());
+}
+
+// TEST(BitMatrixTests, testAugH) {
+// 	BitMatrix<N> I = BitMatrix<N>::squareIdentityMatrix();
+// 	BitMatrix<N> Z = BitMatrix<N>::squareIdentityMatrix();
+// 	BitMatrix<2*N> IZ = BitMatrix<2N>::aug_h(I, Z);
+// 	vector<BitVector<2*N>> IZ_rows();
+// 	BitMatrix <2*N> IZ_manual(IZ_rows);
+// 	ASSERT_TRUE(true);
+// }
