@@ -52,6 +52,7 @@ public:
 	const MultivariateQuadraticFunctionTuple<NUM_INPUTS, NUM_OUTPUTS> operator*(const BitMatrix<NUM_INPUTS> & C) const{
 		const unsigned int NUM_MONOMIALS = paddedMonomialCount >> 6; //dimension for the matrix CC := \mathcal{C}
 		BitMatrix<NUM_MONOMIALS> CC_T = BitMatrix<NUM_MONOMIALS>::squareZeroMatrix(); 
+		//Warning: Untested!
 		//constructs the padded version of \mathcal{C}^T section 3.2.1 in implementation.pdf 
 		int count_i = 0;
 		for(int i = 0; i < numInputBits; ++i){
@@ -80,6 +81,23 @@ public:
 		BitMatrix<NUM_OUTPUTS> AACC_T = CC_T*AA_T; //this should be (AC)^T = C^TA^T
 		MultivariateQuadraticFunctionTuple<NUM_INPUTS, NUM_OUTPUTS> g(CC_T*AA_T); //TODO:just to be careful, check the padding implementation again
 		return g;
+	}
+
+	/**
+	 * Vertically concatenates 2 function tuples
+	 * MultivariateQuadraticFunctionTuple<1,1> f1 = MultivariateQuadraticFunctionTuple<1,1>::randomMultivariateQuadraticFunctionTuple();
+	 * MultivariateQuadraticFunctionTuple<1,2> f2 = MultivariateQuadraticFunctionTuple<1,1>::randomMultivariateQuadraticFunctionTuple();
+	 * MultivariateQuadraticFunctionTuple<1,3> f = aug_v(f1,f2);
+	 */
+	template<unsigned int NUM_OUTPUTS1, unsigned int NUM_OUTPUTS2>
+	static const MultivariateQuadraticFunctionTuple<NUM_INPUTS, NUM_OUTPUTS1+NUM_OUTPUTS2> aug_v
+	(const MultivariateQuadraticFunctionTuple<NUM_INPUTS, NUM_OUTPUTS1> & f1, const MultivariateQuadraticFunctionTuple<NUM_INPUTS, NUM_OUTPUTS2> & f2){
+		BitMatrix<NUM_OUTPUTS1> C1 = f1.getPaddedContribution();
+		BitMatrix<NUM_OUTPUTS2> C2 = f2.getPaddedContribution();
+		const int NUM_OUTPUTS_SUM = NUM_OUTPUTS1 + NUM_OUTPUTS2;
+		BitMatrix<NUM_OUTPUTS_SUM> C = BitMatrix<NUM_OUTPUTS_SUM>::aug_h(C1, C2);
+		MultivariateQuadraticFunctionTuple<NUM_INPUTS, NUM_OUTPUTS_SUM> f(C);
+		return f;
 	}
 
 private:
