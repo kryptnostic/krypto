@@ -96,6 +96,11 @@ public:
 		return rref().getRightBottomCorner();
 	} 
 
+	const BitVector<COLS> & getRow(const int rowIndex) const{
+		assert(rowIndex >= 0 && rowIndex < rowCount()); //"rowIndex out of bound!"
+		return _rows[rowIndex];
+	}
+
 	bool get(int rowIndex, int colIndex) const{ 
 		assert(rowIndex >= 0 && rowIndex < rowCount()); //"rowIndex out of bound!"
 		assert(colIndex >= 0 && colIndex < colCount()); //"colIndex out of bound!"
@@ -142,10 +147,10 @@ public:
 		return result;
 	}
 
+	//NEED TO TEST THIS!
 	template<unsigned int ROWS>
 	const BitMatrix<ROWS> T() const{
 		assert(_rows.size() == ROWS << 6);
-		cout << "AFASd" << endl;
 		BitMatrix<ROWS> Mt = BitMatrix<ROWS>::zeroMatrix(COLS << 6);
 		int numRows = rowCount();
 		int numCols = colCount();
@@ -404,19 +409,16 @@ public:
 	//Splits a bitmatrix into den-many pieces horizontally and returns the index-th submatrix (0 to den - 1)
 	//Assumes that den divides the row count
 	//assume den == 2
-	const BitMatrix<COLS/2> split_h (int index){
+	const BitMatrix<COLS/2> split_h_2(int index) const{
 		assert(index >= 0 && index < 2); //index not OB
-		//const int sub_colCount = COLS / den;
 		const int SUBCOLS = COLS / 2;
-		BitMatrix<SUBCOLS> result = BitMatrix<SUBCOLS>::squareZeroMatrix();
 		int numRows = rowCount();
+		BitMatrix<SUBCOLS> result = BitMatrix<SUBCOLS>::zeroMatrix(numRows);//squareZeroMatrix();
 		for(int i = 0; i < rowCount(); ++i){
-
-			//BitVector<sub_colCount> new_vector(_rows[i]);
-
-			BitVector<SUBCOLS>::vcopy(new_rows[i], _rows[i]);
+			BitVector<SUBCOLS> sv = getRow(i).proj2(index);
+			result.setRow(i, sv);
 		}
-		//return BitMatrix<sub_colCount>(new_rows);
+		return result;
 	}
 
 	// const BitMatrix<COLS / den> split_h (int index, int den){
@@ -515,14 +517,6 @@ public:
 		ofs.close();
 	}
 
-private:
-	vector<BitVector<COLS>> _rows;
-	//static const _rowCount = _rows.size(); (check if it is possible to do so)
-	//static const _colCount = COLS << 6; (check if it is possible to do so)
-	bool getRightBottomCorner() const{
-		return get(rowCount()-1, colCount()-1);
-	}
-
 	/***Acecss/Modify individual cols/rows***/
 	void setRow(int rowIndex, BitVector<COLS> v){ 
 		assert(rowIndex >= 0 && rowIndex < rowCount());
@@ -536,6 +530,14 @@ private:
 		for(int i = 0; i < numRows; ++i){
 			v[i] ? set(i, colIndex) : clear(i, colIndex);
 		}
+	}
+
+private:
+	vector<BitVector<COLS>> _rows;
+	//static const _rowCount = _rows.size(); (check if it is possible to do so)
+	//static const _colCount = COLS << 6; (check if it is possible to do so)
+	bool getRightBottomCorner() const{
+		return get(rowCount()-1, colCount()-1);
 	}
 
 	//clears all the entries 
