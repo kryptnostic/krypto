@@ -103,9 +103,21 @@ TEST(BitMatrixTests, testIdentity){
 
 TEST(BitMatrixTests, testSplit) {
 	BitMatrix<2*N> I = BitMatrix<2*N>::squareIdentityMatrix();
-	BitMatrix<2*N> Il = I.split_v(1, 2);
-	BitMatrix<N> Ir = Il.split_h(1, 2);
-	ASSERT_TRUE(Ir.isIdentity());
+	BitMatrix<N> I1 = I.split_h_2(0); 
+	BitMatrix<N> I2 = I.split_h_2(1);
+	BitMatrix<N> I11 = I1.split_v_2(0);
+	BitMatrix<N> I12 = I1.split_v_2(1);
+	BitMatrix<N> I21 = I2.split_v_2(0);
+	BitMatrix<N> I22 = I2.split_v_2(1);
+	ASSERT_TRUE(I11.isIdentity());
+	ASSERT_FALSE(I12.isIdentity());
+	ASSERT_FALSE(I21.isIdentity());
+	ASSERT_TRUE(I22.isIdentity());
+
+	BitMatrix<3*N> J = BitMatrix<3*N>::squareIdentityMatrix();
+	BitMatrix<N> J1 = J.split_h_3(0);
+	BitMatrix<N> J11 = J1.split_v_3(0);
+	ASSERT_TRUE(J11.isIdentity());
 }
 
 // TEST(BitMatrixTests, testAugH) {

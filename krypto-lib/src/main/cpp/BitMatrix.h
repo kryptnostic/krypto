@@ -408,7 +408,7 @@ public:
 
 	//Splits a bitmatrix into den-many pieces horizontally and returns the index-th submatrix (0 to den - 1)
 	//Assumes that den divides the row count
-	//assume den == 2
+	//TODO: unify 2 functions below if needed
 	const BitMatrix<COLS/2> split_h_2(int index) const{
 		assert(index >= 0 && index < 2); //index not OB
 		const int SUBCOLS = COLS / 2;
@@ -421,32 +421,43 @@ public:
 		return result;
 	}
 
-	// const BitMatrix<COLS / den> split_h (int index, int den){
-	// 	//untested!
-	// 	assert(index >= 0 && index < den); //index not OB
-	// 	const int sub_colCount = COLS / den;
-	// 	vector<BitVector<sub_colCount>> new_rows;
-	// 	for(int i = 0; i < rowCount(); ++i){
-	// 		BitVector<sub_colCount> new_vector(_rows[i]);
-	//
-	// 		new_rows[i] = _rows[i].subv(COLS / den);
-	// 	}
-	// 	return BitMatrix(new_rows);
-	// }
+	const BitMatrix<COLS/3> split_h_3(int index) const{
+		assert(index >= 0 && index < 3); //index not OB
+		const int SUBCOLS = COLS / 3;
+		int numRows = rowCount();
+		BitMatrix<SUBCOLS> result = BitMatrix<SUBCOLS>::zeroMatrix(numRows);//squareZeroMatrix();
+		for(int i = 0; i < rowCount(); ++i){
+			BitVector<SUBCOLS> sv = getRow(i).proj3(index);
+			result.setRow(i, sv);
+		}
+		return result;
+	}
+
+
 
 	//Splits a bitmatrix into den-many pieces vertically and returns the index-th submatrix (0 to den - 1)
 	//Assumes that den divides the row count
-	//assume den = 2 for now, template later
-	const BitMatrix<COLS> split_v (int index){
-		//untested!
-		//assert(index >= 0 && index < den); //index not OB
+	//TODO: unify 2 functions below if needed
+	const BitMatrix<COLS> split_v_2 (int index) const{
 		assert(index >= 0 && index < 2);
-		//const int sub_rowCount = _rows.size() / den;
 		const int sub_rowCount = _rows.size() / 2;
-		const typename vector<BitVector<COLS>>::iterator first = _rows.begin() + index * sub_rowCount;
-		const typename vector<BitVector<COLS>>::iterator last = _rows.begin() + (index + 1) * sub_rowCount;
-		vector<BitVector<COLS>> sub_rows(first, last);
-		return BitMatrix(sub_rows);
+		BitMatrix<COLS> result = BitMatrix<COLS>::zeroMatrix(sub_rowCount);
+		int start = index * sub_rowCount;
+		for(int i = 0; i < sub_rowCount; ++i){
+			result.setRow(i, getRow(i+start));
+		}
+		return result;
+	}
+
+	const BitMatrix<COLS> split_v_3 (int index) const{
+		assert(index >= 0 && index < 3);
+		const int sub_rowCount = _rows.size() / 3;
+		BitMatrix<COLS> result = BitMatrix<COLS>::zeroMatrix(sub_rowCount);
+		int start = index * sub_rowCount;
+		for(int i = 0; i < sub_rowCount; ++i){
+			result.setRow(i, getRow(i+start));
+		}
+		return result;
 	}
 
 	/**
