@@ -145,6 +145,7 @@ public:
 	template<unsigned int ROWS>
 	const BitMatrix<ROWS> T() const{
 		assert(_rows.size() == ROWS << 6);
+		cout << "AFASd" << endl;
 		BitMatrix<ROWS> Mt = BitMatrix<ROWS>::zeroMatrix(COLS << 6);
 		int numRows = rowCount();
 		int numCols = colCount();
@@ -446,20 +447,17 @@ public:
 		return C;
 	}*/
 
-
-
-
-	/* Functions below will be shifted to the private section after tested */
-
 	/***Acecss/Modify individual cols/rows***/
-	//TODO: enable COLS to be the variable numRows(), for now, it is just COLS to be able to executed by the compiler
-	void setCol(int colIndex, BitVector<COLS> v){ 
+	template <unsigned int ROWS>
+	void setCol(int colIndex, BitVector<ROWS> v){
 		assert(colIndex >= 0 && colIndex < colCount());
-		int numRows = COLS << 6;//rowCount();
+		int numRows = ROWS << 6;
 		for(int i = 0; i < numRows; ++i){
 			v[i] ? set(i, colIndex) : clear(i, colIndex);
 		}
 	}
+
+	/* Functions below will be shifted to the private section after tested */
 
 	/***File/terminal input/output***/
 
