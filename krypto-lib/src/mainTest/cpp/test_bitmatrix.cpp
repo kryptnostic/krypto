@@ -101,12 +101,12 @@ TEST(BitMatrixTests, testIdentity){
 	ASSERT_TRUE(I.rref().isIdentity());
 }
 
-TEST(BitMatrixTests, testSplit) {
-	BitMatrix<2*N> I = BitMatrix<2*N>::squareIdentityMatrix();
-	BitMatrix<2*N> Il = I.split_v(1, 2);
-	BitMatrix<N> Ir = Il.split_h(1, 2);
-	ASSERT_TRUE(Ir.isIdentity());
-}
+// TEST(BitMatrixTests, testSplit) {
+// 	BitMatrix<2*N> I = BitMatrix<2*N>::squareIdentityMatrix();
+// 	BitMatrix<2*N> Il = I.split_v(1, 2);
+// 	BitMatrix<N> Ir = Il.split_h(1, 2);
+// 	ASSERT_TRUE(Ir.isIdentity());
+// }
 
 // TEST(BitMatrixTests, testAugH) {
 // 	BitMatrix<N> I = BitMatrix<N>::squareIdentityMatrix();

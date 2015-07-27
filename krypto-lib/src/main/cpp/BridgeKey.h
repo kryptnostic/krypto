@@ -19,8 +19,10 @@ public:
 	_Rx(BitMatrix<N>::randomInvertibleMatrix(N<<6)),
 	_Ry(BitMatrix<N>::randomInvertibleMatrix(N<<6)),
 	_M(pk.getM()),
-	_C1(pk.getUnaryObfChain()[1]),
-	_C2(pk.getUnaryObfChain()[2]),
+	_Cu1(pk.getUnaryObfChain()[1]),
+	_Cu2(pk.getUnaryObfChain()[2]),
+	_Cb1(pk.getBinaryObfChain()[1]),
+	_Cb2(pk.getBinaryObfChain()[2]),
 	_BKBi(pk.getB() * K * pk.getB().inv()),
 	_BKBiAi(_BKBi * pk.getA().inv()),
 	_ARAi(pk.getA() * _R * pk.getA().inv()),
@@ -41,7 +43,7 @@ public:
 
 		BitMatrix<2*N> Y_top = BitMatrix<N>::aug_h(_BKBi, BitMatrix<N>::squareIdentityMatrix());
 		BitMatrix<2*N> Y_bottom = BitMatrix<N>::aug_h(zeroN, zeroN);
-		BitMatrix<2*N> Y = BitMatrix<2*N>::aug_v(X_top, X_bottom) * _C2.inv();
+		BitMatrix<2*N> Y = BitMatrix<2*N>::aug_v(X_top, X_bottom) * _Cu2.inv();
 		return BitMatrix<2*N>::aug_h(X, Y);
 	}
 
@@ -81,7 +83,7 @@ public:
 		BitMatrix<N> idN = BitMatrix<N>::squareIdentityMatrix();
 
 		BitMatrix<3*N> Y_top = BitMatrix<N>::aug_h(idN, BitMatrix<N>::aug_h(idN, idN));
-		return BitMatrix<3*N>::aug_v(Y_top, BitMatrix<3*N>::zeroMatrix(N << 6)) * _C2.inv();
+		return BitMatrix<3*N>::aug_v(Y_top, BitMatrix<3*N>::zeroMatrix(N << 6)) * _Cu2.inv();
 	}
 
 	const BitMatrix<3*N> get_XOR_g1() const{
@@ -134,8 +136,10 @@ private:
 	BitMatrix<N> _Rx;
 	BitMatrix<N> _Ry;
 	BitMatrix<N> _M;
-	BitMatrix<N> _C1;
-	BitMatrix<N> _C2;
+	BitMatrix<2*N> _Cu1;
+	BitMatrix<2*N> _Cu2;
+	BitMatrix<3*N> _Cb1;
+	BitMatrix<3*N> _Cb2;
 	BitMatrix<N> _BKBi; 
 	BitMatrix<N> _BKBiAi;
 	BitMatrix<N> _ARAi;
@@ -154,13 +158,18 @@ private:
 	}
 
 	const BitMatrix<3*N> get_AND_Y1() const{
-		//to be implemented
-		return BitMatrix<3*N>::randomInvertibleMatrix(N<<6);
+		//untested!
+		BitMatrix<3*N> Cb_top = _Cb1.inv().split_v(1, 3);
+		return _pk.getB() * Cb_top;
 	}
 
 	const BitMatrix<3*N> get_AND_Y2() const{
-		//to be implemented
-		return BitMatrix<3*N>::randomInvertibleMatrix(N<<6);
+		BitMatrix<3*N> Cb_middle = _Cb1.inv().split_v(2, 3);
+		return _pk.getB() * Cb_middle;
+	}
+
+		const BitMatrix<3*N> get_AND_Y3() const{
+		return _Cb1.inv().split_v(3, 3);
 	}
 };
 
