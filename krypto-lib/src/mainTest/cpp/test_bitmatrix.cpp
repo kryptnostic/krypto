@@ -119,12 +119,4 @@ TEST(BitMatrixTests, testSplit) {
 	BitMatrix<N> J11 = J1.split_v_3(0);
 	ASSERT_TRUE(J11.isIdentity());
 }
-
-// TEST(BitMatrixTests, testAugH) {
-// 	BitMatrix<N> I = BitMatrix<N>::squareIdentityMatrix();
-// 	BitMatrix<N> Z = BitMatrix<N>::squareIdentityMatrix();
-// 	BitMatrix<2*N> IZ = BitMatrix<2N>::aug_h(I, Z);
-// 	vector<BitVector<2*N>> IZ_rows();
-// 	BitMatrix <2*N> IZ_manual(IZ_rows);
-// 	ASSERT_TRUE(true);
 // }
