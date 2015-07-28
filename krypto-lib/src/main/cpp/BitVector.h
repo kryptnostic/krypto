@@ -278,6 +278,7 @@ public:
     }
 private:
 	unsigned long long _bits[N];
+    //define some const N << 6?
 };
 
 
