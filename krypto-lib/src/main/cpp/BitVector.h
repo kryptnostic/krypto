@@ -39,7 +39,7 @@ public:
         }
     }
     
-	unsigned long long * elements() {
+	unsigned long long * elements() /*const*/ {
 		return _bits;
 	}
     
@@ -141,17 +141,8 @@ public:
         set(firstIndex, secondOld);
     }
 
-    //Returns a subvector
-    //doesn't work, need some implementation
-    // BitVector<len> subv(unsigned int len){
-    //     BitVector<len> new_bits;
-    //     for (unsigned int i = 0; i < len; ++i) {
-    //         new_bits[i] = _bits[i];
-    //     }
-    //     return new_bits;
-    // }
-
     template <unsigned int N1, unsigned int N2>
+    //static const BitVector<N1 + N2> vcat2(const BitVector<N1> & v1, const BitVector<N2> & v2){
     static const BitVector<N1 + N2> vcat2(BitVector<N1> & v1, BitVector<N2> & v2){
         const int N_SUM = N1 + N2;
         BitVector<N_SUM> result;
@@ -244,9 +235,7 @@ public:
     
     template<unsigned int M>
     const bool operator!=(const BitVector<M> & rhs) {
-        if (N != M) {
-            return true;
-        }
+        if (N != M) return true;
         for (unsigned int i = 0; i < N; ++i) {
             if (_bits[i] != rhs._bits[i]) {
                 return true;

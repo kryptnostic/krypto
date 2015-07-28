@@ -293,7 +293,6 @@ public:
 	//Finding the inverse of A if possible, and if not, reflect that in the invertible variable
 	const BitMatrix<COLS> inv(bool & invertible) const{ //assert->ASSERT
 		size_t n = rowCount();
-		//ASSERT(n == colCount(), "Matrix dimension mismatch!");
 		assert(n == colCount());
 		BitMatrix<COLS> A = *this;
 		BitMatrix<COLS> I = BitMatrix<COLS>::squareIdentityMatrix();
@@ -435,11 +434,15 @@ public:
 		int r_rows = rhs.rowCount();
 		assert(l_rows == r_rows); //same height
 
-		vector<BitVector<COLS1 + COLS2>> rows(l_rows);		
+		const int COLS_SUM = COLS1 + COLS2;
+		vector<BitVector<COLS_SUM>> rows(l_rows);		
 		for(int i = 0; i < l_rows; ++i){
-			rows[i] = BitVector<COLS1 + COLS2>::vcat2((lhs._rows)[i], (rhs.rows)[i]);
+			BitVector<COLS1> lv = lhs.getRow(i);
+			BitVector<COLS2> rv = rhs.getRow(i);
+			rows[i] = BitVector<COLS_SUM>::vcat2(lv, rv);
 		}
-		return BitMatrix(rows);
+		BitMatrix<COLS_SUM> M(rows);
+		return M;
 	}
 
 	//Augments two matrices together vertically
