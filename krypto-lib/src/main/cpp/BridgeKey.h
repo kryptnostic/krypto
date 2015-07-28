@@ -224,13 +224,6 @@ private:
 		const int threeN = 3 * (N << 6); //should be the number of coefficients (___ choose 2)
 
 		BitMatrix<N> contrib = BitMatrix<N>::zeroMatrix(threeN);
-		for (int i = 0; i < threeN; i++) { //row within bottom block
-			for (int j = 0; j < (N << 6); j++) { //col within bottom block
-				bool lhs = Y1.get(j, level);
-				bool rhs = Y1.get(j, i);
-				contrib.set(i, j, lhs && rhs);
-			}
-		}
 		return contrib;
 	}
 };
