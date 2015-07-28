@@ -389,7 +389,6 @@ public:
 		assert(numRows == rhs.rowCount());
 		BitMatrix<COLS> A = *this;
 		BitMatrix<NEWCOLS> B = rhs;
-/*
 		for(int k = 0; k < m; ++k){
 			int pos = -1, i = k;
 			while(i < m){ //find the first pos >= k with A[pos,k] == 1

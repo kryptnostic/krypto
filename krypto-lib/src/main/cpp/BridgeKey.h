@@ -179,7 +179,7 @@ private:
 		BitMatrix<N> top = BitMatrix<N>::zeroMatrix(twoN - level - 1); //TODO: check that ops with empty top matrix work
 
 		BitMatrix<N> mid = BitMatrix<N>::zeroMatrix(twoN);
-		for (int i = 0; i < (twoN); i++) { //row within middle block
+		for (int i = 0; i < twoN; i++) { //row within middle block
 			for (int j = 0; j < (N << 6); j++) { //col within middle block
 				bool lhs = X.get(j, level);
 				bool rhs = X.get(j, i);
@@ -188,7 +188,7 @@ private:
 		}
 
 		BitMatrix<N> bot = BitMatrix<N>::zeroMatrix(threeN);
-		for (int i = 0; i < (twoN); i++) { //row within bottom block
+		for (int i = 0; i < threeN; i++) { //row within bottom block
 			for (int j = 0; j < (N << 6); j++) { //col within bottom block
 				bool lhs = X.get(j, level);
 				bool rhs = Y2.get(j, i);
@@ -207,7 +207,7 @@ private:
 		BitMatrix<N> top = BitMatrix<N>::zeroMatrix(twoN - level - 1); //TODO: check that ops with empty top matrix work
 
 		BitMatrix<N> bot = BitMatrix<N>::zeroMatrix(threeN);
-		for (int i = 0; i < (twoN); i++) { //row within bottom block
+		for (int i = 0; i < threeN; i++) { //row within bottom block
 			for (int j = 0; j < (N << 6); j++) { //col within bottom block
 				bool lhs = X.get(j, level);
 				bool rhs = Y1.get(j, i);
@@ -219,19 +219,19 @@ private:
 
 	//bottom chunk of contrib matrix for z
 	//level ranges from 0 to 64 * 2N - 1
-	const BitMatrix<N> get_AND_contrib_Y1_Y2(const int level, const BitMatrix<3*N> Y1, const BitMatrix<3*N> Y1) const{
+	const BitMatrix<N> get_AND_contrib_Y1_Y2(const int level, const BitMatrix<3*N> Y1, const BitMatrix<3*N> Y2) const{
 		//to be implemented
-		const int threeN = 3 * (N << 6);
+		const int threeN = 3 * (N << 6); //should be the number of coefficients (___ choose 2)
 
-		BitMatrix<N> bot = BitMatrix<N>::zeroMatrix(threeN);
-		for (int i = 0; i < (twoN); i++) { //row within bottom block
+		BitMatrix<N> contrib = BitMatrix<N>::zeroMatrix(threeN);
+		for (int i = 0; i < threeN; i++) { //row within bottom block
 			for (int j = 0; j < (N << 6); j++) { //col within bottom block
 				bool lhs = Y1.get(j, level);
 				bool rhs = Y1.get(j, i);
-				bot.set(i, j, lhs && rhs);
+				contrib.set(i, j, lhs && rhs);
 			}
 		}
-		return BitMatrix<N>::aug_v(top, bot);
+		return contrib;
 	}
 };
 
