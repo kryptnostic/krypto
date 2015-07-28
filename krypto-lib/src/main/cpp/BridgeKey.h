@@ -170,9 +170,31 @@ private:
 		return _Cb1.inv().split_v(3, 3);
 	}
 
-	const BitMatrix<N> get_AND_contrib_X_Y1(const int level) const{
+	//level ranges from 0 to 64 * 2N - 1
+	const BitMatrix<N> get_AND_contrib_X_Y1(const int level, BitMatrix<2*N> X, BitMatrix<3*N> Y1) const{
 		//to be implemented
-		return BitMatrix<N>::squareZeroMatrix();
+		const int twoN = N << 7;
+		const int threeN = 3 * (N << 6);
+		BitMatrix<N> top = BitMatrix<N>::zeroMatrix(twoN - level);
+
+		BitMatrix<N> mid = BitMatrix<N>::zeroMatrix(twoN);
+		for (int i = 0; i < (twoN); i++) { //row within middle block
+			for (int j = 0; j < (N << 6); j++) { //col within middle block
+				bool lhs = X.get(j, level);
+				bool rhs = X.get(j, i);
+				mid.set(i, j, lhs && rhs);
+			}
+		}
+
+		BitMatrix<N> bot = BitMatrix<N>::zeroMatrix(threeN);
+		for (int i = 0; i < (twoN); i++) { //row within bottom block
+			for (int j = 0; j < (N << 6); j++) { //col within bottom block
+				bool lhs = Y1.get(j, level);
+				bool rhs = Y1.get(j, i);
+				bot.set(i, j, lhs && rhs);
+			}
+		}
+		return BitMatrix<N>::aug_v(BitMatrix<N>::aug_v(top, mid), bot);
 	}
 };
 
