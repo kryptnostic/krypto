@@ -4,7 +4,6 @@
 
 #include <assert.h>
 #include "BitMatrix.h"
-#include "MultivariatePolynomialFunction.h"
 #include "PolynomialFunctionTupleChain.h"
 
 using namespace std;
@@ -12,7 +11,6 @@ using namespace std;
 /*length of plaintext = N*2^6; length of obfuscation chain = L*/
 template<unsigned int N, unsigned int L>
 class PrivateKey {
-//friend class BridgeKey;
 public:
 	PrivateKey():
 		_A(BitMatrix<N>::randomInvertibleMatrix()),
@@ -40,7 +38,9 @@ public:
 		return _B.solve(x1 ^ (Aix2 ^ fAix2)); 
 	}
 
-protected:
+	//TODO: Make BridgeKey a friend of PrivateKey
+
+//protected:
 	const BitMatrix<N> getA() const{
 		return _A;
 	}

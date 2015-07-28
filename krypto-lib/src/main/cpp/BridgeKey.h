@@ -33,7 +33,7 @@ public:
 
 /* Left Matrix Multiplication */
 
-	const BitMatrix<2*N> get_LMM_Z() const{
+	const BitMatrix<4*N> get_LMM_Z() const{
 		//untested!
 		BitMatrix<N> zeroN = BitMatrix<N>::squareZeroMatrix();
 
@@ -44,7 +44,7 @@ public:
 		BitMatrix<2*N> Y_top = BitMatrix<N>::aug_h(_BKBi, BitMatrix<N>::squareIdentityMatrix());
 		BitMatrix<2*N> Y_bottom = BitMatrix<N>::aug_h(zeroN, zeroN);
 		BitMatrix<2*N> Y = BitMatrix<2*N>::aug_v(X_top, X_bottom) * _Cu2.inv();
-		return BitMatrix<2*N>::aug_h(X, Y);
+		return BitMatrix<4*N>::aug_h(X, Y);
 	}
 
 	const BitMatrix<N> get_LMM_g1() const{
@@ -151,7 +151,7 @@ private:
 	BitMatrix<N> _R; //TODO: delegate the random matrix generation task to some other class?
 	BitMatrix<N> _Rx;
 	BitMatrix<N> _Ry;
-	BitMatrix<N> _M;
+	BitMatrix<2*N> _M;
 	BitMatrix<2*N> _Cu1;
 	BitMatrix<2*N> _Cu2;
 	BitMatrix<3*N> _Cb1;
