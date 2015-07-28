@@ -35,7 +35,7 @@ public:
 
 	const BitMatrix<2*N> get_LMM_Z() const{
 		//untested!
-		BitMatrix<N> zeroN = BitMatrix<N>::zeroMatrix(N << 6);
+		BitMatrix<N> zeroN = BitMatrix<N>::squareZeroMatrix();
 
 		BitMatrix<2*N> X_top = BitMatrix<N>::aug_h(_BKBi, _BKBiAi);
 		BitMatrix<2*N> X_bottom = BitMatrix<N>::aug_h(zeroN, _ARAi);
@@ -65,7 +65,7 @@ public:
 		BitMatrix<N> idN = BitMatrix<N>::squareIdentityMatrix();
 
 		BitMatrix<2*N> X_top = BitMatrix<N>::aug_h(idN, (idN + _Rx) * _pk.getA.inv());
-		BitMatrix<2*N> X_bottom = BitMatrix<N>::aug_h(BitMatrix<N>::zeroMatrix(N << 6), _ARxAi);
+		BitMatrix<2*N> X_bottom = BitMatrix<N>::aug_h(BitMatrix<N>::squareZeroMatrix(), _ARxAi);
 		return BitMatrix<2*N>::aug_v(X_top, X_bottom) * _M.inv();
 	}
 
@@ -74,7 +74,7 @@ public:
 		BitMatrix<N> idN = BitMatrix<N>::squareIdentityMatrix();
 
 		BitMatrix<2*N> X_top = BitMatrix<N>::aug_h(idN, (idN + _Ry) * _pk.getA.inv());
-		BitMatrix<2*N> X_bottom = BitMatrix<N>::aug_h(BitMatrix<N>::zeroMatrix(N << 6), _ARyAi);
+		BitMatrix<2*N> X_bottom = BitMatrix<N>::aug_h(BitMatrix<N>::squareZeroMatrix(), _ARyAi);
 		return BitMatrix<2*N>::aug_v(X_top, X_bottom) * _M.inv();
 	}
 
@@ -152,13 +152,11 @@ private:
 
 	//can be combined into get_z
 	const BitMatrix<2*N> get_AND_X() const{
-		//untested!
 		BitMatrix<2*N> inner = BitMatrix<2*N>::aug_h(BitMatrix<2*N>::squareIdentityMatrix(), _pk.getA().inv());
 		return _pk.getB().inv() * inner * _M.inv();
 	}
 
 	const BitMatrix<3*N> get_AND_Y1() const{
-		//untested!
 		BitMatrix<3*N> Cb_top = _Cb1.inv().split_v(1, 3);
 		return _pk.getB() * Cb_top;
 	}
@@ -168,8 +166,13 @@ private:
 		return _pk.getB() * Cb_middle;
 	}
 
-		const BitMatrix<3*N> get_AND_Y3() const{
+	const BitMatrix<3*N> get_AND_Y3() const{
 		return _Cb1.inv().split_v(3, 3);
+	}
+
+	const BitMatrix<N> get_AND_contrib_X_Y1(const int level) const{
+		//to be implemented
+		return BitMatrix<N>::squareZeroMatrix();
 	}
 };
 

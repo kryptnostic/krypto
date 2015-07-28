@@ -119,6 +119,13 @@ public:
 		_rows[rowIndex].clear(colIndex);		
 	}
 
+	void set(int rowIndex, int colIndex, bool value){
+		assert(rowIndex >= 0 && rowIndex < rowCount()); //"rowIndex out of bound!"
+		assert(colIndex >= 0 && colIndex < colCount());	//"colIndex out of bound!"
+		if (value) _rows[rowIndex].set(colIndex);	
+		else _rows[rowIndex].clear(colIndex);
+	}
+
 	BitVector<COLS> & operator[](const int rowIndex){
 		assert(rowIndex >= 0 && rowIndex < rowCount()); //"rowIndex out of bound!"
 		return _rows[rowIndex];
@@ -444,7 +451,7 @@ public:
 		BitMatrix<COLS> result = BitMatrix<COLS>::zeroMatrix(sub_rowCount);
 		int start = index * sub_rowCount;
 		for(int i = 0; i < sub_rowCount; ++i){
-			result.setRow(i, getRow(i+start));
+			result.setRow(i, getRow(i+start))                                                                                                                                                                                                                                                                                                                 ;
 		}
 		return result;
 	}
