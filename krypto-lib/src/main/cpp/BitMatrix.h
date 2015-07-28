@@ -447,7 +447,6 @@ public:
 
 	//Augments two matrices together vertically (needs optimization!)
 	static const BitMatrix<COLS> aug_v (const BitMatrix<COLS> & top, const BitMatrix<COLS> & bottom){
-		//untested!
 		int t_rows = top.rowCount();
 		int b_rows = bottom.rowCount();
 		vector<BitVector<COLS>> rows;
