@@ -122,14 +122,14 @@ public:
 
 	const BitMatrix<2*N> get_AND_Z1() const{
 		//untested!
-		BitMatrix<2*N> M2 = _M.split_v(1, 2);
+		BitMatrix<2*N> M2 = _M.split_v_2(1);
 		BitMatrix<2*N> top = _Rx * _pk.getA().inv() * M2;
 		BitMatrix<2*N> bottom = _pk.getA() * top;
 		return BitMatrix<N>::aug_v(top, bottom);
 	}
 
 	const BitMatrix<N> get_AND_Z2() const{
-		BitMatrix<2*N> M2 = _M.split_v(1, 2);
+		BitMatrix<2*N> M2 = _M.split_v_2(1);
 		BitMatrix<2*N> top = _Ry * _pk.getA().inv() * M2;
 		BitMatrix<2*N> bottom = _pk.getA() * top;
 		return BitMatrix<N>::aug_v(top, bottom);
@@ -173,17 +173,17 @@ private:
 	}
 
 	const BitMatrix<3*N> get_AND_Y1() const{
-		BitMatrix<3*N> Cb_top = _Cb1.inv().split_v(1, 3);
+		BitMatrix<3*N> Cb_top = _Cb1.inv().split_v_3(0);
 		return _pk.getB() * Cb_top;
 	}
 
 	const BitMatrix<3*N> get_AND_Y2() const{
-		BitMatrix<3*N> Cb_middle = _Cb1.inv().split_v(2, 3);
+		BitMatrix<3*N> Cb_middle = _Cb1.inv().split_v_3(1);
 		return _pk.getB() * Cb_middle;
 	}
 
 	const BitMatrix<3*N> get_AND_Y3() const{
-		return _Cb1.inv().split_v(3, 3);
+		return _Cb1.inv().split_v_3(2);
 	}
 
 	//top chunk of contrib matrix for z
