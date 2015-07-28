@@ -158,6 +158,51 @@ public:
 		return result;
 	}
 
+	//logic correct but implementation is stupid. need to fix access of getCol etc to use those functions
+	template<unsigned int NEWCOLS>
+	const BitMatrix<NEWCOLS> operator*(const BitMatrix<NEWCOLS> & rhs) const{
+		const size_t numCols = colCount();
+		assert(numCols == rhs.rowCount());
+		size_t numRows = rowCount();
+		BitMatrix<NEWCOLS> result(numRows);
+		size_t newNumCols = NEWCOLS << 6;
+		BitMatrix<NEWCOLS> temp(rhs);
+		for(size_t i = 0; i < numRows; ++i){
+			for(size_t j = 0; j < newNumCols; ++j){
+				bool bit = 0;
+				for(size_t k = 0; k < numCols; ++k) bit ^= (get(i, j) & temp.get(i, j));
+				result.set(i, j, bit);
+			}
+		}
+		return result;
+	}
+
+/*
+	template<unsigned int NEWCOLS>
+	const BitMatrix<NEWCOLS> operator*(const BitMatrix<NEWCOLS> & rhs) const {
+		const size_t numCols = colCount();
+		assert(numCols == rhs.rowCount());
+		size_t numRows = rowCount();
+		BitMatrix<COLS> result(numRows);
+		const size_t newNumCols = rhs.colCount();
+		BitMatrix<NEWCOLS> temp = rhs;
+		const size_t ROWS = numRows >> 6; //what if numRows is not a multiple of 64?
+		for (size_t row = 0; row < numRows; row++){
+			//for (size_t col = 0; col < numCols; ++col) {
+			for(size_t col = 0; col < newNumCols; ++col){
+				result.set(row, col, getRow(row).dot(temp.getCol<ROWS>(col)));
+				
+				//if(get(row, col)){ //A = BC ==> A_{ij} = B.getRow(i).dot(C.getCol(j))
+				//	result.setRow(row, getRow(row) ^ rhs.getRow(col));
+					//result._rows[row] ^= rhs._rows[col];
+				//}
+			}
+		}
+
+		return result;
+	}
+*/
+
 	//NEED TO TEST THIS!
 	template<unsigned int ROWS>
 	const BitMatrix<ROWS> T() const{
@@ -208,25 +253,6 @@ public:
 			}
 			if(bit) result.set(j);
 		}
-		return result;
-	}
-
-	const BitMatrix<COLS> operator*(const BitMatrix<COLS> & rhs) const {
-		size_t numRows = rowCount();
-		const size_t numCols = colCount();
-
-		assert(numCols == rhs.rowCount());
-		BitMatrix<COLS> result(numRows);
-
-		for (size_t row = 0; row < numRows; row++) {
-			for (size_t col = 0; col < numCols; ++col) {
-				if(get(row, col)){
-				//if (_rows[row].getBit(col)) {
-					result._rows[row] ^= rhs._rows[col];
-				}
-			}
-		}
-
 		return result;
 	}
 

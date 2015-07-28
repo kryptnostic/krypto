@@ -13,6 +13,13 @@ using namespace testing;
 
 #define N 1
 
+TEST(BitMatrixTest, testIdentity){
+	BitMatrix<N> I = BitMatrix<N>::squareIdentityMatrix();
+	ASSERT_TRUE(I.isIdentity());
+	BitMatrix<N> O = BitMatrix<N>::squareZeroMatrix();
+	ASSERT_FALSE(O.isIdentity());
+}
+
 TEST(BitMatrixTests, testRandomMatrix) {
 	BitMatrix<1> m = BitMatrix<1>::randomMatrix(64);
     BitVector<1> v = BitVector<1>::randomVector();
@@ -89,6 +96,13 @@ TEST(BitMatrixTests, testInv) {
 	BitVector<N> mix = Mi*x;
 	ASSERT_TRUE(mix.equals(M.solve(x)));
 
+	BitMatrix<N> Q = BitMatrix<N>::randomInvertibleMatrix();
+	BitMatrix<N> Qi = Q.inv();
+	BitMatrix<N> Jl = Q*Qi;
+	BitMatrix<N> Jr = Qi*Q;
+	ASSERT_TRUE(Jl.isIdentity());
+	ASSERT_TRUE(Jr.isIdentity());
+
 /*
 	BitMatrix<N> X = BitMatrix<N>::randomInvertibleMatrix();
 	BitMatrix<N> R1 = Mi * X;
@@ -130,4 +144,23 @@ TEST(BitMatrixTest, testAug){
 	BitMatrix<2*N> OI = BitMatrix<2*N>::aug_h(O, I);
 	BitMatrix<2*N> IOOI = BitMatrix<2*N>::aug_v(IO, OI);
 	ASSERT_TRUE(IOOI.isIdentity());
+}
+
+TEST(BitMatrixTests, testTranspose){
+	BitMatrix<N> I = BitMatrix<N>::squareIdentityMatrix();
+	ASSERT_TRUE(I.isIdentity());
+	BitMatrix<N> It = I.T<N>();
+	ASSERT_TRUE(It.isIdentity());
+
+	BitMatrix<N> S = BitMatrix<N>::squareRandomMatrix();
+	BitMatrix<N> St = S.T<N>();
+	BitMatrix<N> Stt = St.T<N>(); 
+	//ASSERT_TRUE(S.equals(Stt));
+	//ASSERT_TRUE(Stt.equals(S));
+
+	BitMatrix<N> R = BitMatrix<N>::randomMatrix(N << 7);
+	BitMatrix<(N<<1)> Rt = R.T<(N<<1)>();
+	BitMatrix<N> Rtt = Rt.T<N>();
+	//ASSERT_TRUE(R.equals(Rtt));
+	//ASSERT_TRUE(Rtt.equals(R));
 }
