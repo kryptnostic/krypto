@@ -50,7 +50,7 @@ TEST(FHETests, testMMult){
 	FullyHomomorphicEncryption<N> fhe;
 	BitVector<2*N> c = fhe.encrypt(m, r);
 	BitMatrix<N> K = BitMatrix<N>::randomMatrix(N<<6); //the matrix to be multiplied
-	BitMatrix<N> R = BitMatrix<N>::randomInvertibleMatrix(N<<6);
+	BitMatrix<N> R = BitMatrix<N>::randomInvertibleMatrix();
 	BitVector<2*N> H = fhe.MMult_Hom(K, c, R);
 	BitVector<N> mt = fhe.decrypt(c);
 	ASSERT_TRUE(m.equals(mt));	
@@ -68,8 +68,8 @@ TEST(FHETests, testMultipleMMults){
 		BitVector<N> r = BitVector<N>::randomVector();
 		FullyHomomorphicEncryption<N> fhe;
 		BitVector<2*N> c = fhe.encrypt(m, r);
-		BitMatrix<N> K = BitMatrix<N>::randomMatrix(N<<6); //the matrix to be multiplied
-		BitMatrix<N> R = BitMatrix<N>::randomInvertibleMatrix(N<<6);
+		BitMatrix<N> K = BitMatrix<N>::randomMatrix(N << 6); //the matrix to be multiplied
+		BitMatrix<N> R = BitMatrix<N>::randomInvertibleMatrix();
 		clock_t begin = clock();
 		BitVector<2*N> H = fhe.MMult_Hom(K, c, R);
 		clock_t end = clock();
@@ -94,8 +94,8 @@ TEST(FHETests, testXor){
 	FullyHomomorphicEncryption<N> fhe;
 	BitVector<2*N> cx = fhe.encrypt(mx, rx);
 	BitVector<2*N> cy = fhe.encrypt(my, ry);
-	BitMatrix<N> Rx = BitMatrix<N>::randomInvertibleMatrix(N<<6);
-	BitMatrix<N> Ry = BitMatrix<N>::randomInvertibleMatrix(N<<6);
+	BitMatrix<N> Rx = BitMatrix<N>::randomInvertibleMatrix();
+	BitMatrix<N> Ry = BitMatrix<N>::randomInvertibleMatrix();
 	BitVector<2*N> H = fhe.Xor_Hom(cx, cy, Rx, Ry);
 	BitVector<N> mxt = fhe.decrypt(cx);
 	BitVector<N> myt = fhe.decrypt(cy);
@@ -118,8 +118,8 @@ TEST(FHETests, testMultipleXors){
 		FullyHomomorphicEncryption<N> fhe;
 		BitVector<2*N> cx = fhe.encrypt(mx, rx);
 		BitVector<2*N> cy = fhe.encrypt(my, ry);
-		BitMatrix<N> Rx = BitMatrix<N>::randomInvertibleMatrix(N<<6);
-		BitMatrix<N> Ry = BitMatrix<N>::randomInvertibleMatrix(N<<6);
+		BitMatrix<N> Rx = BitMatrix<N>::randomInvertibleMatrix();
+		BitMatrix<N> Ry = BitMatrix<N>::randomInvertibleMatrix();
 		clock_t begin = clock();
 		BitVector<2*N> H = fhe.Xor_Hom(cx, cy, Rx, Ry);
 		clock_t end = clock();
@@ -146,8 +146,8 @@ TEST(FHETests, testAnd){
 	FullyHomomorphicEncryption<N> fhe;
 	BitVector<2*N> cx = fhe.encrypt(mx, rx);
 	BitVector<2*N> cy = fhe.encrypt(my, ry);
-	BitMatrix<N> Rx = BitMatrix<N>::randomInvertibleMatrix(N<<6);
-	BitMatrix<N> Ry = BitMatrix<N>::randomInvertibleMatrix(N<<6);
+	BitMatrix<N> Rx = BitMatrix<N>::randomInvertibleMatrix();
+	BitMatrix<N> Ry = BitMatrix<N>::randomInvertibleMatrix();
 	BitVector<2*N> H = fhe.And_Hom(cx, cy, Rx, Ry);
 	BitVector<N> mxt = fhe.decrypt(cx);
 	BitVector<N> myt = fhe.decrypt(cy);
@@ -170,8 +170,8 @@ TEST(FHETests, testMultipleAnds){
 		FullyHomomorphicEncryption<N> fhe;
 		BitVector<2*N> cx = fhe.encrypt(mx, rx);
 		BitVector<2*N> cy = fhe.encrypt(my, ry);
-		BitMatrix<N> Rx = BitMatrix<N>::randomInvertibleMatrix(N<<6);
-		BitMatrix<N> Ry = BitMatrix<N>::randomInvertibleMatrix(N<<6);
+		BitMatrix<N> Rx = BitMatrix<N>::randomInvertibleMatrix();
+		BitMatrix<N> Ry = BitMatrix<N>::randomInvertibleMatrix();
 		clock_t begin = clock();
 		BitVector<2*N> H = fhe.And_Hom(cx, cy, Rx, Ry);
 		clock_t end = clock();

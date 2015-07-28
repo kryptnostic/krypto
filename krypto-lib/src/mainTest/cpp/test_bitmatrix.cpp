@@ -39,14 +39,14 @@ TEST(BitMatrixTests, testRandomMatrix) {
 }
 
 TEST(BitMatrixTests, testAssignment){
-	BitMatrix<N> A = BitMatrix<N>::randomInvertibleMatrix(N<<6);
+	BitMatrix<N> A = BitMatrix<N>::randomInvertibleMatrix();
 	A.set(0,0), A.set(1,1), A.set((N<<6)-1,(N<<6)-1);
 	ASSERT_TRUE(A.get(0,0) && A.get(1,1) && A.get((N<<6)-1,(N<<6)-1));
 }
 
 /*
 TEST(BitMatrixTests, testEquality){
-	BitMatrix<N> S = BitMatrix<N>::randomInvertibleMatrix(N<<6);
+	BitMatrix<N> S = BitMatrix<N>::randomInvertibleMatrix();
 	BitMatrix<N> Z = BitMatrix<N>::squareZeroMatrix();
 	BitMatrix<N> I = BitMatrix<N>::squareIdentityMatrix();
 	ASSERT_TRUE(S.equals(S));
@@ -68,15 +68,18 @@ TEST(BitMatrixTests, testEquality){
 TEST(BitMatrixTests, testSolve) {
 	ASSERT_TRUE( 1+5 == 6 );
 	BitVector<N> v = BitVector<N>::randomVector();
-	BitMatrix<N> M = BitMatrix<N>::randomInvertibleMatrix(N << 6);
+	BitMatrix<N> M = BitMatrix<N>::randomInvertibleMatrix();
 	BitVector<N> x = M.solve(v);
 	BitVector<N> mx = M*x;
 	ASSERT_TRUE(mx.equals(v));
+
+	BitMatrix<N> R = BitMatrix<N>::randomMatrix(N << 6);
+	//BitMatrix<N> Q = M.solveM(R);
 }
 
 TEST(BitMatrixTests, testInv) {
 	ASSERT_TRUE(1+5 == 6);
-	BitMatrix<N> M = BitMatrix<N>::randomInvertibleMatrix(N << 6);
+	BitMatrix<N> M = BitMatrix<N>::randomInvertibleMatrix();
 	BitMatrix<N> Mi = M.inv();
 	BitMatrix<N> Il = M*Mi;
 	BitMatrix<N> Ir = Mi*M;
@@ -87,7 +90,7 @@ TEST(BitMatrixTests, testInv) {
 	ASSERT_TRUE(mix.equals(M.solve(x)));
 
 /*
-	BitMatrix<N> X = BitMatrix<N>::randomInvertibleMatrix(N << 6);
+	BitMatrix<N> X = BitMatrix<N>::randomInvertibleMatrix();
 	BitMatrix<N> R1 = Mi * X;
 	BitMatrix<N> R2 = Mi.solve(X);
 	BitMatrix<N> r1 = R1[2];

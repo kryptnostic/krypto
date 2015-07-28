@@ -57,7 +57,8 @@ public:
 	}
 
 	static const BitMatrix randomInvertibleMatrix() {//invertible matrix should be square
-		BitMatrix<COLS> R = BitMatrix<COLS>::randomMatrix(COLS << 6);
+		int numRows = COLS << 6;
+		BitMatrix<COLS> R = BitMatrix<COLS>::randomMatrix(numRows);
 		while(!R.det()){
 			R = BitMatrix<COLS>::randomMatrix(numRows);
 		}
@@ -75,7 +76,7 @@ public:
 		return BitMatrix(rows);
 	}
 
-/*
+
 	bool equals(const BitMatrix<COLS> & rhs) const{
 		int n = rowCount();
 		assert(n == rhs.rowCount());
@@ -84,7 +85,7 @@ public:
 		}
 		return true;
 	}
-*/
+
 
 	/**
 	 * Returns the determinant of a given (square) matrix, which is 1 iff the right bottom corner of its rref is 1. 
