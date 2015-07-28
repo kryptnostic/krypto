@@ -30,15 +30,6 @@ public:
 			_rows(rows) {
 	}
 
-	static const BitMatrix squareZeroMatrix(){
-		int numRows = COLS << 6;
-		vector<BitVector<COLS>> rows(numRows);
-		for(int i = 0; i < numRows; ++i){
-			BitVector<COLS> v = BitVector<COLS>::zeroVector();
-		}
-		return BitMatrix(rows);
-	}
-
 	//is the for loop necessary? surely there is a faster way (memset or something)
 	static const BitMatrix zeroMatrix(const int numRows){
 		vector<BitVector<COLS>> rows(numRows);
@@ -46,6 +37,10 @@ public:
 			rows[i] = BitVector<COLS>::zeroVector();
 		}
 		return BitMatrix(rows);
+	}
+
+	static const BitMatrix squareZeroMatrix(){
+		return zeroMatrix(COLS << 6);
 	}
 
 	static const BitMatrix randomMatrix(const int numRows) {
