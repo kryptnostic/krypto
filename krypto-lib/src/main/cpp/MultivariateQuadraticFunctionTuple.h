@@ -62,13 +62,13 @@ public:
 					for(int jj = j; jj < numInputBits; ++jj){
 						if(i == ii){
 							if(j == jj){
-								if(C.get(i, j)) CC_T.set(count_j, count_i); //C_{i,j}
+								CC_T.set(count_j, count_i, C.get(i, j)); 
 							} //else the bit is zero
 						} else {
 							if(j == jj){
-								if(C.get(i, j) & C.get(ii, j)) CC_T.set(count_j, count_i); //C_{i,j}*C_{ii,j}
+								CC_T.set(count_j, count_i, C.get(i, j) & C.get(ii, j));
 							} else {
-								if((C.get(i, j) & C.get(ii, jj)) ^ (C.get(i, jj) ^ C.get(ii, j)))CC_T.set(count_j, count_i); //(C_{i,j}*C_{ii,jj})+(C_{i,jj}*C_{ii,j})
+								CC_T.set(count_j, count_i, (C.get(i, j) & C.get(ii, jj)) ^ (C.get(i, jj) ^ C.get(ii, j)));
 							}
 						}
 						++count_j;
@@ -78,7 +78,7 @@ public:
 			++count_i;
 		}
 		BitMatrix<NUM_OUTPUTS> AA_T = getPaddedContribution(); //this is actually A^T
-		BitMatrix<NUM_OUTPUTS> AACC_T = CC_T*AA_T; //this should be (AC)^T = C^TA^T
+		BitMatrix<NUM_OUTPUTS> AACC_T = CC_T * AA_T; //this should be (AC)^T = C^TA^T
 		MultivariateQuadraticFunctionTuple<NUM_INPUTS, NUM_OUTPUTS> g(CC_T*AA_T); //TODO:just to be careful, check the padding implementation again
 		return g;
 	}
@@ -86,12 +86,13 @@ public:
 	/**
 	 * Composition from the right, TODO: make this more user intuitive
 	 * f.rMult(C) := Cf(*)
-	 * //TODO: TEST!
+	 * //TODO: Figure out how to make PADDED_INPUTS const
 	 */
 	const MultivariateQuadraticFunctionTuple<NUM_INPUTS, NUM_OUTPUTS> rMult(const BitMatrix<NUM_OUTPUTS> & C) {
-		int numCols = C.colCount();
-		assert(NUM_OUTPUTS << 6 == numCols);
-		BitMatrix<NUM_OUTPUTS> Cf = C.T() * getPaddedContribution();
+		assert(NUM_OUTPUTS << 6 == C.colCount());
+		const unsigned int PADDED_INPUTS = C.rowCount() >> 6;//paddedMonomialCount >> 6;
+		//BitMatrix<PADDED_INPUTS> Ct = C.T<PADDED_INPUTS>();
+		BitMatrix<NUM_OUTPUTS> Cf = getPaddedContribution() * C; //C -> Ct, HOW?
 		MultivariateQuadraticFunctionTuple<NUM_INPUTS, NUM_OUTPUTS> g(Cf);
 		return g;                     
 	}
