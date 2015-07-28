@@ -256,9 +256,8 @@ public:
     }
 
 	void print() const {
-		const unsigned int numBits = (N << 6) - 1;
 		std::cout << "[ ";
-		for (int i = 0; i < numBits; ++i) {
+		for (int i = 0; i < numBits - 1; ++i) {
 			std::cout << get(i) << ", ";
 		}
 		std::cout << get(numBits) << "]" << std::endl;
@@ -280,7 +279,7 @@ public:
     }
 private:
 	unsigned long long _bits[N];
-    //define some const N << 6?
+    static const unsigned int numBits = N << 6;
 };
 
 
