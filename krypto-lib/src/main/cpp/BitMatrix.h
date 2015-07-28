@@ -4,6 +4,7 @@
 //
 //  Created by Matthew Tamayo on 1/27/15.
 //  Copyright (c) 2015 Kryptnostic. All rights reserved.
+//  Row-major order implementation of binary matrix.
 //
 
 #ifndef krypto_BitMatrix_h
@@ -124,16 +125,19 @@ public:
 		return _rows[rowIndex];
 	}
 
-	//TODO: make it possible for numRow != numCol
-	/*
-	BitVector<COLS> getCol(const int colIndex){
+	//somehow the compiler complains about couldn't infer template argument 'ROWS'
+	//TODO: fix
+	template<unsigned int ROWS>
+	BitVector<ROWS> getCol(const int colIndex) const{
 		assert(colIndex >= 0 && colIndex < colCount());
-		BitVector<COLS> v = BitVector<COLS>::zeroVector();
+		int numRows = rowCount();
+		assert(numRows == ROWS << 6);
+		BitVector<ROWS> v = BitVector<ROWS>::zeroVector();
 		for(int i = 0; i < COLS; ++i){
 			if(get(i, colIndex)) v.set(i); 
 		}
 		return v;
-	}*/
+	}
 
 	const BitVector<COLS> operator*(const BitVector<COLS> & v) const {
 		BitVector<COLS> result;
@@ -161,18 +165,11 @@ public:
 		}
 		return Mt;
 	}
-/*wait for aug_v/h to be fixed
-	template<unsigned int NUM_INPUTS>
-	const MultivariateQuadraticFunctionTuple<NUM_INPUTS, COLS> operator*(const MultivariateQuadraticFunctionTuple<NUM_INPUTS, COLS> & f) const{
-		BitMatrix<COLS> Cf = f.getPaddedContribution() * T();
-		MultivariateQuadraticFunctionTuple<NUM_INPUTS, COLS> g(Cf);
-		return g;
-	}
-*/
+
 	/*
 	//A in F_2^{m * n}, v in F_2^n; so A*v in F_2^m
 	To include in the next version
-	template<NUMROWS>
+	template<unsigned int NUMROWS>
 	const BitVector<NUMROWS> operator*(const BitVector<COLS> & v) const {
 		BitVector<COLS> result;
 		size_t numRows = _rows.size();
@@ -211,7 +208,6 @@ public:
 		size_t numRows = rowCount();
 		const size_t numCols = colCount();
 
-		//ASSERT(numCols == rhs.rowCount(), "Matrix dimension mismatch!");
 		assert(numCols == rhs.rowCount());
 		BitMatrix<COLS> result(numRows);
 
@@ -345,14 +341,13 @@ public:
 	 * Usage: x = A.solve(v, solvable); means Ax = v
 	 */
 	const BitVector<COLS> solve (const BitVector<COLS> & rhs, bool & solvable) const{ //assert->ASSERT
-		size_t n = rowCount();
-		//ASSERT(n == colCount(), "Matrix dimension mismatch!");
-		assert(n == colCount());
+		size_t m = rowCount();
+		assert(m == colCount());
 		BitMatrix<COLS> A = *this;
 		BitVector<COLS> b = rhs;
-		for(int k = 0; k < n; ++k){
+		for(int k = 0; k < m; ++k){
 			int pos = -1, i = k;
-			while(i < n){ //find the first pos >= k with A[pos,k] == 1
+			while(i < m){ //find the first pos >= k with A[pos,k] == 1
 				if(A.get(i, k)){pos = i; break;} 
 				++i;
 			}
@@ -361,7 +356,7 @@ public:
 					A.swapRows(pos, k);
 					b.swap(pos, k);
 				}
-				for(int i = k+1; i < n; ++i) if(A.get(i, k)){
+				for(int i = k+1; i < m; ++i) if(A.get(i, k)){
 					A.setRow(i, A[i] ^ A[k]); 
 					(b[i]^b[k]) ? b.set(i) : b.clear(i);
 				}
@@ -372,7 +367,7 @@ public:
 			}
 		}
 		BitVector<COLS> x = BitVector<COLS>::zeroVector();
-		for(int i = n-1; i >= 0; --i){
+		for(int i = m-1; i >= 0; --i){
 			bool f = x.dot(A[i]) ^ b[i];
 			f ? x.set(i) : x.clear(i);
 		}
@@ -380,6 +375,61 @@ public:
 		return x;
 	}
 
+	/**
+	 * A should be invertible in this case. This can be ensured by inializing an inverible matrix.
+	 * Input: v; Output: A^-1*B;
+	 * Usage: C = A.solve(B); means AC = B
+	 */
+	/*
+	template <unsigned int NEWCOLS> 
+	const BitMatrix<NEWCOLS> solve(const BitMatrix<NEWCOLS> & rhs) const{
+		size_t m = rowCount();
+		assert(m == colCount()); //"Matrix dimension mismatch!"	
+		assert(det()); //make sure that the matrix is invertible
+		assert(numRows == rhs.rowCount());
+		BitMatrix<COLS> A = *this;
+		BitMatrix<NEWCOLS> B = rhs;
+/*
+		for(int k = 0; k < m; ++k){
+			int pos = -1, i = k;
+			while(i < m){ //find the first pos >= k with A[pos,k] == 1
+				if(A.get(i, k)){pos = i; break;} 
+				++i;
+			}
+			if(pos != -1){
+				if(pos != k) {
+					A.swapRows(pos, k);
+					B.swapRows(pos, k);
+					//b.swap(pos, k);
+				}
+				for(int i = k+1; i < m; ++i) if(A.get(i, k)){
+					A.setRow(i, A[i] ^ A[k]); 
+					B.setRow(i, B[i] ^ B[k]);
+					//(b[i]^b[k]) ? b.set(i) : b.clear(i);
+				}
+			} else {
+				cerr << "Error: solving system of a nonsingular matrix!" << endl;
+				solvable = false;
+				return BitVector<COLS>::zeroVector(); //this is when A is singular
+			}
+		}
+		//BitVector<COLS> x = BitVector<COLS>::zeroVector();
+		BitMatrix<NEWCOLS> x = BitMatrix<NEWCOLS>::zeroMatrix(m);
+		for(int i = m-1; i >= 0; --i){
+			bool f = x.dot(A[i]) ^ b[i];
+			f ? x.set(i) : x.clear(i); //x.setRow(i, x.dot(A[i]) ^ b[i])
+		}*/
+
+		/*
+		BitMatrix<NEWCOLS> C = BitMatrix<NEWCOLS>::zeroMatrix(numRows);
+		for(int i = 0; i < NEWCOLS; ++i){
+			BitVector<NEWCOLS> b = B.getCol(i); 
+			BitVector<NEWCOLS> c = A.solve(b);
+			C.setCol(i, c);
+		}	
+		return C;
+	}
+*/
 	//Augments two matrices together horizontally
 	template <unsigned int COLS1, unsigned int COLS2>
 	static const BitMatrix<COLS1 + COLS2> aug_h (const BitMatrix<COLS1> & lhs, const BitMatrix<COLS2> & rhs){
@@ -414,7 +464,7 @@ public:
 		const int SUBCOLS = COLS / 2;
 		int numRows = rowCount();
 		BitMatrix<SUBCOLS> result = BitMatrix<SUBCOLS>::zeroMatrix(numRows);//squareZeroMatrix();
-		for(int i = 0; i < rowCount(); ++i){
+		for(int i = 0; i < numRows; ++i){
 			BitVector<SUBCOLS> sv = getRow(i).proj2(index);
 			result.setRow(i, sv);
 		}
@@ -426,14 +476,12 @@ public:
 		const int SUBCOLS = COLS / 3;
 		int numRows = rowCount();
 		BitMatrix<SUBCOLS> result = BitMatrix<SUBCOLS>::zeroMatrix(numRows);//squareZeroMatrix();
-		for(int i = 0; i < rowCount(); ++i){
+		for(int i = 0; i < numRows; ++i){
 			BitVector<SUBCOLS> sv = getRow(i).proj3(index);
 			result.setRow(i, sv);
 		}
 		return result;
 	}
-
-
 
 	//Splits a bitmatrix into den-many pieces vertically and returns the index-th submatrix (0 to den - 1)
 	//Assumes that den divides the row count
@@ -459,26 +507,6 @@ public:
 		}
 		return result;
 	}
-
-	/**
-	 * A should be invertible in this case. This can be ensured by inializing an inverible matrix.
-	 * Input: v; Output: A^-1*B;
-	 * Usage: C = A.solve(B); means AC = B
-	 */
-	/*	
-	const BitMatrix<COLS> solve (const BitMatrix<COLS> & rhs) const{
-		size_t n = rowCount();
-		assert(n == colCount()); //"Matrix dimension mismatch!"	
-		BitMatrix<COLS> A = *this;
-		BitMatrix<COLS> B = rhs;
-		BitMatrix<COLS> C = BitMatrix<COLS>::squareZeroMatrix();
-		for(int i = 0; i < COLS; ++i){
-			BitVector<COLS> b = B.getCol(i); 
-			BitVector<COLS> c = A.solve(b);
-			C.setCol(i, c);
-		}	
-		return C;
-	}*/
 
 	/* Functions below will be shifted to the private section after tested */
 
