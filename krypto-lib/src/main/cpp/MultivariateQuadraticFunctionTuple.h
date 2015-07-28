@@ -36,10 +36,7 @@ public:
 				++count;
 			}
 		}
-		if(needPadding) for(int i = 0; i < 32; ++i) t.set(numInputBits + i, 0);
 		BitMatrix<NUM_OUTPUTS> paddedContributions = getPaddedContribution();
-		cout << "paddedContributions.rowCount(): " << paddedContributions.rowCount() << endl;
-		cout << "t.length(): " << t.length() << endl;
 		return paddedContributions.tMult(t); 
 	}
 
