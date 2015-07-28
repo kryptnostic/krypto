@@ -176,7 +176,7 @@ private:
 		//untested!
 		const int twoN = N << 7;
 		const int threeN = 3 * (N << 6);
-		BitMatrix<N> top = BitMatrix<N>::zeroMatrix(twoN - level - 1); //TODO: check that ops with empty top matrix work
+		BitMatrix<N> top = BitMatrix<N>::zeroMatrix(twoN - level); //TODO: check that ops with empty top matrix work
 
 		BitMatrix<N> mid = BitMatrix<N>::zeroMatrix(twoN);
 		for (int i = 0; i < twoN; i++) { //row within middle block
@@ -204,7 +204,7 @@ private:
 		//untested!
 		const int twoN = N << 7;
 		const int threeN = 3 * (N << 6);
-		BitMatrix<N> top = BitMatrix<N>::zeroMatrix(twoN - level - 1); //TODO: check that ops with empty top matrix work
+		BitMatrix<N> top = BitMatrix<N>::zeroMatrix(twoN - level); //TODO: check that ops with empty top matrix work
 
 		BitMatrix<N> bot = BitMatrix<N>::zeroMatrix(threeN);
 		for (int i = 0; i < threeN; i++) { //row within bottom block
