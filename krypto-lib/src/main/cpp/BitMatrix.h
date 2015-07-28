@@ -13,7 +13,6 @@
 #include <vector>
 #include <fstream>
 #include "../../main/cpp/BitVector.h"
-//#include "MultivariateQuadraticFunctionTuple.h"
 #include "../../../contrib/gtest/gtest.h"
 
 using namespace std;
@@ -57,8 +56,8 @@ public:
 		return BitMatrix(rows);
 	}
 
-	static const BitMatrix randomInvertibleMatrix(const int numRows) {
-		BitMatrix<COLS> R = BitMatrix<COLS>::randomMatrix(numRows);
+	static const BitMatrix randomInvertibleMatrix() {//invertible matrix should be square
+		BitMatrix<COLS> R = BitMatrix<COLS>::randomMatrix(COLS << 6);
 		while(!R.det()){
 			R = BitMatrix<COLS>::randomMatrix(numRows);
 		}
