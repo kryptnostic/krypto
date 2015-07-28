@@ -22,14 +22,14 @@ template<unsigned int N>
 class FullyHomomorphicEncryption {
 public:
 	FullyHomomorphicEncryption(): 
-		_A(BitMatrix<N>::randomInvertibleMatrix(N<<6)),
-		_B(BitMatrix<N>::randomInvertibleMatrix(N<<6)),
+		_A(BitMatrix<N>::randomInvertibleMatrix()),
+		_B(BitMatrix<N>::randomInvertibleMatrix()),
 		_f1(MultivariatePolynomialFunction<N,N>::denseRandomMultivariateFunctions()),
 		_f2(MultivariatePolynomialFunction<N,N>::denseRandomMultivariateFunctions()),
-		_C1u(BitMatrix<2*N>::randomInvertibleMatrix((2*N)<<6)), //_Ciu for unary
-		_C2u(BitMatrix<2*N>::randomInvertibleMatrix((2*N)<<6)), 
-		_C1b(BitMatrix<3*N>::randomInvertibleMatrix((3*N)<<6)), //_Cib for binary
-		_C2b(BitMatrix<3*N>::randomInvertibleMatrix((3*N)<<6)){
+		_C1u(BitMatrix<2*N>::randomInvertibleMatrix()), //_Ciu for unary
+		_C2u(BitMatrix<2*N>::randomInvertibleMatrix()), 
+		_C1b(BitMatrix<3*N>::randomInvertibleMatrix()), //_Cib for binary
+		_C2b(BitMatrix<3*N>::randomInvertibleMatrix()){
 	}
 
 	/**

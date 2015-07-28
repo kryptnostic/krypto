@@ -15,9 +15,9 @@ class BridgeKey{
 public:
 	BridgeKey(PrivateKey<N,L> pk, BitMatrix<N> K) : 
 	_pk(pk),
-	_R(BitMatrix<N>::randomInvertibleMatrix(N<<6)),
-	_Rx(BitMatrix<N>::randomInvertibleMatrix(N<<6)),
-	_Ry(BitMatrix<N>::randomInvertibleMatrix(N<<6)),
+	_R(BitMatrix<N>::randomInvertibleMatrix()),
+	_Rx(BitMatrix<N>::randomInvertibleMatrix()),
+	_Ry(BitMatrix<N>::randomInvertibleMatrix()),
 	_M(pk.getM()),
 	_Cu1(pk.getUnaryObfChain()[1]),
 	_Cu2(pk.getUnaryObfChain()[2]),
@@ -49,12 +49,12 @@ public:
 
 	const BitMatrix<N> get_LMM_g1() const{
 		//to be implemented
-		return BitMatrix<N>::randomInvertibleMatrix(_dim_quad<<6);
+		return BitMatrix<N>::randomInvertibleMatrix();
 	}
 
 	const BitMatrix<N> get_LMM_g2() const{
 		//to be implemented
-		return BitMatrix<N>::randomInvertibleMatrix(_dim_quad<<6);
+		return BitMatrix<N>::randomInvertibleMatrix();
 	}
 
 
@@ -88,12 +88,12 @@ public:
 
 	const BitMatrix<3*N> get_XOR_g1() const{
 		//to be implemented
-		return BitMatrix<3*N>::randomInvertibleMatrix(_dim_quad<<6);
+		return BitMatrix<3*N>::randomInvertibleMatrix();
 	}
 
 	const BitMatrix<3*N> get_XOR_g2() const{
 		//to be implemented
-		return BitMatrix<3*N>::randomInvertibleMatrix(_dim_quad<<6);
+		return BitMatrix<3*N>::randomInvertibleMatrix();
 	}
 
 
@@ -121,12 +121,12 @@ public:
 
 	const BitMatrix<N> get_AND_g1() const{
 		//to be implemented
-		return BitMatrix<N>::randomInvertibleMatrix(_dim_quad<<6);
+		return BitMatrix<N>::randomInvertibleMatrix();
 	}
 
 	const BitMatrix<N> get_AND_g2() const{
 		//to be implemented
-		return BitMatrix<N>::randomInvertibleMatrix(_dim_quad<<6);
+		return BitMatrix<N>::randomInvertibleMatrix();
 	}
 
 
