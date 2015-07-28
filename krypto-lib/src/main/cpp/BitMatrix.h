@@ -56,10 +56,11 @@ public:
 	}
 
 	//TODO: figure out a better way to generate random invertible matrix
+	//generating an invertible matrix which is not the identity
 	static const BitMatrix randomInvertibleMatrix() {//invertible matrix should be square
 		int numRows = COLS << 6;
 		BitMatrix<COLS> R = BitMatrix<COLS>::squareRandomMatrix();
-		while(!R.det()){
+		while(!R.det() && !R.isIdentity()){
 			R = BitMatrix<COLS>::squareRandomMatrix();
 		}
 		return R;		
