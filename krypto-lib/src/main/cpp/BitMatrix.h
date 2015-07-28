@@ -170,7 +170,7 @@ public:
 		for(size_t i = 0; i < numRows; ++i){
 			for(size_t j = 0; j < newNumCols; ++j){
 				bool bit = 0;
-				for(size_t k = 0; k < numCols; ++k) bit ^= (get(i, j) & temp.get(i, j));
+				for(size_t k = 0; k < numCols; ++k) bit ^= (get(i, k) & temp.get(k, j));
 				result.set(i, j, bit);
 			}
 		}
