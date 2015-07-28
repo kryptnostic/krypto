@@ -1,8 +1,8 @@
 /*
- * test_bitmatrix.cpp
+ * test_bridge.cpp
  *
- *  Created on: Mar 11, 2015
- *      Author: mtamayo
+ *  Created on: July 28, 2015
+ *      Author: robinz16
  */
 
 #include "../../../contrib/gtest/gtest.h"
@@ -14,6 +14,6 @@ using namespace testing;
 
 #define N 1
 
-TEST(BitMatrixTest, testLMM){
+TEST(BridgeKeyTest, testLMM){
 	BitMatrix<2*N> Z = BridgeKey::get_LMM_Z();
 }
