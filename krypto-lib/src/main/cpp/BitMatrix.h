@@ -86,7 +86,6 @@ public:
 		return true;
 	}
 
-
 	/**
 	 * Returns the determinant of a given (square) matrix, which is 1 iff the right bottom corner of its rref is 1. 
 	 * Determinant of a non-square matrix possible? http://math.stackexchange.com/questions/854180/determinant-of-a-non-square-matrix
@@ -323,10 +322,7 @@ public:
 		BitMatrix<COLS> X = BitMatrix<COLS>::squareZeroMatrix();
 		for(int j = 0; j < n; ++j){
 			x.zero();
-			for(int i = n-1; i >= 0; --i){
-				bool b = x.dot(A[i]) ^ I.get(i,j);
-				b ? x.set(i) : x.clear(i);
-			}
+			for(int i = n-1; i >= 0; --i) x.set(i, x.dot(A[i]) ^ I.get(i,j));
 			X.setCol(j, x);
 		}
 		invertible = true;
@@ -365,7 +361,7 @@ public:
 				}
 				for(int i = k+1; i < m; ++i) if(A.get(i, k)){
 					A.setRow(i, A[i] ^ A[k]); 
-					(b[i]^b[k]) ? b.set(i) : b.clear(i);
+					b.set(i, b[i]^b[k]);
 				}
 			} else {
 				cerr << "Error: solving system of a nonsingular matrix!" << endl;
@@ -374,10 +370,7 @@ public:
 			}
 		}
 		BitVector<COLS> x = BitVector<COLS>::zeroVector();
-		for(int i = m-1; i >= 0; --i){
-			bool f = x.dot(A[i]) ^ b[i];
-			f ? x.set(i) : x.clear(i);
-		}
+		for(int i = m-1; i >= 0; --i) x.set(i, x.dot(A[i]) ^ b[i]);
 		solvable = true;
 		return x;
 	}
@@ -407,12 +400,10 @@ public:
 				if(pos != k) {
 					A.swapRows(pos, k);
 					B.swapRows(pos, k);
-					//b.swap(pos, k);
 				}
 				for(int i = k+1; i < m; ++i) if(A.get(i, k)){
 					A.setRow(i, A[i] ^ A[k]); 
 					B.setRow(i, B[i] ^ B[k]);
-					//(b[i]^b[k]) ? b.set(i) : b.clear(i);
 				}
 			} else {
 				cerr << "Error: solving system of a nonsingular matrix!" << endl;
@@ -573,9 +564,7 @@ public:
 	void setCol(int colIndex, BitVector<ROWS> v){
 		assert(colIndex >= 0 && colIndex < colCount());
 		int numRows = ROWS << 6;
-		for(int i = 0; i < numRows; ++i){
-			v[i] ? set(i, colIndex) : clear(i, colIndex);
-		}
+		for(int i = 0; i < numRows; ++i) set(i, colIndex, v[i]);
 	}
 
 private:
@@ -613,7 +602,6 @@ private:
 	BitMatrix<COLS> rrefFastGauss() const{ //assert->ASSERT
 		BitMatrix<COLS> A = *this;
 		size_t n = rowCount();
-		//ASSERT(colCount() == n, "Matrix dimension mismatch!");
 		assert(colCount() == n);
 		for(int j = 0; j < n; ++j){
 			int i = -1;
