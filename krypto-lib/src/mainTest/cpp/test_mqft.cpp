@@ -14,5 +14,5 @@ TEST(MQFTTests, testRandom){
 TEST(MQFTTests, testComposition){
 	MultivariateQuadraticFunctionTuple<N, N> f = MultivariateQuadraticFunctionTuple<N, N>::randomMultivariateQuadraticFunctionTuple();
 	BitMatrix<N> C = BitMatrix<N>::randomInvertibleMatrix();
-	MultivariateQuadraticFunctionTuple<N, N> g = f*C; //this is incredibly slow
+	// MultivariateQuadraticFunctionTuple<N, N> g = f*C; //this is incredibly slow
 }
