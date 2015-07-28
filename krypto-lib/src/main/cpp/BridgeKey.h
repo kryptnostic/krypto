@@ -147,7 +147,7 @@ private:
 	BitMatrix<N> _ARyAi;
 	PolynomialFunctionTupleChain<2*N,L> _g_u; //obsfucated chain for unary operations
 	PolynomialFunctionTupleChain<3*N,L> _g_b; //obsfucated chain for binary operations
-	int _dim_quad = 64; //dimension of bitmatrix used to represent quadratic poly's
+	int _dim_quad = 64; //dimension of bitmatrix used to represent quadratic poly's (why isn't this N << 6 in general?)
 
 
 	//can be combined into get_z
