@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 #include "BitVector.h"
-#include "MultivariatePolynomialFunction.h"
+#include "MultivariateQuadraticFunctiontuple.h"
 
 //for now, assuming that the input and output all live in F_2^{N*2^6}
 //ChainPolynomialFunctionTuple f = {f_1,...,f_L}, f_i: F_2^N -> F_2^N
@@ -16,14 +16,14 @@ public:
 	PolynomialFunctionTupleChain(){
 	}
 
-	int length(){
+	int length() const{
 		return L;
 	}
 
     static const PolynomialFunctionTupleChain<N, L> randomPolynomialFunctionTupleChain() {
         PolynomialFunctionTupleChain<N, L> result;
         for(int i = 0; i < L; ++i){
-        	result._tuple.push_back(MultivariatePolynomialFunction<N,N>::denseRandomMultivariateFunctions()); 
+        	result.addFunctionTuple(MultivariateQuadraticFunctionTuple<N,N>::randomMultivariateQuadraticFunctionTuple());
         }
         return result;
     }
@@ -34,9 +34,14 @@ public:
 			result = (_tuple[i])(result);
 		}
 		return result;
-	}    
+	} 
+
+	void addFunctionTuple(const MultivariateQuadraticFunctionTuple<N,N> & f){
+		_tuple.push_back(f);
+	}
+
 private:
-	vector<MultivariatePolynomialFunction<N,N> > _tuple;
+	vector<MultivariateQuadraticFunctionTuple<N,N> > _tuple;
 };
 
 #endif
