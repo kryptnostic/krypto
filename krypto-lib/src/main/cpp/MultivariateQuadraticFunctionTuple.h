@@ -25,18 +25,21 @@ public:
 	}
 
     const BitVector<NUM_OUTPUTS> operator()(const BitVector<NUM_INPUTS> & input) const {
-		const unsigned int TRANSFORMED_INPUT = paddedMonomialCount/64;
+		const unsigned int TRANSFORMED_INPUT = paddedMonomialCount >> 6;
 		BitVector<TRANSFORMED_INPUT> t = BitVector<TRANSFORMED_INPUT>::zeroVector();
 		int count = 0;
 		for(int i = 0; i < numInputBits; ++i){ //building (padded) \tilde{x}
-			t[count] = input[i];//x_i
+			t.set(count, input[i]); //x_i
 			++count;
 			for(int j = i+1; j < numInputBits; ++j){
-				t[count] = input[i]^input[j];
+				t.set(count, input[i]^input[j]);
 				++count;
 			}
 		}
+		if(needPadding) for(int i = 0; i < 32; ++i) t.set(numInputBits + i, 0);
 		BitMatrix<NUM_OUTPUTS> paddedContributions = getPaddedContribution();
+		cout << "paddedContributions.rowCount(): " << paddedContributions.rowCount() << endl;
+		cout << "t.length(): " << t.length() << endl;
 		return paddedContributions.tMult(t); 
 	}
 
@@ -115,11 +118,11 @@ public:
 
 private:
 	BitMatrix<NUM_OUTPUTS> _contributions;
-	static const bool needPadding = (NUM_INPUTS % 2 == 0);
+	static const bool needPadding = NUM_INPUTS & 1;
 	static const unsigned int numInputBits = (NUM_INPUTS << 6);
 	static const unsigned int numOutputBits = (NUM_OUTPUTS << 6);
-	static const unsigned int monomialCount = numInputBits + ((numInputBits * (numInputBits - 1)) >> 1);
-	static const unsigned int paddedMonomialCount = needPadding ? monomialCount : monomialCount + 32;
+	static const unsigned int monomialCount = ((numInputBits * (numInputBits + 1)) >> 1);
+	static const unsigned int paddedMonomialCount = needPadding ? monomialCount + 32 : monomialCount;
 };
 
 #endif
