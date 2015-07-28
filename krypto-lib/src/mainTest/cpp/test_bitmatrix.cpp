@@ -122,4 +122,12 @@ TEST(BitMatrixTests, testSplit) {
 	BitMatrix<N> J11 = J1.split_v_3(0);
 	ASSERT_TRUE(J11.isIdentity());
 }
-// }
+
+TEST(BitMatrixTest, testAug){
+	BitMatrix<N> I = BitMatrix<N>::squareIdentityMatrix();
+	BitMatrix<N> O = BitMatrix<N>::squareZeroMatrix();
+	BitMatrix<2*N> IO = BitMatrix<2*N>::aug_h(I, O);
+	BitMatrix<2*N> OI = BitMatrix<2*N>::aug_h(O, I);
+	BitMatrix<2*N> IOOI = BitMatrix<2*N>::aug_v(IO, OI);
+	ASSERT_TRUE(IOOI.isIdentity());
+}

@@ -426,7 +426,7 @@ public:
 		return C;
 	}
 */
-	//Augments two matrices together horizontally
+	//Augments two matrices together horizontally (needs optimization!)
 	template <unsigned int COLS1, unsigned int COLS2>
 	static const BitMatrix<COLS1 + COLS2> aug_h (const BitMatrix<COLS1> & lhs, const BitMatrix<COLS2> & rhs){
 		//untested!
@@ -445,15 +445,16 @@ public:
 		return M;
 	}
 
-	//Augments two matrices together vertically
+	//Augments two matrices together vertically (needs optimization!)
 	static const BitMatrix<COLS> aug_v (const BitMatrix<COLS> & top, const BitMatrix<COLS> & bottom){
 		//untested!
 		int t_rows = top.rowCount();
 		int b_rows = bottom.rowCount();
-		vector<BitVector<COLS>> rows(t_rows + b_rows);
-		rows.insert(rows.end(), top.begin(), top.end());
-		rows.insert(rows.end(), bottom.begin(), bottom.end());
-		return BitMatrix(rows);
+		vector<BitVector<COLS>> rows;
+		for(int i = 0; i < t_rows; ++i) rows.push_back(top.getRow(i));
+		for(int i = 0; i < b_rows; ++i) rows.push_back(bottom.getRow(i));
+		BitMatrix<COLS> M(rows);
+		return M;
 	}
 
 	//Splits a bitmatrix into den-many pieces horizontally and returns the index-th submatrix (0 to den - 1)
