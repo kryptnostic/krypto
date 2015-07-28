@@ -64,6 +64,11 @@ public:
 		_bits[n >> 6ul] &= ~(1ul << (n & 63ul));
 		return *this; //added
 	}
+
+    BitVector & set(unsigned int n, bool val){
+        if(val) return set(n);
+        return clear(n);
+    }
     
 	BitVector<N> operator&(const BitVector<N> & rhs) const {
 		BitVector<N> result;
@@ -132,8 +137,8 @@ public:
     void swap(int firstIndex, int secondIndex){
     	bool firstOld = get(firstIndex);
     	bool secondOld = get(secondIndex);
-    	firstOld ? set(secondIndex) : clear(secondIndex);
-    	secondOld ? set(firstIndex) : clear(firstIndex);
+        set(secondIndex, firstOld);
+        set(firstIndex, secondOld);
     }
 
     //Returns a subvector
