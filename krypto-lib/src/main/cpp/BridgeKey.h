@@ -108,13 +108,13 @@ public:
 
 		BitMatrix<N> contrib;
 		for (int level = 0; level < 2*N; ++level) {
-			contrib = BitMatrix::aug_v(contrib, get_AND_Pk(level, X, Y2)); //add P_k's
+			contrib = BitMatrix<N>::aug_v(contrib, get_AND_Pk(level, X, Y2)); //add P_k's
 		}
 		for (int level = 0; level < 2*N; ++level) {
-			contrib = BitMatrix::aug_v(contrib, get_AND_Qk(level, X, Y1)); //add Q_k's
+			contrib = BitMatrix<N>::aug_v(contrib, get_AND_Qk(level, X, Y1)); //add Q_k's
 		}
 		for (int level = 0; level < 3*N; ++level) {
-			contrib = BitMatrix::aug_v(contrib, get_AND_Sk(level, Y1, Y2)); //add S_k's
+			contrib = BitMatrix<N>::aug_v(contrib, get_AND_Sk(level, Y1, Y2)); //add S_k's
 		}
 
 		return contrib;
