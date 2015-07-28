@@ -51,11 +51,16 @@ public:
 		return BitMatrix(rows);
 	}
 
+	static const BitMatrix squareRandomMatrix(){
+		return randomMatrix(COLS << 6);
+	}
+
+	//TODO: figure out a better way to generate random invertible matrix
 	static const BitMatrix randomInvertibleMatrix() {//invertible matrix should be square
 		int numRows = COLS << 6;
-		BitMatrix<COLS> R = BitMatrix<COLS>::randomMatrix(numRows);
+		BitMatrix<COLS> R = BitMatrix<COLS>::squareRandomMatrix();
 		while(!R.det()){
-			R = BitMatrix<COLS>::randomMatrix(numRows);
+			R = BitMatrix<COLS>::squareRandomMatrix();
 		}
 		return R;		
 	}
