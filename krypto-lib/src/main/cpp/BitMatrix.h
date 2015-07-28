@@ -132,8 +132,6 @@ public:
 		return _rows[rowIndex];
 	}
 
-	//somehow the compiler complains about couldn't infer template argument 'ROWS'
-	//TODO: fix
 	template<unsigned int ROWS>
 	BitVector<ROWS> getCol(const int colIndex) const{
 		assert(colIndex >= 0 && colIndex < colCount());
@@ -159,6 +157,7 @@ public:
 	}
 
 	//logic correct but implementation is stupid. need to fix access of getCol etc to use those functions
+	//need to figure out a way to implement getCol, now it is regarded as a static function due to the template argument
 	template<unsigned int NEWCOLS>
 	const BitMatrix<NEWCOLS> operator*(const BitMatrix<NEWCOLS> & rhs) const{
 		const size_t numCols = colCount();
@@ -170,38 +169,12 @@ public:
 		for(size_t i = 0; i < numRows; ++i){
 			for(size_t j = 0; j < newNumCols; ++j){
 				bool bit = 0;
-				for(size_t k = 0; k < numCols; ++k) bit ^= (get(i, k) & temp.get(k, j));
+				for(size_t k = 0; k < numCols; ++k) bit ^= (get(i, k) & rhs.get(k, j));
 				result.set(i, j, bit);
 			}
 		}
 		return result;
 	}
-
-/*
-	template<unsigned int NEWCOLS>
-	const BitMatrix<NEWCOLS> operator*(const BitMatrix<NEWCOLS> & rhs) const {
-		const size_t numCols = colCount();
-		assert(numCols == rhs.rowCount());
-		size_t numRows = rowCount();
-		BitMatrix<COLS> result(numRows);
-		const size_t newNumCols = rhs.colCount();
-		BitMatrix<NEWCOLS> temp = rhs;
-		const size_t ROWS = numRows >> 6; //what if numRows is not a multiple of 64?
-		for (size_t row = 0; row < numRows; row++){
-			//for (size_t col = 0; col < numCols; ++col) {
-			for(size_t col = 0; col < newNumCols; ++col){
-				result.set(row, col, getRow(row).dot(temp.getCol<ROWS>(col)));
-				
-				//if(get(row, col)){ //A = BC ==> A_{ij} = B.getRow(i).dot(C.getCol(j))
-				//	result.setRow(row, getRow(row) ^ rhs.getRow(col));
-					//result._rows[row] ^= rhs._rows[col];
-				//}
-			}
-		}
-
-		return result;
-	}
-*/
 
 	//NEED TO TEST THIS!
 	template<unsigned int ROWS>
