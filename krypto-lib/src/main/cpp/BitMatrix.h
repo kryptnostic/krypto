@@ -176,7 +176,6 @@ public:
 		return result;
 	}
 
-	//NEED TO TEST THIS!
 	template<unsigned int ROWS>
 	const BitMatrix<ROWS> T() const{
 		assert(_rows.size() == ROWS << 6);
@@ -227,6 +226,14 @@ public:
 			if(bit) result.set(j);
 		}
 		return result;
+	}
+
+	template<unsigned int NEWCOLS>
+	const BitMatrix<NEWCOLS> tMult(const BitMatrix<NEWCOLS> & M) const{
+		size_t numRows = _rows.size();
+		assert(numRows == M.rowCount());
+		BitMatrix<NEWCOLS> result = BitVector<NEWCOLS>::zeroMatrix(numRows);
+		
 	}
 
 	bool isIdentity() const {
