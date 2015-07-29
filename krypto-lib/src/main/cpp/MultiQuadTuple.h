@@ -1,17 +1,17 @@
-#ifndef __krypto__MultivariateQuadraticFunctionTuple__
-#define __krypto__MultivariateQuadraticFunctionTuple__
+#ifndef __krypto__MultiQuadTuple__
+#define __krypto__MultiQuadTuple__
 
 #include "BitMatrix.h"
 
 using namespace std;
 template<unsigned int NUM_INPUTS, unsigned int NUM_OUTPUTS>
-class MultivariateQuadraticFunctionTuple {
+class MultiQuadTuple {
 public:
-	MultivariateQuadraticFunctionTuple(const BitMatrix<NUM_OUTPUTS> & contributionsT):_contributionsT(contributionsT){}
+	MultiQuadTuple(const BitMatrix<NUM_OUTPUTS> & contributionsT):_contributionsT(contributionsT){}
 
-	const static MultivariateQuadraticFunctionTuple<NUM_INPUTS, NUM_OUTPUTS> randomMultivariateQuadraticFunctionTuple(){
-		if(!inputNeedPadding) return MultivariateQuadraticFunctionTuple<NUM_INPUTS, NUM_OUTPUTS>(BitMatrix<NUM_OUTPUTS>::randomMatrix(inputMonomialCount));
-		return MultivariateQuadraticFunctionTuple<NUM_INPUTS, NUM_OUTPUTS>(BitMatrix<NUM_OUTPUTS>::aug_v(BitMatrix<NUM_OUTPUTS>::randomMatrix(inputMonomialCount), BitMatrix<NUM_OUTPUTS>::zeroMatrix(32)));
+	const static MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS> randomMultiQuadTuple(){
+		if(!inputNeedPadding) return MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS>(BitMatrix<NUM_OUTPUTS>::randomMatrix(inputMonomialCount));
+		return MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS>(BitMatrix<NUM_OUTPUTS>::aug_v(BitMatrix<NUM_OUTPUTS>::randomMatrix(inputMonomialCount), BitMatrix<NUM_OUTPUTS>::zeroMatrix(32)));
 	}
 
 	/**Functional evaluation**/
@@ -24,14 +24,14 @@ public:
 
 	/**
 	 * Fuctional tuple evaluation composed with left matrix multiplication, e.g.:
-	 * MultivariateQuadraticFunctionTuple<N, M> f = MultivariateQuadraticFunctionTuple<N, M>::randomMultivariateQuadraticFunctionTuple();
+	 * MultiQuadTuple<N, M> f = MultiQuadTuple<N, M>::randomMultiQuadTuple();
 	 * BitMatrix<L> C = BitMatrix<L>::randomMatrix(N << 6);
-	 * MultivariateQuadraticFunctionTuple<L, M> fC = f*C; //not using f(C) to avoid confusion with contribution matrix input variable
+	 * MultiQuadTuple<L, M> fC = f*C; //not using f(C) to avoid confusion with contribution matrix input variable
 	 */
 	template<unsigned int NUM_INNERINPUTS> 
-	const MultivariateQuadraticFunctionTuple<NUM_INNERINPUTS, NUM_OUTPUTS> operator*(const BitMatrix<NUM_INNERINPUTS> & C) const{
+	const MultiQuadTuple<NUM_INNERINPUTS, NUM_OUTPUTS> operator*(const BitMatrix<NUM_INNERINPUTS> & C) const{
 		assert(NUM_INPUTS << 6 == C.colCount());
-		return MultivariateQuadraticFunctionTuple<NUM_INNERINPUTS, NUM_OUTPUTS>(getTransposedCompositionMatrix(C) * _contributionsT);
+		return MultiQuadTuple<NUM_INNERINPUTS, NUM_OUTPUTS>(getTransposedCompositionMatrix(C) * _contributionsT);
 	}
 
 	/**
@@ -39,7 +39,7 @@ public:
 	 * f.rMult(C) := Cf(*)
 	 */
 	template<unsigned int NUM_OUTEROUTPUTS>
-	const MultivariateQuadraticFunctionTuple<NUM_INPUTS, NUM_OUTEROUTPUTS> rMult(const BitMatrix<NUM_OUTPUTS> & C) {
+	const MultiQuadTuple<NUM_INPUTS, NUM_OUTEROUTPUTS> rMult(const BitMatrix<NUM_OUTPUTS> & C) {
 		assert(numOutputBits == C.colCount());
 		assert(!(C.rowCount() & 63)); 
 		//manually constructing the transpose of C since T somehow doesn't work at times when comes to template
@@ -50,26 +50,22 @@ public:
 				Ct.set(j, i, C.get(i, j));
 			}
 		} 
-		return MultivariateQuadraticFunctionTuple<NUM_INPUTS, NUM_OUTEROUTPUTS>(_contributionsT * Ct); 
-		//return MultivariateQuadraticFunctionTuple<NUM_INPUTS, NUM_OUTEROUTPUTS>(_contributionsT * C.T<NUM_ROWS>());
+		return MultiQuadTuple<NUM_INPUTS, NUM_OUTEROUTPUTS>(_contributionsT * Ct); //return MultiQuadTuple<NUM_INPUTS, NUM_OUTEROUTPUTS>(_contributionsT * C.T<NUM_ROWS>());
 	}	
 	/**
 	 * Vertically concatenates 2 function tuples
-	 * MultivariateQuadraticFunctionTuple<1,1> f1 = MultivariateQuadraticFunctionTuple<1,1>::randomMultivariateQuadraticFunctionTuple();
-	 * MultivariateQuadraticFunctionTuple<1,2> f2 = MultivariateQuadraticFunctionTuple<1,1>::randomMultivariateQuadraticFunctionTuple();
-	 * MultivariateQuadraticFunctionTuple<1,3> f = aug_v(f1,f2);
+	 * MultiQuadTuple<1,1> f1 = MultiQuadTuple<1,1>::randomMultiQuadTuple();
+	 * MultiQuadTuple<1,2> f2 = MultiQuadTuple<1,1>::randomMultiQuadTuple();
+	 * MultiQuadTuple<1,3> f = aug_v(f1,f2);
 	 */
-/*
 	template<unsigned int NUM_OUTPUTS1, unsigned int NUM_OUTPUTS2>
-	static const MultivariateQuadraticFunctionTuple<NUM_INPUTS, NUM_OUTPUTS1+NUM_OUTPUTS2> aug_v(const MultivariateQuadraticFunctionTuple<NUM_INPUTS, NUM_OUTPUTS1> & f1, const MultivariateQuadraticFunctionTuple<NUM_INPUTS, NUM_OUTPUTS2> & f2){
+	static const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS1+NUM_OUTPUTS2> aug_v(const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS1> & f1, const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS2> & f2){
 		BitMatrix<NUM_OUTPUTS1> C1 = f1.getTransposedContributionMatrix();
 		BitMatrix<NUM_OUTPUTS2> C2 = f2.getTransposedContributionMatrix();
-		const int NUM_OUTPUTS_SUM = NUM_OUTPUTS1 + NUM_OUTPUTS2;
-		BitMatrix<NUM_OUTPUTS_SUM> C = BitMatrix<NUM_OUTPUTS_SUM>::aug_h(C1, C2);
-		MultivariateQuadraticFunctionTuple<NUM_INPUTS, NUM_OUTPUTS_SUM> f(C);
-		return f;
+		const unsigned int NUM_OUTPUTS_SUM = NUM_OUTPUTS1 + NUM_OUTPUTS2;
+		return MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS_SUM>(BitMatrix<NUM_OUTPUTS_SUM>::aug_h(C1, C2));
 	}
-*/
+
 	/**Accessing various dimensions (make private later)**/
 
 	const unsigned int getInputPaddedMonomialCount() const{
@@ -86,6 +82,10 @@ public:
 
 	const unsigned int getOutputPaddedMonomialMultiple() const{//act as a template argument for BitMatrix
 		return NUM_OUTPUT_MONOMIALS;
+	}
+
+	const BitMatrix<NUM_OUTPUTS> getTransposedContributionMatrix() const{
+		return _contributionsT;
 	}
 
 private: 

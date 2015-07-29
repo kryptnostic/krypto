@@ -4,21 +4,19 @@
 
 #include <assert.h>
 #include "BitMatrix.h"
-#include "MultivariatePolynomialFunction.h"
-#include "PolynomialFunctionTupleChain.h"
+#include "MultiQuadTupleChain.h"
 
 using namespace std;
 
 /*length of plaintext = N*2^6; length of obfuscation chain = L*/
 template<unsigned int N, unsigned int L>
 class PrivateKey {
-//friend class BridgeKey;
 public:
 	PrivateKey():
 		_A(BitMatrix<N>::randomInvertibleMatrix()),
 		_B(BitMatrix<N>::randomInvertibleMatrix()),
 		_M(BitMatrix<2*N>::randomInvertibleMatrix()),
-		_f(PolynomialFunctionTupleChain<N,L>::randomPolynomialFunctionTupleChain()){
+		_f(MultiQuadTupleChain<N,L>::randomMultiQuadTupleChain()){
 		generateObfuscationMatrixChains();
 	}
 
@@ -40,7 +38,9 @@ public:
 		return _B.solve(x1 ^ (Aix2 ^ fAix2)); 
 	}
 
-protected:
+	//TODO: Make BridgeKey a friend of PrivateKey
+
+//protected:
 	const BitMatrix<N> getA() const{
 		return _A;
 	}
@@ -53,7 +53,7 @@ protected:
 		return _M;
 	}
 
-	const PolynomialFunctionTupleChain<N,L> getf() const{
+	const MultiQuadTupleChain<N,L> getf() const{
 		return _f;
 	}
 
@@ -68,7 +68,7 @@ protected:
 private:
 	BitMatrix<N> _A, _B; //SL_n(F_2)
 	BitMatrix<2*N> _M; //SL_{2n}(F_2)
-	PolynomialFunctionTupleChain<N,L> _f; //{f_1,...,f_L} random quadratic function tuples
+	MultiQuadTupleChain<N,L> _f; //{f_1,...,f_L} random quadratic function tuples
 	vector<BitMatrix<2*N> > _C_u; //chain of obfuscation matrix for unary operations
 	vector<BitMatrix<3*N> > _C_b; //chain of obfuscation matrix for binary operations
 	void generateObfuscationMatrixChains(){ //generates C_{u1},...,C_{uL} and C_{b1},...,C_{bL}

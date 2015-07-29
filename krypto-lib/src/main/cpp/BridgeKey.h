@@ -5,6 +5,7 @@
 #include <assert.h>
 #include "PrivateKey.h"
 #include "BitMatrix.h"
+#include "MultiQuadTuple.h"
 
 using namespace std;
 
@@ -29,11 +30,38 @@ public:
 	_ARxAi(pk.getA() * _Rx * pk.getA().inv()),
 	_ARyAi(pk.getA() * _Ry * pk.getA().inv())
 	{
-	}	
+	}
+
+/* Unary unified code */
+
+	const MultiQuadTuple<2*N, 2*N> get_UNARY_g1() const{
+		//untested!
+		MultiQuadTupleChain<N,L> f = _pk.getf();
+
+		BitMatrix<2*N> M2 = _M.inv().split_v_2(1);
+		BitMatrix<2*N> mat_top = _pk.getA().inv() * M2;
+		BitMatrix<2*N> mat_bot = _R.inv() * _pk.getA().inv() * M2;
+
+		MultiQuadTuple<2*N, N> top = f.get(0) * mat_top;
+		MultiQuadTuple<2*N, N> bot = f.get(0) * mat_bot;
+		return (MultiQuadTuple<2*N, 2*N>::aug_v(top, bot)).rMult(_Cu1);
+	}
+
+	const MultiQuadTuple<2*N, 2*N> get_UNARY_g2() const{
+		//untested!
+		MultiQuadTupleChain<N,L> f = _pk.getf();
+
+		BitMatrix<2*N> mat_top = _Cu1.inv().split_v_2(0);
+		BitMatrix<2*N> mat_bot = _Cu1.inv().split_v_2(1);
+
+		MultiQuadTuple<2*N, N> top = f.get(1) * mat_top;
+		MultiQuadTuple<2*N, N> bot = f.get(1) * mat_bot;
+		return (MultiQuadTuple<2*N, 2*N>::aug_v(top, bot)).rMult(_Cu2);
+	}
 
 /* Left Matrix Multiplication */
 
-	const BitMatrix<2*N> get_LMM_Z() const{
+	const BitMatrix<4*N> get_LMM_Z() const{
 		//untested!
 		BitMatrix<N> zeroN = BitMatrix<N>::squareZeroMatrix();
 
@@ -44,17 +72,38 @@ public:
 		BitMatrix<2*N> Y_top = BitMatrix<N>::aug_h(_BKBi, BitMatrix<N>::squareIdentityMatrix());
 		BitMatrix<2*N> Y_bottom = BitMatrix<N>::aug_h(zeroN, zeroN);
 		BitMatrix<2*N> Y = BitMatrix<2*N>::aug_v(X_top, X_bottom) * _Cu2.inv();
-		return BitMatrix<2*N>::aug_h(X, Y);
+		return BitMatrix<4*N>::aug_h(X, Y);
 	}
 
-	const BitMatrix<N> get_LMM_g1() const{
-		//to be implemented
-		return BitMatrix<N>::randomInvertibleMatrix();
+/* Binary unified code */
+
+	const MultiQuadTuple<2*N, 3*N> get_BINARY_gy1() const{
+		//untested!
+		MultiQuadTupleChain<N,L> f = _pk.getf();
+
+		BitMatrix<2*N> M2 = _M.inv().split_v_2(1);
+		BitMatrix<2*N> mat_mid = _pk.getA().inv() * M2;
+		BitMatrix<2*N> mat_bot = _Ry * _pk.getA().inv() * M2;
+
+		MultiQuadTuple<2*N, N> top(BitMatrix<2*N>::zeroMatrix(MultiQuadTuple<N, 2*N>::getMonomialCount()));
+		MultiQuadTuple<2*N, N> mid = f.get(0) * mat_mid;
+		MultiQuadTuple<2*N, N> bot = f.get(0) * mat_bot;
+		return (MultiQuadTuple<2*N, 3*N>::aug_v(MultiQuadTuple<2*N, 2*N>::aug_v(top, mid), bot)).rMult(_Cb1);
 	}
 
-	const BitMatrix<N> get_LMM_g2() const{
-		//to be implemented
-		return BitMatrix<N>::randomInvertibleMatrix();
+	const MultiQuadTuple<2*N, 3*N>get_BINARY_g2() const{
+		//untested!
+		MultiQuadTupleChain<N,L> f = _pk.getf();
+
+		BitMatrix<3*N> Cb1_inv = _Cb1.inv();
+		BitMatrix<3*N> mat_top = Cb1_inv.split_v_3(0);
+		BitMatrix<3*N> mat_mid = Cb1_inv.split_v_3(1);
+		BitMatrix<3*N> mat_bot = Cb1_inv.split_v_3(2);
+
+		MultiQuadTuple<2*N, N> top = f.get(1) * mat_top;
+		MultiQuadTuple<2*N, N> mid = f.get(1) * mat_mid;
+		MultiQuadTuple<2*N, N> bot = f.get(1) * mat_bot;
+		return (MultiQuadTuple<2*N, 3*N>::aug_v(MultiQuadTuple<2*N, 2*N>::aug_v(top, mid), bot)).rMult(_Cb2);
 	}
 
 
@@ -86,16 +135,19 @@ public:
 		return BitMatrix<3*N>::aug_v(Y_top, BitMatrix<3*N>::zeroMatrix(N << 6)) * _Cu2.inv();
 	}
 
-	const BitMatrix<3*N> get_XOR_g1() const{
-		//to be implemented
-		return BitMatrix<3*N>::randomInvertibleMatrix();
-	}
+	const MultiQuadTuple<2*N, 3*N> get_XOR_gx1() const{
+		//untested!
+		MultiQuadTupleChain<N,L> f = _pk.getf();
 
-	const BitMatrix<3*N> get_XOR_g2() const{
-		//to be implemented
-		return BitMatrix<3*N>::randomInvertibleMatrix();
-	}
+		BitMatrix<2*N> M2 = _M.inv().split_v_2(1);
+		BitMatrix<2*N> mat_top = _pk.getA().inv() * M2;
+		BitMatrix<2*N> mat_bot = _Rx * _pk.getA().inv() * M2;
 
+		MultiQuadTuple<2*N, N> top = f.get(0) * mat_top;
+		MultiQuadTuple<2*N, N> mid(BitMatrix<2*N>::zeroMatrix(MultiQuadTuple<N, 2*N>::getMonomialCount()));
+		MultiQuadTuple<2*N, N> bot = f.get(0) * mat_bot;
+		return (MultiQuadTuple<2*N, 3*N>::aug_v(MultiQuadTuple<2*N, 2*N>::aug_v(top, mid), bot)).rMult(_Cb1);
+	}
 
 /* AND */
 
@@ -122,27 +174,17 @@ public:
 
 	const BitMatrix<2*N> get_AND_Z1() const{
 		//untested!
-		BitMatrix<2*N> M2 = _M.split_v(1, 2);
+		BitMatrix<2*N> M2 = _M.split_v_2(1);
 		BitMatrix<2*N> top = _Rx * _pk.getA().inv() * M2;
 		BitMatrix<2*N> bottom = _pk.getA() * top;
 		return BitMatrix<N>::aug_v(top, bottom);
 	}
 
 	const BitMatrix<N> get_AND_Z2() const{
-		BitMatrix<2*N> M2 = _M.split_v(1, 2);
+		BitMatrix<2*N> M2 = _M.split_v_2(1);
 		BitMatrix<2*N> top = _Ry * _pk.getA().inv() * M2;
 		BitMatrix<2*N> bottom = _pk.getA() * top;
 		return BitMatrix<N>::aug_v(top, bottom);
-	}
-
-	const BitMatrix<N> get_AND_g1() const{
-		//to be implemented
-		return BitMatrix<N>::randomInvertibleMatrix();
-	}
-
-	const BitMatrix<N> get_AND_g2() const{
-		//to be implemented
-		return BitMatrix<N>::randomInvertibleMatrix();
 	}
 
 
@@ -151,7 +193,7 @@ private:
 	BitMatrix<N> _R; //TODO: delegate the random matrix generation task to some other class?
 	BitMatrix<N> _Rx;
 	BitMatrix<N> _Ry;
-	BitMatrix<N> _M;
+	BitMatrix<2*N> _M;
 	BitMatrix<2*N> _Cu1;
 	BitMatrix<2*N> _Cu2;
 	BitMatrix<3*N> _Cb1;
@@ -161,8 +203,8 @@ private:
 	BitMatrix<N> _ARAi;
 	BitMatrix<N> _ARxAi;
 	BitMatrix<N> _ARyAi;
-	PolynomialFunctionTupleChain<2*N,L> _g_u; //obsfucated chain for unary operations
-	PolynomialFunctionTupleChain<3*N,L> _g_b; //obsfucated chain for binary operations
+	MultiQuadTupleChain<2*N,L> _g_u; //obsfucated chain for unary operations
+	MultiQuadTupleChain<3*N,L> _g_b; //obsfucated chain for binary operations
 	int _dim_quad = 64; //dimension of bitmatrix used to represent quadratic poly's (why isn't this N << 6 in general?)
 
 
@@ -173,17 +215,17 @@ private:
 	}
 
 	const BitMatrix<3*N> get_AND_Y1() const{
-		BitMatrix<3*N> Cb_top = _Cb1.inv().split_v(1, 3);
+		BitMatrix<3*N> Cb_top = _Cb1.inv().split_v_3(0);
 		return _pk.getB() * Cb_top;
 	}
 
 	const BitMatrix<3*N> get_AND_Y2() const{
-		BitMatrix<3*N> Cb_middle = _Cb1.inv().split_v(2, 3);
+		BitMatrix<3*N> Cb_middle = _Cb1.inv().split_v_3(1);
 		return _pk.getB() * Cb_middle;
 	}
 
 	const BitMatrix<3*N> get_AND_Y3() const{
-		return _Cb1.inv().split_v(3, 3);
+		return _Cb1.inv().split_v_3(2);
 	}
 
 	//top chunk of contrib matrix for z
