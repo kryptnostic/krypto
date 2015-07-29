@@ -102,22 +102,51 @@ public:
 		return BitMatrix<3*N>::aug_v(Y_top, BitMatrix<3*N>::zeroMatrix(N << 6)) * _Cu2.inv();
 	}
 
-	// const BitMatrix<3*N> get_XOR_g1() const{
-	// 	//untested!
-	// 	PolynomialFunctionTupleChain<N,L> f = _pk.getf();
+	//figure out the correct column counts for the g's below
 
-	// 	BitMatrix<2*N> M2 = _M.inv().split_v_2(1);
-	// 	BitMatrix<2*N> mat_top = _pk.getA().inv() * M2;
-	// 	BitMatrix<2*N> mat_mid = _pk.getA().inv() * M2;
+	const BitMatrix<3*N> get_XOR_gx1() const{
+		//untested!
+		PolynomialFunctionTupleChain<N,L> f = _pk.getf();
 
-	// 	MultivariateQuadraticFunctionTuple<N, N> top = f.get(0) * mat_top;
-	// 	MultivariateQuadraticFunctionTuple<N, N> bot = f.get(0) * mat_mid;
-	// 	return (MultivariateQuadraticFunctionTuple<N, 2*N>::aug_v(top, bot)).rMult(_Cu1);
-	// }
+		BitMatrix<2*N> M2 = _M.inv().split_v_2(1);
+		BitMatrix<2*N> mat_top = _pk.getA().inv() * M2;
+		BitMatrix<2*N> mat_mid = BitMatrix<2*N>::squareZeroMatrix();
+		BitMatrix<2*N> mat_bot = _Rx * _pk.getA().inv() * M2;
+
+		MultivariateQuadraticFunctionTuple<N, N> top = f.get(0) * mat_top;
+		MultivariateQuadraticFunctionTuple<N, N> mid = f.get(0) * mat_mid;
+		MultivariateQuadraticFunctionTuple<N, N> bot = f.get(0) * mat_bot;
+		return (MultivariateQuadraticFunctionTuple<N, 3*N>::aug_v(MultivariateQuadraticFunctionTuple<N, 2*N>::aug_v(top, bot))).rMult(_Cb1);
+	}
+
+		const BitMatrix<3*N> get_XOR_gy1() const{
+		//untested!
+		PolynomialFunctionTupleChain<N,L> f = _pk.getf();
+
+		BitMatrix<2*N> M2 = _M.inv().split_v_2(1);
+		BitMatrix<2*N> mat_top = BitMatrix<2*N>::squareZeroMatrix();
+		BitMatrix<2*N> mat_mid = _pk.getA().inv() * M2;
+		BitMatrix<2*N> mat_bot = _Ry * _pk.getA().inv() * M2;
+
+		MultivariateQuadraticFunctionTuple<N, N> top = f.get(0) * mat_top;
+		MultivariateQuadraticFunctionTuple<N, N> mid = f.get(0) * mat_mid;
+		MultivariateQuadraticFunctionTuple<N, N> bot = f.get(0) * mat_bot;
+		return (MultivariateQuadraticFunctionTuple<N, 3*N>::aug_v(MultivariateQuadraticFunctionTuple<N, 2*N>::aug_v(top, bot))).rMult(_Cb1);
+	}
 
 	const BitMatrix<3*N> get_XOR_g2() const{
-		//to be implemented
-		return BitMatrix<3*N>::randomInvertibleMatrix();
+		//untested!
+		PolynomialFunctionTupleChain<N,L> f = _pk.getf();
+
+		BitMatrix<3*N> Cb1_inv = _Cb1.inv();
+		BitMatrix<3*N> mat_top = Cb1_inv.split_v_3(0);
+		BitMatrix<3*N> mat_mid = Cb1_inv.split_v_3(1);
+		BitMatrix<3*N> mat_bot = Cb1_inv.split_v_3(2);
+
+		MultivariateQuadraticFunctionTuple<N, N> top = f.get(1) * mat_top;
+		MultivariateQuadraticFunctionTuple<N, N> mid = f.get(1) * mat_mid;
+		MultivariateQuadraticFunctionTuple<N, N> bot = f.get(1) * mat_bot;
+		return (MultivariateQuadraticFunctionTuple<N, 3*N>::aug_v(MultivariateQuadraticFunctionTuple<N, 2*N>::aug_v(top, bot))).rMult(_Cb2);
 	}
 
 
