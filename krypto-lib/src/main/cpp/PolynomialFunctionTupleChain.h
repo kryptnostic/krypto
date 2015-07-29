@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 #include "BitVector.h"
-#include "MultivariateQuadraticFunctiontuple.h"
+#include "MultivariateQuadraticFunctionTuple.h"
 
 //for now, assuming that the input and output all live in F_2^{N*2^6}
 //ChainPolynomialFunctionTuple f = {f_1,...,f_L}, f_i: F_2^N -> F_2^N
@@ -38,6 +38,10 @@ public:
 
 	void addFunctionTuple(const MultivariateQuadraticFunctionTuple<N,N> & f){
 		_tuple.push_back(f);
+	}
+
+	MultivariateQuadraticFunctionTuple<N,N> get(const int index){
+		return _tuple[index];
 	}
 
 private:

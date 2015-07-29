@@ -5,6 +5,7 @@
 #include <assert.h>
 #include "PrivateKey.h"
 #include "BitMatrix.h"
+#include "MultivariateQuadraticFunctionTuple.h"
 
 using namespace std;
 
@@ -47,14 +48,29 @@ public:
 		return BitMatrix<4*N>::aug_h(X, Y);
 	}
 
-	const BitMatrix<N> get_LMM_g1() const{
-		//to be implemented
-		return BitMatrix<N>::randomInvertibleMatrix();
+	const MultivariateQuadraticFunctionTuple<N, 2*N> get_LMM_g1() const{
+		//untested!
+		PolynomialFunctionTupleChain<N,L> f = _pk.getf();
+
+		BitMatrix<2*N> M2 = _M.inv().split_h_2(1);
+		BitMatrix<2*N> top_mat = _pk.getA().inv() * M2;
+		BitMatrix<2*N> bot_mat = _R.inv() * _pk.getA().inv() * M2;
+
+		MultivariateQuadraticFunctionTuple<N, N> top = f.get(0) * top_mat;
+		MultivariateQuadraticFunctionTuple<N, N> bot = f.get(0) * bot_mat;
+		return (MultivariateQuadraticFunctionTuple<N, 2*N>::aug_v(top, bot)).rMult(_Cu1);
 	}
 
-	const BitMatrix<N> get_LMM_g2() const{
-		//to be implemented
-		return BitMatrix<N>::randomInvertibleMatrix();
+	const MultivariateQuadraticFunctionTuple<N, 2*N> get_LMM_g2() const{
+		//untested!
+		PolynomialFunctionTupleChain<N,L> f = _pk.getf();
+
+		BitMatrix<2*N> top_mat = _Cu1.inv().split_h_2(0);
+		BitMatrix<2*N> bot_mat = _Cu1.inv().split_h_2(1);
+
+		MultivariateQuadraticFunctionTuple<N, N> top = f.get(1) * top_mat;
+		MultivariateQuadraticFunctionTuple<N, N> bot = f.get(1) * bot_mat;
+		return (MultivariateQuadraticFunctionTuple<N, 2*N>::aug_v(top, bot)).rMult(_Cu2);
 	}
 
 
