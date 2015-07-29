@@ -44,7 +44,7 @@ public:
 
 		MultiQuadTuple<2*N, N> top = f.get(0) * mat_top;
 		MultiQuadTuple<2*N, N> bot = f.get(0) * mat_bot;
-		return (MultiQuadTuple<2*N, 2*N>::aug_v(top, bot)).rMult(_Cu1);
+		return (MultiQuadTuple<2*N, 2*N>::aug_v(top, bot)).rMult<2*N>(_Cu1);
 	}
 
 	const MultiQuadTuple<2*N, 2*N> get_UNARY_g2() const{
@@ -56,7 +56,7 @@ public:
 
 		MultiQuadTuple<2*N, N> top = f.get(1) * mat_top;
 		MultiQuadTuple<2*N, N> bot = f.get(1) * mat_bot;
-		return (MultiQuadTuple<2*N, 2*N>::aug_v(top, bot)).rMult(_Cu2);
+		return (MultiQuadTuple<2*N, 2*N>::aug_v(top, bot)).rMult<2*N>(_Cu2);
 	}
 
 /* Left Matrix Multiplication */
@@ -88,7 +88,7 @@ public:
 		MultiQuadTuple<2*N, N> top(BitMatrix<2*N>::zeroMatrix(MultiQuadTuple<N, 2*N>::getMonomialCount()));
 		MultiQuadTuple<2*N, N> mid = f.get(0) * mat_mid;
 		MultiQuadTuple<2*N, N> bot = f.get(0) * mat_bot;
-		return (MultiQuadTuple<2*N, 3*N>::aug_v(MultiQuadTuple<2*N, 2*N>::aug_v(top, mid), bot)).rMult(_Cb1);
+		return (MultiQuadTuple<2*N, 3*N>::aug_v(MultiQuadTuple<2*N, 2*N>::aug_v(top, mid), bot)).rMult<3*N>(_Cb1);
 	}
 
 	const MultiQuadTuple<2*N, 3*N>get_BINARY_g2() const{
@@ -103,7 +103,7 @@ public:
 		MultiQuadTuple<2*N, N> top = f.get(1) * mat_top;
 		MultiQuadTuple<2*N, N> mid = f.get(1) * mat_mid;
 		MultiQuadTuple<2*N, N> bot = f.get(1) * mat_bot;
-		return (MultiQuadTuple<2*N, 3*N>::aug_v(MultiQuadTuple<2*N, 2*N>::aug_v(top, mid), bot)).rMult(_Cb2);
+		return (MultiQuadTuple<2*N, 3*N>::aug_v(MultiQuadTuple<2*N, 2*N>::aug_v(top, mid), bot)).rMult<3*N>(_Cb2);
 	}
 
 
@@ -146,7 +146,7 @@ public:
 		MultiQuadTuple<2*N, N> top = f.get(0) * mat_top;
 		MultiQuadTuple<2*N, N> mid(BitMatrix<2*N>::zeroMatrix(MultiQuadTuple<N, 2*N>::getMonomialCount()));
 		MultiQuadTuple<2*N, N> bot = f.get(0) * mat_bot;
-		return (MultiQuadTuple<2*N, 3*N>::aug_v(MultiQuadTuple<2*N, 2*N>::aug_v(top, mid), bot)).rMult(_Cb1);
+		return (MultiQuadTuple<2*N, 3*N>::aug_v(MultiQuadTuple<2*N, 2*N>::aug_v(top, mid), bot)).rMult<3*N>(_Cb1);
 	}
 
 /* AND */
