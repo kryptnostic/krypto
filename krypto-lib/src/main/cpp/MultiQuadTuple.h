@@ -60,6 +60,7 @@ public:
 	 */
 	template<unsigned int NUM_OUTPUTS1, unsigned int NUM_OUTPUTS2>
 	static const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS1+NUM_OUTPUTS2> aug_v(const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS1> & f1, const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS2> & f2){
+		assert(NUM_OUTPUTS == NUM_OUTPUTS1 + NUM_OUTPUTS2);
 		BitMatrix<NUM_OUTPUTS1> C1 = f1.getTransposedContributionMatrix();
 		BitMatrix<NUM_OUTPUTS2> C2 = f2.getTransposedContributionMatrix();
 		const unsigned int NUM_OUTPUTS_SUM = NUM_OUTPUTS1 + NUM_OUTPUTS2;
