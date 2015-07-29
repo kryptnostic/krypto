@@ -50,7 +50,7 @@ public:
 
 	const MultiQuadTuple<2*N, 2*N> get_LMM_g1() const{
 		//untested!
-		MultiQuadTupleChain<2*N,L> f = _pk.getf();
+		MultiQuadTupleChain<N,L> f = _pk.getf();
 
 		BitMatrix<2*N> M2 = _M.inv().split_v_2(1);
 		BitMatrix<2*N> mat_top = _pk.getA().inv() * M2;
@@ -63,7 +63,7 @@ public:
 
 	const MultiQuadTuple<2*N, 2*N> get_LMM_g2() const{
 		//untested!
-		MultiQuadTupleChain<2*N,L> f = _pk.getf();
+		MultiQuadTupleChain<N,L> f = _pk.getf();
 
 		BitMatrix<2*N> mat_top = _Cu1.inv().split_v_2(0);
 		BitMatrix<2*N> mat_bot = _Cu1.inv().split_v_2(1);
@@ -104,7 +104,7 @@ public:
 
 	const MultiQuadTuple<2*N, 3*N> get_XOR_gx1() const{
 		//untested!
-		MultiQuadTupleChain<2*N,L> f = _pk.getf();
+		MultiQuadTupleChain<N,L> f = _pk.getf();
 
 		BitMatrix<2*N> M2 = _M.inv().split_v_2(1);
 		BitMatrix<2*N> mat_top = _pk.getA().inv() * M2;
@@ -118,7 +118,7 @@ public:
 
 		const MultiQuadTuple<2*N, 3*N> get_XOR_gy1() const{
 		//untested!
-		MultiQuadTupleChain<2*N,L> f = _pk.getf();
+		MultiQuadTupleChain<N,L> f = _pk.getf();
 
 		BitMatrix<2*N> M2 = _M.inv().split_v_2(1);
 		BitMatrix<2*N> mat_mid = _pk.getA().inv() * M2;
