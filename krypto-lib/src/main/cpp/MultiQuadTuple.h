@@ -19,6 +19,10 @@ public:
 		return f;
 	}
 
+	static const unsigned int getMonomialCount() {
+		return monomialCount;
+	}
+
 	const BitMatrix<NUM_OUTPUTS> getPaddedContribution() const{
 		if(!needPadding) return _contributions;
 		return BitMatrix<NUM_OUTPUTS>::aug_v(_contributions, BitMatrix<NUM_OUTPUTS>::zeroMatrix(32));
