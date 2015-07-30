@@ -12,24 +12,48 @@ void testLeftCompose(){ //C:L->N, f:N->M
 	MultiQuadTuple<N, M> f = MultiQuadTuple<N, M>::randomMultiQuadTuple();
 	BitMatrix<L> C = BitMatrix<L>::randomMatrix(N << 6);
 	BitVector<L> x = BitVector<L>::randomVector();
-	MultiQuadTuple<L, M> fC = f*C;
-	BitVector<M> fC_x = fC(x);
+
 	BitVector<N> Cx = C.template operator*<N>(x);
 	BitVector<M> f_Cx = f(Cx);
-	fC_x.print();
+
+	MultiQuadTuple<L, M> fC = f*C;
+	BitVector<M> fC_x = fC(x);
+
+	cout << "f (C*x) = ";
 	f_Cx.print();
+	cout << endl;
+
+	cout << "f*C (x) = ";
+	fC_x.print();
+	cout << endl;
+
+	cout << "x = ";
+	x.print();
+	cout << endl;
 }
 
 void testRightCompose(){ //f:N->M, D:M->K
 	MultiQuadTuple<N, M> f = MultiQuadTuple<N, M>::randomMultiQuadTuple();
 	BitMatrix<M> D = BitMatrix<M>::randomMatrix(K << 6); 
-	MultiQuadTuple<N, K> Df = f.rMult<K>(D); 
 	BitVector<N> x = BitVector<N>::randomVector();
+
+	MultiQuadTuple<N, K> Df = f.rMult<K>(D); 
 	BitVector<K> Df_x = Df(x);
+
 	BitVector<M> fx = f(x);
 	BitVector<K> D_fx = D.template operator*<K>(fx);
+
+	cout << "D * f(x) = ";
 	Df_x.print();
+	cout << endl;
+
+	cout << "D*f (x) = ";
 	D_fx.print();
+	cout << endl;
+
+	cout << "x = ";
+	x.print();
+	cout << endl;
 }
 
 int main(int argc, char **argv) {
