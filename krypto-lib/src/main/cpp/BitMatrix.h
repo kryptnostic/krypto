@@ -146,8 +146,9 @@ public:
 		return v;
 	}
 
-	const BitVector<COLS> operator*(const BitVector<COLS> & v) const {
-		BitVector<COLS> result;
+	template <unsigned int NEWCOLS>
+	const BitVector<NEWCOLS> operator*(const BitVector<COLS> & v) const{
+		BitVector<NEWCOLS> result;
 		size_t numRows = _rows.size();
 		for (size_t i = 0; i < numRows; ++i) {
 			BitVector<COLS> prod = _rows[i] & v;
