@@ -19,6 +19,8 @@ TEST(BridgeKeyTest, testLMM){
 	PrivateKey<N, 2> pk;
  	BridgeKey<N, 2> bk(pk, BitMatrix<N>::squareIdentityMatrix());
  	BitMatrix<4*N> Z = bk.get_LMM_Z();
+	// MultiQuadTuple<2*N, 2*N> u_g1 = bk.get_UNARY_g1();
+	// MultiQuadTuple<2*N, 2*N> u_g2 = bk.get_UNARY_g2();
 }
 
 TEST(BridgeKeyTest, testXOR){
