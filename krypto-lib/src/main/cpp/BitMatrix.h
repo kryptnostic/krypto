@@ -30,7 +30,14 @@ public:
 			_rows(rows) {
 	}
 
+<<<<<<< HEAD
 	BitMatrix(const BitMatrix<COLS> & m) : _rows( m._rows ){}
+=======
+	BitMatrix(const BitMatrix<COLS> & m) : _rows( m._rows ) 
+	{
+		
+	}
+>>>>>>> 732d29346e9080587b6f953a3ca04cb5e4aea21c
 
 	//is the for loop necessary? surely there is a faster way (memset or something)
 	static const BitMatrix zeroMatrix(const int numRows){
@@ -178,6 +185,7 @@ public:
 		return result;
 	}
 
+	//NEED TO TEST THIS!
 	template<unsigned int ROWS>
 	const BitMatrix<ROWS> T() const{
 		assert(_rows.size() == ROWS << 6);
@@ -228,14 +236,6 @@ public:
 			if(bit) result.set(j);
 		}
 		return result;
-	}
-
-	template<unsigned int NEWCOLS>
-	const BitMatrix<NEWCOLS> tMult(const BitMatrix<NEWCOLS> & M) const{
-		size_t numRows = _rows.size();
-		assert(numRows == M.rowCount());
-		BitMatrix<NEWCOLS> result = BitVector<NEWCOLS>::zeroMatrix(numRows);
-		
 	}
 
 	bool isIdentity() const {
@@ -446,11 +446,12 @@ public:
 
 		vector<BitVector<COLS>> rows(l_rows);		
 		for(int i = 0; i < l_rows; ++i){
-			BitVector<COLS> lv = lhs.getRow(i);
-			BitVector<COLS> rv = rhs.getRow(i);
+			BitVector<COLS1> lv = lhs.getRow(i);
+			BitVector<COLS2> rv = rhs.getRow(i);
 			rows[i] = BitVector<COLS>::vcat2(lv, rv);
 		}
-		return BitMatrix<COLS>(rows);
+		BitMatrix<COLS> M(rows);
+		return M;
 	}
 
 	//Augments two matrices together vertically (needs optimization!)
@@ -460,7 +461,8 @@ public:
 		vector<BitVector<COLS>> rows;
 		for(int i = 0; i < t_rows; ++i) rows.push_back(top.getRow(i));
 		for(int i = 0; i < b_rows; ++i) rows.push_back(bottom.getRow(i));
-		return BitMatrix<COLS>(rows);
+		BitMatrix<COLS> M(rows);
+		return M;
 	}
 
 	//Splits a bitmatrix into den-many pieces horizontally and returns the index-th submatrix (0 to den - 1)

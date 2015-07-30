@@ -44,12 +44,16 @@ public:
 		assert(!(C.rowCount() & 63)); 
 		//manually constructing the transpose of C since T somehow doesn't work at times when comes to template
 		const unsigned int givenRowCount = NUM_OUTEROUTPUTS << 6;
+
+		BitMatrix<NUM_OUTEROUTPUTS> Ct( C.template T<NUM_OUTEROUTPUTS>() );
+		/*
 		BitMatrix<NUM_OUTEROUTPUTS> Ct = BitMatrix<NUM_OUTEROUTPUTS>::zeroMatrix(numOutputBits); 
 		for(int i = 0; i < givenRowCount; ++i){
 			for(int j = 0; j < numOutputBits; ++j){
 				Ct.set(j, i, C.get(i, j));
 			}
 		} 
+		*/
 		return MultiQuadTuple<NUM_INPUTS, NUM_OUTEROUTPUTS>(_contributionsT * Ct); //return MultiQuadTuple<NUM_INPUTS, NUM_OUTEROUTPUTS>(_contributionsT * C.T<NUM_ROWS>());
 	}	
 	/**
@@ -60,7 +64,6 @@ public:
 	 */
 	template<unsigned int NUM_OUTPUTS1, unsigned int NUM_OUTPUTS2>
 	static const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS1+NUM_OUTPUTS2> aug_v(const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS1> & f1, const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS2> & f2){
-		assert(NUM_OUTPUTS == NUM_OUTPUTS1 + NUM_OUTPUTS2);
 		BitMatrix<NUM_OUTPUTS1> C1 = f1.getTransposedContributionMatrix();
 		BitMatrix<NUM_OUTPUTS2> C2 = f2.getTransposedContributionMatrix();
 		const unsigned int NUM_OUTPUTS_SUM = NUM_OUTPUTS1 + NUM_OUTPUTS2;
