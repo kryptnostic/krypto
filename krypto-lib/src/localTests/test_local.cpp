@@ -64,18 +64,24 @@ void testRightCompose(MultiQuadTuple<N, M> &f, BitVector<N> &x){ //f:N->M, D:M->
 }
 
 void testBridgeKeyInstantiation(PrivateKey<N, 2*N> &pk) {
- 	BridgeKey<N, 2*N> bk(pk, BitMatrix<N>::squareIdentityMatrix());
+	BridgeKey<N, 2*N> bk(pk, BitMatrix<N>::squareIdentityMatrix());
 
- 	// BitMatrix<4*N> Z = bk.get_LMM_Z();
 	// MultiQuadTuple<2*N, 2*N> u_g1 = bk.get_UNARY_g1();
 	// MultiQuadTuple<2*N, 2*N> u_g2 = bk.get_UNARY_g2();
 
+	// BitMatrix<4*N> Z = bk.get_LMM_Z();
+
+	// MultiQuadTuple<2*N, 3*N> b_gx1 = bk.get_BINARY_gx1();
+	// MultiQuadTuple<2*N, 3*N> b_gy1 = bk.get_BINARY_gy1();
+	// MultiQuadTuple<3*N, 3*N> b_g2 = bk.get_BINARY_g2();
+
 	// BitMatrix<2*N> Xx = bk.get_XOR_Xx();
- 	// BitMatrix<2*N> Xy = bk.get_XOR_Xy();
- 	// BitMatrix<3*N> Y = bk.get_XOR_Y();
- 	MultiQuadTuple<2*N, 3*N> b_gx1 = bk.get_BINARY_gx1();
- 	MultiQuadTuple<2*N, 3*N> b_gy1 = bk.get_BINARY_gy1();
-	MultiQuadTuple<3*N, 3*N> b_g2 = bk.get_BINARY_g2();
+	// BitMatrix<2*N> Xy = bk.get_XOR_Xy();
+	// BitMatrix<3*N> Y = bk.get_XOR_Y();
+
+	// BitMatrix<2*N> Z1 = bk.get_AND_Z1();
+	// BitMatrix<2*N> Z2 = bk.get_AND_Z2();
+	// BitMatrix<N> z = bk.get_AND_z();
 }
 
 int main(int argc, char **argv) {
