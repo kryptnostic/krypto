@@ -1,5 +1,8 @@
 #include "../main/cpp/MultiQuadTuple.h"
+#include "../main/cpp/BridgeKey.h"
 #include <iostream>
+#include <time.h>
+
 using namespace std;
 
 #define L 1
@@ -60,11 +63,40 @@ void testRightCompose(MultiQuadTuple<N, M> &f, BitVector<N> &x){ //f:N->M, D:M->
 	cout << "---------------------------------" << endl;
 }
 
-int main(int argc, char **argv) {
-	MultiQuadTuple<N, M> f = MultiQuadTuple<N, M>::randomMultiQuadTuple();
-	BitVector<N> x = BitVector<N>::randomVector();
+void testBridgeKeyInstantiation(PrivateKey<N, 2*N> &pk) {
+	BridgeKey<N, 2*N> bk(pk, BitMatrix<N>::squareIdentityMatrix());
 
-	testLeftCompose(f, x);
-	testRightCompose(f, x);
+	MultiQuadTuple<2*N, 2*N> u_g1 = bk.get_UNARY_g1();
+	MultiQuadTuple<2*N, 2*N> u_g2 = bk.get_UNARY_g2();
+
+	BitMatrix<4*N> Z = bk.get_LMM_Z();
+
+	MultiQuadTuple<2*N, 3*N> b_gx1 = bk.get_BINARY_gx1();
+	MultiQuadTuple<2*N, 3*N> b_gy1 = bk.get_BINARY_gy1();
+	MultiQuadTuple<3*N, 3*N> b_g2 = bk.get_BINARY_g2();
+
+	BitMatrix<2*N> Xx = bk.get_XOR_Xx();
+	BitMatrix<2*N> Xy = bk.get_XOR_Xy();
+	BitMatrix<3*N> Y = bk.get_XOR_Y();
+
+	BitMatrix<2*N> Z1 = bk.get_AND_Z1();
+	BitMatrix<2*N> Z2 = bk.get_AND_Z2();
+	BitMatrix<N> z = bk.get_AND_z();
+}
+
+int main(int argc, char **argv) {
+	clock_t begin = clock();
+
+	// MultiQuadTuple<N, M> f = MultiQuadTuple<N, M>::randomMultiQuadTuple();
+	// BitVector<N> x = BitVector<N>::randomVector();
+
+	// testLeftCompose(f, x);
+	// testRightCompose(f, x);
+
+	PrivateKey<N, 2*N> pk;
+ 	testBridgeKeyInstantiation(pk);
+
+ 	clock_t end = clock();
+ 	cout << "Time elapsed: " << double(end - begin) / CLOCKS_PER_SEC << " sec" << endl;
 	return 0;
 }
