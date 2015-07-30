@@ -23,10 +23,10 @@ public:
 	const BitVector<2*N> encrypt(const BitVector<N> m) const{//returns x = E(m, r) given a plaintext m 
 		//For now, we assume that m is padded and hashed. These operations will be included later.
 		BitVector<N> r = BitVector<N>::randomVector();
-		BitVector<N> top = _B*m ^ (r ^ _f(r));
-		BitVector<N> bottom = _A*r;
+		BitVector<N> top = _B.template operator*<N>(m) ^ (r ^ _f(r));
+		BitVector<N> bottom = _A.template operator*<N>(r);
 		BitVector<2*N> result = BitVector<N>::vcat2(top, bottom);
-		return _M * (BitVector<N>::vcat2(top, bottom));
+		return _M.template operator*<2*N>(BitVector<N>::vcat2(top, bottom));
 	}
 	
 	const BitVector<N> decrypt(const BitVector<2*N> x) const{//returns m = D(x) given a ciphertext x
