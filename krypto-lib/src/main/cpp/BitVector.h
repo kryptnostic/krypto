@@ -245,7 +245,7 @@ public:
     }
 
     void print() const {
-        std::cout << "[ ";
+        std::cout << "[";
         for (int i = 0; i < numBits - 1; ++i) {
             std::cout << get(i) << ", ";
         }
