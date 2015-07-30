@@ -149,8 +149,8 @@ public:
 		//untested!
 		BitMatrix<N> idN = BitMatrix<N>::squareIdentityMatrix();
 
-		BitMatrix<3*N> Y_top = BitMatrix<3*N>::aug_h(idN, BitMatrix<N>::aug_h(idN, idN));
-		return BitMatrix<3*N>::aug_v(Y_top, BitMatrix<3*N>::zeroMatrix(N << 6)) * _Cu2.inv();
+		BitMatrix<3*N> Y_top = BitMatrix<3*N>::aug_h(idN, BitMatrix<2*N>::aug_h(idN, idN));
+		return BitMatrix<3*N>::aug_v(Y_top, BitMatrix<3*N>::zeroMatrix(N << 6)) * _Cb2.inv();
 	}
 
 /* AND */
