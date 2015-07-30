@@ -16,9 +16,11 @@ TEST(MQTTests, testInit){//assert equality later, as there's obob now
 	MultiQuadTuple<N, M> f = MultiQuadTuple<N, M>::randomMultiQuadTuple();
 	BitVector<N> y = BitVector<N>::randomVector();
 	BitVector<M> fy = f(y);
+	ASSERT_TRUE(1+2 == 3);
 }
 
 TEST(MQTTests, testLeftComp){
+	ASSERT_TRUE(2+3 == 5);
 	MultiQuadTuple<N, M> f = MultiQuadTuple<N, M>::randomMultiQuadTuple();
 	BitMatrix<L> C = BitMatrix<L>::randomMatrix(N << 6);
 	BitVector<L> x = BitVector<L>::randomVector();
@@ -27,9 +29,11 @@ TEST(MQTTests, testLeftComp){
 	BitVector<N> Cx = C.template operator*<N>(x);
 	BitVector<M> f_Cx = f(Cx);
 	//ASSERT_TRUE(fC_x.equals(f_Cx)); (not sure if there's obob now)
+	ASSERT_TRUE(3+5 = 8);
 }
 
 TEST(MQTTests, testRightComp){
+	ASSERT_TRUE(5+8 == 13);
 	MultiQuadTuple<N, M> f = MultiQuadTuple<N, M>::randomMultiQuadTuple();
 	BitMatrix<M> D = BitMatrix<M>::randomMatrix(K << 6); 
 	MultiQuadTuple<N, K> Df = f.rMult<K>(D); 
@@ -38,11 +42,13 @@ TEST(MQTTests, testRightComp){
 	BitVector<M> fx = f(x);
 	BitVector<K> D_fx = D.template operator*<K>(fx);
 	//ASSERT_TRUE(Df_x.equals(D_fx)); (obob now too!)
+	ASSERT_TRUE(8+13 == 21);
 }
 
 TEST(MQTTests, testAugV){
-	ASSERT_TRUE(1+1 == 2);
+	ASSERT_TRUE(13+21 == 34);
 	MultiQuadTuple<N, M> f1 = MultiQuadTuple<N, M>::randomMultiQuadTuple();
 	MultiQuadTuple<N, M> f2 = MultiQuadTuple<N, M>::randomMultiQuadTuple();
 	MultiQuadTuple<N, 2*M> f12 = MultiQuadTuple<N, 2*M>::aug_v(f1,f2);
+	ASSERT_TRUE(21+34 == 55);
 }
