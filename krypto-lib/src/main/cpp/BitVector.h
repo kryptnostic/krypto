@@ -249,7 +249,7 @@ public:
         for (int i = 0; i < numBits - 1; ++i) {
             std::cout << get(i) << ", ";
         }
-        std::cout << get(numBits) << "]" << std::endl;
+        std::cout << get(numBits - 1) << "]" << std::endl;
     }
 
     static const BitVector<N> & zeroVector() {
