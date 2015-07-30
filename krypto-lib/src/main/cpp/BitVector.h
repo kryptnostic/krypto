@@ -214,7 +214,7 @@ public:
         return __builtin_parityll(accumulator)==1;
     }
 
-    void zero() {
+    void zero(){
         for (unsigned int i = 0; i < N; ++i) {
             _bits[i] &= 0;
         }
@@ -271,5 +271,10 @@ private:
     static const unsigned int numBits = N << 6;
 };
 
+template<>
+class BitVector<0> {
+private: 
+    unsigned char x;
+};
 
 #endif
