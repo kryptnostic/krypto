@@ -28,7 +28,7 @@ TEST(MQTTests, testLeftComp){
 	BitVector<M> fC_x = fC(x);
 	BitVector<M> f_Cx = f(C.template operator*<N>(x));
 	//ASSERT_TRUE(fC_x.equals(f_Cx)); (not sure if there's obob now)
-	ASSERT_TRUE(3+5 = 8);
+	ASSERT_TRUE(3+5 == 8);
 }
 
 TEST(MQTTests, testRightComp){
