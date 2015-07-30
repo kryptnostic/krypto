@@ -30,12 +30,11 @@ public:
 	 */
 	template<unsigned int NUM_INNERINPUTS> 
 	const MultiQuadTuple<NUM_INNERINPUTS, NUM_OUTPUTS> operator*(const BitMatrix<NUM_INNERINPUTS> & C) const{
-		assert(NUM_INPUTS << 6 == C.colCount());
+		assert(NUM_INPUTS << 6 == C.rowCount());
 		return MultiQuadTuple<NUM_INNERINPUTS, NUM_OUTPUTS>(getTransposedCompositionMatrix(C) * _contributionsT);
 	}
 
 	/**
-	 * Composition from the right, TODO: make this more user intuitive
 	 * f.rMult(C) := Cf(*)
 	 */
 	template<unsigned int NUM_OUTEROUTPUTS>
@@ -100,7 +99,7 @@ private:
 		int count = 0;
 		for(int i = 0; i < numInputBits; ++i){ //building (padded) \tilde{x}
 			for(int j = i; j < numInputBits; ++j){
-				t.set(count, x[i]&x[j]);
+				t.set(count, x[i] & x[j]);
 				++count;
 			}
 		}
