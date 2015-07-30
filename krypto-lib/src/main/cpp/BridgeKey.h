@@ -127,7 +127,7 @@ public:
 		//untested!
 		BitMatrix<N> idN = BitMatrix<N>::squareIdentityMatrix();
 
-		BitMatrix<2*N> X_top = BitMatrix<2*N>::aug_h(idN, (idN + _Rx) * _pk.getA.inv());
+		BitMatrix<2*N> X_top = BitMatrix<2*N>::aug_h(idN, (idN ^ _Rx) * _pk.getA().inv());
 		BitMatrix<2*N> X_bottom = BitMatrix<2*N>::aug_h(BitMatrix<N>::squareZeroMatrix(), _ARxAi);
 		return BitMatrix<2*N>::aug_v(X_top, X_bottom) * _M.inv();
 	}
@@ -136,7 +136,7 @@ public:
 		//untested!
 		BitMatrix<N> idN = BitMatrix<N>::squareIdentityMatrix();
 
-		BitMatrix<2*N> X_top = BitMatrix<2*N>::aug_h(idN, (idN + _Ry) * _pk.getA.inv());
+		BitMatrix<2*N> X_top = BitMatrix<2*N>::aug_h(idN, (idN ^ _Ry) * _pk.getA().inv());
 		BitMatrix<2*N> X_bottom = BitMatrix<2*N>::aug_h(BitMatrix<N>::squareZeroMatrix(), _ARyAi);
 		return BitMatrix<2*N>::aug_v(X_top, X_bottom) * _M.inv();
 	}
