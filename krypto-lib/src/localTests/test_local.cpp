@@ -14,8 +14,7 @@ void testLeftCompose(){ //C:L->N, f:N->M
 	BitVector<L> x = BitVector<L>::randomVector();
 	MultiQuadTuple<L, M> fC = f*C;
 	BitVector<M> fC_x = fC(x);
-	BitVector<N> Cx = C.template operator*<N>(x);
-	BitVector<M> f_Cx = f(Cx);
+	BitVector<M> f_Cx = f(C.template operator*<N>(x));
 	fC_x.print();
 	f_Cx.print();
 }
@@ -26,8 +25,7 @@ void testRightCompose(){ //f:N->M, D:M->K
 	MultiQuadTuple<N, K> Df = f.rMult<K>(D); 
 	BitVector<N> x = BitVector<N>::randomVector();
 	BitVector<K> Df_x = Df(x);
-	BitVector<M> fx = f(x);
-	BitVector<K> D_fx = D.template operator*<K>(fx);
+	BitVector<K> D_fx = D.template operator*<K>(f(x));
 	Df_x.print();
 	D_fx.print();
 }

@@ -26,8 +26,7 @@ TEST(MQTTests, testLeftComp){
 	BitVector<L> x = BitVector<L>::randomVector();
 	MultiQuadTuple<L, M> fC = f*C;
 	BitVector<M> fC_x = fC(x);
-	BitVector<N> Cx = C.template operator*<N>(x);
-	BitVector<M> f_Cx = f(Cx);
+	BitVector<M> f_Cx = f(C.template operator*<N>(x));
 	//ASSERT_TRUE(fC_x.equals(f_Cx)); (not sure if there's obob now)
 	ASSERT_TRUE(3+5 = 8);
 }
@@ -39,8 +38,7 @@ TEST(MQTTests, testRightComp){
 	MultiQuadTuple<N, K> Df = f.rMult<K>(D); 
 	BitVector<N> x = BitVector<N>::randomVector();
 	BitVector<K> Df_x = Df(x);
-	BitVector<M> fx = f(x);
-	BitVector<K> D_fx = D.template operator*<K>(fx);
+	BitVector<K> D_fx = D.template operator*<K>(f(x));
 	//ASSERT_TRUE(Df_x.equals(D_fx)); (obob now too!)
 	ASSERT_TRUE(8+13 == 21);
 }
