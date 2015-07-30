@@ -77,6 +77,20 @@ public:
 
 /* Binary unified code */
 
+	const MultiQuadTuple<2*N, 3*N> get_BINARY_gx1() const{
+		//untested!
+		MultiQuadTupleChain<N,L> f = _pk.getf();
+
+		BitMatrix<2*N> M2 = _M.inv().split_v_2(1);
+		BitMatrix<2*N> mat_top = _pk.getA().inv() * M2;
+		BitMatrix<2*N> mat_bot = _Rx * _pk.getA().inv() * M2;
+
+		MultiQuadTuple<2*N, N> top = f.get(0) * mat_top;
+		MultiQuadTuple<2*N, N> mid(BitMatrix<2*N>::zeroMatrix(MultiQuadTuple<N, 2*N>::getMonomialCount()));
+		MultiQuadTuple<2*N, N> bot = f.get(0) * mat_bot;
+		return (MultiQuadTuple<2*N, 3*N>::aug_v(MultiQuadTuple<2*N, 2*N>::aug_v(top, mid), bot)).rMult(_Cb1);
+	}
+
 	const MultiQuadTuple<2*N, 3*N> get_BINARY_gy1() const{
 		//untested!
 		MultiQuadTupleChain<N,L> f = _pk.getf();
@@ -133,20 +147,6 @@ public:
 
 		BitMatrix<3*N> Y_top = BitMatrix<N>::aug_h(idN, BitMatrix<N>::aug_h(idN, idN));
 		return BitMatrix<3*N>::aug_v(Y_top, BitMatrix<3*N>::zeroMatrix(N << 6)) * _Cu2.inv();
-	}
-
-	const MultiQuadTuple<2*N, 3*N> get_XOR_gx1() const{
-		//untested!
-		MultiQuadTupleChain<N,L> f = _pk.getf();
-
-		BitMatrix<2*N> M2 = _M.inv().split_v_2(1);
-		BitMatrix<2*N> mat_top = _pk.getA().inv() * M2;
-		BitMatrix<2*N> mat_bot = _Rx * _pk.getA().inv() * M2;
-
-		MultiQuadTuple<2*N, N> top = f.get(0) * mat_top;
-		MultiQuadTuple<2*N, N> mid(BitMatrix<2*N>::zeroMatrix(MultiQuadTuple<N, 2*N>::getMonomialCount()));
-		MultiQuadTuple<2*N, N> bot = f.get(0) * mat_bot;
-		return (MultiQuadTuple<2*N, 3*N>::aug_v(MultiQuadTuple<2*N, 2*N>::aug_v(top, mid), bot)).rMult(_Cb1);
 	}
 
 /* AND */
