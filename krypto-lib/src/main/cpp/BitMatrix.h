@@ -30,6 +30,8 @@ public:
 			_rows(rows) {
 	}
 
+	BitMatrix(const BitMatrix<COLS> & m) : _rows( m._rows ){}
+
 	//is the for loop necessary? surely there is a faster way (memset or something)
 	static const BitMatrix zeroMatrix(const int numRows){
 		vector<BitVector<COLS>> rows(numRows);
