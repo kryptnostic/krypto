@@ -42,18 +42,7 @@ public:
 	const MultiQuadTuple<NUM_INPUTS, NUM_OUTEROUTPUTS> rMult(const BitMatrix<NUM_OUTPUTS> & C) {
 		assert(numOutputBits == C.colCount());
 		assert(!(C.rowCount() & 63)); 
-		//manually constructing the transpose of C since T somehow doesn't work at times when comes to template
-		const unsigned int givenRowCount = NUM_OUTEROUTPUTS << 6;
-
 		BitMatrix<NUM_OUTEROUTPUTS> Ct( C.template T<NUM_OUTEROUTPUTS>() );
-		/*
-		BitMatrix<NUM_OUTEROUTPUTS> Ct = BitMatrix<NUM_OUTEROUTPUTS>::zeroMatrix(numOutputBits); 
-		for(int i = 0; i < givenRowCount; ++i){
-			for(int j = 0; j < numOutputBits; ++j){
-				Ct.set(j, i, C.get(i, j));
-			}
-		} 
-		*/
 		return MultiQuadTuple<NUM_INPUTS, NUM_OUTEROUTPUTS>(_contributionsT * Ct); //return MultiQuadTuple<NUM_INPUTS, NUM_OUTEROUTPUTS>(_contributionsT * C.T<NUM_ROWS>());
 	}	
 	/**
