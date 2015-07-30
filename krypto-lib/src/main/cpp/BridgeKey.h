@@ -162,8 +162,8 @@ public:
 		BitMatrix<3*N> Y2 = get_AND_Y2();
 		BitMatrix<3*N> Y3 = get_AND_Y3();
 
-		BitMatrix<N> contrib;
-		for (int level = 0; level < 2*N; ++level) {
+		BitMatrix<N> contrib = get_AND_Pk(0, X, Y2);
+		for (int level = 1; level < 2*N; ++level) {
 			contrib = BitMatrix<N>::aug_v(contrib, get_AND_Pk(level, X, Y2)); //add P_k's
 		}
 		for (int level = 0; level < 2*N; ++level) {
@@ -214,7 +214,7 @@ private:
 
 	//can be combined into get_z
 	const BitMatrix<2*N> get_AND_X() const{
-		BitMatrix<2*N> inner = BitMatrix<2*N>::aug_h(BitMatrix<2*N>::squareIdentityMatrix(), _pk.getA().inv());
+		BitMatrix<2*N> inner = BitMatrix<2*N>::aug_h(BitMatrix<N>::squareIdentityMatrix(), _pk.getA().inv());
 		return _pk.getB().inv() * inner * _M.inv();
 	}
 
