@@ -50,11 +50,11 @@ void testRightCompose(){ //f:N->M, D:M->K
 	cout << "RIGHT COMPOSE TEST:" << endl << endl;
 
 	cout << "D * f(x) = ";
-	Df_x.print();
+	D_fx.print();
 	cout << endl;
 
-	cout << "D*f (x) = ";
-	D_fx.print();
+	cout << "D*f(x) = ";
+	Df_x.print();
 	cout << endl;
 
 	cout << "x = ";
