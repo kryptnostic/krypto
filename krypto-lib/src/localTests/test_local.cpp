@@ -19,6 +19,8 @@ void testLeftCompose(){ //C:L->N, f:N->M
 	MultiQuadTuple<L, M> fC = f*C;
 	BitVector<M> fC_x = fC(x);
 
+	cout << "LEFT COMPOSE TEST:" << endl << endl;
+
 	cout << "f (C*x) = ";
 	f_Cx.print();
 	cout << endl;
@@ -30,6 +32,8 @@ void testLeftCompose(){ //C:L->N, f:N->M
 	cout << "x = ";
 	x.print();
 	cout << endl;
+
+	cout << "---------------------------------" << endl;
 }
 
 void testRightCompose(){ //f:N->M, D:M->K
@@ -43,6 +47,8 @@ void testRightCompose(){ //f:N->M, D:M->K
 	BitVector<M> fx = f(x);
 	BitVector<K> D_fx = D.template operator*<K>(fx);
 
+	cout << "RIGHT COMPOSE TEST:" << endl << endl;
+
 	cout << "D * f(x) = ";
 	Df_x.print();
 	cout << endl;
@@ -54,6 +60,8 @@ void testRightCompose(){ //f:N->M, D:M->K
 	cout << "x = ";
 	x.print();
 	cout << endl;
+
+	cout << "---------------------------------" << endl;
 }
 
 int main(int argc, char **argv) {
