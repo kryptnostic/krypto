@@ -22,20 +22,22 @@ TEST(MQTTests, testLeftComp){
 	MultiQuadTuple<N, M> f = MultiQuadTuple<N, M>::randomMultiQuadTuple();
 	BitMatrix<L> C = BitMatrix<L>::randomMatrix(N << 6);
 	BitVector<L> x = BitVector<L>::randomVector();
-	BitVector<N> cx = C*x;
-	BitVector<M> fcx = f(cx);
 	MultiQuadTuple<L, M> fC = f*C;
-	BitVector<M> fCx = fC(x);
-	//ASSERT_TRUE(fcx.equals(fCx)); (obob now)
+	BitVector<M> fC_x = fC(x);
+	BitVector<N> Cx = C.template operator*<N>(x);
+	BitVector<M> f_Cx = f(Cx);
+	//ASSERT_TRUE(fC_x.equals(f_Cx)); (not sure if there's obob now)
 }
 
 TEST(MQTTests, testRightComp){
 	MultiQuadTuple<N, M> f = MultiQuadTuple<N, M>::randomMultiQuadTuple();
-	BitVector<N> y = BitVector<N>::randomVector();
-	BitMatrix<M> D = BitMatrix<M>::randomMatrix(K << 6);
-	BitVector<M> fy = f(y);
-	MultiQuadTuple<N, K> Df = f.rMult<K>(D);
-	//ASSERT_TRUE(Df(y).equals(D*fy));
+	BitMatrix<M> D = BitMatrix<M>::randomMatrix(K << 6); 
+	MultiQuadTuple<N, K> Df = f.rMult<K>(D); 
+	BitVector<N> x = BitVector<N>::randomVector();
+	BitVector<K> Df_x = Df(x);
+	BitVector<M> fx = f(x);
+	BitVector<K> D_fx = D.template operator*<K>(fx);
+	//ASSERT_TRUE(Df_x.equals(D_fx)); (obob now too!)
 }
 
 TEST(MQTTests, testAugV){
