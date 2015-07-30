@@ -7,6 +7,7 @@ using namespace testing;
 #define N 1
 #define C 5 //runtime average over C times
 
+/*
 TEST(FHETests, testEncryptionAndDecryption){
 	ASSERT_TRUE(1 + 1 == 2);
 	FullyHomomorphicEncryption<N> fhe;
@@ -188,3 +189,4 @@ TEST(FHETests, testMultipleAnds){
 	double average_time = total_time/static_cast<double>(C);
 	std::cout << "And_Hom [average]: " << average_time << endl;	
 }
+*/
