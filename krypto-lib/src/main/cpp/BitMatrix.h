@@ -80,13 +80,27 @@ public:
 	}
 
 
-	bool equals(const BitMatrix<COLS> & rhs) const{
+	bool equals(const BitMatrix<COLS> & rhs) const{ //untested!
 		int n = rowCount();
 		assert(n == rhs.rowCount());
 		for(int i = 0; i < n; ++i){
 			if(!_rows[i].equals(rhs[i])) return false;
 		}
 		return true;
+	}
+
+	const BitMatrix<COLS> operator^(const BitMatrix<COLS> & rhs) const{
+		BitMatrix<COLS> result = *this;
+		const unsigned int numRows = rowCount();
+		assert(numRows == rhs.rowCount());
+		const unsigned int numCols = colCount();
+		assert(numCols == rhs.colCount());
+		for(size_t i = 0; i < numRows; ++i){
+			for(size_t j = 0; j < numCols; ++j){
+				result.set(i, j, get(i, j)^rhs.get(i, j));
+			}
+		}
+		return result;
 	}
 
 	/**
