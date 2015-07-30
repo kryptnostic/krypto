@@ -9,7 +9,6 @@
 
 using namespace std;
 
-//TODO: make BridgeKey a friend class of PrivateKey
 
 template<unsigned int N, unsigned int L>
 class BridgeKey{

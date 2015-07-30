@@ -11,6 +11,9 @@ using namespace std;
 /*length of plaintext = N*2^6; length of obfuscation chain = L*/
 template<unsigned int N, unsigned int L>
 class PrivateKey {
+
+template<unsigned int M, unsigned int K> friend class BridgeKey;
+
 public:
 	PrivateKey():
 		_A(BitMatrix<N>::randomInvertibleMatrix()),
@@ -38,9 +41,7 @@ public:
 		return _B.solve(x1 ^ (Aix2 ^ fAix2)); 
 	}
 
-	//TODO: Make BridgeKey a friend of PrivateKey
-
-//protected:
+protected:
 	const BitMatrix<N> getA() const{
 		return _A;
 	}
