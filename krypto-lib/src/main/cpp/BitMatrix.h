@@ -30,14 +30,7 @@ public:
 			_rows(rows) {
 	}
 
-<<<<<<< HEAD
 	BitMatrix(const BitMatrix<COLS> & m) : _rows( m._rows ){}
-=======
-	BitMatrix(const BitMatrix<COLS> & m) : _rows( m._rows ) 
-	{
-		
-	}
->>>>>>> 732d29346e9080587b6f953a3ca04cb5e4aea21c
 
 	//is the for loop necessary? surely there is a faster way (memset or something)
 	static const BitMatrix zeroMatrix(const int numRows){
