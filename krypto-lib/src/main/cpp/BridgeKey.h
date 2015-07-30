@@ -40,7 +40,7 @@ public:
 
 		BitMatrix<2*N> M2 = _M.inv().split_v_2(1);
 		BitMatrix<2*N> mat_top = _pk.getA().inv() * M2;
-		BitMatrix<2*N> mat_bot = _R.inv() * _pk.getA().inv() * M2;
+		BitMatrix<2*N> mat_bot = _R * _pk.getA().inv() * M2;
 
 		MultiQuadTuple<2*N, N> top = f.get(0) * mat_top;
 		MultiQuadTuple<2*N, N> bot = f.get(0) * mat_bot;
