@@ -65,12 +65,12 @@ public:
 		//untested!
 		BitMatrix<N> zeroN = BitMatrix<N>::squareZeroMatrix();
 
-		BitMatrix<2*N> X_top = BitMatrix<N>::aug_h(_BKBi, _BKBiAi);
-		BitMatrix<2*N> X_bottom = BitMatrix<N>::aug_h(zeroN, _ARAi);
+		BitMatrix<2*N> X_top = BitMatrix<2*N>::aug_h(_BKBi, _BKBiAi);
+		BitMatrix<2*N> X_bottom = BitMatrix<2*N>::aug_h(zeroN, _ARAi);
 		BitMatrix<2*N> X = BitMatrix<2*N>::aug_v(X_top, X_bottom) * _M.inv();
 
-		BitMatrix<2*N> Y_top = BitMatrix<N>::aug_h(_BKBi, BitMatrix<N>::squareIdentityMatrix());
-		BitMatrix<2*N> Y_bottom = BitMatrix<N>::aug_h(zeroN, zeroN);
+		BitMatrix<2*N> Y_top = BitMatrix<2*N>::aug_h(_BKBi, BitMatrix<N>::squareIdentityMatrix());
+		BitMatrix<2*N> Y_bottom = BitMatrix<2*N>::aug_h(zeroN, zeroN);
 		BitMatrix<2*N> Y = BitMatrix<2*N>::aug_v(X_top, X_bottom) * _Cu2.inv();
 		return BitMatrix<4*N>::aug_h(X, Y);
 	}
@@ -113,8 +113,8 @@ public:
 		//untested!
 		BitMatrix<N> idN = BitMatrix<N>::squareIdentityMatrix();
 
-		BitMatrix<2*N> X_top = BitMatrix<N>::aug_h(idN, (idN + _Rx) * _pk.getA.inv());
-		BitMatrix<2*N> X_bottom = BitMatrix<N>::aug_h(BitMatrix<N>::squareZeroMatrix(), _ARxAi);
+		BitMatrix<2*N> X_top = BitMatrix<2*N>::aug_h(idN, (idN + _Rx) * _pk.getA.inv());
+		BitMatrix<2*N> X_bottom = BitMatrix<2*N>::aug_h(BitMatrix<N>::squareZeroMatrix(), _ARxAi);
 		return BitMatrix<2*N>::aug_v(X_top, X_bottom) * _M.inv();
 	}
 
@@ -122,8 +122,8 @@ public:
 		//untested!
 		BitMatrix<N> idN = BitMatrix<N>::squareIdentityMatrix();
 
-		BitMatrix<2*N> X_top = BitMatrix<N>::aug_h(idN, (idN + _Ry) * _pk.getA.inv());
-		BitMatrix<2*N> X_bottom = BitMatrix<N>::aug_h(BitMatrix<N>::squareZeroMatrix(), _ARyAi);
+		BitMatrix<2*N> X_top = BitMatrix<2*N>::aug_h(idN, (idN + _Ry) * _pk.getA.inv());
+		BitMatrix<2*N> X_bottom = BitMatrix<2*N>::aug_h(BitMatrix<N>::squareZeroMatrix(), _ARyAi);
 		return BitMatrix<2*N>::aug_v(X_top, X_bottom) * _M.inv();
 	}
 
@@ -131,7 +131,7 @@ public:
 		//untested!
 		BitMatrix<N> idN = BitMatrix<N>::squareIdentityMatrix();
 
-		BitMatrix<3*N> Y_top = BitMatrix<N>::aug_h(idN, BitMatrix<N>::aug_h(idN, idN));
+		BitMatrix<3*N> Y_top = BitMatrix<3*N>::aug_h(idN, BitMatrix<N>::aug_h(idN, idN));
 		return BitMatrix<3*N>::aug_v(Y_top, BitMatrix<3*N>::zeroMatrix(N << 6)) * _Cu2.inv();
 	}
 
