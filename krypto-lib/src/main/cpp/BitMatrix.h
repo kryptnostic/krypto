@@ -451,8 +451,8 @@ public:
 		int l_rows = lhs.rowCount();
 		int r_rows = rhs.rowCount();
 		assert(l_rows == r_rows); //same height 
-		if(COLS1 == 0) return rhs;
-		if(COLS2 == 0) return lhs;
+		//if(COLS1 == 0) return rhs; (why did this give dim disagreement?!?!)
+		//if(COLS2 == 0) return lhs; (why did this give dim disagreement?!?!)
 		vector<BitVector<COLS>> rows(l_rows);		
 		for(int i = 0; i < l_rows; ++i){
 			BitVector<COLS1> lv = lhs.getRow(i);
