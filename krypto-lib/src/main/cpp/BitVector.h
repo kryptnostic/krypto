@@ -23,76 +23,76 @@ static FILE * urandom = std::fopen("/dev/urandom", "rb" );
 template<unsigned int N>
 class BitVector {
 public:
-	BitVector() {
+    BitVector() {
         zero();
-	}
+    }
     
-    BitVector( const BitVector & v ) {
+    BitVector( const BitVector<N> & v ) {
         for (unsigned int i = 0; i < N; ++i) {
             _bits[i] = v._bits[i];
         }
     }
     
-    BitVector( BitVector && v ) {
+    BitVector( BitVector<N> && v ) {
         for (unsigned int i = 0; i < N; ++i) {
             _bits[i] = v._bits[i];
         }
     }
     
-	unsigned long long * elements() /*const*/ {
-		return _bits;
-	}
+    unsigned long long * elements() /*const*/ {
+        return _bits;
+    }
     
-	int length() const {
-		return N << 6;
-	}
+    int length() const {
+        return N << 6;
+    }
 
-	bool get(unsigned int n) const {
-		return (_bits[n >> 6] & (1ul << (n & 63ul))) != 0;
-	}
+    bool get(unsigned int n) const {
+        return (_bits[n >> 6] & (1ul << (n & 63ul))) != 0;
+    }
 
-   	bool operator[](unsigned int n) const{
-   		return get(n);
-   	}
+    bool operator[](unsigned int n) const{
+        return get(n);
+    }
 
-	BitVector & set(unsigned int n) {
-		_bits[n >> 6] |= (1ul << (n & 63ul));
-		return *this;
-	}
+    BitVector & set(unsigned int n) {
+        _bits[n >> 6] |= (1ul << (n & 63ul));
+        return *this;
+    }
 
-	BitVector & clear(unsigned int n) {
-		_bits[n >> 6ul] &= ~(1ul << (n & 63ul));
-		return *this; //added
-	}
+    BitVector & clear(unsigned int n) {
+        _bits[n >> 6ul] &= ~(1ul << (n & 63ul));
+        return *this; //added
+    }
 
     BitVector & set(unsigned int n, bool val){
         if(val) return set(n);
         return clear(n);
     }
     
-	BitVector<N> operator&(const BitVector<N> & rhs) const {
-		BitVector<N> result;
-		for (unsigned int i = 0; i < N; ++i) {
-			result._bits[i] = _bits[i] & rhs._bits[i];
-		}
-		return result;
-	}
+    BitVector<N> operator&(const BitVector<N> & rhs) const {
+        BitVector<N> result;
+        for (unsigned int i = 0; i < N; ++i) {
+            result._bits[i] = _bits[i] & rhs._bits[i];
+        }
+        return result;
+    }
 
-	BitVector<N> operator|(const BitVector<N> & rhs) {
-		BitVector<N> result;
-		for (unsigned int i = 0; i < N; ++i) {
-			result._bits[i] = _bits[i] | rhs._bits[i];
-		}
-		return result;
-	}
+    BitVector<N> operator|(const BitVector<N> & rhs) {
+        BitVector<N> result;
+        for (unsigned int i = 0; i < N; ++i) {
+            result._bits[i] = _bits[i] | rhs._bits[i];
+        }
+        return result;
+    }
 
-	BitVector<N> operator^(const BitVector<N> & rhs) const {
-		BitVector<N> result;
-		for (unsigned int i = 0; i < N; ++i) {
-			result._bits[i] = _bits[i] ^ rhs._bits[i];
-		}
-		return result;
-	}
+    BitVector<N> operator^(const BitVector<N> & rhs) const {
+        BitVector<N> result;
+        for (unsigned int i = 0; i < N; ++i) {
+            result._bits[i] = _bits[i] ^ rhs._bits[i];
+        }
+        return result;
+    }
 
     const BitVector<N> & operator=(const BitVector<N> & rhs) {
         for (unsigned int i = 0; i < N; ++i) {
@@ -101,12 +101,12 @@ public:
         return *this;
     }
     
-	BitVector<N> & operator^=(const BitVector<N> & rhs) {
-		for (unsigned int i = 0; i < N; ++i) {
-			_bits[i] ^= rhs._bits[i];
-		}
-		return *this;
-	}
+    BitVector<N> & operator^=(const BitVector<N> & rhs) {
+        for (unsigned int i = 0; i < N; ++i) {
+            _bits[i] ^= rhs._bits[i];
+        }
+        return *this;
+    }
 
     BitVector<N> & operator&=(const BitVector<N> & rhs) {
         for (unsigned int i = 0; i < N; ++i) {
@@ -116,27 +116,27 @@ public:
     }
 
     bool dot(const BitVector<N> & rhs) const {
-    	int n = length();
-    	assert(n == rhs.length());
-    	bool result = 0;
-    	for(int i = 0; i < n; ++i){
-    		result ^= (get(i) & rhs.get(i));
-    	}
-    	return result;
+        int n = length();
+        assert(n == rhs.length());
+        bool result = 0;
+        for(int i = 0; i < n; ++i){
+            result ^= (get(i) & rhs.get(i));
+        }
+        return result;
     }
 
     bool equals(const BitVector<N> & rhs) const {
-    	int n = length();
-    	assert(n == rhs.length());
-    	for(int i = 0; i < n; ++i){
-    		if(get(i) ^ rhs.get(i)) return false;
-    	}
-    	return true;
+        int n = length();
+        assert(n == rhs.length());
+        for(int i = 0; i < n; ++i){
+            if(get(i) ^ rhs.get(i)) return false;
+        }
+        return true;
     }
 
     void swap(int firstIndex, int secondIndex){
-    	bool firstOld = get(firstIndex);
-    	bool secondOld = get(secondIndex);
+        bool firstOld = get(firstIndex);
+        bool secondOld = get(secondIndex);
         set(secondIndex, firstOld);
         set(firstIndex, secondOld);
     }
@@ -167,9 +167,9 @@ public:
     }
 
     void proj2(BitVector<(N>>1)> & v1, BitVector<(N>>1)> & v2) const{
-    	unsigned int M = (N >> 1);
-    	memcpy(v1.elements(), _bits, M*sizeof(unsigned long long));
-    	memcpy(v2.elements(), _bits+M, M*sizeof(unsigned long long));
+        unsigned int M = (N >> 1);
+        memcpy(v1.elements(), _bits, M*sizeof(unsigned long long));
+        memcpy(v2.elements(), _bits+M, M*sizeof(unsigned long long));
     }
 
     void proj3(BitVector<(N/3)> & v1, BitVector<(N/3)> & v2, BitVector<(N/3)> & v3) const{
@@ -180,10 +180,10 @@ public:
     }    
 
     BitVector<(N >> 1)> proj2(int part) const{//part = 0 or 1
-    	BitVector<(N>>1)> r;
-    	unsigned int M = (N >> 1);
-    	memcpy(r.elements(), _bits+(part*M), M*sizeof(unsigned long long));
-    	return r;
+        BitVector<(N>>1)> r;
+        unsigned int M = (N >> 1);
+        memcpy(r.elements(), _bits+(part*M), M*sizeof(unsigned long long));
+        return r;
     }
 
     BitVector<(N/3)> proj3(int part) const{//part = 0, 1, or 2
@@ -193,45 +193,45 @@ public:
         return r;
     }
 
-	const bool isZero() const {
-		for (unsigned int i = 0; i < N; ++i) {
-			if (_bits[i] != 0) {
-				return false;
-			}
-		}
-		return true;
-	}
+    const bool isZero() const {
+        for (unsigned int i = 0; i < N; ++i) {
+            if (_bits[i] != 0) {
+                return false;
+            }
+        }
+        return true;
+    }
     
     /*
      * Returns 1 if number of bits set in bitvector is odd
      * Returns 0 otherwise.
      */
-	const bool parity() const {
-		unsigned long long accumulator = 0;
-		for (unsigned int i = 0; i < N; ++i) {
-			accumulator ^= _bits[i];
-		}
+    const bool parity() const {
+        unsigned long long accumulator = 0;
+        for (unsigned int i = 0; i < N; ++i) {
+            accumulator ^= _bits[i];
+        }
         return __builtin_parityll(accumulator)==1;
-	}
+    }
 
-	void zero() {
-		for (unsigned int i = 0; i < N; ++i) {
-			_bits[i] &= 0;
-		}
-	}
+    void zero() {
+        for (unsigned int i = 0; i < N; ++i) {
+            _bits[i] &= 0;
+        }
+    }
 
-	template<unsigned int M>
-	const bool operator==(const BitVector<M> & rhs) const {
-		if (N != M) {
-			return false;
-		}
-		for (unsigned int i = 0; i < N; ++i) {
-			if (_bits[i] != rhs._bits[i]) {
-				return false;
-			}
-		}
-		return true;
-	}
+    template<unsigned int M>
+    const bool operator==(const BitVector<M> & rhs) const {
+        if (N != M) {
+            return false;
+        }
+        for (unsigned int i = 0; i < N; ++i) {
+            if (_bits[i] != rhs._bits[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
     
     template<unsigned int M>
     const bool operator!=(const BitVector<M> & rhs) {
@@ -244,13 +244,13 @@ public:
         return false;
     }
 
-	void print() const {
-		std::cout << "[ ";
-		for (int i = 0; i < numBits - 1; ++i) {
-			std::cout << get(i) << ", ";
-		}
-		std::cout << get(numBits) << "]" << std::endl;
-	}
+    void print() const {
+        std::cout << "[ ";
+        for (int i = 0; i < numBits - 1; ++i) {
+            std::cout << get(i) << ", ";
+        }
+        std::cout << get(numBits) << "]" << std::endl;
+    }
 
     static const BitVector<N> & zeroVector() {
         static BitVector<N> v;
@@ -267,7 +267,7 @@ public:
         return result;
     }
 private:
-	unsigned long long _bits[N];
+    unsigned long long _bits[N];
     static const unsigned int numBits = N << 6;
 };
 
