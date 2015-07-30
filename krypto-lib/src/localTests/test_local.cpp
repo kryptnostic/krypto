@@ -8,10 +8,8 @@ using namespace std;
 #define N 1 
 #define DEBUG false
 
-void testLeftCompose(){ //C:L->N, f:N->M
-	MultiQuadTuple<N, M> f = MultiQuadTuple<N, M>::randomMultiQuadTuple();
+void testLeftCompose(MultiQuadTuple<N, M> &f, BitVector<N> &x){ //C:L->N, f:N->M
 	BitMatrix<L> C = BitMatrix<L>::randomMatrix(N << 6);
-	BitVector<L> x = BitVector<L>::randomVector();
 
 	BitVector<N> Cx = C.template operator*<N>(x);
 	BitVector<M> f_Cx = f(Cx);
@@ -36,10 +34,8 @@ void testLeftCompose(){ //C:L->N, f:N->M
 	cout << "---------------------------------" << endl;
 }
 
-void testRightCompose(){ //f:N->M, D:M->K
-	MultiQuadTuple<N, M> f = MultiQuadTuple<N, M>::randomMultiQuadTuple();
+void testRightCompose(MultiQuadTuple<N, M> &f, BitVector<N> &x){ //f:N->M, D:M->K
 	BitMatrix<M> D = BitMatrix<M>::randomMatrix(K << 6); 
-	BitVector<N> x = BitVector<N>::randomVector();
 
 	MultiQuadTuple<N, K> Df = f.rMult<K>(D); 
 	BitVector<K> Df_x = Df(x);
@@ -65,7 +61,10 @@ void testRightCompose(){ //f:N->M, D:M->K
 }
 
 int main(int argc, char **argv) {
-	testLeftCompose();
-	testRightCompose();
+	MultiQuadTuple<N, M> f = MultiQuadTuple<N, M>::randomMultiQuadTuple();
+	BitVector<N> x = BitVector<N>::randomVector();
+
+	testLeftCompose(f, x);
+	testRightCompose(f, x);
 	return 0;
 }
