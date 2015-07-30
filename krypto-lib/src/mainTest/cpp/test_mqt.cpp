@@ -16,16 +16,26 @@ TEST(MQTTests, testInit){//assert equality later, as there's obob now
 	MultiQuadTuple<N, M> f = MultiQuadTuple<N, M>::randomMultiQuadTuple();
 	BitVector<N> y = BitVector<N>::randomVector();
 	BitVector<M> fy = f(y);
+}
 
+TEST(MQTTests, testLeftComp){
+	MultiQuadTuple<N, M> f = MultiQuadTuple<N, M>::randomMultiQuadTuple();
 	BitMatrix<L> C = BitMatrix<L>::randomMatrix(N << 6);
 	BitVector<L> x = BitVector<L>::randomVector();
 	BitVector<N> cx = C*x;
 	BitVector<M> fcx = f(cx);
 	MultiQuadTuple<L, M> fC = f*C;
 	BitVector<M> fCx = fC(x);
+	//ASSERT_TRUE(fcx.equals(fCx)); (obob now)
+}
 
+TEST(MQTTests, testRightComp){
+	MultiQuadTuple<N, M> f = MultiQuadTuple<N, M>::randomMultiQuadTuple();
+	BitVector<N> y = BitVector<N>::randomVector();
 	BitMatrix<M> D = BitMatrix<M>::randomMatrix(K << 6);
+	BitVector<M> fy = f(y);
 	MultiQuadTuple<N, K> Df = f.rMult<K>(D);
+	//ASSERT_TRUE(Df(y).equals(D*fy));
 }
 
 TEST(MQTTests, testAugV){
