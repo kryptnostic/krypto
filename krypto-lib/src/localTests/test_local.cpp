@@ -1,4 +1,5 @@
 #include "../main/cpp/MultiQuadTuple.h"
+#include "../main/cpp/BridgeKey.h"
 #include <iostream>
 using namespace std;
 
@@ -60,11 +61,21 @@ void testRightCompose(MultiQuadTuple<N, M> &f, BitVector<N> &x){ //f:N->M, D:M->
 	cout << "---------------------------------" << endl;
 }
 
-int main(int argc, char **argv) {
-	MultiQuadTuple<N, M> f = MultiQuadTuple<N, M>::randomMultiQuadTuple();
-	BitVector<N> x = BitVector<N>::randomVector();
+void testBridgeKeyInstantiation(PrivateKey<N, 2*N> &pk) {
+ 	BridgeKey<N, 2*N> bk(pk, BitMatrix<N>::squareIdentityMatrix());
+ 	BitMatrix<4*N> Z = bk.get_LMM_Z();
+	MultiQuadTuple<2*N, 2*N> u_g1 = bk.get_UNARY_g1();
+	MultiQuadTuple<2*N, 2*N> u_g2 = bk.get_UNARY_g2();
+}
 
-	testLeftCompose(f, x);
-	testRightCompose(f, x);
+int main(int argc, char **argv) {
+	// MultiQuadTuple<N, M> f = MultiQuadTuple<N, M>::randomMultiQuadTuple();
+	// BitVector<N> x = BitVector<N>::randomVector();
+
+	// testLeftCompose(f, x);
+	// testRightCompose(f, x);
+
+	PrivateKey<N, 2*N> pk;
+ 	testBridgeKeyInstantiation(pk);
 	return 0;
 }

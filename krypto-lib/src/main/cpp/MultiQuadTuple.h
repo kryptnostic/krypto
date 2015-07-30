@@ -30,7 +30,7 @@ public:
 	 */
 	template<unsigned int NUM_INNERINPUTS> 
 	const MultiQuadTuple<NUM_INNERINPUTS, NUM_OUTPUTS> operator*(const BitMatrix<NUM_INNERINPUTS> & C) const{
-		assert(NUM_INPUTS << 6 == C.colCount());
+		assert(NUM_INPUTS << 6 == C.rowCount());
 		return MultiQuadTuple<NUM_INNERINPUTS, NUM_OUTPUTS>(getTransposedCompositionMatrix(C) * _contributionsT);
 	}
 
