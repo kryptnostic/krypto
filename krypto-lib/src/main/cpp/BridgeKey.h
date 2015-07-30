@@ -87,7 +87,7 @@ public:
 		BitMatrix<2*N> mat_bot = _Rx * _pk.getA().inv() * M2;
 
 		MultiQuadTuple<2*N, N> top = f.get(0) * mat_top;
-		MultiQuadTuple<2*N, N> mid(BitMatrix<2*N>::zeroMatrix(MultiQuadTuple<N, 2*N>::getMonomialCount()));
+		MultiQuadTuple<2*N, N> mid(BitMatrix<N>::zeroMatrix(MultiQuadTuple<2*N, N>::getInputPaddedMonomialCount()));
 		MultiQuadTuple<2*N, N> bot = f.get(0) * mat_bot;
 		MultiQuadTuple<2*N, 3*N> aug = MultiQuadTuple<2*N, 3*N>::aug_v(MultiQuadTuple<2*N, 2*N>::aug_v(top, mid), bot);
 		return aug.template rMult<3*N>(_Cb1);
@@ -101,14 +101,14 @@ public:
 		BitMatrix<2*N> mat_mid = _pk.getA().inv() * M2;
 		BitMatrix<2*N> mat_bot = _Ry * _pk.getA().inv() * M2;
 
-		MultiQuadTuple<2*N, N> top(BitMatrix<2*N>::zeroMatrix(MultiQuadTuple<N, 2*N>::getMonomialCount()));
+		MultiQuadTuple<2*N, N> top(BitMatrix<N>::zeroMatrix(MultiQuadTuple<2*N, N>::getInputPaddedMonomialCount()));
 		MultiQuadTuple<2*N, N> mid = f.get(0) * mat_mid;
 		MultiQuadTuple<2*N, N> bot = f.get(0) * mat_bot;
 		MultiQuadTuple<2*N, 3*N> aug = MultiQuadTuple<2*N, 3*N>::aug_v(MultiQuadTuple<2*N, 2*N>::aug_v(top, mid), bot);
 		return aug.template rMult<3*N>(_Cb1);
 	}
 
-	const MultiQuadTuple<2*N, 3*N>get_BINARY_g2() const{
+	const MultiQuadTuple<3*N, 3*N>get_BINARY_g2() const{
 		//untested!
 		MultiQuadTupleChain<N,L> f = _pk.getf();
 
@@ -117,10 +117,10 @@ public:
 		BitMatrix<3*N> mat_mid = Cb1_inv.split_v_3(1);
 		BitMatrix<3*N> mat_bot = Cb1_inv.split_v_3(2);
 
-		MultiQuadTuple<2*N, N> top = f.get(1) * mat_top;
-		MultiQuadTuple<2*N, N> mid = f.get(1) * mat_mid;
-		MultiQuadTuple<2*N, N> bot = f.get(1) * mat_bot;
-		MultiQuadTuple<2*N, 3*N> aug = MultiQuadTuple<2*N, 3*N>::aug_v(MultiQuadTuple<2*N, 2*N>::aug_v(top, mid), bot);
+		MultiQuadTuple<3*N, N> top = f.get(1) * mat_top;
+		MultiQuadTuple<3*N, N> mid = f.get(1) * mat_mid;
+		MultiQuadTuple<3*N, N> bot = f.get(1) * mat_bot;
+		MultiQuadTuple<3*N, 3*N> aug = MultiQuadTuple<3*N, 3*N>::aug_v(MultiQuadTuple<3*N, 2*N>::aug_v(top, mid), bot);
 		return aug.template rMult<3*N>(_Cb2);
 	}
 

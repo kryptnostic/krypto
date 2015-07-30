@@ -61,19 +61,19 @@ public:
 
 	/**Accessing various dimensions (make private later)**/
 
-	const unsigned int getInputPaddedMonomialCount() const{
+	static const unsigned int getInputPaddedMonomialCount() {
 		return inputPaddedMonomialCount;
 	}
 
-	const unsigned int getOutputPaddedMonomialCount() const{ 
+	static const unsigned int getOutputPaddedMonomialCount() { 
 		return outputPaddedMonomialCount;
 	}
 
-	const unsigned int getInputPaddedMonomialMultiple() const{//act as a template argument for BitMatrix
+	static const unsigned int getInputPaddedMonomialMultiple() {//act as a template argument for BitMatrix
 		return NUM_INPUT_MONOMIALS;
 	}
 
-	const unsigned int getOutputPaddedMonomialMultiple() const{//act as a template argument for BitMatrix
+	static const unsigned int getOutputPaddedMonomialMultiple() {//act as a template argument for BitMatrix
 		return NUM_OUTPUT_MONOMIALS;
 	}
 
