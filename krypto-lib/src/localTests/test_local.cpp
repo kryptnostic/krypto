@@ -113,14 +113,14 @@ void testPublicKey(PrivateKey<N, 2> &pk) {
 	BitVector<N> unencryptedXOR = pk.decrypt(encryptedXOR); //should be zero
 
 	cout << "XOR: D(H(E(x))) = ";
-	unencryptedLMM.print();
+	unencryptedXOR.print();
 	cout << endl;
 
 	BitVector<2*N> encryptedAND = pub.homomorphicAND(encrypted, encrypted);
 	BitVector<N> unencryptedAND = pk.decrypt(encryptedAND); //should be zero
 
 	cout << "AND: D(H(E(x))) = ";
-	unencryptedLMM.print();
+	unencryptedAND.print();
 	cout << endl;
 
 	cout << "---------------------------------" << endl;
