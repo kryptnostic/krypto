@@ -31,15 +31,15 @@ public:
 	}
 
 	const BitVector<2*N> homomorphicLMM(BitVector<2*N> x) const{
-		BitVector<2*N> t = gu2(gu1(x));
+		BitVector<2*N> t = _gu2(_gu1(x));
 		BitVector<4*N> inner = BitVector<4*N>::vcat2(x, t);
 
-		return _Z * inner;
+		return _Z.template operator*<2*N>(inner);
 	}
 
 	const BitVector<2*N> homomorphicXOR(BitVector<2*N> x, BitVector<2*N> y) const{
 		BitVector<3*N> t = calculateT(x, y);
-		return _Xx * x ^ _Xy * y ^ _Y * t;
+		return _Xx.template operator*<2*N>(x) ^ _Xy.template operator*<2*N>(y) ^ _Y.template operator*<2*N>(t);
 	}
 
 	const BitVector<2*N> homomorphicAND(BitVector<2*N> x, BitVector<2*N> y) const{
@@ -47,9 +47,10 @@ public:
 		BitVector<7*N> coordinates = BitVector<7*N>::vcat3(x, y, t);
 
 		BitVector<N> zeroVector;
-		BitVector<2*N> left = BitVector<2*N>::vcat2(_z(coordinates), zeroVector);
-		BitVector<2*N> mid = _Z1 * x;
-		BitVector<2*N> right = _Z2 * y;
+		BitVector<N> top = _z(coordinates);
+		BitVector<2*N> left = BitVector<2*N>::vcat2(top, zeroVector);
+		BitVector<2*N> mid = _Z1.template operator*<2*N>(x);
+		BitVector<2*N> right = _Z2.template operator*<2*N>(y);
 
 		return left ^ mid ^ right;
 	}
@@ -70,7 +71,7 @@ private:
 	BitMatrix<2*N> _Z2;
 
 	const BitVector<3*N> calculateT(BitVector<2*N> x, BitVector<2*N> y) const{
-		return gb2(gbx1(x) ^ gby1(x));
+		return _gb2(_gbx1(x) ^ _gby1(y));
 	}
 };
 
