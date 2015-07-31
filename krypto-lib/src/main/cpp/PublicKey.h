@@ -13,7 +13,7 @@ using namespace std;
 template<unsigned int N, unsigned int L>
 class PublicKey{
 public:
-	PublicKey(BridgeKey<N,L> bk) : 
+	PublicKey(BridgeKey<N,L> &bk) : 
 	_bk(bk),
 	_gu1(bk.get_UNARY_g1()),
 	_gu2(bk.get_UNARY_g2()),
@@ -30,21 +30,22 @@ public:
 	{
 	}
 
-	const BitVector<2*N> homomorphicLMM(BitVector<2*N> x) const{
+	const BitVector<2*N> homomorphicLMM(BitVector<2*N> &x) const{
 		BitVector<2*N> t = _gu2(_gu1(x));
 		BitVector<4*N> inner = BitVector<4*N>::vcat2(x, t);
 
 		return _Z.template operator*<2*N>(inner);
 	}
 
-	const BitVector<2*N> homomorphicXOR(BitVector<2*N> x, BitVector<2*N> y) const{
+	const BitVector<2*N> homomorphicXOR(BitVector<2*N> &x, BitVector<2*N> &y) const{
 		BitVector<3*N> t = calculateT(x, y);
 		return _Xx.template operator*<2*N>(x) ^ _Xy.template operator*<2*N>(y) ^ _Y.template operator*<2*N>(t);
 	}
 
-	const BitVector<2*N> homomorphicAND(BitVector<2*N> x, BitVector<2*N> y) const{
+	const BitVector<2*N> homomorphicAND(BitVector<2*N> &x, BitVector<2*N> &y) const{
 		BitVector<3*N> t = calculateT(x, y);
 		BitVector<7*N> coordinates = BitVector<7*N>::vcat3(x, y, t);
+		MultiQuadTuple<7*N, N> _z(_bk.get_AND_z());
 
 		BitVector<N> zeroVector;
 		BitVector<N> top = _z(coordinates);
@@ -70,7 +71,7 @@ private:
 	BitMatrix<2*N> _Z1;
 	BitMatrix<2*N> _Z2;
 
-	const BitVector<3*N> calculateT(BitVector<2*N> x, BitVector<2*N> y) const{
+	const BitVector<3*N> calculateT(BitVector<2*N> &x, BitVector<2*N> &y) const{
 		return _gb2(_gbx1(x) ^ _gby1(y));
 	}
 };

@@ -13,7 +13,7 @@ using namespace std;
 template<unsigned int N, unsigned int L>
 class BridgeKey{
 public:
-	BridgeKey(PrivateKey<N,L> pk, BitMatrix<N> K) : 
+	BridgeKey(PrivateKey<N,L> &pk, BitMatrix<N> K) : 
 	_pk(pk),
 	_R(BitMatrix<N>::randomInvertibleMatrix()),
 	_Rx(BitMatrix<N>::randomInvertibleMatrix()),
@@ -153,13 +153,16 @@ public:
 		BitMatrix<3*N> Y3 = get_AND_Y3();
 
 		BitMatrix<N> contrib = get_AND_Pk(0, X, Y2);
-		for (int level = 1; level < 2*N; ++level) {
+		const int twoN = N << 7;
+		const int threeN = 3 * (N << 6);
+
+		for (int level = 1; level < twoN; ++level) {
 			contrib = BitMatrix<N>::aug_v(contrib, get_AND_Pk(level, X, Y2)); //add P_k's
 		}
-		for (int level = 0; level < 2*N; ++level) {
+		for (int level = 0; level < twoN; ++level) {
 			contrib = BitMatrix<N>::aug_v(contrib, get_AND_Qk(level, X, Y1)); //add Q_k's
 		}
-		for (int level = 0; level < 3*N; ++level) {
+		for (int level = 0; level < threeN; ++level) {
 			contrib = BitMatrix<N>::aug_v(contrib, get_AND_Sk(level, Y1, Y2)); //add S_k's
 		}
 
@@ -223,7 +226,7 @@ private:
 
 	//top chunk of contrib matrix for z
 	//level ranges from 0 to 64 * 2N - 1
-	const BitMatrix<N> get_AND_Pk(const int level, const BitMatrix<2*N> X, const BitMatrix<3*N> Y2) const{
+	const BitMatrix<N> get_AND_Pk(const int level, const BitMatrix<2*N> &X, const BitMatrix<3*N> &Y2) const{
 		//untested!
 		const int twoN = N << 7;
 		const int threeN = 3 * (N << 6);
@@ -251,7 +254,7 @@ private:
 
 	//middle chunk of contrib matrix for z
 	//level ranges from 0 to 64 * 2N - 1
-	const BitMatrix<N> get_AND_Qk(const int level, const BitMatrix<2*N> X, const BitMatrix<3*N> Y1) const{
+	const BitMatrix<N> get_AND_Qk(const int level, const BitMatrix<2*N>&X, const BitMatrix<3*N> &Y1) const{
 		//untested!
 		const int twoN = N << 7;
 		const int threeN = 3 * (N << 6);
@@ -270,7 +273,7 @@ private:
 
 	//bottom chunk of contrib matrix for z
 	//level ranges from 0 to 64 * 2N - 1
-	const BitMatrix<N> get_AND_Sk(const int level, const BitMatrix<3*N> Y1, const BitMatrix<3*N> Y2) const{
+	const BitMatrix<N> get_AND_Sk(const int level, const BitMatrix<3*N> &Y1, const BitMatrix<3*N> &Y2) const{
 		//to be implemented
 		const int threeN = 3 * (N << 6); //should be the number of coefficients (___ choose 2)
 

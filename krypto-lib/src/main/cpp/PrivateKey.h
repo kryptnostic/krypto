@@ -23,7 +23,7 @@ public:
 		generateObfuscationMatrixChains();
 	}
 
-	const BitVector<2*N> encrypt(const BitVector<N> m) const{//returns x = E(m, r) given a plaintext m 
+	const BitVector<2*N> encrypt(const BitVector<N> &m) const{//returns x = E(m, r) given a plaintext m 
 		//For now, we assume that m is padded and hashed. These operations will be included later.
 		BitVector<N> r = BitVector<N>::randomVector();
 		BitVector<N> top = _B.template operator*<N>(m) ^ (r ^ _f(r));
@@ -32,7 +32,7 @@ public:
 		return _M.template operator*<2*N>(BitVector<N>::vcat2(top, bottom));
 	}
 	
-	const BitVector<N> decrypt(const BitVector<2*N> x) const{//returns m = D(x) given a ciphertext x
+	const BitVector<N> decrypt(const BitVector<2*N> &x) const{//returns m = D(x) given a ciphertext x
 		BitVector<2*N> mix = _M.solve(x);
 		BitVector<N> x1, x2;
 		mix.proj2(x1, x2);
