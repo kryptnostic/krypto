@@ -182,14 +182,15 @@ public:
 		size_t numRows = rowCount();
 		BitMatrix<NEWCOLS> result(numRows);
 		size_t newNumCols = NEWCOLS << 6;
-		BitMatrix<NEWCOLS> temp = rhs;
+		for(size_t j = 0; j < newNumCols; ++j) result.setCol(*this * rhs.getCol(j));
+		/*
 		for(size_t i = 0; i < numRows; ++i){
 			for(size_t j = 0; j < newNumCols; ++j){
-				bool bit = 0; //(getRow(i)).dot(temp.getCol<COLS>(j));
+				bool bit = 0; 
 				for(size_t k = 0; k < numCols; ++k) bit ^= (get(i, k) & rhs.get(k, j));
 				result.set(i, j, bit);
 			}
-		}
+		}*/
 		return result;
 	}
 
