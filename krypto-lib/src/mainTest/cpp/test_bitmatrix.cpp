@@ -42,7 +42,18 @@ TEST(BitMatrixTests, testRandomMatrix) {
 		SCOPED_TRACE("Unexpected zero vector.");
 		ASSERT_FALSE(m[i].isZero());
 	}
-	
+}
+
+TEST(BitMatrixTests, testEqual){
+	BitMatrix<N> I = BitMatrix<N>::squareIdentityMatrix();
+	ASSERT_TRUE(I.equals(I));
+	BitMatrix<N> J = BitMatrix<N>::squareIdentityMatrix();
+	ASSERT_TRUE(I.equals(J));
+	ASSERT_TRUE(J.equals(I));
+	BitMatrix<N> R = BitMatrix<N>::randomInvertibleMatrix();
+	ASSERT_TRUE(R.equals(R));
+	BitMatrix<N> S = BitMatrix<N>::randomMatrix(N << 7);
+	ASSERT_TRUE(S.equals(S));
 }
 
 TEST(BitMatrixTests, testAssignment){
