@@ -1,5 +1,6 @@
 #include "../main/cpp/MultiQuadTuple.h"
 #include "../main/cpp/BridgeKey.h"
+#include "../main/cpp/PublicKey.h"
 #include <iostream>
 #include <time.h>
 
@@ -63,7 +64,7 @@ void testRightCompose(MultiQuadTuple<N, M> &f, BitVector<N> &x){ //f:N->M, D:M->
 	cout << "---------------------------------" << endl;
 }
 
-void testBridgeKeyInstantiation(PrivateKey<N, 2*N> &pk) {
+void testBridgeKeyInstantiation(PrivateKey<N, 2> &pk) {
 	BridgeKey<N, 2*N> bk(pk, BitMatrix<N>::squareIdentityMatrix());
 
 	MultiQuadTuple<2*N, 2*N> u_g1 = bk.get_UNARY_g1();
@@ -84,17 +85,28 @@ void testBridgeKeyInstantiation(PrivateKey<N, 2*N> &pk) {
 	BitMatrix<N> z = bk.get_AND_z();
 }
 
+void testPublicKey(PrivateKey<N, 2> &pk) {
+	BridgeKey<N, 2> bk(pk, BitMatrix<N>::squareIdentityMatrix());
+	PublicKey<N, 2> pub(bk);
+
+	// BitVector<N> x; //zero vector
+	// BitVector<2*N> encrypted = pk.encrypt(x);
+	// BitVector<2*N> encryptedLMM = pub.homomorphicLMM(encrypted);
+	// BitVector<N> unencryptedLMM = pk.decrypt(encryptedLMM); //should be zero
+}
+
 int main(int argc, char **argv) {
 	clock_t begin = clock();
 
 	// MultiQuadTuple<N, M> f = MultiQuadTuple<N, M>::randomMultiQuadTuple();
 	// BitVector<N> x = BitVector<N>::randomVector();
-
 	// testLeftCompose(f, x);
 	// testRightCompose(f, x);
 
-	PrivateKey<N, 2*N> pk;
- 	testBridgeKeyInstantiation(pk);
+	PrivateKey<N, 2> pk;
+
+ 	//testBridgeKeyInstantiation(pk);
+	testPublicKey(pk);
 
  	clock_t end = clock();
  	cout << "Time elapsed: " << double(end - begin) / CLOCKS_PER_SEC << " sec" << endl;
