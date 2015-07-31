@@ -84,7 +84,7 @@ public:
 		int n = rowCount();
 		assert(n == rhs.rowCount());
 		for(int i = 0; i < n; ++i){
-			if(!_rows[i].equals(rhs[i])) return false;
+			if(!_rows[i].equals(rhs._rows[i])) return false;
 		}
 		return true;
 	}
@@ -193,7 +193,6 @@ public:
 		return result;
 	}
 
-	//NEED TO TEST THIS!
 	template<unsigned int ROWS>
 	const BitMatrix<ROWS> T() const{
 		assert(_rows.size() == ROWS << 6);
@@ -207,24 +206,6 @@ public:
 		}
 		return Mt;
 	}
-
-	/*
-	//A in F_2^{m * n}, v in F_2^n; so A*v in F_2^m
-	To include in the next version
-	template<unsigned int NUMROWS>
-	const BitVector<NUMROWS> operator*(const BitVector<COLS> & v) const {
-		BitVector<COLS> result;
-		size_t numRows = _rows.size();
-		assert(numRows == NUMROWS);
-		for (size_t i = 0; i < numRows; ++i) {
-			BitVector<COLS> prod = _rows[i] & v;
-			if (prod.parity()) {
-				result.set(i);
-			}
-		}
-		return result;
-	}
-	*/
 
 	/**
 	 * A in F_2^{n \times m}, v in F_2{n}
