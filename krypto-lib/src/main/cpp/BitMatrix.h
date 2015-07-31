@@ -149,7 +149,7 @@ public:
 	}
 
 	template<unsigned int ROWS>
-	BitVector<ROWS> getCol(const int colIndex) const{
+	const BitVector<ROWS> getCol(const int colIndex) const{
 		assert(colIndex >= 0 && colIndex < colCount());
 		int numRows = rowCount();
 		assert(numRows == ROWS << 6);
@@ -182,7 +182,6 @@ public:
 		size_t numRows = rowCount();
 		BitMatrix<NEWCOLS> result(numRows);
 		size_t newNumCols = NEWCOLS << 6;
-		BitMatrix<NEWCOLS> temp(rhs);
 		for(size_t i = 0; i < numRows; ++i){
 			for(size_t j = 0; j < newNumCols; ++j){
 				bool bit = 0;
