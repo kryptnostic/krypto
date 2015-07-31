@@ -189,7 +189,7 @@ public:
 		for(size_t i = 0; i < numRows; ++i){
 			for(size_t j = 0; j < numCols; ++j){
 				if(get(i, j)){
-					result.xorRow(i, rhs._rows[j]);
+					result._rows[i] ^= rhs._rows[j];
 				}
 			}
 		}
