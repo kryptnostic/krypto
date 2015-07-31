@@ -34,7 +34,6 @@ public:
 /* Unary unified code */
 
 	const MultiQuadTuple<2*N, 2*N> get_UNARY_g1() const{
-		//untested!
 		MultiQuadTupleChain<N,L> f = _pk.getf();
 
 		BitMatrix<2*N> M2 = _M.inv().split_v_2(1);
@@ -48,7 +47,6 @@ public:
 	}
 
 	const MultiQuadTuple<2*N, 2*N> get_UNARY_g2() const{
-		//untested!
 		MultiQuadTupleChain<N,L> f = _pk.getf();
 
 		BitMatrix<2*N> mat_top = _Cu1.inv().split_v_2(0);
@@ -63,7 +61,6 @@ public:
 /* Left Matrix Multiplication */
 
 	const BitMatrix<4*N> get_LMM_Z() const{
-		//untested!
 		BitMatrix<N> zeroN = BitMatrix<N>::squareZeroMatrix();
 
 		BitMatrix<2*N> X_top = BitMatrix<2*N>::aug_h(_BKBi, _BKBiAi);
@@ -79,7 +76,6 @@ public:
 /* Binary unified code */
 
 	const MultiQuadTuple<2*N, 3*N> get_BINARY_gx1() const{
-		//untested!
 		MultiQuadTupleChain<N,L> f = _pk.getf();
 
 		BitMatrix<2*N> M2 = _M.inv().split_v_2(1);
@@ -94,7 +90,6 @@ public:
 	}
 
 	const MultiQuadTuple<2*N, 3*N> get_BINARY_gy1() const{
-		//untested!
 		MultiQuadTupleChain<N,L> f = _pk.getf();
 
 		BitMatrix<2*N> M2 = _M.inv().split_v_2(1);
@@ -109,7 +104,6 @@ public:
 	}
 
 	const MultiQuadTuple<3*N, 3*N>get_BINARY_g2() const{
-		//untested!
 		MultiQuadTupleChain<N,L> f = _pk.getf();
 
 		BitMatrix<3*N> Cb1_inv = _Cb1.inv();
@@ -128,7 +122,6 @@ public:
 /* XOR */
 
 	const BitMatrix<2*N> get_XOR_Xx() const{
-		//untested!
 		BitMatrix<N> idN = BitMatrix<N>::squareIdentityMatrix();
 
 		BitMatrix<2*N> X_top = BitMatrix<2*N>::aug_h(idN, (idN ^ _Rx) * _pk.getA().inv());
@@ -137,7 +130,6 @@ public:
 	}
 
 	const BitMatrix<2*N> get_XOR_Xy() const{
-		//untested!
 		BitMatrix<N> idN = BitMatrix<N>::squareIdentityMatrix();
 
 		BitMatrix<2*N> X_top = BitMatrix<2*N>::aug_h(idN, (idN ^ _Ry) * _pk.getA().inv());
@@ -146,7 +138,6 @@ public:
 	}
 
 	const BitMatrix<3*N> get_XOR_Y() const{
-		//untested!
 		BitMatrix<N> idN = BitMatrix<N>::squareIdentityMatrix();
 
 		BitMatrix<3*N> Y_top = BitMatrix<3*N>::aug_h(idN, BitMatrix<2*N>::aug_h(idN, idN));
@@ -156,7 +147,6 @@ public:
 /* AND */
 
 	const BitMatrix<N> get_AND_z() const{
-		//untested!
 		BitMatrix<2*N> X = get_AND_X();
 		BitMatrix<3*N> Y1 = get_AND_Y1();
 		BitMatrix<3*N> Y2 = get_AND_Y2();
@@ -177,7 +167,6 @@ public:
 	}
 
 	const BitMatrix<2*N> get_AND_Z1() const{
-		//untested!
 		BitMatrix<2*N> M2 = _M.split_v_2(1);
 		BitMatrix<2*N> top = _Rx * _pk.getA().inv() * M2;
 		BitMatrix<2*N> bottom = _pk.getA() * top;
