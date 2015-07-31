@@ -113,7 +113,7 @@ public:
 		return rref().getRightBottomCorner();
 	} 
 
-	const BitVector<COLS> & getRow(const int rowIndex) const{
+	const inline BitVector<COLS> & getRow(const int rowIndex) const{
 		assert(rowIndex >= 0 && rowIndex < rowCount()); //"rowIndex out of bound!"
 		return _rows[rowIndex];
 	}
@@ -149,7 +149,7 @@ public:
 	}
 
 	template<unsigned int ROWS>
-	const BitVector<ROWS> getCol(const int colIndex) const{
+	const BitVector<ROWS> & getCol(const int colIndex) const{
 		assert(colIndex >= 0 && colIndex < colCount());
 		int numRows = rowCount();
 		assert(numRows == ROWS << 6);
@@ -189,7 +189,7 @@ public:
 		for(size_t i = 0; i < numRows; ++i){
 			for(size_t j = 0; j < numCols; ++j){
 				if(get(i, j)){
-					result._rows[i] ^= rhs._rows[j];
+					result.setRow(i, result.getRow(i) ^ rhs.getRow(j));
 				}
 			}
 		}
