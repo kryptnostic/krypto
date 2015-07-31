@@ -182,9 +182,10 @@ public:
 		size_t numRows = rowCount();
 		BitMatrix<NEWCOLS> result(numRows);
 		size_t newNumCols = NEWCOLS << 6;
+		BitMatrix<NEWCOLS> temp = rhs;
 		for(size_t i = 0; i < numRows; ++i){
 			for(size_t j = 0; j < newNumCols; ++j){
-				bool bit = 0;
+				bool bit = 0; //(getRow(i)).dot(temp.getCol<COLS>(j));
 				for(size_t k = 0; k < numCols; ++k) bit ^= (get(i, k) & rhs.get(k, j));
 				result.set(i, j, bit);
 			}
@@ -214,14 +215,9 @@ public:
 	const BitVector<COLS> tMult(const BitVector<ROWS> & v) const {
 		size_t numRows = _rows.size(); //n
  		assert(numRows == ROWS << 6);
-		BitVector<COLS> result;
-		int numCols = COLS << 6; //m
-		for(int j = 0; j < numCols; ++j){
-			bool bit = 0;
-			for(int i = 0; i < numRows; ++i){
-				bit ^= (get(i, j)&v.get(i));
-			}
-			if(bit) result.set(j);
+		BitVector<COLS> result = BitVector<COLS>::zeroVector();
+		for(int i = 0; i < numRows; ++i){
+			if(v[i]) result ^= getRow(i);
 		}
 		return result;
 	}
