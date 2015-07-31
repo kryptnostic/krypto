@@ -173,6 +173,11 @@ public:
 		return result;
 	}
 
+	void xorRow(int rowIndex, const BitVector<COLS> & row){
+		assert(rowIndex >= 0 && rowIndex <= rowCount());
+		_rows[rowIndex] ^= row;
+	}
+
 	//logic correct but implementation is stupid. need to fix access of getCol etc to use those functions
 	//need to figure out a way to implement getCol, now it is regarded as a static function due to the template argument
 	template<unsigned int NEWCOLS>
@@ -181,16 +186,13 @@ public:
 		assert(numCols == rhs.rowCount());
 		size_t numRows = rowCount();
 		BitMatrix<NEWCOLS> result(numRows);
-		size_t newNumCols = NEWCOLS << 6;
-		for(size_t j = 0; j < newNumCols; ++j) result.setCol(*this * rhs.getCol(j));
-		/*
 		for(size_t i = 0; i < numRows; ++i){
-			for(size_t j = 0; j < newNumCols; ++j){
-				bool bit = 0; 
-				for(size_t k = 0; k < numCols; ++k) bit ^= (get(i, k) & rhs.get(k, j));
-				result.set(i, j, bit);
+			for(size_t j = 0; j < numCols; ++j){
+				if(get(i, j)){
+					result.xorRow(i, rhs._rows[j]);
+				}
 			}
-		}*/
+		}
 		return result;
 	}
 
