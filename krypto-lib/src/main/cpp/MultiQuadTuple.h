@@ -17,7 +17,20 @@ public:
 	/**Functional evaluation**/
 
     const BitVector<NUM_OUTPUTS> operator()(const BitVector<NUM_INPUTS> & input) const {
- 		return _contributionsT.tMult(getTransformedInput(input));
+ 		//return _contributionsT.tMult(getTransformedInput(input));
+ 		BitVector<NUM_OUTPUTS> result = BitVector<NUM_OUTPUTS>::zeroVector();
+		unsigned int count = 0;
+		for(size_t i = 0; i < numInputBits; ++i){
+			if(input[i]){
+				result ^= _contributionsT.getRow(count);
+				++count;
+				for(size_t j = i+1; j < numInputBits; ++j){
+					if(input[j])result ^= _contributionsT.getRow(count);
+					++count;
+				}	
+			} else count += (numInputBits - i);
+		}
+		return result;
 	}
 
 	/**Functional compositions**/
