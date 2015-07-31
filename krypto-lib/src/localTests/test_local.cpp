@@ -97,14 +97,29 @@ void testPublicKey(PrivateKey<N, 2> &pk) {
 
 	BitVector<N> x; //zero vector
 	BitVector<2*N> encrypted = pk.encrypt(x);
-	BitVector<2*N> encryptedLMM = pub.homomorphicLMM(encrypted);
-	BitVector<N> unencryptedLMM = pk.decrypt(encryptedLMM); //should be zero
 
 	cout << "x = ";
 	x.print();
 	cout << endl;
 
-	cout << "D(H(E(x))) = ";
+	BitVector<2*N> encryptedLMM = pub.homomorphicLMM(encrypted);
+	BitVector<N> unencryptedLMM = pk.decrypt(encryptedLMM); //should be zero
+
+	cout << "LMM: D(H(E(x))) = ";
+	unencryptedLMM.print();
+	cout << endl;
+
+	BitVector<2*N> encryptedXOR = pub.homomorphicXOR(encrypted, encrypted);
+	BitVector<N> unencryptedXOR = pk.decrypt(encryptedXOR); //should be zero
+
+	cout << "XOR: D(H(E(x))) = ";
+	unencryptedLMM.print();
+	cout << endl;
+
+	BitVector<2*N> encryptedAND = pub.homomorphicAND(encrypted, encrypted);
+	BitVector<N> unencryptedAND = pk.decrypt(encryptedAND); //should be zero
+
+	cout << "AND: D(H(E(x))) = ";
 	unencryptedLMM.print();
 	cout << endl;
 
