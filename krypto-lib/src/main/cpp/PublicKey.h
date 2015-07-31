@@ -31,10 +31,10 @@ public:
 	}
 
 	const BitVector<2*N> homomorphicLMM(BitVector<2*N> x) const{
-		BitVector<2*N> t = gu2(gu1(x));
+		BitVector<2*N> t = _gu2(_gu1(x));
 		BitVector<4*N> inner = BitVector<4*N>::vcat2(x, t);
 
-		return _Z * inner;
+		return _Z.template operator*<2*N>(inner);
 	}
 
 	const BitVector<2*N> homomorphicXOR(BitVector<2*N> x, BitVector<2*N> y) const{
@@ -70,7 +70,7 @@ private:
 	BitMatrix<2*N> _Z2;
 
 	const BitVector<3*N> calculateT(BitVector<2*N> x, BitVector<2*N> y) const{
-		return gb2(gbx1(x) ^ gby1(x));
+		return _gb2(_gbx1(x) ^ _gby1(y));
 	}
 };
 

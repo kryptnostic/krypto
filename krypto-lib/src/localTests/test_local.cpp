@@ -89,10 +89,10 @@ void testPublicKey(PrivateKey<N, 2> &pk) {
 	BridgeKey<N, 2> bk(pk, BitMatrix<N>::squareIdentityMatrix());
 	PublicKey<N, 2> pub(bk);
 
-	// BitVector<N> x; //zero vector
-	// BitVector<2*N> encrypted = pk.encrypt(x);
-	// BitVector<2*N> encryptedLMM = pub.homomorphicLMM(encrypted);
-	// BitVector<N> unencryptedLMM = pk.decrypt(encryptedLMM); //should be zero
+	BitVector<N> x; //zero vector
+	BitVector<2*N> encrypted = pk.encrypt(x);
+	BitVector<2*N> encryptedLMM = pub.homomorphicLMM(encrypted);
+	BitVector<N> unencryptedLMM = pk.decrypt(encryptedLMM); //should be zero
 }
 
 int main(int argc, char **argv) {
