@@ -13,6 +13,8 @@ using namespace std;
 #define DEBUG false
 
 void testLeftCompose(MultiQuadTuple<N, M> &f, BitVector<N> &x){ //C:L->N, f:N->M
+	cout << "LEFT COMPOSE TEST:" << endl << endl;
+
 	BitMatrix<L> C = BitMatrix<L>::randomMatrix(N << 6);
 
 	BitVector<N> Cx = C.template operator*<N>(x);
@@ -20,8 +22,6 @@ void testLeftCompose(MultiQuadTuple<N, M> &f, BitVector<N> &x){ //C:L->N, f:N->M
 
 	MultiQuadTuple<L, M> fC = f*C;
 	BitVector<M> fC_x = fC(x);
-
-	cout << "LEFT COMPOSE TEST:" << endl << endl;
 
 	cout << "f (C*x) = ";
 	f_Cx.print();
@@ -39,6 +39,8 @@ void testLeftCompose(MultiQuadTuple<N, M> &f, BitVector<N> &x){ //C:L->N, f:N->M
 }
 
 void testRightCompose(MultiQuadTuple<N, M> &f, BitVector<N> &x){ //f:N->M, D:M->K
+	cout << "RIGHT COMPOSE TEST:" << endl << endl;
+
 	BitMatrix<M> D = BitMatrix<M>::randomMatrix(K << 6); 
 
 	MultiQuadTuple<N, K> Df = f.rMult<K>(D); 
@@ -46,8 +48,6 @@ void testRightCompose(MultiQuadTuple<N, M> &f, BitVector<N> &x){ //f:N->M, D:M->
 
 	BitVector<M> fx = f(x);
 	BitVector<K> D_fx = D.template operator*<K>(fx);
-
-	cout << "RIGHT COMPOSE TEST:" << endl << endl;
 
 	cout << "D * f(x) = ";
 	D_fx.print();
@@ -65,6 +65,8 @@ void testRightCompose(MultiQuadTuple<N, M> &f, BitVector<N> &x){ //f:N->M, D:M->
 }
 
 void testBridgeKeyInstantiation(PrivateKey<N, 2> &pk) {
+	cout << "BRIDGE KEY TEST:" << endl << endl;
+
 	BridgeKey<N, 2*N> bk(pk, BitMatrix<N>::squareIdentityMatrix());
 
 	MultiQuadTuple<2*N, 2*N> u_g1 = bk.get_UNARY_g1();
@@ -83,9 +85,13 @@ void testBridgeKeyInstantiation(PrivateKey<N, 2> &pk) {
 	BitMatrix<2*N> Z1 = bk.get_AND_Z1();
 	BitMatrix<2*N> Z2 = bk.get_AND_Z2();
 	BitMatrix<N> z = bk.get_AND_z();
+
+	cout << "---------------------------------" << endl;
 }
 
 void testPublicKey(PrivateKey<N, 2> &pk) {
+	cout << "PUBLIC KEY TEST:" << endl << endl;
+
 	BridgeKey<N, 2> bk(pk, BitMatrix<N>::squareIdentityMatrix());
 	PublicKey<N, 2> pub(bk);
 
@@ -93,6 +99,16 @@ void testPublicKey(PrivateKey<N, 2> &pk) {
 	BitVector<2*N> encrypted = pk.encrypt(x);
 	BitVector<2*N> encryptedLMM = pub.homomorphicLMM(encrypted);
 	BitVector<N> unencryptedLMM = pk.decrypt(encryptedLMM); //should be zero
+
+	cout << "x = ";
+	x.print();
+	cout << endl;
+
+	cout << "D(H(E(x))) = ";
+	unencryptedLMM.print();
+	cout << endl;
+
+	cout << "---------------------------------" << endl;
 }
 
 int main(int argc, char **argv) {
