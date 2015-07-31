@@ -25,9 +25,9 @@ public:
 	_Xy(bk.get_XOR_Xy()),
 	_Y(bk.get_XOR_Y()),
 	_Z1(bk.get_AND_Z1()),
-	_Z2(bk.get_AND_Z2())
+	_Z2(bk.get_AND_Z2()),
+	_z(bk.get_AND_z())
 	{
-		MultiQuadTuple<7*N, N> _z(_bk.get_AND_z());
 	}
 
 	const BitVector<2*N> homomorphicLMM(BitVector<2*N> x) const{
@@ -46,8 +46,8 @@ public:
 		BitVector<3*N> t = calculateT(x, y);
 		BitVector<7*N> coordinates = BitVector<7*N>::vcat3(x, y, t);
 
-		BitVector<N> zv = BitVector<N>::zeroVector();
-		BitVector<2*N> left = BitVector<2*N>::vcat2(_z(coordinates), zv);
+		BitVector<N> zeroVector;
+		BitVector<2*N> left = BitVector<2*N>::vcat2(_z(coordinates), zeroVector);
 		BitVector<2*N> mid = _Z1 * x;
 		BitVector<2*N> right = _Z2 * y;
 

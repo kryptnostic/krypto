@@ -16,8 +16,8 @@ using namespace testing;
 #define N 1
 
 TEST(BridgeKeyTest, testLMM){
-	PrivateKey<N, 2*N> pk;
-	BridgeKey<N, 2*N> bk(pk, BitMatrix<N>::squareIdentityMatrix());
+	PrivateKey<N, 2> pk;
+	BridgeKey<N, 2> bk(pk, BitMatrix<N>::squareIdentityMatrix());
 
 	MultiQuadTuple<2*N, 2*N> u_g1 = bk.get_UNARY_g1();
 	MultiQuadTuple<2*N, 2*N> u_g2 = bk.get_UNARY_g2();
@@ -26,8 +26,8 @@ TEST(BridgeKeyTest, testLMM){
 }
 
 TEST(BridgeKeyTest, testXOR){
-	PrivateKey<N, 2*N> pk;
-	BridgeKey<N, 2*N> bk(pk, BitMatrix<N>::squareIdentityMatrix());
+	PrivateKey<N, 2> pk;
+	BridgeKey<N, 2> bk(pk, BitMatrix<N>::squareIdentityMatrix());
 
 	MultiQuadTuple<2*N, 3*N> b_gx1 = bk.get_BINARY_gx1();
 	MultiQuadTuple<2*N, 3*N> b_gy1 = bk.get_BINARY_gy1();
@@ -39,8 +39,8 @@ TEST(BridgeKeyTest, testXOR){
 }
 
 TEST(BridgeKeyTest, testAND){
-	PrivateKey<N, 2*N> pk;
-	BridgeKey<N, 2*N> bk(pk, BitMatrix<N>::squareIdentityMatrix());
+	PrivateKey<N, 2> pk;
+	BridgeKey<N, 2> bk(pk, BitMatrix<N>::squareIdentityMatrix());
 
 	BitMatrix<2*N> Z1 = bk.get_AND_Z1();
 	BitMatrix<2*N> Z2 = bk.get_AND_Z2();
