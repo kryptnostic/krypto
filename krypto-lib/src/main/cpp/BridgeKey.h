@@ -230,7 +230,7 @@ private:
 		//untested!
 		const int twoN = N << 7;
 		const int threeN = 3 * (N << 6);
-		BitMatrix<N> top = BitMatrix<N>::zeroMatrix(twoN - level); //TODO: check that ops with empty top matrix work
+		BitMatrix<N> top = BitMatrix<N>::zeroMatrix(twoN - level);
 
 		BitMatrix<N> mid = BitMatrix<N>::zeroMatrix(twoN);
 		for (int i = 0; i < twoN; i++) { //row within middle block
@@ -277,7 +277,7 @@ private:
 		//to be implemented
 		const int threeN = 3 * (N << 6); //should be the number of coefficients (___ choose 2)
 
-		BitMatrix<N> contrib = BitMatrix<N>::zeroMatrix(threeN);
+		BitMatrix<N> contrib = BitMatrix<N>::zeroMatrix(threeN - level);
 		for (int j = 0; j < N; ++j) { //cols
 			bool prod = Y1.get(j, level) && Y2.get(j, level); //first row
 			contrib.set(0, j, prod);

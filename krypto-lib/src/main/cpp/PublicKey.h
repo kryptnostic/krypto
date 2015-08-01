@@ -45,7 +45,6 @@ public:
 	const BitVector<2*N> homomorphicAND(BitVector<2*N> &x, BitVector<2*N> &y) const{
 		BitVector<3*N> t = calculateT(x, y);
 		BitVector<7*N> coordinates = BitVector<7*N>::vcat3(x, y, t);
-		MultiQuadTuple<7*N, N> _z(_bk.get_AND_z());
 
 		BitVector<N> zeroVector;
 		BitVector<N> top = _z(coordinates);
