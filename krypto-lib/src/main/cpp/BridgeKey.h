@@ -38,7 +38,7 @@ public:
 
 		BitMatrix<2*N> M2 = _M.inv().split_v_2(1);
 		BitMatrix<2*N> mat_top = _pk.getA().inv() * M2;
-		BitMatrix<2*N> mat_bot = _R * _pk.getA().inv() * M2;
+		BitMatrix<2*N> mat_bot = _R * mat_top;
 
 		MultiQuadTuple<2*N, N> top = f.get(0) * mat_top;
 		MultiQuadTuple<2*N, N> bot = f.get(0) * mat_bot;
@@ -69,7 +69,7 @@ public:
 
 		BitMatrix<2*N> Y_top = BitMatrix<2*N>::aug_h(_BKBi, BitMatrix<N>::squareIdentityMatrix());
 		BitMatrix<2*N> Y_bottom = BitMatrix<2*N>::aug_h(zeroN, zeroN);
-		BitMatrix<2*N> Y = BitMatrix<2*N>::aug_v(X_top, X_bottom) * _Cu2.inv();
+		BitMatrix<2*N> Y = BitMatrix<2*N>::aug_v(Y_top, Y_bottom) * _Cu2.inv();
 		return BitMatrix<4*N>::aug_h(X, Y);
 	}
 

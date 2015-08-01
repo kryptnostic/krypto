@@ -14,6 +14,11 @@ public:
 		return MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS>(BitMatrix<NUM_OUTPUTS>::aug_v(BitMatrix<NUM_OUTPUTS>::randomMatrix(inputMonomialCount), BitMatrix<NUM_OUTPUTS>::zeroMatrix(32)));
 	}
 
+	const static MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS> zeroMultiQuadTuple(){
+		if(!inputNeedPadding) return MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS>(BitMatrix<NUM_OUTPUTS>::zeroMatrix(inputMonomialCount));
+		return MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS>(BitMatrix<NUM_OUTPUTS>::aug_v(BitMatrix<NUM_OUTPUTS>::zeroMatrix(inputMonomialCount), BitMatrix<NUM_OUTPUTS>::zeroMatrix(32)));
+	}
+
 	/**Functional evaluation**/
 
     const BitVector<NUM_OUTPUTS> operator()(const BitVector<NUM_INPUTS> & input) const {
