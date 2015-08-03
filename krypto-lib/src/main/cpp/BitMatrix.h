@@ -32,6 +32,7 @@ public:
 
 	BitMatrix(const BitMatrix<COLS> & m) : _rows( m._rows ){}
 
+/*Matrix Generation*/
 	//is the for loop necessary? surely there is a faster way (memset or something)
 	static const BitMatrix zeroMatrix(const int numRows){
 		vector<BitVector<COLS>> rows(numRows);
@@ -57,8 +58,8 @@ public:
 		return randomMatrix(COLS << 6);
 	}
 
-	//TODO: figure out a better way to generate random invertible matrix
 	//generating an invertible matrix which is not the identity
+	//TODO: figure out a better way to generate random invertible matrix
 	static const BitMatrix randomInvertibleMatrix() {//invertible matrix should be square
 		int numRows = COLS << 6;
 		BitMatrix<COLS> R = BitMatrix<COLS>::squareRandomMatrix();
@@ -79,40 +80,7 @@ public:
 		return BitMatrix(rows);
 	}
 
-
-	bool equals(const BitMatrix<COLS> & rhs) const{ //untested!
-		int n = rowCount();
-		assert(n == rhs.rowCount());
-		for(int i = 0; i < n; ++i){
-			if(!_rows[i].equals(rhs._rows[i])) return false;
-		}
-		return true;
-	}
-
-	const BitMatrix<COLS> operator^(const BitMatrix<COLS> & rhs) const{
-		BitMatrix<COLS> result = *this;
-		const unsigned int numRows = rowCount();
-		assert(numRows == rhs.rowCount());
-		const unsigned int numCols = colCount();
-		assert(numCols == rhs.colCount());
-		for(size_t i = 0; i < numRows; ++i){
-			for(size_t j = 0; j < numCols; ++j){
-				result.set(i, j, get(i, j)^rhs.get(i, j));
-			}
-		}
-		return result;
-	}
-
-	/**
-	 * Returns the determinant of a given (square) matrix, which is 1 iff the right bottom corner of its rref is 1. 
-	 * Determinant of a non-square matrix possible? http://math.stackexchange.com/questions/854180/determinant-of-a-non-square-matrix
-	 * Read into this later: http://journals.cambridge.org/download.php?file=%2FBAZ%2FBAZ21_01%2FS0004972700011369a.pdf&code=1807973f2c6d49bc4579326df0a7aa58
-	 */
-	bool det() const{ 
-		assert(rowCount() == colCount());
-		return rref().getRightBottomCorner();
-	} 
-
+/*Accessing (get/set/clear)*/
 	const inline BitVector<COLS> & getRow(const int rowIndex) const{
 		assert(rowIndex >= 0 && rowIndex < rowCount()); //"rowIndex out of bound!"
 		return _rows[rowIndex];
@@ -178,6 +146,7 @@ public:
 		_rows[rowIndex] ^= row;
 	}
 
+/*Multiplications / T*/
 	//logic correct but implementation is stupid. need to fix access of getCol etc to use those functions
 	//need to figure out a way to implement getCol, now it is regarded as a static function due to the template argument
 	template<unsigned int NEWCOLS>
@@ -190,6 +159,30 @@ public:
 			for(size_t j = 0; j < numCols; ++j){
 				if(get(i, j)){
 					result.setRow(i, result.getRow(i) ^ rhs.getRow(j));
+				}
+			}
+		}
+		return result;
+	}
+
+	//multiplication between submatrices
+	template<unsigned int NEWCOLS> 
+	const BitMatrix<NEWCOLS> pMult(const BitMatrix<NEWCOLS> & rhs, 
+		unsigned int startCol, unsigned int endCol, unsigned int startRow, unsigned int endRow){
+		const size_t numCols = colCount();
+		assert(numCols == rhs.rowCount());
+		assert(startCol >= 0 && endCol < numCols);
+		assert(endCol >= startCol);
+		assert(startRow >= 0 && endRow < numCols);
+		assert(endRow >= startRow);
+		assert(startCol + endRow == startRow + endCol);
+		size_t numRows = rowCount();
+		BitMatrix<NEWCOLS> result(numRows);
+		for(size_t j = startCol; j <= endCol; ++j){
+			size_t rhsRow = startRow + j;		
+			for(size_t i = 0; i < numRows; ++i){
+				if(get(i, j)){
+					result.setRow(i, result.getRow(i) ^ rhs.getRow(rhs.getRow(rhsRow)));
 				}
 			}
 		}
@@ -253,6 +246,7 @@ public:
 		return COLS << 6;
 	}   
 
+/*inv/solve/rref*/
 	//for generalized matrix
 	const BitMatrix<COLS> rref() const{
 		size_t n = rowCount(), m = colCount();
@@ -422,6 +416,8 @@ public:
 		return C;
 	}
 */
+
+/*Aug/Split*/
 	//Augments two matrices together horizontally (needs optimization!)
 	template <unsigned int COLS1, unsigned int COLS2>
 	static const BitMatrix<COLS1 + COLS2> aug_h (const BitMatrix<COLS1> & lhs, const BitMatrix<COLS2> & rhs){
@@ -570,6 +566,40 @@ public:
 		int last = rowCount() -1;
 		_rows[last].print();
 	}
+
+
+	bool equals(const BitMatrix<COLS> & rhs) const{ //untested!
+		int n = rowCount();
+		assert(n == rhs.rowCount());
+		for(int i = 0; i < n; ++i){
+			if(!_rows[i].equals(rhs._rows[i])) return false;
+		}
+		return true;
+	}
+
+	const BitMatrix<COLS> operator^(const BitMatrix<COLS> & rhs) const{
+		BitMatrix<COLS> result = *this;
+		const unsigned int numRows = rowCount();
+		assert(numRows == rhs.rowCount());
+		const unsigned int numCols = colCount();
+		assert(numCols == rhs.colCount());
+		for(size_t i = 0; i < numRows; ++i){
+			for(size_t j = 0; j < numCols; ++j){
+				result.set(i, j, get(i, j)^rhs.get(i, j));
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Returns the determinant of a given (square) matrix, which is 1 iff the right bottom corner of its rref is 1. 
+	 * Determinant of a non-square matrix possible? http://math.stackexchange.com/questions/854180/determinant-of-a-non-square-matrix
+	 * Read into this later: http://journals.cambridge.org/download.php?file=%2FBAZ%2FBAZ21_01%2FS0004972700011369a.pdf&code=1807973f2c6d49bc4579326df0a7aa58
+	 */
+	bool det() const{ 
+		assert(rowCount() == colCount());
+		return rref().getRightBottomCorner();
+	} 
 
 private:
 	vector<BitVector<COLS>> _rows;
