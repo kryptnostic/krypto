@@ -72,35 +72,29 @@ public:
 		BitMatrix<2*N> Y_bottom = BitMatrix<2*N>::aug_h(zeroN, zeroN);
 		BitMatrix<2*N> Y = _M * BitMatrix<2*N>::aug_v(Y_top, Y_bottom) * _Cu2.inv();
 		return BitMatrix<4*N>::aug_h(X, Y);
+		//move _M mult to return
 	}
 
 /* Binary unified code */
 
-	const MultiQuadTuple<2*N, 3*N> get_BINARY_gx1() const{
+	const MultiQuadTuple<4*N, 3*N> get_BINARY_g1() const{
 		MultiQuadTupleChain<N,L> f = _pk.getf();
 
 		BitMatrix<2*N> M2 = _M.inv().split_v_2(1);
-		BitMatrix<2*N> mat_top = _pk.getA().inv() * M2;
-		BitMatrix<2*N> mat_bot = _Rx * _pk.getA().inv() * M2;
+		BitMatrix<4*N> M2_projX = BitMatrix<4*N>::aug_h(M2, BitMatrix<2*N>::zeroMatrix(N << 6));
+		BitMatrix<4*N> M2_projY = BitMatrix<4*N>::aug_h(BitMatrix<2*N>::zeroMatrix(N << 6), M2);
 
-		MultiQuadTuple<2*N, N> top = f.get(0) * mat_top;
-		MultiQuadTuple<2*N, N> mid(BitMatrix<N>::zeroMatrix(MultiQuadTuple<2*N, N>::getInputPaddedMonomialCount()));
-		MultiQuadTuple<2*N, N> bot = f.get(0) * mat_bot;
-		MultiQuadTuple<2*N, 3*N> aug = MultiQuadTuple<2*N, 3*N>::aug_v(MultiQuadTuple<2*N, 2*N>::aug_v(top, mid), bot);
-		return aug.template rMult<3*N>(_Cb1);
-	}
+		BitMatrix<4*N> mat_top = _pk.getA().inv() * M2_projX;
+		BitMatrix<4*N> mat_mid = _pk.getA().inv() * M2_projY;
+		BitMatrix<4*N> mat_botX = _Rx * _pk.getA().inv() * M2_projX;
+		BitMatrix<4*N> mat_botY = _Ry * _pk.getA().inv() * M2_projY;
 
-	const MultiQuadTuple<2*N, 3*N> get_BINARY_gy1() const{
-		MultiQuadTupleChain<N,L> f = _pk.getf();
-
-		BitMatrix<2*N> M2 = _M.inv().split_v_2(1);
-		BitMatrix<2*N> mat_mid = _pk.getA().inv() * M2;
-		BitMatrix<2*N> mat_bot = _Ry * _pk.getA().inv() * M2;
-
-		MultiQuadTuple<2*N, N> top(BitMatrix<N>::zeroMatrix(MultiQuadTuple<2*N, N>::getInputPaddedMonomialCount()));
-		MultiQuadTuple<2*N, N> mid = f.get(0) * mat_mid;
-		MultiQuadTuple<2*N, N> bot = f.get(0) * mat_bot;
-		MultiQuadTuple<2*N, 3*N> aug = MultiQuadTuple<2*N, 3*N>::aug_v(MultiQuadTuple<2*N, 2*N>::aug_v(top, mid), bot);
+		MultiQuadTuple<4*N, N> top = f.get(0) * mat_top;
+		MultiQuadTuple<4*N, N> mid = f.get(0) * mat_mid;
+		MultiQuadTuple<4*N, N> botX = f.get(0) * mat_botX;
+		MultiQuadTuple<4*N, N> botY = f.get(0) * mat_botY;
+		MultiQuadTuple<4*N, N> bot = botX ^ botY;
+		MultiQuadTuple<4*N, 3*N> aug = MultiQuadTuple<4*N, 3*N>::aug_v(MultiQuadTuple<4*N, 2*N>::aug_v(top, mid), bot);
 		return aug.template rMult<3*N>(_Cb1);
 	}
 

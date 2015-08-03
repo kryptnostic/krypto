@@ -90,8 +90,7 @@ void testBridgeKeyInstantiation(PrivateKey<N, 2> &pk) {
 
 	BitMatrix<4*N> Z = bk.get_LMM_Z();
 
-	MultiQuadTuple<2*N, 3*N> b_gx1 = bk.get_BINARY_gx1();
-	MultiQuadTuple<2*N, 3*N> b_gy1 = bk.get_BINARY_gy1();
+	MultiQuadTuple<4*N, 3*N> b_g1 = bk.get_BINARY_g1();
 	MultiQuadTuple<3*N, 3*N> b_g2 = bk.get_BINARY_g2();
 
 	BitMatrix<2*N> Xx = bk.get_XOR_Xx();

@@ -62,7 +62,17 @@ public:
 		assert(!(C.rowCount() & 63)); 
 		BitMatrix<NUM_OUTEROUTPUTS> Ct( C.template T<NUM_OUTEROUTPUTS>() );
 		return MultiQuadTuple<NUM_INPUTS, NUM_OUTEROUTPUTS>(_contributionsT * Ct); //return MultiQuadTuple<NUM_INPUTS, NUM_OUTEROUTPUTS>(_contributionsT * C.T<NUM_ROWS>());
-	}	
+	}
+
+	/**
+	 * Adds two MultiQuadTuples by ^-ing the contribution matrices
+	 */
+	const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS> operator^(const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS> & rhs) const {
+ 		BitMatrix<NUM_OUTPUTS> resultContributionsT = _contributionsT ^ rhs._contributionsT;
+ 		MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS> result(resultContributionsT);
+		return result;
+	}
+
 	/**
 	 * Vertically concatenates 2 function tuples
 	 * MultiQuadTuple<1,1> f1 = MultiQuadTuple<1,1>::randomMultiQuadTuple();

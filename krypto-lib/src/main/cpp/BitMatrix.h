@@ -189,27 +189,27 @@ public:
 		return result;
 	}
 
-	template <unsigned int NEWCOLS>
-	const BitMatrix<NEWCOLS> pMult(const BitVector<COLS> & v, unsigned int startCol,
-		unsigned int endCol, unsigned int startIndex, unsigned int endIndex) const{
-		const size_t numCols = colCount();
-		const size_t rhsLength = rhs.length();
-		assert(startCol >= 0 && endCol < numCols);
-		assert(endCol >= startCol);
-		assert(startIndex >= 0 && endIndex < rhsLength);
-		assert(endIndex >= startIndex);
-		assert(startCol + endIndex == startIndex + endCol);
-		size_t numRows = rowCount();
-		BitVector<NEWCOLS> result;
-		for(size_t j = startCol; j <= endCol; ++j){
-			size_t rhsIndex = startIndex + j;
-			for(size_t i = 0; i < numRows; ++i){
-				if(get(i, j)){
-					result.set(i, result.get(i) ^ rhs.get(rhsIndex));
-				}
-			}
-		}
-	}
+	// template <unsigned int NEWCOLS>
+	// const BitMatrix<NEWCOLS> pMult(const BitVector<COLS> & v, unsigned int startCol,
+	// 	unsigned int endCol, unsigned int startIndex, unsigned int endIndex) const{
+	// 	const size_t numCols = colCount();
+	// 	const size_t rhsLength = rhs.length();
+	// 	assert(startCol >= 0 && endCol < numCols);
+	// 	assert(endCol >= startCol);
+	// 	assert(startIndex >= 0 && endIndex < rhsLength);
+	// 	assert(endIndex >= startIndex);
+	// 	assert(startCol + endIndex == startIndex + endCol);
+	// 	size_t numRows = rowCount();
+	// 	BitVector<NEWCOLS> result;
+	// 	for(size_t j = startCol; j <= endCol; ++j){
+	// 		size_t rhsIndex = startIndex + j;
+	// 		for(size_t i = 0; i < numRows; ++i){
+	// 			if(get(i, j)){
+	// 				result.set(i, result.get(i) ^ rhs.get(rhsIndex));
+	// 			}
+	// 		}
+	// 	}
+	// }
 
 	template<unsigned int ROWS>
 	const BitMatrix<ROWS> T() const{
@@ -525,7 +525,7 @@ public:
 
 	//Returns a projection matrix with 1s in the diagonal between given indices
 	//Includes start and end
-	const BitMatrix<COLS> proj_matrix (int start, int end) const{
+	const static BitMatrix<COLS> proj_matrix (int start, int end) {
 		assert(start >= 0 && start < COLS && end >= 0 && end < COLS && start <= end);
 		BitMatrix<COLS> proj = BitMatrix<COLS>::squareZeroMatrix();
 		

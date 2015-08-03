@@ -18,8 +18,7 @@ public:
 	_gu1(bk.get_UNARY_g1()),
 	_gu2(bk.get_UNARY_g2()),
 	_Z(bk.get_LMM_Z()),
-	_gbx1(bk.get_BINARY_gx1()),
-	_gby1(bk.get_BINARY_gy1()),
+	_gb1(bk.get_BINARY_g1()),
 	_gb2(bk.get_BINARY_g2()),
 	_Xx(bk.get_XOR_Xx()),
 	_Xy(bk.get_XOR_Xy()),
@@ -58,8 +57,7 @@ private:
 	MultiQuadTuple<2*N, 2*N> _gu1;
 	MultiQuadTuple<2*N, 2*N> _gu2;
 	BitMatrix<4*N> _Z;
-	MultiQuadTuple<2*N, 3*N> _gbx1;
-	MultiQuadTuple<2*N, 3*N> _gby1;
+	MultiQuadTuple<4*N, 3*N> _gb1;
 	MultiQuadTuple<3*N, 3*N> _gb2;
 	BitMatrix<2*N> _Xx;
 	BitMatrix<2*N> _Xy;
@@ -69,7 +67,8 @@ private:
 	BitMatrix<2*N> _Z2;
 
 	const BitVector<3*N> calculateT(BitVector<2*N> &x, BitVector<2*N> &y) const{
-		return _gb2(_gbx1(x) ^ _gby1(y));
+		BitVector<4*N> concatXY = BitVector<4*N>::vcat2(x, y);
+		return _gb2(_gb1(concatXY));
 	}
 };
 
