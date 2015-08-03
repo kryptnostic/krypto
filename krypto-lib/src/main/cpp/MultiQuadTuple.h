@@ -10,6 +10,17 @@ public:
 	MultiQuadTuple(const BitMatrix<NUM_OUTPUTS> & contributionsT):_contributionsT(contributionsT){}
 	//TODO: introduce padding into above constructor
 
+	const static MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS> getMultiQuadTuple(const BitMatrix<NUM_INPUTS> & M){
+		assert(NUM_OUTPUTS == M.rowCount());
+		BitMatrix<NUM_OUTPUTS> result = BitMatrix<NUM_OUTPUTS>::zeroMatrix(inputMonomialCount);
+		size_t count = 0;
+		for(size_t i = 0; i < numInputBits; ++i){
+			result.setRow(i, M.getRow(i));
+			count += (numInputBits - i);
+		}
+		return MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS>(result);
+	}
+
 	const static MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS> randomMultiQuadTuple(){
 		if(!inputNeedPadding) return MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS>(BitMatrix<NUM_OUTPUTS>::randomMatrix(inputMonomialCount));
 		return MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS>(BitMatrix<NUM_OUTPUTS>::aug_v(BitMatrix<NUM_OUTPUTS>::randomMatrix(inputMonomialCount), BitMatrix<NUM_OUTPUTS>::zeroMatrix(32)));
