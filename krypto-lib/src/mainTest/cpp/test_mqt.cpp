@@ -19,6 +19,15 @@ TEST(MQTTests, testInit){//assert equality later, as there's obob now
 	ASSERT_TRUE(1+2 == 3);
 }
 
+TEST(MQTTests, testMatToMQT){
+	BitMatrix<N> X = BitMatrix<N>::randomMatrix(M << 6);
+	BitVector<N> x = BitVector<N>::randomVector();
+	BitVector<M> Xx = X.template operator*<M>(x);
+	MultiQuadTuple<N, M> f = MultiQuadTuple<N, M>::getMultiQuadTuple(X);
+	BitVector<M> fx = f(x);
+	ASSERT_TRUE(fx.equals(Xx));
+}
+
 TEST(MQTTests, testLeftComp){
 	ASSERT_TRUE(2+3 == 5);
 	MultiQuadTuple<N, M> f = MultiQuadTuple<N, M>::randomMultiQuadTuple();
