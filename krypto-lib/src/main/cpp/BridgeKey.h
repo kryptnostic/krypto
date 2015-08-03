@@ -66,11 +66,11 @@ public:
 
 		BitMatrix<2*N> X_top = BitMatrix<2*N>::aug_h(_BKBi, _BKBiAi ^ RAi);
 		BitMatrix<2*N> X_bottom = BitMatrix<2*N>::aug_h(zeroN, _ARAi);
-		BitMatrix<2*N> X = BitMatrix<2*N>::aug_v(X_top, X_bottom) * _M.inv();
+		BitMatrix<2*N> X = _M * BitMatrix<2*N>::aug_v(X_top, X_bottom) * _M.inv();
 
 		BitMatrix<2*N> Y_top = BitMatrix<2*N>::aug_h(_BKBi, BitMatrix<N>::squareIdentityMatrix());
 		BitMatrix<2*N> Y_bottom = BitMatrix<2*N>::aug_h(zeroN, zeroN);
-		BitMatrix<2*N> Y = BitMatrix<2*N>::aug_v(Y_top, Y_bottom) * _Cu2.inv();
+		BitMatrix<2*N> Y = _M * BitMatrix<2*N>::aug_v(Y_top, Y_bottom) * _Cu2.inv();
 		return BitMatrix<4*N>::aug_h(X, Y);
 	}
 
@@ -127,7 +127,7 @@ public:
 
 		BitMatrix<2*N> X_top = BitMatrix<2*N>::aug_h(idN, (idN ^ _Rx) * _pk.getA().inv());
 		BitMatrix<2*N> X_bottom = BitMatrix<2*N>::aug_h(BitMatrix<N>::squareZeroMatrix(), _ARxAi);
-		return BitMatrix<2*N>::aug_v(X_top, X_bottom) * _M.inv();
+		return _M * BitMatrix<2*N>::aug_v(X_top, X_bottom) * _M.inv();
 	}
 
 	const BitMatrix<2*N> get_XOR_Xy() const{
@@ -135,14 +135,14 @@ public:
 
 		BitMatrix<2*N> X_top = BitMatrix<2*N>::aug_h(idN, (idN ^ _Ry) * _pk.getA().inv());
 		BitMatrix<2*N> X_bottom = BitMatrix<2*N>::aug_h(BitMatrix<N>::squareZeroMatrix(), _ARyAi);
-		return BitMatrix<2*N>::aug_v(X_top, X_bottom) * _M.inv();
+		return _M * BitMatrix<2*N>::aug_v(X_top, X_bottom) * _M.inv();
 	}
 
 	const BitMatrix<3*N> get_XOR_Y() const{
 		BitMatrix<N> idN = BitMatrix<N>::squareIdentityMatrix();
 
 		BitMatrix<3*N> Y_top = BitMatrix<3*N>::aug_h(idN, BitMatrix<2*N>::aug_h(idN, idN));
-		return BitMatrix<3*N>::aug_v(Y_top, BitMatrix<3*N>::zeroMatrix(N << 6)) * _Cb2.inv();
+		return _M * BitMatrix<3*N>::aug_v(Y_top, BitMatrix<3*N>::zeroMatrix(N << 6)) * _Cb2.inv();
 	}
 
 /* AND */
