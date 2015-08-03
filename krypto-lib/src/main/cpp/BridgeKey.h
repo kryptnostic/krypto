@@ -147,7 +147,7 @@ public:
 
 /* AND */
 
-	const BitMatrix<N> get_AND_z() const{
+	const MultiQuadTuple<7*N, 2*N> get_AND_z() const{
 		BitMatrix<2*N> X = get_AND_X();
 		BitMatrix<3*N> Y1 = get_AND_Y1();
 		BitMatrix<3*N> Y2 = get_AND_Y2();
@@ -167,21 +167,26 @@ public:
 			contrib = BitMatrix<N>::aug_v(contrib, get_AND_Sk(level, Y1, Y2)); //add S_k's
 		}
 
-		return contrib;
+		MultiQuadTuple<7*N, N> z_top(BitMatrix<N>::aug_v(contrib, BitMatrix<N>::zeroMatrix(32)));
+		MultiQuadTuple<7*N, N> zeroMQT = MultiQuadTuple<7*N, N>::zeroMultiQuadTuple();
+		MultiQuadTuple<7*N, 2*N> z = MultiQuadTuple<7*N, 2*N>::aug_v(z_top, zeroMQT);
+		MultiQuadTuple<7*N, 2*N> result = z.template rMult<2*N>(_M);
+
+		return result;
 	}
 
 	const BitMatrix<2*N> get_AND_Z1() const{
 		BitMatrix<2*N> M2 = _M.split_v_2(1);
 		BitMatrix<2*N> top = _Rx * _pk.getA().inv() * M2;
 		BitMatrix<2*N> bottom = _pk.getA() * top;
-		return BitMatrix<2*N>::aug_v(top, bottom);
+		return _M * BitMatrix<2*N>::aug_v(top, bottom);
 	}
 
 	const BitMatrix<2*N> get_AND_Z2() const{
 		BitMatrix<2*N> M2 = _M.split_v_2(1);
 		BitMatrix<2*N> top = _Ry * _pk.getA().inv() * M2;
 		BitMatrix<2*N> bottom = _pk.getA() * top;
-		return BitMatrix<2*N>::aug_v(top, bottom);
+		return _M * BitMatrix<2*N>::aug_v(top, bottom);
 	}
 
 

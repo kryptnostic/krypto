@@ -523,6 +523,18 @@ public:
 		return result;
 	}
 
+	//Returns a projection matrix with 1s in the diagonal between given indices
+	//Includes start and end
+	const BitMatrix<COLS> proj_matrix (int start, int end) const{
+		assert(start >= 0 && start < COLS && end >= 0 && end < COLS && start <= end);
+		BitMatrix<COLS> proj = BitMatrix<COLS>::squareZeroMatrix();
+		
+		for (int i = start; i <= end; ++i) {
+			proj.set(i, i);
+		}
+		return proj;
+	}
+
 	/* Functions below will be shifted to the private section after tested */
 
 	/***File/terminal input/output***/

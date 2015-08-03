@@ -100,7 +100,7 @@ void testBridgeKeyInstantiation(PrivateKey<N, 2> &pk) {
 
 	BitMatrix<2*N> Z1 = bk.get_AND_Z1();
 	BitMatrix<2*N> Z2 = bk.get_AND_Z2();
-	BitMatrix<N> z = bk.get_AND_z();
+	MultiQuadTuple<7*N, 2*N> z = bk.get_AND_z();
 
 	cout << "---------------------------------" << endl;
 }

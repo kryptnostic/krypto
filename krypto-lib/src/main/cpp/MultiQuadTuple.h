@@ -8,6 +8,7 @@ template<unsigned int NUM_INPUTS, unsigned int NUM_OUTPUTS>
 class MultiQuadTuple {
 public:
 	MultiQuadTuple(const BitMatrix<NUM_OUTPUTS> & contributionsT):_contributionsT(contributionsT){}
+	//TODO: introduce padding into above constructor
 
 	const static MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS> randomMultiQuadTuple(){
 		if(!inputNeedPadding) return MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS>(BitMatrix<NUM_OUTPUTS>::randomMatrix(inputMonomialCount));

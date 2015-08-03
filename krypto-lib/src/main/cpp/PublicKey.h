@@ -46,9 +46,7 @@ public:
 		BitVector<3*N> t = calculateT(x, y);
 		BitVector<7*N> coordinates = BitVector<7*N>::vcat3(x, y, t);
 
-		BitVector<N> zeroVector;
-		BitVector<N> top = _z(coordinates);
-		BitVector<2*N> left = BitVector<2*N>::vcat2(top, zeroVector);
+		BitVector<2*N> left = _z(coordinates);
 		BitVector<2*N> mid = _Z1.template operator*<2*N>(x);
 		BitVector<2*N> right = _Z2.template operator*<2*N>(y);
 
@@ -66,7 +64,7 @@ private:
 	BitMatrix<2*N> _Xx;
 	BitMatrix<2*N> _Xy;
 	BitMatrix<3*N> _Y;
-	MultiQuadTuple<7*N, N> _z;
+	MultiQuadTuple<7*N, 2*N> _z;
 	BitMatrix<2*N> _Z1;
 	BitMatrix<2*N> _Z2;
 
