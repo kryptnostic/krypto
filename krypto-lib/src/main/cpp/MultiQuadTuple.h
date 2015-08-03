@@ -19,7 +19,8 @@ public:
 			result.setRow(count, Mt.getRow(i));
 			count += (numInputBits - i);
 		}
-		return MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS>(result);
+		if(!inputNeedPadding) return MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS>(result);
+		return MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS>(BitMatrix<NUM_OUTPUTS>::aug_v(result, BitMatrix<NUM_OUTPUTS>::zeroMatrix(32)));
 	}
 
 	const static MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS> randomMultiQuadTuple(){
