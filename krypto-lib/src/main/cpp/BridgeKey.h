@@ -160,6 +160,8 @@ public:
 		}
 
 		MultiQuadTuple<7*N, N> z_top(BitMatrix<N>::aug_v(contrib, BitMatrix<N>::zeroMatrix(32)));
+		z_top = z_top.template rMult<N>(_pk.getB()); //need to add Y_3 t
+
 		MultiQuadTuple<7*N, N> zeroMQT = MultiQuadTuple<7*N, N>::zeroMultiQuadTuple();
 		MultiQuadTuple<7*N, 2*N> z = MultiQuadTuple<7*N, 2*N>::aug_v(z_top, zeroMQT);
 		MultiQuadTuple<7*N, 2*N> result = z.template rMult<2*N>(_M);
@@ -210,12 +212,12 @@ private:
 
 	const BitMatrix<3*N> get_AND_Y1() const{
 		BitMatrix<3*N> Cb_top = _Cb1.inv().split_v_3(0);
-		return _pk.getB() * Cb_top;
+		return _pk.getB().inv() * Cb_top;
 	}
 
 	const BitMatrix<3*N> get_AND_Y2() const{
 		BitMatrix<3*N> Cb_middle = _Cb1.inv().split_v_3(1);
-		return _pk.getB() * Cb_middle;
+		return _pk.getB().inv() * Cb_middle;
 	}
 
 	const BitMatrix<3*N> get_AND_Y3() const{
