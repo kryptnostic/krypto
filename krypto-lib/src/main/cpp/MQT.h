@@ -1,5 +1,3 @@
-//the supposedly faster new version, under experiment
-
 #ifndef __krypto__MQT__
 #define __krypto__MQT__
 
@@ -14,6 +12,22 @@ public:
 	const static MQT<NUM_INPUTS, NUM_OUTPUTS> rMQT(){
 		return MQT<NUM_INPUTS, NUM_OUTPUTS>(BitMatrix<NUM_OUTPUTS>::randomMatrix(numInputMonomials));
 	}
+
+	const static MQT<NUM_INPUTS, NUM_OUTPUTS> zMQT(){
+		return MQT<NUM_INPUTS, NUM_OUTPUTS>(BitMatrix<NUM_OUTPUTS>::zeroMatrix(numInputMonomials));
+	}
+
+	const static MQT<NUM_INPUTS, NUM_OUTPUTS> gMQT(const BitMatrix<NUM_INPUTS> & M){
+		assert(NUM_OUTPUTS << 6 == M.rowCount());
+		BitMatrix<NUM_OUTPUTS> Mt = M.template T<NUM_OUTPUTS>();
+		BitMatrix<NUM_OUTPUTS> result = BitMatrix<NUM_OUTPUTS>::zeroMatrix(numInputMonomials);
+		size_t count = 0;
+		for(size_t i = 0; i < numInputBits; i++){
+			result.setRow(count, Mt.getRow(i));
+			count += (numInputBits - i);
+		}
+		return MQT<NUM_INPUTS, NUM_OUTPUTS>(result);
+	}	
 
 	const BitVector<NUM_OUTPUTS> operator()(const BitVector<NUM_INPUTS> & input) const {
 		BitVector<NUM_OUTPUTS> result;
@@ -31,16 +45,6 @@ public:
 		return result;
 	}
 
-	const unsigned int getIndex(unsigned int main, unsigned int aux) const{
-		size_t index1 = min(main, aux);
-		size_t index2 = max(main, aux);
-		//unsigned int toSubtract = (((numInputBits - main) * (numInputBits - main + 1)) >> 1);
-		//return numInputMonomials - toSubtract + (aux - main);
-		unsigned int toSubtract = (((numInputBits - index1) * (numInputBits - index1 + 1)) >> 1);
-		unsigned int result = numInputMonomials - toSubtract + (index2 - index1);
-		return result;
-	}
-
 	template<unsigned int NUM_INNERINPUTS> 
 	const MQT<NUM_INNERINPUTS, NUM_OUTPUTS> operator*(const BitMatrix<NUM_INNERINPUTS> & C) const{
 		assert(NUM_INPUTS << 6 == C.rowCount());
@@ -52,20 +56,26 @@ public:
 		size_t subLength = numInputBits;
 		for(size_t i = 0; i < numInputBits; ++i){ 
 			BitMatrix<NUM_OUTPUTS> A_i = Ct.template pMult<NUM_OUTPUTS>(_contributionsT, i, numInputBits - 1, input_count, input_count + subLength - 1);
-			assert(A_i.rowCount() == numInnerInputBits);
-			assert(A_i.colCount() == numOutputBits);
 			input_count += subLength;
 			--subLength;
 			for(size_t j = 0; j < numInnerInputBits; ++j){
 				if(C.get(i, j)){ 
 					for(size_t k = 0; k < numInnerInputBits; ++k){
-						size_t newIndex = MQT<NUM_INNERINPUTS, NUM_OUTPUTS>::getIndex(j, k);
+						size_t newIndex = MQT<NUM_INNERINPUTS, NUM_OUTPUTS>::getIndex(j, k); //move this out of the loop
 						result.setRow(newIndex, result.getRow(newIndex) ^ A_i.getRow(k));
 					}
 				}
 			}
 		}
 		return MQT<NUM_INNERINPUTS, NUM_OUTPUTS>(result);
+	}
+
+	template<unsigned int NUM_OUTEROUTPUTS>
+	const MQT<NUM_INPUTS, NUM_OUTEROUTPUTS> rMult(const BitMatrix<NUM_OUTPUTS> & C) {
+		assert(numOutputBits == C.colCount());
+		assert(!(C.rowCount() & 63)); 
+		BitMatrix<NUM_OUTEROUTPUTS> Ct( C.template T<NUM_OUTEROUTPUTS>() );
+		return MQT<NUM_INPUTS, NUM_OUTEROUTPUTS>(_contributionsT * Ct);
 	}
 
 	const unsigned int getInputCount() const{
@@ -75,6 +85,14 @@ public:
 	const unsigned int getInputMonomialCount() const{
 		return numInputMonomials;
 	}
+
+	const unsigned int getIndex(unsigned int main, unsigned int aux) const{
+		size_t index1 = min(main, aux);
+		size_t index2 = max(main, aux);
+		unsigned int toSubtract = (((numInputBits - index1) * (numInputBits - index1 + 1)) >> 1);
+		unsigned int result = numInputMonomials - toSubtract + (index2 - index1);
+		return result;
+	}	
 private:
 	BitMatrix<NUM_OUTPUTS> _contributionsT;
 	static const unsigned int numInputBits = (NUM_INPUTS << 6);
@@ -82,5 +100,4 @@ private:
 	static const unsigned int numInputMonomials = ((numInputBits * (numInputBits + 1)) >> 1);
 	static const unsigned int numOutputMonomials = ((numOutputBits * (numOutputBits + 1)) >> 1);
 };
-
 #endif
