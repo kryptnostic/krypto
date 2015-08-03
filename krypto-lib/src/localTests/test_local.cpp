@@ -8,7 +8,7 @@ using namespace std;
 
 #define L 1
 #define M 1 
-#define K 2 
+#define H 2 
 #define N 1
 #define DEBUG false
 
@@ -54,16 +54,16 @@ void testLeftCompose(MultiQuadTuple<N, M> &f, BitVector<N> &x){ //C:L->N, f:N->M
 	cout << "---------------------------------" << endl;
 }
 
-void testRightCompose(MultiQuadTuple<N, M> &f, BitVector<N> &x){ //f:N->M, D:M->K
+void testRightCompose(MultiQuadTuple<N, M> &f, BitVector<N> &x){ //f:N->M, D:M->H
 	cout << "RIGHT COMPOSE TEST:" << endl << endl;
 
-	BitMatrix<M> D = BitMatrix<M>::randomMatrix(K << 6); 
+	BitMatrix<M> D = BitMatrix<M>::randomMatrix(H << 6); 
 
-	MultiQuadTuple<N, K> Df = f.rMult<K>(D); 
-	BitVector<K> Df_x = Df(x);
+	MultiQuadTuple<N, H> Df = f.rMult<H>(D); 
+	BitVector<H> Df_x = Df(x);
 
 	BitVector<M> fx = f(x);
-	BitVector<K> D_fx = D.template operator*<K>(fx);
+	BitVector<H> D_fx = D.template operator*<H>(fx);
 
 	cout << "D * f(x) = ";
 	D_fx.print();
@@ -107,7 +107,8 @@ void testBridgeKeyInstantiation(PrivateKey<N, 2> &pk) {
 void testPublicKey(PrivateKey<N, 2> &pk) {
 	cout << "PUBLIC KEY TEST:" << endl << endl;
 
-	BridgeKey<N, 2> bk(pk, BitMatrix<N>::squareIdentityMatrix());
+	BitMatrix<N> K = BitMatrix<N>::randomMatrix(N << 6);
+	BridgeKey<N, 2> bk(pk, K);
 	PublicKey<N, 2> pub(bk);
 
 	BitVector<N> x = BitVector<N>::randomVector();
@@ -122,7 +123,8 @@ void testPublicKey(PrivateKey<N, 2> &pk) {
 
 	cout << "y = ";
 	y.print();
-	cout << endl;
+	cout << endl << "------" << endl;
+
 
 	BitVector<2*N> encryptedLMM = pub.homomorphicLMM(encryptedX);
 	BitVector<N> unencryptedLMM = pk.decrypt(encryptedLMM); //should be zero
@@ -130,6 +132,10 @@ void testPublicKey(PrivateKey<N, 2> &pk) {
 	cout << "LMM: D(H(E(x))) = ";
 	unencryptedLMM.print();
 	cout << endl;
+
+	cout << "K * x = ";
+	(K.template operator*<N>(x)).print();
+	cout << endl << "------" << endl;
 
 
 	BitVector<2*N> encryptedXOR = pub.homomorphicXOR(encryptedX, encryptedY);
@@ -141,7 +147,7 @@ void testPublicKey(PrivateKey<N, 2> &pk) {
 
 	cout << "x ^ y = ";
 	(x ^ y).print();
-	cout << endl;
+	cout << endl << "------" << endl;
 
 
 	BitVector<2*N> encryptedAND = pub.homomorphicAND(encryptedX, encryptedY);
