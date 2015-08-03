@@ -91,9 +91,7 @@ public:
 
 		MultiQuadTuple<4*N, N> top = f.get(0) * mat_top;
 		MultiQuadTuple<4*N, N> mid = f.get(0) * mat_mid;
-		MultiQuadTuple<4*N, N> botX = f.get(0) * mat_botX;
-		MultiQuadTuple<4*N, N> botY = f.get(0) * mat_botY;
-		MultiQuadTuple<4*N, N> bot = botX ^ botY;
+		MultiQuadTuple<4*N, N> bot = f.get(0) * (mat_botX ^ mat_botY);
 		MultiQuadTuple<4*N, 3*N> aug = MultiQuadTuple<4*N, 3*N>::aug_v(MultiQuadTuple<4*N, 2*N>::aug_v(top, mid), bot);
 		return aug.template rMult<3*N>(_Cb1);
 	}
