@@ -15,7 +15,7 @@ public:
 		BitMatrix<NUM_OUTPUTS> result = BitMatrix<NUM_OUTPUTS>::zeroMatrix(inputMonomialCount);
 		size_t count = 0;
 		for(size_t i = 0; i < numInputBits; ++i){
-			result.setRow(i, M.getRow(i));
+			result.setRow(count, M.getRow(i));
 			count += (numInputBits - i);
 		}
 		return MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS>(result);
