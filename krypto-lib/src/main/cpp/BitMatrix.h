@@ -128,19 +128,6 @@ public:
 		return v;
 	}
 
-	template <unsigned int NEWCOLS>
-	const BitVector<NEWCOLS> operator*(const BitVector<COLS> & v) const{
-		BitVector<NEWCOLS> result;
-		size_t numRows = _rows.size();
-		for (size_t i = 0; i < numRows; ++i) {
-			BitVector<COLS> prod = _rows[i] & v;
-			if (prod.parity()) {
-				result.set(i);
-			}
-		}
-		return result;
-	}
-
 	void xorRow(int rowIndex, const BitVector<COLS> & row){
 		assert(rowIndex >= 0 && rowIndex <= rowCount());
 		_rows[rowIndex] ^= row;
@@ -168,12 +155,12 @@ public:
 	//multiplication between submatrices
 	template<unsigned int NEWCOLS> 
 	const BitMatrix<NEWCOLS> pMult(const BitMatrix<NEWCOLS> & rhs, 
-		unsigned int startCol, unsigned int endCol, unsigned int startRow, unsigned int endRow){
+		unsigned int startCol, unsigned int endCol, unsigned int startRow, unsigned int endRow) const{
 		const size_t numCols = colCount();
-		assert(numCols == rhs.rowCount());
+		const size_t rhsRows = rhs.rowCount();
 		assert(startCol >= 0 && endCol < numCols);
 		assert(endCol >= startCol);
-		assert(startRow >= 0 && endRow < numCols);
+		assert(startRow >= 0 && endRow < rhsRows);
 		assert(endRow >= startRow);
 		assert(startCol + endRow == startRow + endCol);
 		size_t numRows = rowCount();
@@ -187,6 +174,41 @@ public:
 			}
 		}
 		return result;
+	}
+
+	template <unsigned int NEWCOLS>
+	const BitVector<NEWCOLS> operator*(const BitVector<COLS> & v) const{
+		BitVector<NEWCOLS> result;
+		size_t numRows = _rows.size();
+		for (size_t i = 0; i < numRows; ++i) {
+			BitVector<COLS> prod = _rows[i] & v;
+			if (prod.parity()) {
+				result.set(i);
+			}
+		}
+		return result;
+	}
+
+	template <unsigned int NEWCOLS>
+	const BitMatrix<NEWCOLS> pMult(const BitVector<COLS> & v, unsigned int startCol,
+		unsigned int endCol, unsigned int startIndex, unsigned int endIndex) const{
+		const size_t numCols = colCount();
+		const size_t rhsLength = rhs.length();
+		assert(startCol >= 0 && endCol < numCols);
+		assert(endCol >= startCol);
+		assert(startIndex >= 0 && endIndex < rhsLength);
+		assert(endIndex >= startIndex);
+		assert(startCol + endIndex == startIndex + endCol);
+		size_t numRows = rowCount();
+		BitVector<NEWCOLS> result;
+		for(size_t j = startCol; j <= endCol; ++j){
+			size_t rhsIndex = startIndex + j;
+			for(size_t i = 0; i < numRows; ++i){
+				if(get(i, j)){
+					result.set(i, result.get(i) ^ rhs.get(rhsIndex));
+				}
+			}
+		}
 	}
 
 	template<unsigned int ROWS>
