@@ -11,11 +11,12 @@ public:
 	//TODO: introduce padding into above constructor
 
 	const static MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS> getMultiQuadTuple(const BitMatrix<NUM_INPUTS> & M){
-		assert(NUM_OUTPUTS == M.rowCount());
+		assert(NUM_OUTPUTS << 6 == M.rowCount());
+		BitMatrix<NUM_OUTPUTS> Mt = M.template T<NUM_OUTPUTS>();
 		BitMatrix<NUM_OUTPUTS> result = BitMatrix<NUM_OUTPUTS>::zeroMatrix(inputMonomialCount);
 		size_t count = 0;
-		for(size_t i = 0; i < numInputBits; ++i){
-			result.setRow(count, M.getRow(i));
+		for(size_t i = 0; i < numInputBits; i++){
+			result.setRow(count, Mt.getRow(i));
 			count += (numInputBits - i);
 		}
 		return MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS>(result);
