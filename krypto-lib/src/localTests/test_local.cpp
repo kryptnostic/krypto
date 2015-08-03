@@ -150,7 +150,7 @@ int main(int argc, char **argv) {
 
 	// testLeftCompose(f, x);
 	// testRightCompose(f, x);
-	testEvaluateMQT(f, x);
+	// testEvaluateMQT(f, x);
 
 	PrivateKey<N, 2> pk;
 

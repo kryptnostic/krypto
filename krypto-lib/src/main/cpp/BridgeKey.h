@@ -62,8 +62,9 @@ public:
 
 	const BitMatrix<4*N> get_LMM_Z() const{
 		BitMatrix<N> zeroN = BitMatrix<N>::squareZeroMatrix();
+		BitMatrix<N> RAi = _R * _pk.getA().inv();
 
-		BitMatrix<2*N> X_top = BitMatrix<2*N>::aug_h(_BKBi, _BKBiAi);
+		BitMatrix<2*N> X_top = BitMatrix<2*N>::aug_h(_BKBi, _BKBiAi ^ RAi);
 		BitMatrix<2*N> X_bottom = BitMatrix<2*N>::aug_h(zeroN, _ARAi);
 		BitMatrix<2*N> X = BitMatrix<2*N>::aug_v(X_top, X_bottom) * _M.inv();
 
