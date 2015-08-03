@@ -89,15 +89,15 @@ public:
 		return MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS_SUM>(BitMatrix<NUM_OUTPUTS_SUM>::aug_h(C1, C2));
 	}	
 
-	const unsigned int getInputCount() const{
+	static const unsigned int getInputCount(){
 		return numInputBits;
 	}
 
-	const unsigned int getInputMonomialCount() const{
+	static const unsigned int getInputMonomialCount(){
 		return numInputMonomials;
 	}
 
-	const unsigned int getIndex(unsigned int main, unsigned int aux) const{
+	static const unsigned int getIndex(unsigned int main, unsigned int aux){
 		size_t index1 = min(main, aux);
 		size_t index2 = max(main, aux);
 		unsigned int toSubtract = (((numInputBits - index1) * (numInputBits - index1 + 1)) >> 1);
