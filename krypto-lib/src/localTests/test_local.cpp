@@ -110,32 +110,49 @@ void testPublicKey(PrivateKey<N, 2> &pk) {
 	BridgeKey<N, 2> bk(pk, BitMatrix<N>::squareIdentityMatrix());
 	PublicKey<N, 2> pub(bk);
 
-	BitVector<N> x; //zero vector
-	BitVector<2*N> encrypted = pk.encrypt(x);
+	BitVector<N> x = BitVector<N>::randomVector();
+	BitVector<N> y = BitVector<N>::randomVector();
+	BitVector<2*N> encryptedX = pk.encrypt(x);
+	BitVector<2*N> encryptedY = pk.encrypt(y);
+
 
 	cout << "x = ";
 	x.print();
 	cout << endl;
 
-	BitVector<2*N> encryptedLMM = pub.homomorphicLMM(encrypted);
+	cout << "y = ";
+	y.print();
+	cout << endl;
+
+	BitVector<2*N> encryptedLMM = pub.homomorphicLMM(encryptedX);
 	BitVector<N> unencryptedLMM = pk.decrypt(encryptedLMM); //should be zero
 
 	cout << "LMM: D(H(E(x))) = ";
 	unencryptedLMM.print();
 	cout << endl;
 
-	BitVector<2*N> encryptedXOR = pub.homomorphicXOR(encrypted, encrypted);
+
+	BitVector<2*N> encryptedXOR = pub.homomorphicXOR(encryptedX, encryptedY);
 	BitVector<N> unencryptedXOR = pk.decrypt(encryptedXOR); //should be zero
 
 	cout << "XOR: D(H(E(x))) = ";
 	unencryptedXOR.print();
 	cout << endl;
 
-	BitVector<2*N> encryptedAND = pub.homomorphicAND(encrypted, encrypted);
+	cout << "x ^ y = ";
+	(x ^ y).print();
+	cout << endl;
+
+
+	BitVector<2*N> encryptedAND = pub.homomorphicAND(encryptedX, encryptedY);
 	BitVector<N> unencryptedAND = pk.decrypt(encryptedAND); //should be zero
 
 	cout << "AND: D(H(E(x))) = ";
 	unencryptedAND.print();
+	cout << endl;
+
+	cout << "x & y = ";
+	(x & y).print();
 	cout << endl;
 
 	cout << "---------------------------------" << endl;
