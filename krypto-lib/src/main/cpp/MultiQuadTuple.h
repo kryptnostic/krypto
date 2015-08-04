@@ -46,7 +46,7 @@ public:
 
 	template<unsigned int NUM_INNERINPUTS> 
 	const MultiQuadTuple<NUM_INNERINPUTS, NUM_OUTPUTS> operator*(const BitMatrix<NUM_INNERINPUTS> & C) const{
-		assert(NUM_INPUTS << 6 == C.rowCount());
+		assert(numInputBits == C.rowCount());
 		BitMatrix<NUM_INPUTS> Ct = C.template T<NUM_INPUTS>();
 		const unsigned int numInnerInputMonomials = MultiQuadTuple<NUM_INNERINPUTS, NUM_OUTPUTS>::getInputMonomialCount(); 
 		const unsigned int numInnerInputBits = MultiQuadTuple<NUM_INNERINPUTS, NUM_OUTPUTS>::getInputCount();
@@ -103,7 +103,7 @@ public:
 		return result;
 	}		
 
-	const BitMatrix<NUM_OUTPUTS> getTransposedContributionMatrix(){
+	const BitMatrix<NUM_OUTPUTS> getTransposedContributionMatrix() const{
 		return _contributionsT;
 	}
 private:
