@@ -15,9 +15,9 @@ class BridgeKey{
 public:
 	BridgeKey(PrivateKey<N,L> &pk, BitMatrix<N> K) : 
 	_pk(pk),
-	_R(BitMatrix<N>::randomInvertibleMatrix()),
-	_Rx(BitMatrix<N>::randomInvertibleMatrix()),
-	_Ry(BitMatrix<N>::randomInvertibleMatrix()),
+	_R(BitMatrix<N>::squareIdentityMatrix()),//::randomInvertibleMatrix()),
+	_Rx(BitMatrix<N>::squareIdentityMatrix()),//::randomInvertibleMatrix()),
+	_Ry(BitMatrix<N>::squareIdentityMatrix()),//::randomInvertibleMatrix()),
 	_M(pk.getM()),
 	_Cu1(pk.getUnaryObfChain()[0]),
 	_Cu2(pk.getUnaryObfChain()[1]),
@@ -213,17 +213,17 @@ private:
 	}
 
 	const BitMatrix<3*N> get_AND_Y1() const{
-		BitMatrix<3*N> Cb_top = _Cb1.inv().split_v_3(0);
+		BitMatrix<3*N> Cb_top = _Cb2.inv().split_v_3(0);
 		return _pk.getB().inv() * Cb_top;
 	}
 
 	const BitMatrix<3*N> get_AND_Y2() const{
-		BitMatrix<3*N> Cb_middle = _Cb1.inv().split_v_3(1);
+		BitMatrix<3*N> Cb_middle = _Cb2.inv().split_v_3(1);
 		return _pk.getB().inv() * Cb_middle;
 	}
 
 	const BitMatrix<3*N> get_AND_Y3() const{
-		return _Cb1.inv().split_v_3(2);
+		return _Cb2.inv().split_v_3(2);
 	}
 
 	//top chunk of contrib matrix for z

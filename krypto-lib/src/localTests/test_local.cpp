@@ -111,8 +111,8 @@ void testPublicKey(PrivateKey<N, 2> &pk) {
 	BridgeKey<N, 2> bk(pk, K);
 	PublicKey<N, 2> pub(bk);
 
-	BitVector<N> x = BitVector<N>::randomVector();
-	BitVector<N> y = BitVector<N>::randomVector();
+	BitVector<N> x;// = BitVector<N>::randomVector();
+	BitVector<N> y;// = BitVector<N>::randomVector();
 	BitVector<2*N> encryptedX = pk.encrypt(x);
 	BitVector<2*N> encryptedY = pk.encrypt(y);
 
