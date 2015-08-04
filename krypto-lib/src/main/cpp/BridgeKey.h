@@ -2,7 +2,6 @@
 #ifndef krypto_BridgeKey_h
 #define krypto_BridgeKey_h
 
-#include <assert.h>
 #include "PrivateKey.h"
 #include "BitMatrix.h"
 #include "MultiQuadTuple.h"

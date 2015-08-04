@@ -2,7 +2,6 @@
 #ifndef krypto_PrivateKey_h
 #define krypto_PrivateKey_h
 
-#include <assert.h>
 #include "BitMatrix.h"
 #include "MultiQuadTupleChain.h"
 

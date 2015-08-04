@@ -118,7 +118,7 @@ public:
 
     bool dot(const BitVector<N> & rhs) const {
         int n = length();
-        assert(n == rhs.length());
+        // // assert(n == rhs.length());
         bool result = 0;
         for(int i = 0; i < n; ++i){
             result ^= (get(i) & rhs.get(i));
@@ -128,7 +128,7 @@ public:
 
     bool equals(const BitVector<N> & rhs) const {
         int n = length();
-        assert(n == rhs.length());
+        // assert(n == rhs.length());
         for(int i = 0; i < n; ++i){
             if(get(i) ^ rhs.get(i)) return false;
         }
