@@ -1,6 +1,7 @@
 //-----------------------------------------------------------------------------
 // MurmurHash3 was written by Austin Appleby, and is placed in the public
 // domain. The author hereby disclaims copyright to this source code.
+// http://docs.projects.genivi.org/ipc.common-api-dbus-runtime/2.0.6/MurmurHash3_8h_source.html
  
 #ifndef _MURMURHASH3_H_
 #define _MURMURHASH3_H_
