@@ -12,6 +12,8 @@
 #include "../../main/cpp/BridgeKey.h"
 #include "../../main/cpp/PublicKey.h"
 #include <string>
+#include <time.h>
+
 using namespace testing;
 
 #define N 1
@@ -19,15 +21,22 @@ using namespace testing;
 TEST(PublicKeyTest, testLMM){
 	PrivateKey<N, 2> pk;
 	BitMatrix<N> K = BitMatrix<N>::randomMatrix(N << 6);
+	
+	clock_t begin = clock();
 	BridgeKey<N, 2> bk(pk, K);
 	PublicKey<N, 2> pub(bk);
+	clock_t end = clock();
+	std::cout << "Time used to generate PubKey from PrivKey and BridgeKey: " << double(end - begin) / CLOCKS_PER_SEC << "sec" << endl;
 
 	BitVector<N> x = BitVector<N>::randomVector();
 	BitVector<N> y = BitVector<N>::randomVector();
 	BitVector<2*N> encryptedX = pk.encrypt(x);
 	BitVector<2*N> encryptedY = pk.encrypt(y);
 
+	begin = clock();
 	BitVector<2*N> encryptedLMM = pub.homomorphicLMM(encryptedX);
+	end = clock();
+	std::cout << "Time used to compute encryptedLMM: " << double(end - begin) / CLOCKS_PER_SEC << " sec" << endl;
 	BitVector<N> unencryptedLMM = pk.decrypt(encryptedLMM);
 	BitVector<N> expectedLMM = K.template operator*<N>(x);
 
@@ -45,7 +54,11 @@ TEST(PublicKeyTest, testXOR){
 	BitVector<2*N> encryptedX = pk.encrypt(x);
 	BitVector<2*N> encryptedY = pk.encrypt(y);
 
+	clock_t begin = clock();
 	BitVector<2*N> encryptedXOR = pub.homomorphicXOR(encryptedX, encryptedY);
+	clock_t end = clock();
+	std::cout << "Time used to compute encryptedXOR: " << double(end - begin) / CLOCKS_PER_SEC << " sec" << endl;
+
 	BitVector<N> unencryptedXOR = pk.decrypt(encryptedXOR); 
 	BitVector<N> expectedXOR = x ^ y;
 
@@ -62,8 +75,10 @@ TEST(PublicKeyTest, testAND){
 	BitVector<N> y = BitVector<N>::randomVector();
 	BitVector<2*N> encryptedX = pk.encrypt(x);
 	BitVector<2*N> encryptedY = pk.encrypt(y);
-
+	clock_t begin = clock();
 	BitVector<2*N> encryptedAND = pub.homomorphicAND(encryptedX, encryptedY);
+	clock_t end = clock();
+	std::cout << "Time used to compute encryptedAND: " << double(end - begin) / CLOCKS_PER_SEC << " sec" << endl;
 	BitVector<N> unencryptedAND = pk.decrypt(encryptedAND); 
 	BitVector<N> expectedAND = x & y;
 
