@@ -18,7 +18,7 @@ public:
 	PrivateKey():
 		_A(BitMatrix<N>::randomInvertibleMatrix()),
 		_B(BitMatrix<N>::randomInvertibleMatrix()),
-		_M(BitMatrix<2*N>::randomInvertibleMatrix()),
+		_M(BitMatrix<2*N>::squareIdentityMatrix()), //_M(BitMatrix<2*N>::randomInvertibleMatrix()),
 		_f(MultiQuadTupleChain<N,L>::randomMultiQuadTupleChain()){
 		generateObfuscationMatrixChains();
 	}
