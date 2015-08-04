@@ -146,12 +146,14 @@ public:
 		BitMatrix<3*N> Y3 = get_AND_Y3();
 		BitMatrix<7*N> Y3t = BitMatrix<7*N>::aug_h(BitMatrix<4*N>::zeroMatrix(N << 6), Y3);
 
+		//maybe it was because X,X was not added
+
 		BitMatrix<N> contrib = get_AND_Pk(0, X, Y2);
 		const int twoN = N << 7;
 		const int threeN = 3 * (N << 6);
 
 		for (int level = 1; level < twoN; ++level) {
-			contrib = BitMatrix<N>::aug_v(contrib, get_AND_Pk(level, X, Y2)); //add P_k's
+			contrib = BitMatrix<N>::aug_v(contrib, get_AND_Pk(level, X, Y2)); //add P_k's (are Yi's flipped)
 		}
 		for (int level = 0; level < twoN; ++level) {
 			contrib = BitMatrix<N>::aug_v(contrib, get_AND_Qk(level, X, Y1)); //add Q_k's
@@ -231,12 +233,12 @@ private:
 		//untested!
 		const int twoN = N << 7;
 		const int threeN = 3 * (N << 6);
-		BitMatrix<N> top = BitMatrix<N>::zeroMatrix(twoN - level);
+		BitMatrix<N> top = BitMatrix<N>::zeroMatrix(twoN - level); //not sure if there's obob here
 
 		BitMatrix<N> mid = BitMatrix<N>::zeroMatrix(twoN);
-		for (int i = 0; i < twoN; i++) { //row within middle block
-			for (int j = 0; j < (N << 6); j++) { //col within middle block
-				bool lhs = X.get(j, level);
+		for (int j = 0; j < (N << 6); ++j) { //col within middle block
+			bool lhs = X.get(j, level);
+			for (int i = 0; i < twoN; ++i) { //row within middle block
 				bool rhs = X.get(j, i);
 				mid.set(i, j, lhs && rhs);
 			}
@@ -273,13 +275,13 @@ private:
 	}
 
 	//bottom chunk of contrib matrix for z
-	//level ranges from 0 to 64 * 2N - 1
+	//level ranges from 0 to 64 * 3N - 1
 	const BitMatrix<N> get_AND_Sk(const int level, const BitMatrix<3*N> &Y1, const BitMatrix<3*N> &Y2) const{
 		//to be implemented
 		const int threeN = 3 * (N << 6); //should be the number of coefficients (___ choose 2)
 
 		BitMatrix<N> contrib = BitMatrix<N>::zeroMatrix(threeN - level);
-		for (int j = 0; j < N; ++j) { //cols
+		for (int j = 0; j < (N << 6); ++j) { //cols
 			bool prod = Y1.get(j, level) && Y2.get(j, level); //first row
 			contrib.set(0, j, prod);
 
