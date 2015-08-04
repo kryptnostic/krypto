@@ -18,7 +18,7 @@ using namespace std;
 //TODO: Wrap this in a class that can release the file handle and automatically select a good source of randomness on Windows.
 
 //file pointer urandom must be closed by any class importing BitVector
-extern FILE * urandom = std::fopen("/dev/urandom", "rb" );
+static FILE * urandom = std::fopen("/dev/urandom", "rb" );
 
 //N is number of 64 bit longs in the bitvector. N<<6 is the total number of bits in a bitvector
 template<unsigned int N>
