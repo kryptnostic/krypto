@@ -56,17 +56,17 @@ public:
         return get(n);
     }
 
-    BitVector & set(unsigned int n) {
+    inline BitVector & set(unsigned int n) {
         _bits[n >> 6] |= (1ul << (n & 63ul));
         return *this;
     }
 
-    BitVector & clear(unsigned int n) {
+    inline BitVector & clear(unsigned int n) {
         _bits[n >> 6ul] &= ~(1ul << (n & 63ul));
         return *this; //added
     }
 
-    BitVector & set(unsigned int n, bool val){
+    inline BitVector & set(unsigned int n, bool val){
         if(val) return set(n);
         return clear(n);
     }

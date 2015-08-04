@@ -11,7 +11,7 @@ using namespace std;
 #define H 2 
 #define N 1
 #define DEBUG false
-#define TESTRUNS 20
+#define TESTRUNS 100
 
 int main(int argc, char **argv) {
 	clock_t begin = clock();
