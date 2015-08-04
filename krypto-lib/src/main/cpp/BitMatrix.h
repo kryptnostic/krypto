@@ -88,7 +88,7 @@ public:
 		return _rows[rowIndex];
 	}
 
-	bool get(int rowIndex, int colIndex) const{ 
+	inline bool get(int rowIndex, int colIndex) const{ 
 		if(DEBUG){
 			assert(rowIndex >= 0 && rowIndex < rowCount()); //"rowIndex out of bound!"
 			assert(colIndex >= 0 && colIndex < colCount()); //"colIndex out of bound!"
@@ -96,7 +96,7 @@ public:
 		return _rows[rowIndex].get(colIndex);
 	}
 
-	void set(int rowIndex, int colIndex){
+	inline void set(int rowIndex, int colIndex){
 		if(DEBUG){
 			assert(rowIndex >= 0 && rowIndex < rowCount()); //"rowIndex out of bound!"
 			assert(colIndex >= 0 && colIndex < colCount());	//"colIndex out of bound!"
@@ -104,7 +104,7 @@ public:
 		_rows[rowIndex].set(colIndex);	
 	}
 
-	void clear(int rowIndex, int colIndex){
+	inline void clear(int rowIndex, int colIndex){
 		if(DEBUG){
 			assert(rowIndex >= 0 && rowIndex < rowCount()); //"rowIndex out of bound!"
 			assert(colIndex >= 0 && colIndex < colCount());	//"colIndex out of bound!"
@@ -112,13 +112,11 @@ public:
 		_rows[rowIndex].clear(colIndex);		
 	}
 
-	void set(int rowIndex, int colIndex, bool value){
+	inline void set(int rowIndex, int colIndex, bool value){
 		if(DEBUG){
 			assert(rowIndex >= 0 && rowIndex < rowCount()); //"rowIndex out of bound!"
 			assert(colIndex >= 0 && colIndex < colCount());	//"colIndex out of bound!"
 		}
-		if (value) _rows[rowIndex].set(colIndex);	
-		else _rows[rowIndex].clear(colIndex);
 	}
 
 	BitVector<COLS> & operator[](const int rowIndex){
@@ -140,7 +138,7 @@ public:
 		return v;
 	}
 
-	void xorRow(int rowIndex, const BitVector<COLS> & row){
+	inline void xorRow(int rowIndex, const BitVector<COLS> & row){
 		if(DEBUG) assert(rowIndex >= 0 && rowIndex <= rowCount());
 		_rows[rowIndex] ^= row;
 	}
@@ -276,11 +274,11 @@ public:
 		return true;
 	}
 
-	const size_t rowCount() const {
+	const inline size_t rowCount() const {
 		return _rows.size();
 	}
 
-	const size_t colCount() const {
+	const inline size_t colCount() const {
 		return COLS << 6;
 	}   
 
@@ -401,59 +399,6 @@ public:
 		solvable = true;
 		return x;
 	}
-
-	/**
-	 * A should be invertible in this case. This can be ensured by inializing an inverible matrix.
-	 * Input: v; Output: A^-1*B;
-	 * Usage: C = A.solve(B); means AC = B
-	 */
-	/*
-	template <unsigned int NEWCOLS> 
-	const BitMatrix<NEWCOLS> solve(const BitMatrix<NEWCOLS> & rhs) const{
-		size_t m = rowCount();
-		// assert(m == colCount()); //"Matrix dimension mismatch!"	
-		// assert(det()); //make sure that the matrix is invertible
-		// assert(numRows == rhs.rowCount());
-		BitMatrix<COLS> A = *this;
-		BitMatrix<NEWCOLS> B = rhs;
-		for(int k = 0; k < m; ++k){
-			int pos = -1, i = k;
-			while(i < m){ //find the first pos >= k with A[pos,k] == 1
-				if(A.get(i, k)){pos = i; break;} 
-				++i;
-			}
-			if(pos != -1){
-				if(pos != k) {
-					A.swapRows(pos, k);
-					B.swapRows(pos, k);
-				}
-				for(int i = k+1; i < m; ++i) if(A.get(i, k)){
-					A.setRow(i, A[i] ^ A[k]); 
-					B.setRow(i, B[i] ^ B[k]);
-				}
-			} else {
-				cerr << "Error: solving system of a nonsingular matrix!" << endl;
-				solvable = false;
-				return BitVector<COLS>::zeroVector(); //this is when A is singular
-			}
-		}
-		//BitVector<COLS> x = BitVector<COLS>::zeroVector();
-		BitMatrix<NEWCOLS> x = BitMatrix<NEWCOLS>::zeroMatrix(m);
-		for(int i = m-1; i >= 0; --i){
-			bool f = x.dot(A[i]) ^ b[i];
-			f ? x.set(i) : x.clear(i); //x.setRow(i, x.dot(A[i]) ^ b[i])
-		}*/
-
-		/*
-		BitMatrix<NEWCOLS> C = BitMatrix<NEWCOLS>::zeroMatrix(numRows);
-		for(int i = 0; i < NEWCOLS; ++i){
-			BitVector<NEWCOLS> b = B.getCol(i); 
-			BitVector<NEWCOLS> c = A.solve(b);
-			C.setCol(i, c);
-		}	
-		return C;
-	}
-*/
 
 /*Aug/Split*/
 	//Augments two matrices together horizontally (needs optimization!)
