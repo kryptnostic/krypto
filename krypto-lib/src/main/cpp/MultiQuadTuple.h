@@ -60,7 +60,7 @@ public:
 			for(size_t j = 0; j < numInnerInputBits; ++j){
 				if(C.get(i, j)){ 
 					for(size_t k = 0; k < numInnerInputBits; ++k){
-						size_t newIndex = MultiQuadTuple<NUM_INNERINPUTS, NUM_OUTPUTS>::getIndex(j, k); //move this out of the loop
+						size_t newIndex = MultiQuadTuple<NUM_INNERINPUTS, NUM_OUTPUTS>::getIndex(j, k); 
 						result.setRow(newIndex, result.getRow(newIndex) ^ A_i.getRow(k));
 					}
 				}
@@ -71,10 +71,8 @@ public:
 
 	template<unsigned int NUM_OUTEROUTPUTS>
 	const MultiQuadTuple<NUM_INPUTS, NUM_OUTEROUTPUTS> rMult(const BitMatrix<NUM_OUTPUTS> & C) {
-		assert(numOutputBits == C.colCount());
-		assert(!(C.rowCount() & 63)); 
-		BitMatrix<NUM_OUTEROUTPUTS> Ct( C.template T<NUM_OUTEROUTPUTS>() );
-		return MultiQuadTuple<NUM_INPUTS, NUM_OUTEROUTPUTS>(_contributionsT * Ct);
+		assert(C.rowCount() == NUM_OUTEROUTPUTS << 6); 
+		return MultiQuadTuple<NUM_INPUTS, NUM_OUTEROUTPUTS>(_contributionsT * (C.template T<NUM_OUTEROUTPUTS>()));
 	}
 
 	const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS> operator^(const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS> & rhs) const {
@@ -103,16 +101,14 @@ public:
 		unsigned int toSubtract = (((numInputBits - index1) * (numInputBits - index1 + 1)) >> 1);
 		unsigned int result = numInputMonomials - toSubtract + (index2 - index1);
 		return result;
-	}	
+	}		
 
-	const BitMatrix<NUM_OUTPUTS> getTransposedContributionMatrix() const{
+	const BitMatrix<NUM_OUTPUTS> getTransposedContributionMatrix(){
 		return _contributionsT;
-	}	
+	}
 private:
 	BitMatrix<NUM_OUTPUTS> _contributionsT;
 	static const unsigned int numInputBits = (NUM_INPUTS << 6);
-	static const unsigned int numOutputBits = (NUM_OUTPUTS << 6);
 	static const unsigned int numInputMonomials = ((numInputBits * (numInputBits + 1)) >> 1);
-	static const unsigned int numOutputMonomials = ((numOutputBits * (numOutputBits + 1)) >> 1);
 };
 #endif

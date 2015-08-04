@@ -166,7 +166,7 @@ public:
 		size_t numRows = rowCount();
 		BitMatrix<NEWCOLS> result(numRows);
 		for(size_t j = startCol; j <= endCol; ++j){
-			size_t rhsRow = startRow + j;		
+			size_t rhsRow = startRow + (j - startCol);		
 			for(size_t i = 0; i < numRows; ++i){
 				if(get(i, j)){
 					result.setRow(i, result.getRow(i) ^ rhs.getRow(rhsRow));
@@ -202,7 +202,7 @@ public:
 		size_t numRows = rowCount();
 		BitVector<NEWCOLS> result;
 		for(size_t j = startCol; j <= endCol; ++j){
-			size_t rhsIndex = startIndex + j;
+			size_t rhsIndex = startIndex + (j-startCol);
 			for(size_t i = 0; i < numRows; ++i){
 				if(get(i, j)){
 					result.set(i, result.get(i) ^ v.get(rhsIndex));
