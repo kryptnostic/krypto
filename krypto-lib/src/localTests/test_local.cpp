@@ -181,5 +181,7 @@ int main(int argc, char **argv) {
 
  	clock_t end = clock();
  	cout << "Time elapsed: " << double(end - begin) / CLOCKS_PER_SEC << " sec" << endl;
+
+ 	fclose(urandom);
 	return 0;
 }
