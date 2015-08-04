@@ -118,7 +118,6 @@ public:
 
     bool dot(const BitVector<N> & rhs) const {
         int n = length();
-        // // assert(n == rhs.length());
         bool result = 0;
         for(int i = 0; i < n; ++i){
             result ^= (get(i) & rhs.get(i));
@@ -128,7 +127,6 @@ public:
 
     bool equals(const BitVector<N> & rhs) const {
         int n = length();
-        // assert(n == rhs.length());
         for(int i = 0; i < n; ++i){
             if(get(i) ^ rhs.get(i)) return false;
         }
@@ -143,7 +141,7 @@ public:
     }
 
     template <unsigned int N1, unsigned int N2>
-    //static const BitVector<N1 + N2> vcat2(const BitVector<N1> & v1, const BitVector<N2> & v2){
+    //static const BitVector<N> vcat2(const BitVector<N1> & v1, const BitVector<N2> & v2){
     static const BitVector<N1 + N2> vcat2(BitVector<N1> & v1, BitVector<N2> & v2){
         const int N_SUM = N1 + N2;
         BitVector<N_SUM> result;
