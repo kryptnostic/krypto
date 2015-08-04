@@ -44,11 +44,11 @@ public:
 	const BitVector<2*N> homomorphicAND(BitVector<2*N> &x, BitVector<2*N> &y) const{
 		BitVector<3*N> t = calculateT(x, y);
 		BitVector<7*N> coordinates = BitVector<7*N>::vcat3(x, y, t);
-
+		
 		BitVector<2*N> left = _z(coordinates);
 		BitVector<2*N> mid = _Z1.template operator*<2*N>(x);
 		BitVector<2*N> right = _Z2.template operator*<2*N>(y);
-
+		
 		return left ^ mid ^ right;
 	}
 

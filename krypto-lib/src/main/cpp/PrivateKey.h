@@ -18,7 +18,7 @@ public:
 	PrivateKey():
 		_A(BitMatrix<N>::randomInvertibleMatrix()),
 		_B(BitMatrix<N>::randomInvertibleMatrix()),
-		_M(BitMatrix<2*N>::squareIdentityMatrix()), //_M(BitMatrix<2*N>::randomInvertibleMatrix()),
+		_M(BitMatrix<2*N>::randomInvertibleMatrix()),
 		_f(MultiQuadTupleChain<N,L>::randomMultiQuadTupleChain()){
 		generateObfuscationMatrixChains();
 	}
@@ -74,8 +74,10 @@ private:
 	vector<BitMatrix<3*N> > _C_b; //chain of obfuscation matrix for binary operations
 	void generateObfuscationMatrixChains(){ //generates C_{u1},...,C_{uL} and C_{b1},...,C_{bL}
 		for(int i = 0; i < L; ++i){
-			_C_u.push_back(BitMatrix<(2*N)>::squareIdentityMatrix());//::randomInvertibleMatrix());
-			_C_b.push_back(BitMatrix<(3*N)>::squareIdentityMatrix());//::randomInvertibleMatrix());
+			//_C_u.push_back(BitMatrix<(2*N)>::squareIdentityMatrix());
+			_C_u.push_back(BitMatrix<(2*N)>::randomInvertibleMatrix());
+			//_C_b.push_back(BitMatrix<(3*N)>::squareIdentityMatrix());
+			_C_b.push_back(BitMatrix<(3*N)>::randomInvertibleMatrix());
 		}
 	}
 };

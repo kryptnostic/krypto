@@ -62,7 +62,7 @@ TEST(PublicKeyTest, testAND){
 	BitVector<N> y = BitVector<N>::randomVector();
 	BitVector<2*N> encryptedX = pk.encrypt(x);
 	BitVector<2*N> encryptedY = pk.encrypt(y);
-	
+
 	BitVector<2*N> encryptedAND = pub.homomorphicAND(encryptedX, encryptedY);
 	BitVector<N> unencryptedAND = pk.decrypt(encryptedAND); 
 	BitVector<N> expectedAND = x & y;
