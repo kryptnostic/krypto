@@ -16,9 +16,9 @@ template<unsigned int M, unsigned int K> friend class BridgeKey;
 
 public:
 	PrivateKey():
-		_A(BitMatrix<N>::squareIdentityMatrix()),//::randomInvertibleMatrix()),
-		_B(BitMatrix<N>::squareIdentityMatrix()),//::randomInvertibleMatrix()),
-		_M(BitMatrix<2*N>::squareIdentityMatrix()), //_M(BitMatrix<2*N>::randomInvertibleMatrix()),
+		_A(BitMatrix<N>::randomInvertibleMatrix()),
+		_B(BitMatrix<N>::randomInvertibleMatrix()),
+		_M(BitMatrix<2*N>::randomInvertibleMatrix()),
 		_f(MultiQuadTupleChain<N,L>::randomMultiQuadTupleChain()){
 		generateObfuscationMatrixChains();
 	}
