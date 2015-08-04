@@ -156,7 +156,7 @@ public:
 		const int threeN = 3 * (N << 6);
 
 		for (int level = 1; level < twoN; ++level) {
-			contrib = BitMatrix<N>::aug_v(contrib, get_AND_Pk(level, X, Y2)); //add P_k's (are Yi's flipped)
+			contrib = BitMatrix<N>::aug_v(contrib, get_AND_Pk(level, X, Y2)); //add P_k's
 		}
 		for (int level = 0; level < twoN; ++level) {
 			contrib = BitMatrix<N>::aug_v(contrib, get_AND_Qk(level, X, Y1)); //add Q_k's
