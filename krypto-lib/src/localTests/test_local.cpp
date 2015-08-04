@@ -111,8 +111,8 @@ void testPublicKey(PrivateKey<N, 2> &pk) {
 	BridgeKey<N, 2> bk(pk, K);
 	PublicKey<N, 2> pub(bk);
 
-	BitVector<N> x;// = BitVector<N>::randomVector();
-	BitVector<N> y;// = BitVector<N>::randomVector();
+	BitVector<N> x = BitVector<N>::randomVector();
+	BitVector<N> y = BitVector<N>::randomVector();
 	BitVector<2*N> encryptedX = pk.encrypt(x);
 	BitVector<2*N> encryptedY = pk.encrypt(y);
 
@@ -181,5 +181,7 @@ int main(int argc, char **argv) {
 
  	clock_t end = clock();
  	cout << "Time elapsed: " << double(end - begin) / CLOCKS_PER_SEC << " sec" << endl;
+
+ 	fclose(urandom);
 	return 0;
 }

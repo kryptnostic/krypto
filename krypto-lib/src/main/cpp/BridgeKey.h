@@ -15,11 +15,8 @@ class BridgeKey{
 public:
 	BridgeKey(PrivateKey<N,L> &pk, BitMatrix<N> K) : 
 	_pk(pk),
-	//_R(BitMatrix<N>::squareIdentityMatrix()),
 	_R(BitMatrix<N>::randomInvertibleMatrix()),
-	//_Rx(BitMatrix<N>::squareIdentityMatrix()),
 	_Rx(BitMatrix<N>::randomInvertibleMatrix()),
-	//_Ry(BitMatrix<N>::squareIdentityMatrix()),
 	_Ry(BitMatrix<N>::randomInvertibleMatrix()),
 	_M(pk.getM()),
 	_Cu1(pk.getUnaryObfChain()[0]),
