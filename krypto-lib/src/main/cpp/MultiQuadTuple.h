@@ -18,7 +18,7 @@ public:
 	}
 
 	const static MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS> getMultiQuadTuple(const BitMatrix<NUM_INPUTS> & M){
-		assert(NUM_OUTPUTS << 6 == M.rowCount());
+		// assert(NUM_OUTPUTS << 6 == M.rowCount());
 		BitMatrix<NUM_OUTPUTS> Mt = M.template T<NUM_OUTPUTS>();
 		BitMatrix<NUM_OUTPUTS> result = BitMatrix<NUM_OUTPUTS>::zeroMatrix(numInputMonomials);
 		size_t count = 0;
@@ -47,7 +47,7 @@ public:
 
 	template<unsigned int NUM_INNERINPUTS> 
 	const MultiQuadTuple<NUM_INNERINPUTS, NUM_OUTPUTS> operator*(const BitMatrix<NUM_INNERINPUTS> & C) const{
-		assert(numInputBits == C.rowCount());
+		// assert(numInputBits == C.rowCount());
 		BitMatrix<NUM_INPUTS> Ct = C.template T<NUM_INPUTS>();
 		const unsigned int numInnerInputMonomials = MultiQuadTuple<NUM_INNERINPUTS, NUM_OUTPUTS>::getInputMonomialCount(); 
 		const unsigned int numInnerInputBits = MultiQuadTuple<NUM_INNERINPUTS, NUM_OUTPUTS>::getInputCount();
@@ -72,7 +72,7 @@ public:
 
 	template<unsigned int NUM_OUTEROUTPUTS>
 	const MultiQuadTuple<NUM_INPUTS, NUM_OUTEROUTPUTS> rMult(const BitMatrix<NUM_OUTPUTS> & C) {
-		assert(C.rowCount() == NUM_OUTEROUTPUTS << 6); 
+		// assert(C.rowCount() == NUM_OUTEROUTPUTS << 6); 
 		return MultiQuadTuple<NUM_INPUTS, NUM_OUTEROUTPUTS>(_contributionsT * (C.template T<NUM_OUTEROUTPUTS>()), C.template operator*<NUM_OUTEROUTPUTS>(_constants));
 	}
 

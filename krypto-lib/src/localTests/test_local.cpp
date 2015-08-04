@@ -127,7 +127,7 @@ void testPublicKey(PrivateKey<N, 2> &pk) {
 
 
 	BitVector<2*N> encryptedLMM = pub.homomorphicLMM(encryptedX);
-	BitVector<N> unencryptedLMM = pk.decrypt(encryptedLMM); //should be zero
+	BitVector<N> unencryptedLMM = pk.decrypt(encryptedLMM);
 
 	cout << "LMM: D(H(E(x))) = ";
 	unencryptedLMM.print();
@@ -139,7 +139,7 @@ void testPublicKey(PrivateKey<N, 2> &pk) {
 
 
 	BitVector<2*N> encryptedXOR = pub.homomorphicXOR(encryptedX, encryptedY);
-	BitVector<N> unencryptedXOR = pk.decrypt(encryptedXOR); //should be zero
+	BitVector<N> unencryptedXOR = pk.decrypt(encryptedXOR);
 
 	cout << "XOR: D(H(E(x))) = ";
 	unencryptedXOR.print();
@@ -151,7 +151,7 @@ void testPublicKey(PrivateKey<N, 2> &pk) {
 
 
 	BitVector<2*N> encryptedAND = pub.homomorphicAND(encryptedX, encryptedY);
-	BitVector<N> unencryptedAND = pk.decrypt(encryptedAND); //should be zero
+	BitVector<N> unencryptedAND = pk.decrypt(encryptedAND);
 
 	cout << "AND: D(H(E(x))) = ";
 	unencryptedAND.print();
@@ -167,8 +167,8 @@ void testPublicKey(PrivateKey<N, 2> &pk) {
 int main(int argc, char **argv) {
 	clock_t begin = clock();
 
-	MultiQuadTuple<N, M> f = MultiQuadTuple<N, M>::randomMultiQuadTuple();
-	BitVector<N> x = BitVector<N>::randomVector();
+	// MultiQuadTuple<N, M> f = MultiQuadTuple<N, M>::randomMultiQuadTuple();
+	// BitVector<N> x = BitVector<N>::randomVector();
 
 	// testLeftCompose(f, x);
 	// testRightCompose(f, x);

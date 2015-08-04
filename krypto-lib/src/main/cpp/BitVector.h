@@ -18,7 +18,6 @@ using namespace std;
 //TODO: Wrap this in a class that can release the file handle and automatically select a good source of randomness on Windows.
 
 //file pointer urandom must be closed by any class importing BitVector
-//extern FILE * urandom = std::fopen("/dev/urandom", "rb" );
 static FILE * urandom = std::fopen("/dev/urandom", "rb" );
 
 //N is number of 64 bit longs in the bitvector. N<<6 is the total number of bits in a bitvector
@@ -119,7 +118,7 @@ public:
 
     bool dot(const BitVector<N> & rhs) const {
         int n = length();
-        assert(n == rhs.length());
+        // // assert(n == rhs.length());
         bool result = 0;
         for(int i = 0; i < n; ++i){
             result ^= (get(i) & rhs.get(i));
@@ -129,7 +128,7 @@ public:
 
     bool equals(const BitVector<N> & rhs) const {
         int n = length();
-        assert(n == rhs.length());
+        // assert(n == rhs.length());
         for(int i = 0; i < n; ++i){
             if(get(i) ^ rhs.get(i)) return false;
         }
