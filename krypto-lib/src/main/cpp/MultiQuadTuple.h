@@ -6,14 +6,15 @@
 template<unsigned int NUM_INPUTS, unsigned int NUM_OUTPUTS>
 class MultiQuadTuple {
 public:
-	MultiQuadTuple(const BitMatrix<NUM_OUTPUTS> & contributionsT):_contributionsT(contributionsT){}
+	MultiQuadTuple(const BitMatrix<NUM_OUTPUTS> & contributionsT, const BitVector<NUM_OUTPUTS> & constants):
+	_contributionsT(contributionsT), _constants(constants){}
 
 	const static MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS> randomMultiQuadTuple(){
-		return MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS>(BitMatrix<NUM_OUTPUTS>::randomMatrix(numInputMonomials));
+		return MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS>(BitMatrix<NUM_OUTPUTS>::randomMatrix(numInputMonomials), BitVector<NUM_OUTPUTS>::randomVector());
 	}
 
 	const static MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS> zeroMultiQuadTuple(){
-		return MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS>(BitMatrix<NUM_OUTPUTS>::zeroMatrix(numInputMonomials));
+		return MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS>(BitMatrix<NUM_OUTPUTS>::zeroMatrix(numInputMonomials), BitVector<NUM_OUTPUTS>::zeroVector());
 	}
 
 	const static MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS> getMultiQuadTuple(const BitMatrix<NUM_INPUTS> & M){
@@ -25,7 +26,7 @@ public:
 			result.setRow(count, Mt.getRow(i));
 			count += (numInputBits - i);
 		}
-		return MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS>(result);
+		return MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS>(result, BitVector<NUM_OUTPUTS>::zeroVector());
 	}	
 
 	const BitVector<NUM_OUTPUTS> operator()(const BitVector<NUM_INPUTS> & input) const {
@@ -41,7 +42,7 @@ public:
 				}	
 			} else count += (numInputBits - i);
 		}
-		return result;
+		return result ^ _constants;
 	}
 
 	template<unsigned int NUM_INNERINPUTS> 
@@ -66,25 +67,27 @@ public:
 				}
 			}
 		}
-		return MultiQuadTuple<NUM_INNERINPUTS, NUM_OUTPUTS>(result);
+		return MultiQuadTuple<NUM_INNERINPUTS, NUM_OUTPUTS>(result, _constants);
 	}
 
 	template<unsigned int NUM_OUTEROUTPUTS>
 	const MultiQuadTuple<NUM_INPUTS, NUM_OUTEROUTPUTS> rMult(const BitMatrix<NUM_OUTPUTS> & C) {
 		assert(C.rowCount() == NUM_OUTEROUTPUTS << 6); 
-		return MultiQuadTuple<NUM_INPUTS, NUM_OUTEROUTPUTS>(_contributionsT * (C.template T<NUM_OUTEROUTPUTS>()));
+		return MultiQuadTuple<NUM_INPUTS, NUM_OUTEROUTPUTS>(_contributionsT * (C.template T<NUM_OUTEROUTPUTS>()), C.template operator*<NUM_OUTEROUTPUTS>(_constants));
 	}
 
 	const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS> operator^(const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS> & rhs) const {
- 		return MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS>(_contributionsT ^ rhs._contributionsT);
+ 		return MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS>(_contributionsT ^ rhs._contributionsT, _constants ^ rhs._constants);
 	}
 
 	template<unsigned int NUM_OUTPUTS1, unsigned int NUM_OUTPUTS2>
 	static const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS1+NUM_OUTPUTS2> aug_v(const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS1> & f1, const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS2> & f2){
 		BitMatrix<NUM_OUTPUTS1> C1 = f1.getTransposedContributionMatrix();
 		BitMatrix<NUM_OUTPUTS2> C2 = f2.getTransposedContributionMatrix();
+		BitVector<NUM_OUTPUTS1> c1 = f1.getConstantTerms();
+		BitVector<NUM_OUTPUTS2> c2 = f2.getConstantTerms(); 
 		const unsigned int NUM_OUTPUTS_SUM = NUM_OUTPUTS1 + NUM_OUTPUTS2;
-		return MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS_SUM>(BitMatrix<NUM_OUTPUTS_SUM>::aug_h(C1, C2));
+		return MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS_SUM>(BitMatrix<NUM_OUTPUTS_SUM>::aug_h(C1, C2), BitVector<NUM_OUTPUTS_SUM>::vcat2(c1, c2));
 	}	
 
 	static const unsigned int getInputCount(){
@@ -106,8 +109,13 @@ public:
 	const BitMatrix<NUM_OUTPUTS> getTransposedContributionMatrix() const{
 		return _contributionsT;
 	}
+
+	const BitVector<NUM_OUTPUTS> getConstantTerms() const{
+		return _constants;
+	}
 private:
 	BitMatrix<NUM_OUTPUTS> _contributionsT;
+	BitVector<NUM_OUTPUTS> _constants; //constant term
 	static const unsigned int numInputBits = (NUM_INPUTS << 6);
 	static const unsigned int numInputMonomials = ((numInputBits * (numInputBits + 1)) >> 1);
 };

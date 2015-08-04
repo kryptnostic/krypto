@@ -165,7 +165,7 @@ public:
 			contrib = BitMatrix<N>::aug_v(contrib, get_AND_Sk(level, Y1, Y2)); //add S_k's
 		}
 
-		MultiQuadTuple<7*N, N> z_top(contrib);
+		MultiQuadTuple<7*N, N> z_top(contrib, BitVector<N>::zeroVector());
 		z_top = z_top.template rMult<N>(_pk.getB());
 		z_top = z_top ^ MultiQuadTuple<7*N, N>::getMultiQuadTuple(Y3t);
 		MultiQuadTuple<7*N, N> zeroMQT = MultiQuadTuple<7*N, N>::zeroMultiQuadTuple();
