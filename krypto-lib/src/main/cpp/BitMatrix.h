@@ -373,6 +373,11 @@ public:
 		return rref().getRightBottomCorner();
 	} 
 
+	/*
+	 * Function: T()
+	 * Returns the transpose of a matrix
+	 * Usage: BitMatrix<K> Mt = M.template operator<K>(); //M is a matrix of dimension (K << 6) * (L * 6) for some K, L >= 0
+	 */
 	template<unsigned int ROWS>
 	const BitMatrix<ROWS> T() const{
 		if(DEBUG) assert(_rows.size() == ROWS << 6);
@@ -567,6 +572,13 @@ public:
 		return result;
 	}
 
+	template<unsigned int NEWCOLS>
+	const BitMatrix<NEWCOLS> pMult(const BitMatrix<NEWCOLS> & rhs,
+		unsigned int startRow, unsigned int endRow) const{
+		cout << "DASFDFASFDSFAFSADFASFASDFASFASFDFDSAFDAFDSF" << endl;
+		return pMult<NEWCOLS>(rhs, 0, _colCount-1, startRow, endRow);
+	}
+
 	/*
      * Function: pMult(v, startCol, endCol, startRow, endRow)
      * Returns the result of multiplication of a given vector
@@ -677,7 +689,6 @@ public:
      * Returns the top or bottom half of the current BitMatrix
      * Assumes the the number of rows is divisible by 2
      */
-	//TODO: unify 2 functions below if needed
 	const BitMatrix<COLS> split_v_2 (int index) const{
 		if(DEBUG) assert(index >= 0 && index < 2);
 		const int sub_rowCount = _rows.size() / 2;
@@ -790,8 +801,7 @@ public:
 
 private:
 	vector<BitVector<COLS>> _rows;
-	//static const _rowCount = _rows.size(); (check if it is possible to do so)
-	//static const _colCount = COLS << 6; (check if it is possible to do so)
+	static const unsigned int _colCount = COLS << 6;
 
     /*
      * Function: getRightBottomCorner()
@@ -807,9 +817,11 @@ private:
      * Function: addRow(dstIndex, srcIndex)
      * Bitwise adds (XORs) the source row to the destination row
      */
-	void addRow(int dstIndex, int srcIndex){ //// assert->ASSERT
-		if(DEBUG) assert(dstIndex >= 0 && dstIndex < rowCount());
-		if(DEBUG) assert(srcIndex >= 0 && srcIndex < rowCount());
+	void addRow(int dstIndex, int srcIndex){ 
+		if(DEBUG){
+			assert(dstIndex >= 0 && dstIndex < rowCount());
+			assert(srcIndex >= 0 && srcIndex < rowCount());
+		}
 		_rows[dstIndex] ^= _rows[srcIndex];
 	}
 
@@ -817,9 +829,11 @@ private:
      * Function: swapRow(firstIndex, secondIndex)
      * Swaps two specified rows
      */
-	void swapRows(int firstIndex, int secondIndex){ //// assert->ASSERT
-		if(DEBUG) assert(firstIndex >= 0 && firstIndex < rowCount());
-		if(DEBUG) assert(secondIndex >= 0 && secondIndex < rowCount());
+	void swapRows(int firstIndex, int secondIndex){ 
+		if(DEBUG){
+			assert(firstIndex >= 0 && firstIndex < rowCount());
+			assert(secondIndex >= 0 && secondIndex < rowCount());
+		}
 		BitVector<COLS> tmp = _rows[firstIndex];
 		_rows[firstIndex] = _rows[secondIndex];
 		_rows[secondIndex] = tmp;
