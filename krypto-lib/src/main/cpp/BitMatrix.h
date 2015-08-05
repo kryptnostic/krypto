@@ -19,22 +19,37 @@
 using namespace std;
 
 #define DEBUG false
-// TODO: possibly uniformize template/parameter for col/row
 
 template<unsigned int COLS>
 class BitMatrix {
 public:
+
+/* Constructors */
+
+	/*
+     * Constructor
+     * Constructs a zero-initialized BitMatrix with a given number of rows 
+     */
 	BitMatrix(int numRows) :
 			_rows(numRows) {
 	}
 
+	 /*
+     * Constructor
+     * Constructs a BitMatrix with a given vector of BitVectors
+     */
 	BitMatrix(const vector<BitVector<COLS>> & rows) :
 			_rows(rows) {
 	}
 
+	 /*
+     * Copy Constructor
+     * Constructs a copy of an input BitMatrix
+     */
 	BitMatrix(const BitMatrix<COLS> & m) : _rows( m._rows ){}
 
-/*Matrix Generation*/
+/* Generation */
+
 	//is the for loop necessary? surely there is a faster way (memset or something)
 	static const BitMatrix zeroMatrix(const int numRows){
 		vector<BitVector<COLS>> rows(numRows);
@@ -82,11 +97,7 @@ public:
 		return BitMatrix(rows);
 	}
 
-/*Accessing (get/set/clear)*/
-	const inline BitVector<COLS> & getRow(const int rowIndex) const{
-		if(DEBUG) assert(rowIndex >= 0 && rowIndex < rowCount()); //"rowIndex out of bound!"
-		return _rows[rowIndex];
-	}
+/* Access and Modification */
 
 	inline bool get(int rowIndex, int colIndex) const{ 
 		if(DEBUG){
@@ -121,7 +132,7 @@ public:
 		else _rows[rowIndex].clear(colIndex);
 	}
 
-	BitVector<COLS> & operator[](const int rowIndex){
+	const inline BitVector<COLS> & getRow(const int rowIndex) const{
 		if(DEBUG) assert(rowIndex >= 0 && rowIndex < rowCount()); //"rowIndex out of bound!"
 		return _rows[rowIndex];
 	}
@@ -140,12 +151,77 @@ public:
 		return v;
 	}
 
+	void setRow(int rowIndex, BitVector<COLS> v){ 
+		if(DEBUG) assert(rowIndex >= 0 && rowIndex < rowCount());
+		_rows[rowIndex] = v;
+	}
+
+	template <unsigned int ROWS>
+	void setCol(int colIndex, BitVector<ROWS> v){
+		if(DEBUG) assert(colIndex >= 0 && colIndex < colCount());
+		int numRows = ROWS << 6;
+		for(int i = 0; i < numRows; ++i) set(i, colIndex, v[i]);
+	}
+
 	inline void xorRow(int rowIndex, const BitVector<COLS> & row){
 		if(DEBUG) assert(rowIndex >= 0 && rowIndex <= rowCount());
 		_rows[rowIndex] ^= row;
 	}
 
-/*Multiplications / T*/
+	bool isIdentity() const {
+		size_t numRows = rowCount();
+		const size_t numCols = colCount();
+
+		if (numRows != numCols) {
+			return false;
+		}
+
+		for (size_t i = 0; i < numRows; i++) {
+			for (size_t j = 0; j < numCols; j++) {
+				if (_rows[i].get(j) && i != j)
+					return false;
+				else if (i == j && !_rows[i].get(j))
+					return false;
+
+			}
+		}
+		return true;
+	}
+
+	const inline size_t rowCount() const {
+		return _rows.size();
+	}
+
+	const inline size_t colCount() const {
+		return COLS << 6;
+	}   
+
+	/*
+	 * Returns the determinant of a given (square) matrix, which is 1 iff the right bottom corner of its rref is 1. 
+	 * Determinant of a non-square matrix possible? http://math.stackexchange.com/questions/854180/determinant-of-a-non-square-matrix
+	 * Read into this later: http://journals.cambridge.org/download.php?file=%2FBAZ%2FBAZ21_01%2FS0004972700011369a.pdf&code=1807973f2c6d49bc4579326df0a7aa58
+	 */
+	bool det() const{ 
+		if(DEBUG) assert(rowCount() == colCount());
+		return rref().getRightBottomCorner();
+	} 
+
+/* Operators */
+
+	bool equals(const BitMatrix<COLS> & rhs) const{ //untested!
+		int n = rowCount();
+		if(DEBUG) assert(n == rhs.rowCount());
+		for(int i = 0; i < n; ++i){
+			if(!_rows[i].equals(rhs._rows[i])) return false;
+		}
+		return true;
+	}
+
+	BitVector<COLS> & operator[](const int rowIndex){
+		if(DEBUG) assert(rowIndex >= 0 && rowIndex < rowCount()); //"rowIndex out of bound!"
+		return _rows[rowIndex];
+	}
+
 	//logic correct but implementation is stupid. need to fix access of getCol etc to use those functions
 	//need to figure out a way to implement getCol, now it is regarded as a static function due to the template argument
 	template<unsigned int NEWCOLS>
@@ -159,6 +235,35 @@ public:
 				if(get(i, j)){
 					result.setRow(i, result.getRow(i) ^ rhs.getRow(j));
 				}
+			}
+		}
+		return result;
+	}
+
+	template <unsigned int NEWCOLS>
+	const BitVector<NEWCOLS> operator*(const BitVector<COLS> & v) const{
+		BitVector<NEWCOLS> result;
+		size_t numRows = _rows.size();
+		for (size_t i = 0; i < numRows; ++i) {
+			BitVector<COLS> prod = _rows[i] & v;
+			if (prod.parity()) {
+				result.set(i);
+			}
+		}
+		return result;
+	}
+
+	const BitMatrix<COLS> operator^(const BitMatrix<COLS> & rhs) const{
+		BitMatrix<COLS> result = *this;
+		const unsigned int numRows = rowCount();
+		const unsigned int numCols = colCount();
+		if(DEBUG){
+			assert(numRows == rhs.rowCount());
+			assert(numCols == rhs.colCount());
+		}
+		for(size_t i = 0; i < numRows; ++i){
+			for(size_t j = 0; j < numCols; ++j){
+				result.set(i, j, get(i, j)^rhs.get(i, j));
 			}
 		}
 		return result;
@@ -185,19 +290,6 @@ public:
 				if(get(i, j)){
 					result.setRow(i, result.getRow(i) ^ rhs.getRow(rhsRow));
 				}
-			}
-		}
-		return result;
-	}
-
-	template <unsigned int NEWCOLS>
-	const BitVector<NEWCOLS> operator*(const BitVector<COLS> & v) const{
-		BitVector<NEWCOLS> result;
-		size_t numRows = _rows.size();
-		for (size_t i = 0; i < numRows; ++i) {
-			BitVector<COLS> prod = _rows[i] & v;
-			if (prod.parity()) {
-				result.set(i);
 			}
 		}
 		return result;
@@ -241,7 +333,7 @@ public:
 		return Mt;
 	}
 
-	/**
+	/*
 	 * A in F_2^{n \times m}, v in F_2{n}
 	 * A.tMult(v) := A^T*v in F_2^{m}
 	 */
@@ -256,60 +348,7 @@ public:
 		return result;
 	}
 
-	bool isIdentity() const {
-		size_t numRows = rowCount();
-		const size_t numCols = colCount();
-
-		if (numRows != numCols) {
-			return false;
-		}
-
-		for (size_t i = 0; i < numRows; i++) {
-			for (size_t j = 0; j < numCols; j++) {
-				if (_rows[i].get(j) && i != j)
-					return false;
-				else if (i == j && !_rows[i].get(j))
-					return false;
-
-			}
-		}
-		return true;
-	}
-
-	const inline size_t rowCount() const {
-		return _rows.size();
-	}
-
-	const inline size_t colCount() const {
-		return COLS << 6;
-	}   
-
-/*inv/solve/rref*/
-	//for generalized matrix
-	const BitMatrix<COLS> rref() const{
-		size_t n = rowCount(), m = colCount();
-		int l = 0;
-		BitMatrix<COLS> A = *this;
-		for(int k = 0; k < m && l < n; ++k){
-			int pos = -1, i = l;
-			while(i < n){
-				if(A.get(i, k)){pos = i; break;}
-				++i;
-			}
-			if(pos != -1){
-				if(pos != l){
-					A.swapRows(pos, l);
-				}
-				for(int i = l+1; i < n; ++i) if(A.get(i, k)){
-					A.setRow(i, A[i] ^ A[k]);
-				}
-				++l;
-			}
-		}
-		return A; 
-	}
-
-	/**
+	/*
 	 * Input: A; Output: A^-1, here, A must be invertible
 	 * By Gaussian elimination; assume square matrix for now, generalize later
 	 */
@@ -319,7 +358,7 @@ public:
 	}
 
 	//Finding the inverse of A if possible, and if not, reflect that in the invertible variable
-	const BitMatrix<COLS> inv(bool & invertible) const{ //// assert->ASSERT
+	const BitMatrix<COLS> inv(bool & invertible) const{
 		size_t n = rowCount();
 		if(DEBUG) assert(n == colCount());
 		BitMatrix<COLS> A = *this;
@@ -354,6 +393,32 @@ public:
 		}
 		invertible = true;
 		return X;
+	}
+
+/* inv/solve/rref */
+
+	//for generalized matrix
+	const BitMatrix<COLS> rref() const{
+		size_t n = rowCount(), m = colCount();
+		int l = 0;
+		BitMatrix<COLS> A = *this;
+		for(int k = 0; k < m && l < n; ++k){
+			int pos = -1, i = l;
+			while(i < n){
+				if(A.get(i, k)){pos = i; break;}
+				++i;
+			}
+			if(pos != -1){
+				if(pos != l){
+					A.swapRows(pos, l);
+				}
+				for(int i = l+1; i < n; ++i) if(A.get(i, k)){
+					A.setRow(i, A[i] ^ A[k]);
+				}
+				++l;
+			}
+		}
+		return A; 
 	}
 
 	/**
@@ -402,7 +467,8 @@ public:
 		return x;
 	}
 
-/*Aug/Split*/
+/* Aug/Split */
+
 	//Augments two matrices together horizontally (needs optimization!)
 	template <unsigned int COLS1, unsigned int COLS2>
 	static const BitMatrix<COLS1 + COLS2> aug_h (const BitMatrix<COLS1> & lhs, const BitMatrix<COLS2> & rhs){
@@ -499,7 +565,7 @@ public:
 
 	/* Functions below will be shifted to the private section after tested */
 
-	/***File/terminal input/output***/
+	/* Print */
 
 	void printRow(int rowIndex) const { 
 		if(DEBUG) assert(rowIndex >= 0 && rowIndex < rowCount());
@@ -528,6 +594,11 @@ public:
 		}
 	}
 
+	void printLastRow() const{ //exists for debugging purpose
+		int last = rowCount() -1;
+		_rows[last].print();
+	}
+
 	//write matrix into a file to check against magma results
 	void writeMatrix(const string filename) const{
 		int n = rowCount(), m = colCount();
@@ -542,60 +613,6 @@ public:
 		}
 		ofs.close();
 	}
-
-	/***Acecss/Modify individual cols/rows***/
-	void setRow(int rowIndex, BitVector<COLS> v){ 
-		if(DEBUG) assert(rowIndex >= 0 && rowIndex < rowCount());
-		_rows[rowIndex] = v;
-	}
-
-	template <unsigned int ROWS>
-	void setCol(int colIndex, BitVector<ROWS> v){
-		if(DEBUG) assert(colIndex >= 0 && colIndex < colCount());
-		int numRows = ROWS << 6;
-		for(int i = 0; i < numRows; ++i) set(i, colIndex, v[i]);
-	}
-
-	void printLastRow() const{ //exists for debugging purpose
-		int last = rowCount() -1;
-		_rows[last].print();
-	}
-
-
-	bool equals(const BitMatrix<COLS> & rhs) const{ //untested!
-		int n = rowCount();
-		if(DEBUG) assert(n == rhs.rowCount());
-		for(int i = 0; i < n; ++i){
-			if(!_rows[i].equals(rhs._rows[i])) return false;
-		}
-		return true;
-	}
-
-	const BitMatrix<COLS> operator^(const BitMatrix<COLS> & rhs) const{
-		BitMatrix<COLS> result = *this;
-		const unsigned int numRows = rowCount();
-		const unsigned int numCols = colCount();
-		if(DEBUG){
-			assert(numRows == rhs.rowCount());
-			assert(numCols == rhs.colCount());
-		}
-		for(size_t i = 0; i < numRows; ++i){
-			for(size_t j = 0; j < numCols; ++j){
-				result.set(i, j, get(i, j)^rhs.get(i, j));
-			}
-		}
-		return result;
-	}
-
-	/**
-	 * Returns the determinant of a given (square) matrix, which is 1 iff the right bottom corner of its rref is 1. 
-	 * Determinant of a non-square matrix possible? http://math.stackexchange.com/questions/854180/determinant-of-a-non-square-matrix
-	 * Read into this later: http://journals.cambridge.org/download.php?file=%2FBAZ%2FBAZ21_01%2FS0004972700011369a.pdf&code=1807973f2c6d49bc4579326df0a7aa58
-	 */
-	bool det() const{ 
-		if(DEBUG) assert(rowCount() == colCount());
-		return rref().getRightBottomCorner();
-	} 
 
 private:
 	vector<BitVector<COLS>> _rows;
@@ -613,14 +630,14 @@ private:
 
 	/***Elementary row operations***/
 	void addRow(int dstIndex, int srcIndex){ //// assert->ASSERT
-		// assert(dstIndex >= 0 && dstIndex < rowCount());
-		// assert(srcIndex >= 0 && srcIndex < rowCount());
+		if(DEBUG) assert(dstIndex >= 0 && dstIndex < rowCount());
+		if(DEBUG) assert(srcIndex >= 0 && srcIndex < rowCount());
 		_rows[dstIndex] ^= _rows[srcIndex];
 	}
 
 	void swapRows(int firstIndex, int secondIndex){ //// assert->ASSERT
-		// assert(firstIndex >= 0 && firstIndex < rowCount());
-		// assert(secondIndex >= 0 && secondIndex < rowCount());
+		if(DEBUG) assert(firstIndex >= 0 && firstIndex < rowCount());
+		if(DEBUG) assert(secondIndex >= 0 && secondIndex < rowCount());
 		BitVector<COLS> tmp = _rows[firstIndex];
 		_rows[firstIndex] = _rows[secondIndex];
 		_rows[secondIndex] = tmp;
@@ -632,7 +649,7 @@ private:
 	BitMatrix<COLS> rrefFastGauss() const{ //// assert->ASSERT
 		BitMatrix<COLS> A = *this;
 		size_t n = rowCount();
-		// assert(colCount() == n);
+		if(DEBUG) assert(colCount() == n);
 		for(int j = 0; j < n; ++j){
 			int i = -1;
 			while(i < n){

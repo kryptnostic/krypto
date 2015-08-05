@@ -30,6 +30,8 @@ template<unsigned int N>
 class BitVector {
 public:
 
+/* Constructors */
+
     /*
      * Constructor
      * Constructs a zero-initialized BitVector
@@ -58,6 +60,8 @@ public:
         }
     }
 
+/* Generation */
+
     /*
      * Function: zeroVector
      * Returns a zero-initialized BitVector
@@ -79,7 +83,9 @@ public:
         }
         return result;
     }
-    
+
+/* Operators */
+
     /*
      * Operator: []
      * Returns the value of the bit at a given index
@@ -206,6 +212,8 @@ public:
         }
         return true;
     }
+
+/* Access and Modification */
 
     /*
      * Function: elements
@@ -406,6 +414,8 @@ public:
         memcpy(r.elements(), _bits+(part*M), M*sizeof(unsigned long long));
         return r;
     }
+
+/* Print */
 
     /*
      * Function: print
