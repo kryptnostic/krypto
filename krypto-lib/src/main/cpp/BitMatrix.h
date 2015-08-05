@@ -18,6 +18,10 @@
 using namespace std;
 
 #define DEBUG false
+<<<<<<< HEAD
+=======
+
+>>>>>>> d50ee15aa037e8a60528fbcf0bda030d3027936f
 // TODO: possibly uniformize template/parameter for col/row
 
 template<unsigned int COLS>
@@ -127,10 +131,17 @@ public:
 
 	template<unsigned int ROWS>
 	const BitVector<ROWS> & getCol(const int colIndex) const{
+<<<<<<< HEAD
 		if(DEBUG){
 			assert(colIndex >= 0 && colIndex < colCount());
 			int numRows = rowCount();
 			assert(numRows == ROWS << 6);			
+=======
+		int numRows = rowCount();
+		if(DEBUG){
+			assert(colIndex >= 0 && colIndex < colCount());
+			assert(numRows == ROWS << 6);
+>>>>>>> d50ee15aa037e8a60528fbcf0bda030d3027936f
 		}
 		BitVector<ROWS> v = BitVector<ROWS>::zeroVector();
 		for(int i = 0; i < COLS; ++i){
@@ -174,7 +185,11 @@ public:
 			assert(endCol >= startCol);
 			assert(startRow >= 0 && endRow < rhsRows);
 			assert(endRow >= startRow);
+<<<<<<< HEAD
 			assert(startCol + endRow == startRow + endCol);			
+=======
+			assert(startCol + endRow == startRow + endCol);
+>>>>>>> d50ee15aa037e8a60528fbcf0bda030d3027936f
 		}
 		size_t numRows = rowCount();
 		BitMatrix<NEWCOLS> result(numRows);
@@ -405,8 +420,6 @@ public:
 	//Augments two matrices together horizontally (needs optimization!)
 	template <unsigned int COLS1, unsigned int COLS2>
 	static const BitMatrix<COLS1 + COLS2> aug_h (const BitMatrix<COLS1> & lhs, const BitMatrix<COLS2> & rhs){
-		//untested!
-		// assert(COLS == COLS1 + COLS2);
 		int l_rows = lhs.rowCount();
 		int r_rows = rhs.rowCount();
 		if(DEBUG) assert(l_rows == r_rows); //same height 
@@ -426,6 +439,7 @@ public:
 	static const BitMatrix<COLS> aug_v (const BitMatrix<COLS> & top, const BitMatrix<COLS> & bottom){
 		int t_rows = top.rowCount();
 		int b_rows = bottom.rowCount();
+		if(DEBUG) assert(t_rows == b_rows);
 		vector<BitVector<COLS>> rows;
 		for(int i = 0; i < t_rows; ++i) rows.push_back(top.getRow(i));
 		for(int i = 0; i < b_rows; ++i) rows.push_back(bottom.getRow(i));
@@ -502,7 +516,12 @@ public:
 	/***File/terminal input/output***/
 
 	void printRow(int rowIndex) const { 
+<<<<<<< HEAD
 		if(DEBUG) assert(rowIndex >= 0 && rowIndex < rowCount());
+=======
+		const int n = rowCount();
+		if(DEBUG) assert(rowIndex >= 0 && rowIndex < n);
+>>>>>>> d50ee15aa037e8a60528fbcf0bda030d3027936f
 		const int m = colCount();
 		cout << get(rowIndex, 0);
 		for(int i = 1; i < m; ++i){
@@ -593,7 +612,7 @@ public:
 	 * Read into this later: http://journals.cambridge.org/download.php?file=%2FBAZ%2FBAZ21_01%2FS0004972700011369a.pdf&code=1807973f2c6d49bc4579326df0a7aa58
 	 */
 	bool det() const{ 
-		// assert(rowCount() == colCount());
+		if(DEBUG) assert(rowCount() == colCount());
 		return rref().getRightBottomCorner();
 	} 
 
