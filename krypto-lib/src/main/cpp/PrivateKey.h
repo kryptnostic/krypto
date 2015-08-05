@@ -6,9 +6,9 @@
 //  Copyright (c) 2015 Kryptnostic. All rights reserved.
 //
 //  Implementation of private key generation
+//	Accessed by clients
 //
 
-/*Accessed by client*/
 #ifndef krypto_PrivateKey_h
 #define krypto_PrivateKey_h
 

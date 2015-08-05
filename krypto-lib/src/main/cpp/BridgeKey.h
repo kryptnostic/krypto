@@ -6,9 +6,9 @@
 //  Copyright (c) 2015 Kryptnostic. All rights reserved.
 //
 //  Implementation of bridge key generation
+//	Accessed by clients, used to generate components of the public keys
 //
 
-/*Accessed by client, used to generate components of the public keys*/
 #ifndef krypto_BridgeKey_h
 #define krypto_BridgeKey_h
 
