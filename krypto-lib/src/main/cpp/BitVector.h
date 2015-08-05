@@ -63,7 +63,7 @@ public:
 /* Generation */
 
     /*
-     * Function: zeroVector
+     * Function: zeroVector()
      * Returns a zero-initialized BitVector
      */
     static const BitVector<N> & zeroVector() {
@@ -72,7 +72,7 @@ public:
     }
 
     /*
-     * Function: randomVector
+     * Function: randomVector()
      * Returns a BitVector with random values
      */
     static const BitVector<N> randomVector() {
@@ -201,7 +201,7 @@ public:
     }
 
     /*
-     * Function: equals
+     * Function: equals(rhs)
      * Returns whether the current BitVector has values
      * equal to the values of an input BitVector
      */
@@ -216,7 +216,7 @@ public:
 /* Access and Modification */
 
     /*
-     * Function: elements
+     * Function: elements()
      * Returns the underlying array of bits
      */
     unsigned long long * elements() /*const*/ {
@@ -224,7 +224,7 @@ public:
     }
     
     /*
-     * Function: length
+     * Function: length()
      * Returns the number of bits
      */
     int length() const {
@@ -232,7 +232,7 @@ public:
     }
 
     /*
-     * Function: parity
+     * Function: parity()
      * Returns 1 if number of bits set in BitVector is odd
      * Returns 0 otherwise.
      */
@@ -245,7 +245,7 @@ public:
     }
 
     /*
-     * Function: isZero
+     * Function: isZero()
      * Returns whether the current BitVector is a zero vector
      */
     const bool isZero() const {
@@ -258,7 +258,7 @@ public:
     }
 
     /*
-     * Function: zero
+     * Function: zero()
      * Sets the current BitVector to be a zero vector
      */
     void zero(){
@@ -268,7 +268,7 @@ public:
     }
 
     /*
-     * Function: get
+     * Function: get(n)
      * Returns the value of the bit at a given index
      */
     bool get(unsigned int n) const {
@@ -276,37 +276,34 @@ public:
     }
 
     /*
-     * Function: set
+     * Function: set(n)
      * Sets the bit at a given index to 1
-     * Returns the current BitVector
      */
-    inline BitVector & set(unsigned int n) {
+    inline void set(unsigned int n) {
         _bits[n >> 6] |= (1ul << (n & 63ul));
-        return *this;
     }
 
     /*
-     * Function: clear
+     * Function: clear(n)
      * Sets the bit at a given index to 0
-     * Returns the current BitVector
      */
-    inline BitVector & clear(unsigned int n) {
+    inline void clear(unsigned int n) {
         _bits[n >> 6ul] &= ~(1ul << (n & 63ul));
-        return *this; //added
     }
 
     /*
-     * Function: set
+     * Function: set(n, val)
      * Sets the bit at a given index to a given value
-     * Returns the current BitVector
      */
-    inline BitVector & set(unsigned int n, bool val){
-        if(val) return set(n);
-        return clear(n);
+    inline void set(unsigned int n, bool val){
+        if(val) set(n);
+        else clear(n);
     }
 
+/* Multi-Vector Functions */
+
     /*
-     * Function: dot
+     * Function: dot(rhs)
      * Returns the dot product of the current BitVector with an
      * input BitVector
      */
@@ -320,7 +317,7 @@ public:
     }
 
     /*
-     * Function: swap
+     * Function: swap(firstIndex, secondIndex)
      * Swaps the values at two given indices
      */
     void swap(int firstIndex, int secondIndex){
@@ -331,7 +328,7 @@ public:
     }
 
     /*
-     * Function: vcat2
+     * Function: vcat2(v1, v2)
      * Returns a BitVector resulting from the concatenation of
      * two given BitVectors
      */
@@ -347,7 +344,7 @@ public:
     }
 
     /*
-     * Function: vcat3
+     * Function: vcat3(v1, v2, v3)
      * Returns a BitVector resulting from the concatenation of
      * three given BitVectors
      */
@@ -365,7 +362,7 @@ public:
     }
 
     /*
-     * Function: proj2
+     * Function: proj2(v1, v2)
      * Sets two input BitVectors of half the length of the current
      * BitVector to each contain half the values of the current BitVector
      * Assumes that the length of the current Bitvector is divisible by 2
@@ -377,7 +374,7 @@ public:
     }
 
     /*
-     * Function: proj3
+     * Function: proj3(v1, v2, v3)
      * Sets three input BitVectors of one-third the length of the current
      * BitVector to each contain one-third the values of the current BitVector
      * Assumes that the length of the current BitVector is divisible by 3
@@ -390,7 +387,7 @@ public:
     }    
 
     /*
-     * Function: proj2
+     * Function: proj2(part)
      * Returns a BitVector of half the length of the current BitVector
      * containing a specified half of the values of the current BitVector
      * Assumes that the length of the current Bitvector is divisible by 2
@@ -403,7 +400,7 @@ public:
     }
 
     /*
-     * Function: proj3
+     * Function: proj3(part)
      * Returns a BitVector of one-third the length of the current BitVector
      * containing a specified third of the values of the current BitVector
      * Assumes that the length of the current Bitvector is divisible by 2
@@ -418,7 +415,7 @@ public:
 /* Print */
 
     /*
-     * Function: print
+     * Function: print()
      * Prints the values of the current BitVector
      * Ex. [1, 0, 0, 1, 0, 1, 1, 0]
      */
