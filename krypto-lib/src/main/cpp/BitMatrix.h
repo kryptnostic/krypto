@@ -176,6 +176,7 @@ public:
 		BitMatrix<COLS> result = *this;
 		const unsigned int numRows = rowCount();
 		const unsigned int numCols = colCount();
+
 		if(DEBUG){
 			assert(numRows == rhs.rowCount());
 			assert(numCols == rhs.colCount());
@@ -215,6 +216,7 @@ public:
 		}
 		return _rows[rowIndex].get(colIndex);
 	}
+
 
     /*
      * Function: getRow(rowIndex)
