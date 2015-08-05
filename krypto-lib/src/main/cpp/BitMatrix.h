@@ -18,10 +18,6 @@
 using namespace std;
 
 #define DEBUG false
-<<<<<<< HEAD
-=======
-
->>>>>>> d50ee15aa037e8a60528fbcf0bda030d3027936f
 // TODO: possibly uniformize template/parameter for col/row
 
 template<unsigned int COLS>
@@ -131,17 +127,10 @@ public:
 
 	template<unsigned int ROWS>
 	const BitVector<ROWS> & getCol(const int colIndex) const{
-<<<<<<< HEAD
 		if(DEBUG){
 			assert(colIndex >= 0 && colIndex < colCount());
 			int numRows = rowCount();
 			assert(numRows == ROWS << 6);			
-=======
-		int numRows = rowCount();
-		if(DEBUG){
-			assert(colIndex >= 0 && colIndex < colCount());
-			assert(numRows == ROWS << 6);
->>>>>>> d50ee15aa037e8a60528fbcf0bda030d3027936f
 		}
 		BitVector<ROWS> v = BitVector<ROWS>::zeroVector();
 		for(int i = 0; i < COLS; ++i){
@@ -185,11 +174,7 @@ public:
 			assert(endCol >= startCol);
 			assert(startRow >= 0 && endRow < rhsRows);
 			assert(endRow >= startRow);
-<<<<<<< HEAD
 			assert(startCol + endRow == startRow + endCol);			
-=======
-			assert(startCol + endRow == startRow + endCol);
->>>>>>> d50ee15aa037e8a60528fbcf0bda030d3027936f
 		}
 		size_t numRows = rowCount();
 		BitMatrix<NEWCOLS> result(numRows);
@@ -516,12 +501,7 @@ public:
 	/***File/terminal input/output***/
 
 	void printRow(int rowIndex) const { 
-<<<<<<< HEAD
 		if(DEBUG) assert(rowIndex >= 0 && rowIndex < rowCount());
-=======
-		const int n = rowCount();
-		if(DEBUG) assert(rowIndex >= 0 && rowIndex < n);
->>>>>>> d50ee15aa037e8a60528fbcf0bda030d3027936f
 		const int m = colCount();
 		cout << get(rowIndex, 0);
 		for(int i = 1; i < m; ++i){
