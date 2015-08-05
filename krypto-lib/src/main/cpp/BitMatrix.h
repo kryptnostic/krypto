@@ -4,6 +4,7 @@
 //
 //  Created by Matthew Tamayo on 1/27/15.
 //  Copyright (c) 2015 Kryptnostic. All rights reserved.
+//
 //  Row-major order implementation of binary matrix.
 //
 

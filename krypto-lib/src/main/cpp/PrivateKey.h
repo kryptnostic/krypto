@@ -1,3 +1,13 @@
+//
+//  PrivateKey.h
+//  krypto
+//
+//  Created by Peng Hui How and Robin Zhang on 7/22/15.
+//  Copyright (c) 2015 Kryptnostic. All rights reserved.
+//
+//  Implementation of private key generation
+//
+
 /*Accessed by client*/
 #ifndef krypto_PrivateKey_h
 #define krypto_PrivateKey_h

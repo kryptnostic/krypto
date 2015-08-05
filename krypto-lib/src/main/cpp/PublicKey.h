@@ -1,3 +1,13 @@
+//
+//  PublicKey.h
+//  krypto
+//
+//  Created by Peng Hui How and Robin Zhang on 7/23/15.
+//  Copyright (c) 2015 Kryptnostic. All rights reserved.
+//
+//  Implementation of private key generation
+//
+
 /*Accessed by server, used to generate components of the public keys*/
 #ifndef krypto_PublicKey_h
 #define krypto_PublicKey_h
