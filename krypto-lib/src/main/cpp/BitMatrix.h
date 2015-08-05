@@ -20,6 +20,11 @@ using namespace std;
 
 #define DEBUG false
 
+
+/*
+ * Template for BitMatrix
+ * Bit values are stored in a vector of BitVectors<COLS>
+ */
 template<unsigned int COLS>
 class BitMatrix {
 public:
