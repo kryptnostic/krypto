@@ -575,7 +575,6 @@ public:
 	template<unsigned int NEWCOLS>
 	const BitMatrix<NEWCOLS> pMult(const BitMatrix<NEWCOLS> & rhs,
 		unsigned int startRow, unsigned int endRow) const{
-		cout << "DASFDFASFDSFAFSADFASFASDFASFASFDFDSAFDAFDSF" << endl;
 		return pMult<NEWCOLS>(rhs, 0, _colCount-1, startRow, endRow);
 	}
 
