@@ -45,8 +45,7 @@ public:
 	const MultiQuadTuple<2*N, 2*N> get_UNARY_g1() const{
 		MultiQuadTupleChain<N,L> f = _pk.getf();
 
-		BitMatrix<2*N> M2 = _M.inv().split_v_2(1);
-		BitMatrix<2*N> mat_top = _pk.getA().inv() * M2;
+		BitMatrix<2*N> mat_top = _pk.getA().inv().template pMult<2*N>(_M.inv(), NN, 2*NN-1);
 		BitMatrix<2*N> mat_bot = _R * mat_top;
 
 		MultiQuadTuple<2*N, N> top = f.get(0) * mat_top;
@@ -81,7 +80,6 @@ public:
 		BitMatrix<2*N> Y_bottom = BitMatrix<2*N>::aug_h(zeroN, zeroN);
 		BitMatrix<2*N> Y = _M * BitMatrix<2*N>::aug_v(Y_top, Y_bottom) * _Cu2.inv();
 		return BitMatrix<4*N>::aug_h(X, Y);
-		//move _M mult to return
 	}
 
 /* Binary unified code */
@@ -143,7 +141,7 @@ public:
 		BitMatrix<N> idN = BitMatrix<N>::squareIdentityMatrix();
 
 		BitMatrix<3*N> Y_top = BitMatrix<3*N>::aug_h(idN, BitMatrix<2*N>::aug_h(idN, idN));
-		return _M * BitMatrix<3*N>::aug_v(Y_top, BitMatrix<3*N>::zeroMatrix(N << 6)) * _Cb2.inv();
+		return _M * BitMatrix<3*N>::aug_v(Y_top, BitMatrix<3*N>::zeroMatrix(NN)) * _Cb2.inv();
 	}
 
 /* AND */
@@ -158,16 +156,14 @@ public:
 		//maybe it was because X,X was not added
 
 		BitMatrix<N> contrib = get_AND_Pk(0, X, Y2);
-		const int twoN = N << 7;
-		const int threeN = 3 * (N << 6);
 
-		for (int level = 1; level < twoN; ++level) {
+		for (int level = 1; level < twoNN; ++level) {
 			contrib = BitMatrix<N>::aug_v(contrib, get_AND_Pk(level, X, Y2)); //add P_k's
 		}
-		for (int level = 0; level < twoN; ++level) {
+		for (int level = 0; level < twoNN; ++level) {
 			contrib = BitMatrix<N>::aug_v(contrib, get_AND_Qk(level, X, Y1)); //add Q_k's
 		}
-		for (int level = 0; level < threeN; ++level) {
+		for (int level = 0; level < threeNN; ++level) {
 			contrib = BitMatrix<N>::aug_v(contrib, get_AND_Sk(level, Y1, Y2)); //add S_k's
 		}
 
@@ -182,15 +178,13 @@ public:
 	}
 
 	const BitMatrix<2*N> get_AND_Z1() const{
-		BitMatrix<2*N> M2 = _M.inv().split_v_2(1);
-		BitMatrix<2*N> top = _Rx * _pk.getA().inv() * M2;
+		BitMatrix<2*N> top = _Rx * _pk.getA().inv().template pMult<2*N>(_M.inv(), NN, 2*NN-1);// * M2;
 		BitMatrix<2*N> bottom = _pk.getA() * top;
 		return _M * BitMatrix<2*N>::aug_v(top, bottom);
 	}
 
 	const BitMatrix<2*N> get_AND_Z2() const{
-		BitMatrix<2*N> M2 = _M.inv().split_v_2(1);
-		BitMatrix<2*N> top = _Ry * _pk.getA().inv() * M2;
+		BitMatrix<2*N> top = _Ry * _pk.getA().inv().template pMult<2*N>(_M.inv(), NN, 2*NN-1);// * M2;
 		BitMatrix<2*N> bottom = _pk.getA() * top;
 		return _M * BitMatrix<2*N>::aug_v(top, bottom);
 	}
@@ -214,7 +208,11 @@ private:
 	MultiQuadTupleChain<2*N,L> _g_u; //obsfucated chain for unary operations
 	MultiQuadTupleChain<3*N,L> _g_b; //obsfucated chain for binary operations
 	int _dim_quad = 64; //dimension of bitmatrix used to represent quadratic poly's (why isn't this N << 6 in general?)
-
+	static const unsigned int twoN = N << 1;
+	static const unsigned int threeN = 3 * N;
+	static const unsigned int NN = N << 6;
+	static const unsigned int twoNN = NN << 1;
+	static const unsigned int threeNN = 3 * NN;
 
 	//can be combined into get_z
 	const BitMatrix<2*N> get_AND_X() const{
@@ -223,13 +221,11 @@ private:
 	}
 
 	const BitMatrix<3*N> get_AND_Y1() const{
-		BitMatrix<3*N> Cb_top = _Cb2.inv().split_v_3(0);
-		return _pk.getB().inv() * Cb_top;
+		return _pk.getB().inv().pMult(_Cb2.inv(), 0, NN-1);
 	}
 
 	const BitMatrix<3*N> get_AND_Y2() const{
-		BitMatrix<3*N> Cb_middle = _Cb2.inv().split_v_3(1);
-		return _pk.getB().inv() * Cb_middle;
+		return _pk.getB().inv().pMult(_Cb2.inv(), NN, 2*NN-1);
 	}
 
 	const BitMatrix<3*N> get_AND_Y3() const{
@@ -240,22 +236,20 @@ private:
 	//level ranges from 0 to 64 * 2N - 1
 	const BitMatrix<N> get_AND_Pk(const int level, const BitMatrix<2*N> &X, const BitMatrix<3*N> &Y2) const{
 		//untested!
-		const int twoN = N << 7;
-		const int threeN = 3 * (N << 6);
-		BitMatrix<N> top = BitMatrix<N>::zeroMatrix(twoN - level); //not sure if there's obob here
+		BitMatrix<N> top = BitMatrix<N>::zeroMatrix(twoNN - level); //not sure if there's obob here
 
-		BitMatrix<N> mid = BitMatrix<N>::zeroMatrix(twoN);
-		for (int j = 0; j < (N << 6); ++j) { //col within middle block
+		BitMatrix<N> mid = BitMatrix<N>::zeroMatrix(twoNN);
+		for (int j = 0; j < NN; ++j) { //col within middle block
 			bool lhs = X.get(j, level);
-			for (int i = 0; i < twoN; ++i) { //row within middle block
+			for (int i = 0; i < twoNN; ++i) { //row within middle block
 				bool rhs = X.get(j, i);
 				mid.set(i, j, lhs && rhs);
 			}
 		}
 
-		BitMatrix<N> bot = BitMatrix<N>::zeroMatrix(threeN);
-		for (int i = 0; i < threeN; i++) { //row within bottom block
-			for (int j = 0; j < (N << 6); j++) { //col within bottom block
+		BitMatrix<N> bot = BitMatrix<N>::zeroMatrix(threeNN);
+		for (int i = 0; i < threeNN; ++i) { //row within bottom block
+			for (int j = 0; j < NN; ++j) { //col within bottom block
 				bool lhs = X.get(j, level);
 				bool rhs = Y2.get(j, i);
 				bot.set(i, j, lhs && rhs);
@@ -267,14 +261,11 @@ private:
 	//middle chunk of contrib matrix for z
 	//level ranges from 0 to 64 * 2N - 1
 	const BitMatrix<N> get_AND_Qk(const int level, const BitMatrix<2*N>&X, const BitMatrix<3*N> &Y1) const{
-		//untested!
-		const int twoN = N << 7;
-		const int threeN = 3 * (N << 6);
-		BitMatrix<N> top = BitMatrix<N>::zeroMatrix(twoN - level);
+		BitMatrix<N> top = BitMatrix<N>::zeroMatrix(twoNN - level);
 
-		BitMatrix<N> bot = BitMatrix<N>::zeroMatrix(threeN);
-		for (int i = 0; i < threeN; i++) { //row within bottom block
-			for (int j = 0; j < (N << 6); j++) { //col within bottom block
+		BitMatrix<N> bot = BitMatrix<N>::zeroMatrix(threeNN);
+		for (int i = 0; i < threeNN; ++i) { //row within bottom block
+			for (int j = 0; j < NN; ++j) { //col within bottom block
 				bool lhs = X.get(j, level);
 				bool rhs = Y1.get(j, i);
 				bot.set(i, j, lhs && rhs);
@@ -286,15 +277,12 @@ private:
 	//bottom chunk of contrib matrix for z
 	//level ranges from 0 to 64 * 3N - 1
 	const BitMatrix<N> get_AND_Sk(const int level, const BitMatrix<3*N> &Y1, const BitMatrix<3*N> &Y2) const{
-		//to be implemented
-		const int threeN = 3 * (N << 6); //should be the number of coefficients (___ choose 2)
-
-		BitMatrix<N> contrib = BitMatrix<N>::zeroMatrix(threeN - level);
-		for (int j = 0; j < (N << 6); ++j) { //cols
+		BitMatrix<N> contrib = BitMatrix<N>::zeroMatrix(threeNN - level);
+		for (int j = 0; j < NN; ++j) { //cols
 			bool prod = Y1.get(j, level) && Y2.get(j, level); //first row
 			contrib.set(0, j, prod);
 
-			for (int i = 1; i < threeN - level; ++i) { //rows
+			for (int i = 1; i < threeNN - level; ++i) { //rows
 				bool prod1 = Y1.get(j, level) && Y2.get(j, level + i);
 				bool prod2 = Y1.get(j, level + i) && Y2.get(j, level);
 				contrib.set(i, j, prod1 ^ prod2);
