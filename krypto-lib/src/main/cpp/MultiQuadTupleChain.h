@@ -1,3 +1,13 @@
+//
+//  MultiQuadTupleChain.h
+//  krypto
+//
+//  Created by Peng Hui How and Robin Zhang on 7/29/15.
+//  Copyright (c) 2015 Kryptnostic. All rights reserved.
+//
+//  Implementation of tuples of multivariate quadratic polynomials over F2
+//
+
 #ifndef krypto_MultiQuadTupleChain_h
 #define krypto_MultiQuadTupleChain_h
 

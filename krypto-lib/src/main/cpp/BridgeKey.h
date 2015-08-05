@@ -1,4 +1,14 @@
-/*Accessed by client, used to generate components of the public keys*/
+//
+//  BridgeKey.h
+//  krypto
+//
+//  Created by Peng Hui How and Robin Zhang on 7/22/15.
+//  Copyright (c) 2015 Kryptnostic. All rights reserved.
+//
+//  Implementation of bridge key generation
+//	Accessed by clients, used to generate components of the public keys
+//
+
 #ifndef krypto_BridgeKey_h
 #define krypto_BridgeKey_h
 
