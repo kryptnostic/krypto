@@ -99,6 +99,10 @@ public:
 
 /* Access and Modification */
 
+    /*
+     * Function: get
+     * Returns the value of the bit at the given index
+     */
 	inline bool get(int rowIndex, int colIndex) const{ 
 		if(DEBUG){
 			assert(rowIndex >= 0 && rowIndex < rowCount()); //"rowIndex out of bound!"
@@ -107,6 +111,10 @@ public:
 		return _rows[rowIndex].get(colIndex);
 	}
 
+	/*
+	 * Function: set
+	 * Set the bit at the given index as 1
+	 */
 	inline void set(int rowIndex, int colIndex){
 		if(DEBUG){
 			assert(rowIndex >= 0 && rowIndex < rowCount()); //"rowIndex out of bound!"
@@ -115,6 +123,10 @@ public:
 		_rows[rowIndex].set(colIndex);	
 	}
 
+	/*
+	 * Function: clear
+	 * Return the bit at the given index as 0
+	 */
 	inline void clear(int rowIndex, int colIndex){
 		if(DEBUG){
 			assert(rowIndex >= 0 && rowIndex < rowCount()); //"rowIndex out of bound!"
@@ -123,6 +135,10 @@ public:
 		_rows[rowIndex].clear(colIndex);		
 	}
 
+	/*
+	 * Function: set
+	 * Return the bit at the given index as the given value
+	 */	
 	inline void set(int rowIndex, int colIndex, bool value){
 		if(DEBUG){
 			assert(rowIndex >= 0 && rowIndex < rowCount()); //"rowIndex out of bound!"
@@ -132,11 +148,20 @@ public:
 		else _rows[rowIndex].clear(colIndex);
 	}
 
+	/*
+	 * Function: getRow
+	 * Return the row of the matrix at a given index
+	 */
 	const inline BitVector<COLS> & getRow(const int rowIndex) const{
 		if(DEBUG) assert(rowIndex >= 0 && rowIndex < rowCount()); //"rowIndex out of bound!"
 		return _rows[rowIndex];
 	}
 
+	/*
+	 * Function: getCol
+	 * Return the row of the matrix at a given index
+	 * Usage: BitVector<1> v = M.getCol<1>(0);
+	 */
 	template<unsigned int ROWS>
 	const BitVector<ROWS> & getCol(const int colIndex) const{
 		if(DEBUG){
@@ -151,11 +176,19 @@ public:
 		return v;
 	}
 
+	/*
+	 * Function: setRow
+	 * Set the row of the given index as the given vector
+	 */
 	void setRow(int rowIndex, BitVector<COLS> v){ 
 		if(DEBUG) assert(rowIndex >= 0 && rowIndex < rowCount());
 		_rows[rowIndex] = v;
 	}
 
+	/*
+	 * Function: setCol
+	 * Set the column of the given index as the given vector
+	 */
 	template <unsigned int ROWS>
 	void setCol(int colIndex, BitVector<ROWS> v){
 		if(DEBUG) assert(colIndex >= 0 && colIndex < colCount());
@@ -163,11 +196,19 @@ public:
 		for(int i = 0; i < numRows; ++i) set(i, colIndex, v[i]);
 	}
 
+	/*
+	 * Function: xorRow
+	 * Xor the row at the given index with the given vector
+	 */
 	inline void xorRow(int rowIndex, const BitVector<COLS> & row){
 		if(DEBUG) assert(rowIndex >= 0 && rowIndex <= rowCount());
 		_rows[rowIndex] ^= row;
 	}
 
+	/*
+	 * Function: isIdentity
+	 * Returns true if and only if the given matrix is identity. Returns false directly if the matrix is not square.
+ 	 */
 	bool isIdentity() const {
 		size_t numRows = rowCount();
 		const size_t numCols = colCount();
