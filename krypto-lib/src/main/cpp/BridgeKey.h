@@ -26,6 +26,12 @@ using namespace std;
 template<unsigned int N, unsigned int L>
 class BridgeKey{
 public:
+
+	/*
+     * Constructor
+     * Constructs a BridgeKey with a given PrivateKey
+     * and BitMatrix K (for left-matrix multiplcation)
+     */
 	BridgeKey(PrivateKey<N,L> &pk, BitMatrix<N> K) : 
 	_pk(pk),
 	_R(BitMatrix<N>::randomInvertibleMatrix()),

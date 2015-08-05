@@ -17,13 +17,21 @@
 
 using namespace std;
 
-/*length of plaintext = N*2^6; length of obfuscation chain = L*/
+/*
+ * Template for PrivateKey
+ * Length of plaintext = N * 2^6, Length of obfuscation chain = L
+ */
 template<unsigned int N, unsigned int L>
 class PrivateKey {
 
 template<unsigned int M, unsigned int K> friend class BridgeKey;
 
 public:
+
+	/*
+     * Constructor
+     * Constructs a PrivateKey with randomly initialized private variables
+     */
 	PrivateKey():
 		_A(BitMatrix<N>::randomInvertibleMatrix()),
 		_B(BitMatrix<N>::randomInvertibleMatrix()),
@@ -32,6 +40,10 @@ public:
 		generateObfuscationMatrixChains();
 	}
 
+    /*
+     * Function: encrypt(m)
+     * Returns the encrypted ciphertext (length 2N * 2^6) of the plaintext (length N * 2^6)
+     */
 	const BitVector<2*N> encrypt(const BitVector<N> &m) const{//returns x = E(m, r) given a plaintext m 
 		//For now, we assume that m is padded and hashed. These operations will be included later.
 		BitVector<N> r = BitVector<N>::randomVector();
@@ -40,7 +52,11 @@ public:
 		BitVector<2*N> result = BitVector<N>::vcat2(top, bottom);
 		return _M.template operator*<2*N>(BitVector<N>::vcat2(top, bottom));
 	}
-	
+
+    /*
+     * Function: decrypt(x)
+     * Returns the decrypted plaintext (length N * 2^6) from a ciphertext (length 2N * 2^6)
+     */
 	const BitVector<N> decrypt(const BitVector<2*N> &x) const{//returns m = D(x) given a ciphertext x
 		BitVector<2*N> mix = _M.solve(x);
 		BitVector<N> x1, x2;
