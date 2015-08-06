@@ -446,7 +446,7 @@ public:
 					I.setRow(i, I[i] ^ I[k]);
 				}
 			} else {
-				cerr << "Error: inversing a nonsingular matrix!" << endl;
+				cerr << "Error: inversing a singular matrix!" << endl;
 				invertible = false;
 				return BitMatrix<COLS>::squareZeroMatrix(); 
 			}
