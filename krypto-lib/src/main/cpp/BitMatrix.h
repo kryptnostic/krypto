@@ -14,7 +14,7 @@
 #include <vector>
 #include <fstream>
 #include "../../main/cpp/BitVector.h"
-#include "../../../contrib/gtest/gtest.h"
+//#include "../../../contrib/gtest/gtest.h"
 
 using namespace std;
 
