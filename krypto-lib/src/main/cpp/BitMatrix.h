@@ -43,7 +43,7 @@ public:
      * Constructor
      * Constructs a BitMatrix with a given vector of BitVectors
      */
-	BitMatrix(const vector<BitVector<COLS>> & rows) :
+	BitMatrix(const vector< BitVector<COLS> > & rows) :
 			_rows(rows) {
 	}
 
@@ -60,7 +60,7 @@ public:
      * Returns a zero-initialized BitMatrix with a given number of rows
      */
 	static const BitMatrix zeroMatrix(const int numRows){
-		vector<BitVector<COLS>> rows(numRows);
+		vector< BitVector<COLS> > rows(numRows);
 		for(int i = 0; i < numRows; ++i){ //TODO: is the for loop necessary? surely there is a faster way (memset or something)
 			rows[i] = BitVector<COLS>::zeroVector();
 		}
@@ -80,7 +80,7 @@ public:
      * Returns a random BitMatrix with a given number of rows
      */
 	static const BitMatrix randomMatrix(const int numRows) {
-		vector<BitVector<COLS>> rows(numRows);
+		vector< BitVector<COLS> > rows(numRows);
 		for (int i = 0; i < numRows; ++i) {
 			rows[i] = BitVector<COLS>::randomVector();
 		}
@@ -117,7 +117,7 @@ public:
      */
 	static const BitMatrix squareIdentityMatrix(){
 		int numRows = COLS << 6;
-		vector<BitVector<COLS>> rows(numRows);
+		vector< BitVector<COLS> > rows(numRows);
 		for(int i = 0; i < numRows; ++i){
 			BitVector<COLS> e = BitVector<COLS>::zeroVector();
 			e.set(i);
@@ -639,7 +639,7 @@ public:
 		if(DEBUG) assert(l_rows == r_rows); //same height 
 		//if(COLS1 == 0) return rhs; (why did this give dim disagreement?!?!)
 		//if(COLS2 == 0) return lhs; (why did this give dim disagreement?!?!)
-		vector<BitVector<COLS>> rows(l_rows);		
+		vector< BitVector<COLS> > rows(l_rows);		
 		for(size_t i = 0; i < l_rows; ++i){
 			BitVector<COLS1> lv = lhs.getRow(i);
 			BitVector<COLS2> rv = rhs.getRow(i);
@@ -662,7 +662,7 @@ public:
 			assert(l_rows == mid.rowCount());
 			assert(l_rows == rhs.rowCount()); 
 		}
-		vector<BitVector<COLS>> rows(l_rows);		
+		vector< BitVector<COLS> > rows(l_rows);		
 		for(size_t i = 0; i < l_rows; ++i){
 			BitVector<COLS1> lv = lhs.getRow(i);
 			BitVector<COLS2> mv = mid.getRow(i);
@@ -683,7 +683,7 @@ public:
 		unsigned int t_rows = top.rowCount();
 		unsigned int b_rows = bot.rowCount();
 		if(DEBUG) assert(t_rows == b_rows);
-		vector<BitVector<COLS>> rows;
+		vector< BitVector<COLS> > rows;
 		for(size_t i = 0; i < t_rows; ++i) rows.push_back(top.getRow(i));
 		for(size_t i = 0; i < b_rows; ++i) rows.push_back(bot.getRow(i));
 		BitMatrix<COLS> M(rows);
@@ -704,7 +704,7 @@ public:
 			assert(t_rows == m_rows);
 			assert(t_rows == b_rows);
 		}
-		vector<BitVector<COLS>> rows;
+		vector< BitVector<COLS> > rows;
 		for(size_t i = 0; i < t_rows; ++i) rows.push_back(top.getRow(i));
 		for(size_t i = 0; i < m_rows; ++i) rows.push_back(mid.getRow(i));
 		for(size_t i = 0; i < b_rows; ++i) rows.push_back(bot.getRow(i));
@@ -863,7 +863,7 @@ public:
 	}
 
 private:
-	vector<BitVector<COLS>> _rows;
+	vector< BitVector<COLS> > _rows;
 	static const unsigned int _colCount = COLS << 6;
 
     /*
