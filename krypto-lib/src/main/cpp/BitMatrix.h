@@ -102,8 +102,11 @@ public:
 	static const BitMatrix randomInvertibleMatrix() {//TODO: figure out a better way to generate random invertible matrix
 		int numRows = COLS << 6;
 		BitMatrix<COLS> R = BitMatrix<COLS>::squareRandomMatrix();
+		unsigned int count = 0;
 		while(!R.det() || R.isIdentity()){
 			R = BitMatrix<COLS>::squareRandomMatrix();
+			++count;
+			if(count == 50) return BitMatrix<COLS>::squareIdentityMatrix(); //force termination, not ideal, will update
 		}
 		return R;		
 	}
