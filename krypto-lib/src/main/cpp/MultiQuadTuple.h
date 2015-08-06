@@ -13,22 +13,44 @@
 
 #include "BitMatrix.h"
 
+#define DEBUG false
+
 template<unsigned int NUM_INPUTS, unsigned int NUM_OUTPUTS>
 class MultiQuadTuple {
 public:
+/* Constructor */	
+
+	/*
+	 * Constructor
+	 * Constructs a MultiQuadTuple with given contribution matrix and constant vector (which represents the constant terms).
+	 */
 	MultiQuadTuple(const BitMatrix<NUM_OUTPUTS> & contributionsT, const BitVector<NUM_OUTPUTS> & constants):
 	_contributionsT(contributionsT), _constants(constants){}
 
+/* Generation */
+
+	/*
+	 * Function: randomMultiQuadTuple()
+	 * Generates a random MultiQuadTuple of the given numbers of input and output.
+	 */
 	const static MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS> randomMultiQuadTuple(){
 		return MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS>(BitMatrix<NUM_OUTPUTS>::randomMatrix(numInputMonomials), BitVector<NUM_OUTPUTS>::randomVector());
 	}
 
+	/*
+	 * Function: zeroMultiQuadTuple()
+	 * Generates a zero MultiQuadTuple of the given numbers of input and output.
+	 */
 	const static MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS> zeroMultiQuadTuple(){
 		return MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS>(BitMatrix<NUM_OUTPUTS>::zeroMatrix(numInputMonomials), BitVector<NUM_OUTPUTS>::zeroVector());
 	}
 
+	/*
+	 * Function: getMultiQuadTuple()
+	 * Generates a MultiQuadTuple equivalent to a given linear transformation.
+	 */
 	const static MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS> getMultiQuadTuple(const BitMatrix<NUM_INPUTS> & M){
-		// assert(NUM_OUTPUTS << 6 == M.rowCount());
+		if(DEBUG) assert(NUM_OUTPUTS << 6 == M.rowCount());
 		BitMatrix<NUM_OUTPUTS> Mt = M.template T<NUM_OUTPUTS>();
 		BitMatrix<NUM_OUTPUTS> result = BitMatrix<NUM_OUTPUTS>::zeroMatrix(numInputMonomials);
 		size_t count = 0;
@@ -39,6 +61,12 @@ public:
 		return MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS>(result, BitVector<NUM_OUTPUTS>::zeroVector());
 	}	
 
+/* Evaluation */
+
+	/*
+	 * Function: ()
+	 * Return the evaluation result on a given BitVector.
+	 */
 	const BitVector<NUM_OUTPUTS> operator()(const BitVector<NUM_INPUTS> & input) const {
 		BitVector<NUM_OUTPUTS> result;
 		unsigned int count = 0;
@@ -55,9 +83,15 @@ public:
 		return result ^ _constants;
 	}
 
+/* Composition with Linear Transformation */
+
+	/*
+	 * Operator: *(C)
+	 * Returns the MultiQuadTuple as a result of left composition with a given linear transformation.
+	 */
 	template<unsigned int NUM_INNERINPUTS> 
 	const MultiQuadTuple<NUM_INNERINPUTS, NUM_OUTPUTS> operator*(const BitMatrix<NUM_INNERINPUTS> & C) const{
-		// assert(numInputBits == C.rowCount());
+		if(DEBUG) assert(numInputBits == C.rowCount());
 		BitMatrix<NUM_INPUTS> Ct = C.template T<NUM_INPUTS>();
 		const unsigned int numInnerInputMonomials = MultiQuadTuple<NUM_INNERINPUTS, NUM_OUTPUTS>::getInputMonomialCount(); 
 		const unsigned int numInnerInputBits = MultiQuadTuple<NUM_INNERINPUTS, NUM_OUTPUTS>::getInputCount();
@@ -80,16 +114,30 @@ public:
 		return MultiQuadTuple<NUM_INNERINPUTS, NUM_OUTPUTS>(result, _constants);
 	}
 
+	/*
+	 * Function: rMult(C)
+	 * Returns the MultiQuadTuple as a result of right composition with a given linear transformation.
+	 */
 	template<unsigned int NUM_OUTEROUTPUTS>
 	const MultiQuadTuple<NUM_INPUTS, NUM_OUTEROUTPUTS> rMult(const BitMatrix<NUM_OUTPUTS> & C) {
-		// assert(C.rowCount() == NUM_OUTEROUTPUTS << 6); 
+		if(DEBUG) assert(C.rowCount() == NUM_OUTEROUTPUTS << 6); 
 		return MultiQuadTuple<NUM_INPUTS, NUM_OUTEROUTPUTS>(_contributionsT * (C.template T<NUM_OUTEROUTPUTS>()), C.template operator*<NUM_OUTEROUTPUTS>(_constants));
 	}
 
+/* MultiQuadTuple-MultiQuadTuple Operations */
+
+	/*
+	 * Operator: ^
+	 * Returns a MultiQuadTuple with values resulting from bitwise XOR
+	 */
 	const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS> operator^(const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS> & rhs) const {
  		return MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS>(_contributionsT ^ rhs._contributionsT, _constants ^ rhs._constants);
 	}
 
+	/*
+	 * Function: aug_v
+	 * Returns the matrix resulting from vertical augmentation of two given MultiQuadTuples
+	 */
 	template<unsigned int NUM_OUTPUTS1, unsigned int NUM_OUTPUTS2>
 	static const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS1+NUM_OUTPUTS2> aug_v(const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS1> & f1, const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS2> & f2){
 		BitMatrix<NUM_OUTPUTS1> C1 = f1.getTransposedContributionMatrix();
@@ -100,14 +148,44 @@ public:
 		return MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS_SUM>(BitMatrix<NUM_OUTPUTS_SUM>::aug_h(C1, C2), BitVector<NUM_OUTPUTS_SUM>::vcat2(c1, c2));
 	}	
 
+/* Access */
+
+	/*
+	 * Function: getInputCount
+	 * Returns the dimension of inputs of a MultiQuadTuple
+	 */
 	static const unsigned int getInputCount(){
 		return numInputBits;
 	}
 
+	/*
+	 * Function: getInputMonomoialCount
+	 * Returns the number of monomials (of the form x_i, x_jx_k (j != k)) of inputs of a MultiQuadTuple
+	 */
 	static const unsigned int getInputMonomialCount(){
 		return numInputMonomials;
+	}	
+
+	/*
+	 * Function: getTransposeContributionMatrix
+	 * Returns the transposed contribution matrix of a MultiQuadTuple
+	 */
+	const BitMatrix<NUM_OUTPUTS> getTransposedContributionMatrix() const{
+		return _contributionsT;
 	}
 
+	/*
+	 * Function: getConstantTerms
+	 * Returns the BitVector that represents the constant terms of a MultiQuadTuple
+	 */
+	const BitVector<NUM_OUTPUTS> getConstantTerms() const{
+		return _constants;
+	}
+
+	/*
+	 * Function: getIndex
+	 * Returns the index of x_{main}x_{aux} in the monomial list.
+	 */
 	static const unsigned int getIndex(unsigned int main, unsigned int aux){
 		size_t index1 = min(main, aux);
 		size_t index2 = max(main, aux);
@@ -115,14 +193,6 @@ public:
 		unsigned int result = numInputMonomials - toSubtract + (index2 - index1);
 		return result;
 	}		
-
-	const BitMatrix<NUM_OUTPUTS> getTransposedContributionMatrix() const{
-		return _contributionsT;
-	}
-
-	const BitVector<NUM_OUTPUTS> getConstantTerms() const{
-		return _constants;
-	}
 private:
 	BitMatrix<NUM_OUTPUTS> _contributionsT;
 	BitVector<NUM_OUTPUTS> _constants; //constant term

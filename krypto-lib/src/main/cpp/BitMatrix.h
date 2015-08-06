@@ -138,8 +138,6 @@ public:
      * Operator: *
      * Returns the result of matrix * matrix multiplication
      */
-	//logic correct but implementation is stupid. need to fix access of getCol etc to use those functions
-	//need to figure out a way to implement getCol, now it is regarded as a static function due to the template argument
 	template<unsigned int NEWCOLS>
 	const BitMatrix<NEWCOLS> operator*(const BitMatrix<NEWCOLS> & rhs) const{
 		const size_t numCols = colCount();
@@ -327,7 +325,7 @@ public:
 
     /*
      * Function: setSubMatrix(startRowIndex, M)
-     * Set a portion of a matrix given the submatrix
+     * Set a portion of a matrix starting from a given row as given the matrix
      */
 	void setSubMatrix(size_t startRowIndex, const BitMatrix<COLS> & M){ 
 		unsigned int newNumRows = M.rowCount();
