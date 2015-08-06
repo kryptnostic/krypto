@@ -17,6 +17,8 @@ int main(int argc, char **argv) {
 	clock_t begin = clock();
 
 	for (int i = 0; i < TESTRUNS; ++i) {
+		// clock_t begin_i = clock();
+		
 		PrivateKey<N, 2> pk;
 
 		BitMatrix<N> K = BitMatrix<N>::randomMatrix(N << 6);
@@ -36,6 +38,9 @@ int main(int argc, char **argv) {
 
 		BitVector<2*N> encryptedAND = pub.homomorphicAND(encryptedX, encryptedY);
 		BitVector<N> unencryptedAND = pk.decrypt(encryptedAND);
+
+		// clock_t end_i = clock();
+		// cout << "Test Run #" << i << " time: " << double(end_i - begin_i) / (CLOCKS_PER_SEC) << " sec" << endl;
 	}
 
  	clock_t end = clock();

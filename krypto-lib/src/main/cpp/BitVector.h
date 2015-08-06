@@ -272,7 +272,7 @@ public:
      * Returns the value of the bit at a given index
      */
     bool get(unsigned int n) const {
-        return (_bits[n >> 6] & (1ul << (n & 63ul))) != 0;
+        return (_bits[n >> 6] & (1ull << (n & 63ull))) != 0;
     }
 
     /*
@@ -280,7 +280,7 @@ public:
      * Sets the bit at a given index to 1
      */
     inline void set(unsigned int n) {
-        _bits[n >> 6] |= (1ul << (n & 63ul));
+        _bits[n >> 6] |= (1ull << (n & 63ull));
     }
 
     /*
@@ -288,7 +288,7 @@ public:
      * Sets the bit at a given index to 0
      */
     inline void clear(unsigned int n) {
-        _bits[n >> 6ul] &= ~(1ul << (n & 63ul));
+        _bits[n >> 6] &= ~(1ull << (n & 63ull));
     }
 
     /*
