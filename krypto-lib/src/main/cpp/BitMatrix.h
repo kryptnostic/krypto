@@ -13,13 +13,14 @@
 
 #include <vector>
 #include <fstream>
+#include <pthread.h>
 #include "../../main/cpp/BitVector.h"
 //#include "../../../contrib/gtest/gtest.h"
 
 using namespace std;
 
 #define DEBUG false
-
+#define NUM_THREADS 5
 
 /*
  * Template for BitMatrix
@@ -116,7 +117,7 @@ public:
      * Returns a square identity BitMatrix
      */
 	static const BitMatrix squareIdentityMatrix(){
-		int numRows = COLS << 6;
+		size_t numRows = _colCount;
 		vector< BitVector<COLS> > rows(numRows);
 		for(int i = 0; i < numRows; ++i){
 			BitVector<COLS> e = BitVector<COLS>::zeroVector();
@@ -124,6 +125,7 @@ public:
 			rows[i] = e;
 		}
 		return BitMatrix(rows);
+		
 	}
 
 /* Operators */
@@ -189,11 +191,6 @@ public:
 		}
 		for(size_t i = 0; i < numRows; ++i){
 			result.setRow(i, result.getRow(i) ^ rhs.getRow(i));
-			/*
-			for(size_t j = 0; j < numCols; ++j){
-				result.set(i, j, get(i, j)^rhs.get(i, j));
-			}
-			*/
 		}
 		return result;
 	}
@@ -570,10 +567,10 @@ public:
      */
 	template<unsigned int NEWCOLS> 
 	const BitMatrix<NEWCOLS> pMult(const BitMatrix<NEWCOLS> & rhs, 
-		unsigned int startCol, unsigned int endCol, unsigned int startRow, unsigned int endRow) const{
-		const size_t numCols = colCount();
-		const size_t rhsRows = rhs.rowCount();
+		unsigned int startCol, unsigned int endCol, unsigned int startRow, unsigned int endRow) const{		
 		if(DEBUG){
+			const size_t numCols = colCount();
+			const size_t rhsRows = rhs.rowCount();
 			assert(startCol >= 0 && endCol < numCols);
 			assert(endCol >= startCol);
 			assert(startRow >= 0 && endRow < rhsRows);
@@ -687,6 +684,7 @@ public:
 		unsigned int b_rows = bot.rowCount();
 		if(DEBUG) assert(t_rows == b_rows);
 		vector< BitVector<COLS> > rows;
+		rows.reserve(t_rows + b_rows);
 		for(size_t i = 0; i < t_rows; ++i) rows.push_back(top.getRow(i));
 		for(size_t i = 0; i < b_rows; ++i) rows.push_back(bot.getRow(i));
 		BitMatrix<COLS> M(rows);
@@ -708,6 +706,7 @@ public:
 			assert(t_rows == b_rows);
 		}
 		vector< BitVector<COLS> > rows;
+		rows.reserve(t_rows + m_rows + b_rows);
 		for(size_t i = 0; i < t_rows; ++i) rows.push_back(top.getRow(i));
 		for(size_t i = 0; i < m_rows; ++i) rows.push_back(mid.getRow(i));
 		for(size_t i = 0; i < b_rows; ++i) rows.push_back(bot.getRow(i));
