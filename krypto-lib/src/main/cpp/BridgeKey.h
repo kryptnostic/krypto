@@ -206,7 +206,7 @@ public:
 		BitMatrix<3*N> Y3 = get_AND_Y3();
 		BitMatrix<7*N> Y3t = BitMatrix<7*N>::aug_h(BitMatrix<4*N>::zeroMatrix(N << 6), Y3);
 
-		BitMatrix<N> contrib = BitMatrix<N>::aug_v(contrib, BitMatrix<N>::aug_v(get_AND_P(X, Y2), get_AND_Q(X, Y1)));
+		BitMatrix<N> contrib = BitMatrix<N>::aug_v(BitMatrix<N>::aug_v(get_AND_P(X, Y2), get_AND_Q(X, Y1)), get_AND_S(Y1, Y2));
 		MultiQuadTuple<7*N, N> z_top(contrib, BitVector<N>::zeroVector());
 		z_top = z_top.template rMult<N>(_pk.getB());
 		z_top = z_top ^ MultiQuadTuple<7*N, N>::getMultiQuadTuple(Y3t);
