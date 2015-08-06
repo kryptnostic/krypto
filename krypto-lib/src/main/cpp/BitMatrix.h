@@ -326,6 +326,18 @@ public:
 	}
 
     /*
+     * Function: setSubMatrix(startRowIndex, M)
+     * Set a portion of a matrix given the submatrix
+     */
+	void setSubMatrix(size_t startRowIndex, const BitMatrix<COLS> & M){ 
+		unsigned int newNumRows = M.rowCount();
+		if(DEBUG) assert(startRowIndex >= 0 && startRowIndex + newNumRows < rowCount());
+		for(size_t i = 0; i < newNumRows; ++i){
+			_rows[i + startRowIndex] = M.getRow(i);
+		}
+	}
+
+    /*
      * Function: isIdentity()
      * Returns whether the current BitMatrix is an identity matrix
      */
@@ -621,16 +633,40 @@ public:
      */
 	template <unsigned int COLS1, unsigned int COLS2> //TODO: optimize
 	static const BitMatrix<COLS1 + COLS2> aug_h (const BitMatrix<COLS1> & lhs, const BitMatrix<COLS2> & rhs){
-		int l_rows = lhs.rowCount();
-		int r_rows = rhs.rowCount();
+		unsigned int l_rows = lhs.rowCount();
+		unsigned int r_rows = rhs.rowCount();
 		if(DEBUG) assert(l_rows == r_rows); //same height 
 		//if(COLS1 == 0) return rhs; (why did this give dim disagreement?!?!)
 		//if(COLS2 == 0) return lhs; (why did this give dim disagreement?!?!)
 		vector<BitVector<COLS>> rows(l_rows);		
-		for(int i = 0; i < l_rows; ++i){
+		for(size_t i = 0; i < l_rows; ++i){
 			BitVector<COLS1> lv = lhs.getRow(i);
 			BitVector<COLS2> rv = rhs.getRow(i);
 			rows[i] = BitVector<COLS>::vcat2(lv, rv);
+		}
+		BitMatrix<COLS> M(rows);
+		return M;
+	}
+
+	/*
+     * Function: aug_h_3(lhs, mid, rhs)
+     * Returns the matrix resulting from horizontal augmentation
+     * of three given matrices
+     * Assumes the given matrixes have the same number of rows
+     */
+	template <unsigned int COLS1, unsigned int COLS2, unsigned int COLS3> //TODO: optimize
+	static const BitMatrix<COLS1 + COLS2 + COLS3> aug_h_3(const BitMatrix<COLS1> & lhs, const BitMatrix<COLS2> & mid, const BitMatrix<COLS3> & rhs){
+		unsigned int l_rows = lhs.rowCount();
+		if(DEBUG) { //same height 
+			assert(l_rows == mid.rowCount());
+			assert(l_rows == rhs.rowCount()); 
+		}
+		vector<BitVector<COLS>> rows(l_rows);		
+		for(size_t i = 0; i < l_rows; ++i){
+			BitVector<COLS1> lv = lhs.getRow(i);
+			BitVector<COLS2> mv = mid.getRow(i);
+			BitVector<COLS3> rv = rhs.getRow(i);
+			rows[i] = BitVector<COLS>::vcat3(lv, mv, rv);
 		}
 		BitMatrix<COLS> M(rows);
 		return M;
@@ -643,12 +679,34 @@ public:
      * Assumes the given matrixes have the same number of rows
      */
 	static const BitMatrix<COLS> aug_v (const BitMatrix<COLS> & top, const BitMatrix<COLS> & bot){ //TODO: optimize
-		int t_rows = top.rowCount();
-		int b_rows = bot.rowCount();
+		unsigned int t_rows = top.rowCount();
+		unsigned int b_rows = bot.rowCount();
 		if(DEBUG) assert(t_rows == b_rows);
 		vector<BitVector<COLS>> rows;
-		for(int i = 0; i < t_rows; ++i) rows.push_back(top.getRow(i));
-		for(int i = 0; i < b_rows; ++i) rows.push_back(bot.getRow(i));
+		for(size_t i = 0; i < t_rows; ++i) rows.push_back(top.getRow(i));
+		for(size_t i = 0; i < b_rows; ++i) rows.push_back(bot.getRow(i));
+		BitMatrix<COLS> M(rows);
+		return M;
+	}
+
+	/*
+     * Function: aug_v_3(top, mid, bot)
+     * Returns the matrix resulting from vertical augmentation
+     * of two given matrices
+     * Assumes the given matrixes have the same number of rows
+     */
+	static const BitMatrix<COLS> aug_v_3(const BitMatrix<COLS> & top, const BitMatrix<COLS> & mid, const BitMatrix<COLS> & bot){ //TODO: optimize
+		unsigned int t_rows = top.rowCount();
+		unsigned int m_rows = mid.rowCount();
+		unsigned int b_rows = bot.rowCount();
+		if(DEBUG) {
+			assert(t_rows == m_rows);
+			assert(t_rows == b_rows);
+		}
+		vector<BitVector<COLS>> rows;
+		for(size_t i = 0; i < t_rows; ++i) rows.push_back(top.getRow(i));
+		for(size_t i = 0; i < m_rows; ++i) rows.push_back(mid.getRow(i));
+		for(size_t i = 0; i < b_rows; ++i) rows.push_back(bot.getRow(i));
 		BitMatrix<COLS> M(rows);
 		return M;
 	}
