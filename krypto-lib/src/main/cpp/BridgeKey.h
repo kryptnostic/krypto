@@ -206,18 +206,7 @@ public:
 		BitMatrix<3*N> Y3 = get_AND_Y3();
 		BitMatrix<7*N> Y3t = BitMatrix<7*N>::aug_h(BitMatrix<4*N>::zeroMatrix(N << 6), Y3);
 
-		BitMatrix<N> contrib = get_AND_Pk(0, X, Y2);
-
-		for (size_t level = 1; level < twoNN; ++level) {
-			contrib = BitMatrix<N>::aug_v(contrib, get_AND_Pk(level, X, Y2)); //add P_k's
-		}
-		for (size_t level = 0; level < twoNN; ++level) {
-			contrib = BitMatrix<N>::aug_v(contrib, get_AND_Qk(level, X, Y1)); //add Q_k's
-		}
-		for (size_t level = 0; level < threeNN; ++level) {
-			contrib = BitMatrix<N>::aug_v(contrib, get_AND_Sk(level, Y1, Y2)); //add S_k's
-		}
-
+		BitMatrix<N> contrib = BitMatrix<N>::aug_v(contrib, BitMatrix<N>::aug_v(get_AND_P(X, Y2), get_AND_Q(X, Y1)));
 		MultiQuadTuple<7*N, N> z_top(contrib, BitVector<N>::zeroVector());
 		z_top = z_top.template rMult<N>(_pk.getB());
 		z_top = z_top ^ MultiQuadTuple<7*N, N>::getMultiQuadTuple(Y3t);
@@ -366,8 +355,8 @@ private:
 
 	/*
 	 * Function: get_AND_Sk
-	 * bottom chunk of contrib matrix for z
 	 * level ranges from 0 to 64 * 3N - 1
+	 * Dimension: 3 * 64N - level
 	 */
 	const BitMatrix<N> get_AND_Sk(const int level, const BitMatrix<3*N> &Y1, const BitMatrix<3*N> &Y2) const{
 		BitMatrix<N> contrib = BitMatrix<N>::zeroMatrix(threeNN - level);
@@ -383,6 +372,42 @@ private:
 		}
 		return contrib;
 	}
+
+	/*
+	 * Function: get_AND_P (entire chunk)
+	 * top chunk of contrib matrix for z for homomorphic AND
+	 */
+	const BitMatrix<N> get_AND_P(const BitMatrix<2*N> &X, const BitMatrix<3*N> &Y2) const{
+		BitMatrix<N> contrib = get_AND_Pk(0, X, Y2);
+		for (size_t level = 1; level < twoNN; ++level) {
+			contrib = BitMatrix<N>::aug_v(contrib, get_AND_Pk(level, X, Y2)); //add P_k's
+		}
+		return contrib;
+	}
+
+	/*
+	 * Function: get_AND_Q (entire chunk)
+	 * middle chunk of contrib matrix for z for homomorphic AND
+	 */
+	const BitMatrix<N> get_AND_Q(const BitMatrix<2*N> &X, const BitMatrix<3*N> &Y1) const{
+		BitMatrix<N> contrib = get_AND_Qk(0, X, Y1);
+		for (size_t level = 1; level < twoNN; ++level) {
+			contrib = BitMatrix<N>::aug_v(contrib, get_AND_Qk(level, X, Y1)); //add Q_k's
+		}
+		return contrib;
+	}
+
+	/*
+	 * Function: get_AND_S (entire chunk)
+	 * bottom chunk of contrib matrix for z
+	 */	
+	const BitMatrix<N> get_AND_S(const BitMatrix<3*N> &Y1, const BitMatrix<3*N> &Y2) const{
+		BitMatrix<N> contrib = get_AND_Sk(0, Y1, Y2);
+		for (size_t level = 1; level < threeNN; ++level) {
+			contrib = BitMatrix<N>::aug_v(contrib, get_AND_Sk(level, Y1, Y2)); //add S_k's
+		}	
+		return contrib;
+	}	
 };
 
 #endif
