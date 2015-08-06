@@ -188,9 +188,12 @@ public:
 			assert(numCols == rhs.colCount());
 		}
 		for(size_t i = 0; i < numRows; ++i){
+			result.setRow(i, result.getRow(i) ^ rhs.getRow(i));
+			/*
 			for(size_t j = 0; j < numCols; ++j){
 				result.set(i, j, get(i, j)^rhs.get(i, j));
 			}
+			*/
 		}
 		return result;
 	}
