@@ -99,14 +99,14 @@ public:
 		size_t input_count = 0;
 		size_t subLength = numInputBits;
 		for(size_t i = 0; i < numInputBits; ++i){ 
-			BitMatrix<NUM_OUTPUTS> A_i = Ct.template pMult<NUM_OUTPUTS>(_contributionsT, i, numInputBits - 1, input_count, input_count + subLength - 1);
+			BitMatrix<NUM_OUTPUTS> Ai = Ct.template pMult<NUM_OUTPUTS>(_contributionsT, i, numInputBits - 1, input_count, input_count + subLength - 1);
 			input_count += subLength;
 			--subLength;
 			for(size_t j = 0; j < numInnerInputBits; ++j){
 				if(C.get(i, j)){ 
 					for(size_t k = 0; k < numInnerInputBits; ++k){
 						size_t newIndex = MultiQuadTuple<NUM_INNERINPUTS, NUM_OUTPUTS>::getIndex(j, k); 
-						result.setRow(newIndex, result.getRow(newIndex) ^ A_i.getRow(k));
+						result.setRow(newIndex, result.getRow(newIndex) ^ Ai.getRow(k));
 					}
 				}
 			}
