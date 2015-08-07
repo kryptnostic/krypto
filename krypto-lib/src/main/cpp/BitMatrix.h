@@ -716,13 +716,11 @@ public:
 	static const BitMatrix<COLS> aug_v (const BitMatrix<COLS> & top, const BitMatrix<COLS> & bot){ //TODO: optimize
 		unsigned int t_rows = top.rowCount();
 		unsigned int b_rows = bot.rowCount();
-		if(DEBUG) assert(t_rows == b_rows);
 		vector< BitVector<COLS> > rows;
 		rows.reserve(t_rows + b_rows);
-		for(size_t i = 0; i < t_rows; ++i) rows.push_back(top.getRow(i));
-		for(size_t i = 0; i < b_rows; ++i) rows.push_back(bot.getRow(i));
-		BitMatrix<COLS> M(rows);
-		return M;
+		rows.insert(rows.end(), top._rows.begin(), top._rows.end());
+		rows.insert(rows.end(), bot._rows.begin(), bot._rows.end());
+		return BitMatrix<COLS>(rows);
 	}
 
 	/*
@@ -735,15 +733,11 @@ public:
 		unsigned int t_rows = top.rowCount();
 		unsigned int m_rows = mid.rowCount();
 		unsigned int b_rows = bot.rowCount();
-		if(DEBUG) {
-			assert(t_rows == m_rows);
-			assert(t_rows == b_rows);
-		}
 		vector< BitVector<COLS> > rows;
 		rows.reserve(t_rows + m_rows + b_rows);
-		for(size_t i = 0; i < t_rows; ++i) rows.push_back(top.getRow(i));
-		for(size_t i = 0; i < m_rows; ++i) rows.push_back(mid.getRow(i));
-		for(size_t i = 0; i < b_rows; ++i) rows.push_back(bot.getRow(i));
+		rows.insert(rows.end(), top._rows.begin(), top._rows.end());
+		rows.insert(rows.end(), mid._rows.begin(), mid._rows.end());
+		rows.insert(rows.end(), bot._rows.begin(), bot._rows.end());
 		return BitMatrix<COLS>(rows);
 	}
 
