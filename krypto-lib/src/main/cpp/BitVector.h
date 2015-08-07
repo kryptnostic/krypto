@@ -358,12 +358,12 @@ public:
     }
 
     /*
-     * Function: vcat(v1, v2)
+     * Function: vCat(v1, v2)
      * Returns a BitVector resulting from the concatenation of
      * two given BitVectors
      */
     template <unsigned int N1, unsigned int N2>
-    static const BitVector<N1 + N2> vcat(BitVector<N1> & v1, BitVector<N2> & v2){
+    static const BitVector<N1 + N2> vCat(BitVector<N1> & v1, BitVector<N2> & v2){
         const int N_SUM = N1 + N2;
         BitVector<N_SUM> result;
         unsigned long long *b1 = v1.elements();
@@ -374,12 +374,12 @@ public:
     }
 
     /*
-     * Function: vcat(v1, v2, v3)
+     * Function: vCat(v1, v2, v3)
      * Returns a BitVector resulting from the concatenation of
      * three given BitVectors
      */
     template <unsigned int N1, unsigned int N2, unsigned int N3>
-    static const BitVector<N1 + N2 + N3> vcat(BitVector<N1> & v1, BitVector<N2> & v2, BitVector<N3> & v3){
+    static const BitVector<N1 + N2 + N3> vCat(BitVector<N1> & v1, BitVector<N2> & v2, BitVector<N3> & v3){
         const int N_SUM = N1 + N2 + N3;
         BitVector<N_SUM> result;
         unsigned long long *b1 = v1.elements();

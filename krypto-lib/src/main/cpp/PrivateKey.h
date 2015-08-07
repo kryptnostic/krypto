@@ -49,7 +49,7 @@ public:
 		BitVector<N> r = BitVector<N>::randomVector();
 		BitVector<N> top = _B.template operator*<N>(m) ^ (r ^ _f(r));
 		BitVector<N> bottom = _A.template operator*<N>(r);
-		return _M.template operator*<2*N>(BitVector<N>::vcat(top, bottom));
+		return _M.template operator*<2*N>(BitVector<N>::vCat(top, bottom));
 	}
 
     /*

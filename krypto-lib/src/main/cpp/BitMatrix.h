@@ -655,13 +655,13 @@ public:
 	}
 
 	/*
-     * Function: aug_h(lhs, rhs)
+     * Function: augH(lhs, rhs)
      * Returns the matrix resulting from horizontal augmentation
      * of two given matrices
      * Assumes the given matrixes have the same number of rows
      */
 	template <unsigned int COLS1, unsigned int COLS2> //TODO: optimize
-	static const BitMatrix<COLS1 + COLS2> aug_h (const BitMatrix<COLS1> & lhs, const BitMatrix<COLS2> & rhs){
+	static const BitMatrix<COLS1 + COLS2> augH (const BitMatrix<COLS1> & lhs, const BitMatrix<COLS2> & rhs){
 		unsigned int l_rows = lhs.rowCount();
 		unsigned int r_rows = rhs.rowCount();
 		if(DEBUG) assert(l_rows == r_rows); //same height 
@@ -671,19 +671,19 @@ public:
 		for(size_t i = 0; i < l_rows; ++i){
 			BitVector<COLS1> lv = lhs.getRow(i);
 			BitVector<COLS2> rv = rhs.getRow(i);
-			rows[i] = BitVector<COLS>::vcat(lv, rv);
+			rows[i] = BitVector<COLS>::vCat(lv, rv);
 		}
 		return BitMatrix<COLS>(rows);
 	}
 
 	/*
-     * Function: aug_h(lhs, mid, rhs)
+     * Function: augH(lhs, mid, rhs)
      * Returns the matrix resulting from horizontal augmentation
      * of three given matrices
      * Assumes the given matrixes have the same number of rows
      */
 	template <unsigned int COLS1, unsigned int COLS2, unsigned int COLS3> //TODO: optimize
-	static const BitMatrix<COLS1 + COLS2 + COLS3> aug_h(const BitMatrix<COLS1> & lhs, const BitMatrix<COLS2> & mid, const BitMatrix<COLS3> & rhs){
+	static const BitMatrix<COLS1 + COLS2 + COLS3> augH(const BitMatrix<COLS1> & lhs, const BitMatrix<COLS2> & mid, const BitMatrix<COLS3> & rhs){
 		unsigned int l_rows = lhs.rowCount();
 		if(DEBUG) { //same height 
 			assert(l_rows == mid.rowCount());
@@ -694,18 +694,18 @@ public:
 			BitVector<COLS1> lv = lhs.getRow(i);
 			BitVector<COLS2> mv = mid.getRow(i);
 			BitVector<COLS3> rv = rhs.getRow(i);
-			rows[i] = BitVector<COLS>::vcat(lv, mv, rv);
+			rows[i] = BitVector<COLS>::vCat(lv, mv, rv);
 		}
 		return BitMatrix<COLS>(rows);
 	}
 
 	/*
-     * Function: aug_v(top, bot)
+     * Function: augV(top, bot)
      * Returns the matrix resulting from vertical augmentation
      * of two given matrices
      * Assumes the given matrixes have the same number of rows
      */
-	static const BitMatrix<COLS> aug_v (const BitMatrix<COLS> & top, const BitMatrix<COLS> & bot){ //TODO: optimize
+	static const BitMatrix<COLS> augV (const BitMatrix<COLS> & top, const BitMatrix<COLS> & bot){ //TODO: optimize
 		unsigned int t_rows = top.rowCount();
 		unsigned int b_rows = bot.rowCount();
 		vector< BitVector<COLS> > rows;
@@ -716,12 +716,12 @@ public:
 	}
 
 	/*
-     * Function: aug_v(top, mid, bot)
+     * Function: augV(top, mid, bot)
      * Returns the matrix resulting from vertical augmentation
      * of two given matrices
      * Assumes the given matrixes have the same number of rows
      */
-	static const BitMatrix<COLS> aug_v(const BitMatrix<COLS> & top, const BitMatrix<COLS> & mid, const BitMatrix<COLS> & bot){ //TODO: optimize
+	static const BitMatrix<COLS> augV(const BitMatrix<COLS> & top, const BitMatrix<COLS> & mid, const BitMatrix<COLS> & bot){ //TODO: optimize
 		unsigned int t_rows = top.rowCount();
 		unsigned int m_rows = mid.rowCount();
 		unsigned int b_rows = bot.rowCount();
@@ -734,12 +734,12 @@ public:
 	}
 
 	/*
-     * Function: split_h_2(index)
+     * Function: splitH2(index)
      * Returns the left or right half of the current BitMatrix
      * Assumes the the number of columns is divisible by 2
      */
 	//TODO: unify 2 functions below if needed
-	const BitMatrix<COLS/2> split_h_2(int index) const{
+	const BitMatrix<COLS/2> splitH2(int index) const{
 		if(DEBUG) assert(index >= 0 && index < 2); //index not OB
 		const int SUBCOLS = COLS / 2;
 		int numRows = rowCount();
@@ -752,11 +752,11 @@ public:
 	}
 
 	/*
-     * Function: split_h_3(index)
+     * Function: splitH3(index)
      * Returns a specified horizontal third of the current BitMatrix
      * Assumes the the number of columns is divisible by 3
      */
-	const BitMatrix<COLS/3> split_h_3(int index) const{
+	const BitMatrix<COLS/3> splitH3(int index) const{
 		if(DEBUG) assert(index >= 0 && index < 3); //index not OB
 		const int SUBCOLS = COLS / 3;
 		int numRows = rowCount();
@@ -769,11 +769,11 @@ public:
 	}
 
 	/*
-     * Function: split_v_2(index)
+     * Function: splitV2(index)
      * Returns the top or bottom half of the current BitMatrix
      * Assumes the the number of rows is divisible by 2
      */
-	const BitMatrix<COLS> split_v_2 (int index) const{
+	const BitMatrix<COLS> splitV2 (int index) const{
 		if(DEBUG) assert(index >= 0 && index < 2);
 		const unsigned int sub_rowCount = _rows.size() / 2;
 		unsigned int start = index * sub_rowCount;
@@ -782,11 +782,11 @@ public:
 	}
 
 	/*
-     * Function: split_v_3(index)
+     * Function: splitV3(index)
      * Returns a specified vertical third of the current BitMatrix
      * Assumes the the number of rows is divisible by 3
      */
-	const BitMatrix<COLS> split_v_3 (int index) const{
+	const BitMatrix<COLS> splitV3 (int index) const{
 		if(DEBUG) assert(index >= 0 && index < 3);
 		const unsigned int sub_rowCount = _rows.size() / 3;
 		unsigned int start = index * sub_rowCount;
@@ -795,11 +795,11 @@ public:
 	}
 
 	/*
-     * Function: proj_matrix(start, end)
+     * Function: projMatrix(start, end)
      * Return a projection matrix for the coordinates between start and end inclusive
      * The projection matrix has 1s in the diagonal between the given indices inclusive
      */
-	const static BitMatrix<COLS> proj_matrix (int start, int end) {
+	const static BitMatrix<COLS> projMatrix (int start, int end) {
 		if(DEBUG) assert(start >= 0 && start < COLS && end >= 0 && end < COLS && start <= end);
 		BitMatrix<COLS> result = BitMatrix<COLS>::squareZeroMatrix();
 		

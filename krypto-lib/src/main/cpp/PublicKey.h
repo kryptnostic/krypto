@@ -24,26 +24,26 @@ class PublicKey{
 public:
 	PublicKey(BridgeKey<N,L> &bk) : 
 	_bk(bk),
-	//_gu1(bk.get_UNARY_g1()),
-	//_gu2(bk.get_UNARY_g2()),
-	//_Z(bk.get_LMM_Z()),
-	_gb1(bk.get_BINARY_g1()),
-	_gb2(bk.get_BINARY_g2()),
-	_Xx(bk.get_XOR_Xx()),
-	_Xy(bk.get_XOR_Xy()),
-	_Y(bk.get_XOR_Y()),
-	_Z1(bk.get_AND_Z1()),
-	_Z2(bk.get_AND_Z2()),
-	_z(bk.get_AND_z())
+	//_gu1(bk.getUnaryG1()),
+	//_gu2(bk.getUnaryG2()),
+	//_Z(bk.getLMMZ()),
+	_gb1(bk.getBinaryG1()),
+	_gb2(bk.getBinaryG2()),
+	_Xx(bk.getXORXx()),
+	_Xy(bk.getXORXy()),
+	_Y(bk.getXORY()),
+	_Z1(bk.getANDZ1()),
+	_Z2(bk.getANDZ2()),
+	_z(bk.getANDz())
 	{
 	}
 
 	const BitVector<2*N> homomorphicLMM(BitMatrix<N> & K, BitVector<2*N> &x) const{
-		MultiQuadTuple<2*N, 2*N> _gu1 = _bk.get_UNARY_g1();
-		MultiQuadTuple<2*N, 2*N> _gu2 = _bk.get_UNARY_g2();
-		BitMatrix<4*N> _Z = _bk.get_LMM_Z(K);
+		MultiQuadTuple<2*N, 2*N> _gu1 = _bk.getUnaryG1();
+		MultiQuadTuple<2*N, 2*N> _gu2 = _bk.getUnaryG2();
+		BitMatrix<4*N> _Z = _bk.getLMMZ(K);
 		BitVector<2*N> t = _gu2(_gu1(x));
-		BitVector<4*N> inner = BitVector<4*N>::vcat(x, t);
+		BitVector<4*N> inner = BitVector<4*N>::vCat(x, t);
 
 		return _Z.template operator*<2*N>(inner);
 	}
@@ -55,7 +55,7 @@ public:
 
 	const BitVector<2*N> homomorphicAND(BitVector<2*N> &x, BitVector<2*N> &y) const{
 		BitVector<3*N> t = calculateT(x, y);
-		BitVector<7*N> coordinates = BitVector<7*N>::vcat(x, y, t);
+		BitVector<7*N> coordinates = BitVector<7*N>::vCat(x, y, t);
 		
 		BitVector<2*N> left = _z(coordinates);
 		BitVector<2*N> mid = _Z1.template operator*<2*N>(x);
@@ -82,7 +82,7 @@ private:
 	unsigned int NN = N << 6;
 
 	const BitVector<3*N> calculateT(BitVector<2*N> &x, BitVector<2*N> &y) const{
-		BitVector<4*N> concatXY = BitVector<4*N>::vcat(x, y);
+		BitVector<4*N> concatXY = BitVector<4*N>::vCat(x, y);
 		return _gb2(_gb1(concatXY));
 	}
 };

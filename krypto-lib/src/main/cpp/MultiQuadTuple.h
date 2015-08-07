@@ -135,25 +135,25 @@ public:
 	}
 
 	/*
-	 * Function: aug_v(f1, f2)
+	 * Function: augV(f1, f2)
 	 * Returns the matrix resulting from vertical augmentation of two given MultiQuadTuples
 	 */
 	template<unsigned int NUM_OUTPUTS1, unsigned int NUM_OUTPUTS2>
-	static const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS1+NUM_OUTPUTS2> aug_v(const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS1> & f1, const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS2> & f2){
+	static const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS1+NUM_OUTPUTS2> augV(const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS1> & f1, const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS2> & f2){
 		BitMatrix<NUM_OUTPUTS1> C1 = f1.getTransposedContributionMatrix();
 		BitMatrix<NUM_OUTPUTS2> C2 = f2.getTransposedContributionMatrix();
 		BitVector<NUM_OUTPUTS1> c1 = f1.getConstantTerms();
 		BitVector<NUM_OUTPUTS2> c2 = f2.getConstantTerms(); 
 		const unsigned int NUM_OUTPUTS_SUM = NUM_OUTPUTS1 + NUM_OUTPUTS2;
-		return MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS_SUM>(BitMatrix<NUM_OUTPUTS_SUM>::aug_h(C1, C2), BitVector<NUM_OUTPUTS_SUM>::vcat(c1, c2));
+		return MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS_SUM>(BitMatrix<NUM_OUTPUTS_SUM>::augH(C1, C2), BitVector<NUM_OUTPUTS_SUM>::vCat(c1, c2));
 	}	
 
 	/*
-	 * Function: aug_v(f1, f2, f3)
+	 * Function: augV(f1, f2, f3)
 	 * Returns the matrix resulting from vertical augmentation of three given MultiQuadTuples
 	 */
 	template<unsigned int NUM_OUTPUTS1, unsigned int NUM_OUTPUTS2, unsigned int NUM_OUTPUTS3>
-	static const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS1+NUM_OUTPUTS2+NUM_OUTPUTS3> aug_v(const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS1> & f1, const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS2> & f2, const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS3> & f3){
+	static const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS1+NUM_OUTPUTS2+NUM_OUTPUTS3> augV(const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS1> & f1, const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS2> & f2, const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS3> & f3){
 		BitMatrix<NUM_OUTPUTS1> C1 = f1.getTransposedContributionMatrix();
 		BitMatrix<NUM_OUTPUTS2> C2 = f2.getTransposedContributionMatrix();
 		BitMatrix<NUM_OUTPUTS2> C3 = f3.getTransposedContributionMatrix();
@@ -161,7 +161,7 @@ public:
 		BitVector<NUM_OUTPUTS2> c2 = f2.getConstantTerms();
 		BitVector<NUM_OUTPUTS2> c3 = f3.getConstantTerms(); 
 		const unsigned int NUM_OUTPUTS_SUM = NUM_OUTPUTS1 + NUM_OUTPUTS2 + NUM_OUTPUTS3;
-		return MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS_SUM>(BitMatrix<NUM_OUTPUTS_SUM>::aug_h(C1, C2, C3), BitVector<NUM_OUTPUTS_SUM>::vcat(c1, c2, c3));
+		return MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS_SUM>(BitMatrix<NUM_OUTPUTS_SUM>::augH(C1, C2, C3), BitVector<NUM_OUTPUTS_SUM>::vCat(c1, c2, c3));
 	}
 
 /* Access */
