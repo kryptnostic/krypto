@@ -84,6 +84,24 @@ public:
         return result;
     }
 
+    /*
+     * Function: randomVectorLeadingZeroes(n)
+     * Returns a BitVector with n leading zeroes followed by random values
+     * Assumes n < numBits
+     */
+    static const BitVector<N> randomVectorLeadingZeroes(unsigned int n) {
+        BitVector<N> result;
+        
+        while( result.isZero() ) {
+            std::fread(&result._bits, sizeof( unsigned long long ), N, urandom );
+        }
+
+        for (int i = 0; i < n; ++i) {
+            result.clear(i);
+        }
+        return result;
+    }
+
 /* Operators */
 
     /*
