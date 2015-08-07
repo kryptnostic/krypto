@@ -643,7 +643,7 @@ public:
 		for(size_t i = 0; i < l_rows; ++i){
 			BitVector<COLS1> lv = lhs.getRow(i);
 			BitVector<COLS2> rv = rhs.getRow(i);
-			rows[i] = BitVector<COLS>::vcat2(lv, rv);
+			rows[i] = BitVector<COLS>::vcat(lv, rv);
 		}
 		BitMatrix<COLS> M(rows);
 		return M;
@@ -667,7 +667,7 @@ public:
 			BitVector<COLS1> lv = lhs.getRow(i);
 			BitVector<COLS2> mv = mid.getRow(i);
 			BitVector<COLS3> rv = rhs.getRow(i);
-			rows[i] = BitVector<COLS>::vcat3(lv, mv, rv);
+			rows[i] = BitVector<COLS>::vcat(lv, mv, rv);
 		}
 		BitMatrix<COLS> M(rows);
 		return M;
@@ -788,12 +788,12 @@ public:
      */
 	const static BitMatrix<COLS> proj_matrix (int start, int end) {
 		if(DEBUG) assert(start >= 0 && start < COLS && end >= 0 && end < COLS && start <= end);
-		BitMatrix<COLS> proj = BitMatrix<COLS>::squareZeroMatrix();
+		BitMatrix<COLS> result = BitMatrix<COLS>::squareZeroMatrix();
 		
 		for (int i = start; i <= end; ++i) {
-			proj.set(i, i);
+			result.set(i, i);
 		}
-		return proj;
+		return result;
 	}
 
 	/* Print */

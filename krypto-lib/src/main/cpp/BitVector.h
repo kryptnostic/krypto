@@ -328,12 +328,12 @@ public:
     }
 
     /*
-     * Function: vcat2(v1, v2)
+     * Function: vcat(v1, v2)
      * Returns a BitVector resulting from the concatenation of
      * two given BitVectors
      */
     template <unsigned int N1, unsigned int N2>
-    static const BitVector<N1 + N2> vcat2(BitVector<N1> & v1, BitVector<N2> & v2){
+    static const BitVector<N1 + N2> vcat(BitVector<N1> & v1, BitVector<N2> & v2){
         const int N_SUM = N1 + N2;
         BitVector<N_SUM> result;
         unsigned long long *b1 = v1.elements();
@@ -344,12 +344,12 @@ public:
     }
 
     /*
-     * Function: vcat3(v1, v2, v3)
+     * Function: vcat(v1, v2, v3)
      * Returns a BitVector resulting from the concatenation of
      * three given BitVectors
      */
     template <unsigned int N1, unsigned int N2, unsigned int N3>
-    static const BitVector<N1 + N2 + N3> vcat3(BitVector<N1> & v1, BitVector<N2> & v2, BitVector<N3> & v3){
+    static const BitVector<N1 + N2 + N3> vcat(BitVector<N1> & v1, BitVector<N2> & v2, BitVector<N3> & v3){
         const int N_SUM = N1 + N2 + N3;
         BitVector<N_SUM> result;
         unsigned long long *b1 = v1.elements();
@@ -362,24 +362,24 @@ public:
     }
 
     /*
-     * Function: proj2(v1, v2)
+     * Function: proj(v1, v2)
      * Sets two input BitVectors of half the length of the current
      * BitVector to each contain half the values of the current BitVector
      * Assumes that the length of the current Bitvector is divisible by 2
      */
-    void proj2(BitVector<(N>>1)> & v1, BitVector<(N>>1)> & v2) const{
+    void proj(BitVector<(N>>1)> & v1, BitVector<(N>>1)> & v2) const{
         unsigned int M = (N >> 1);
         memcpy(v1.elements(), _bits, M*sizeof(unsigned long long));
         memcpy(v2.elements(), _bits+M, M*sizeof(unsigned long long));
     }
 
     /*
-     * Function: proj3(v1, v2, v3)
+     * Function: proj(v1, v2, v3)
      * Sets three input BitVectors of one-third the length of the current
      * BitVector to each contain one-third the values of the current BitVector
      * Assumes that the length of the current BitVector is divisible by 3
      */
-    void proj3(BitVector<(N/3)> & v1, BitVector<(N/3)> & v2, BitVector<(N/3)> & v3) const{
+    void proj(BitVector<(N/3)> & v1, BitVector<(N/3)> & v2, BitVector<(N/3)> & v3) const{
         unsigned int M = N/3;
         memcpy(v1.elements(), _bits, M*sizeof(unsigned long long));
         memcpy(v2.elements(), _bits+M, M*sizeof(unsigned long long));

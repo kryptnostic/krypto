@@ -49,8 +49,8 @@ public:
 		BitVector<N> r = BitVector<N>::randomVector();
 		BitVector<N> top = _B.template operator*<N>(m) ^ (r ^ _f(r));
 		BitVector<N> bottom = _A.template operator*<N>(r);
-		BitVector<2*N> result = BitVector<N>::vcat2(top, bottom);
-		return _M.template operator*<2*N>(BitVector<N>::vcat2(top, bottom));
+		BitVector<2*N> result = BitVector<N>::vcat(top, bottom);
+		return _M.template operator*<2*N>(BitVector<N>::vcat(top, bottom));
 	}
 
     /*
@@ -60,7 +60,7 @@ public:
 	const BitVector<N> decrypt(const BitVector<2*N> &x) const{//returns m = D(x) given a ciphertext x
 		BitVector<2*N> mix = _M.solve(x);
 		BitVector<N> x1, x2;
-		mix.proj2(x1, x2);
+		mix.proj(x1, x2);
 		BitVector<N> Aix2 = _A.solve(x2);
 		BitVector<N> fAix2 = _f(Aix2);
 		return _B.solve(x1 ^ (Aix2 ^ fAix2)); 

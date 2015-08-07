@@ -40,7 +40,7 @@ public:
 
 	const BitVector<2*N> homomorphicLMM(BitVector<2*N> &x) const{
 		BitVector<2*N> t = _gu2(_gu1(x));
-		BitVector<4*N> inner = BitVector<4*N>::vcat2(x, t);
+		BitVector<4*N> inner = BitVector<4*N>::vcat(x, t);
 
 		return _Z.template operator*<2*N>(inner);
 	}
@@ -52,7 +52,7 @@ public:
 
 	const BitVector<2*N> homomorphicAND(BitVector<2*N> &x, BitVector<2*N> &y) const{
 		BitVector<3*N> t = calculateT(x, y);
-		BitVector<7*N> coordinates = BitVector<7*N>::vcat3(x, y, t);
+		BitVector<7*N> coordinates = BitVector<7*N>::vcat(x, y, t);
 		
 		BitVector<2*N> left = _z(coordinates);
 		BitVector<2*N> mid = _Z1.template operator*<2*N>(x);
@@ -76,7 +76,7 @@ private:
 	BitMatrix<2*N> _Z2;
 
 	const BitVector<3*N> calculateT(BitVector<2*N> &x, BitVector<2*N> &y) const{
-		BitVector<4*N> concatXY = BitVector<4*N>::vcat2(x, y);
+		BitVector<4*N> concatXY = BitVector<4*N>::vcat(x, y);
 		return _gb2(_gb1(concatXY));
 	}
 };
