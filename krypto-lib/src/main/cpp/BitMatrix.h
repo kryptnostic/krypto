@@ -650,13 +650,13 @@ public:
 	}
 
 	/*
-     * Function: aug_h_3(lhs, mid, rhs)
+     * Function: aug_h(lhs, mid, rhs)
      * Returns the matrix resulting from horizontal augmentation
      * of three given matrices
      * Assumes the given matrixes have the same number of rows
      */
 	template <unsigned int COLS1, unsigned int COLS2, unsigned int COLS3> //TODO: optimize
-	static const BitMatrix<COLS1 + COLS2 + COLS3> aug_h_3(const BitMatrix<COLS1> & lhs, const BitMatrix<COLS2> & mid, const BitMatrix<COLS3> & rhs){
+	static const BitMatrix<COLS1 + COLS2 + COLS3> aug_h(const BitMatrix<COLS1> & lhs, const BitMatrix<COLS2> & mid, const BitMatrix<COLS3> & rhs){
 		unsigned int l_rows = lhs.rowCount();
 		if(DEBUG) { //same height 
 			assert(l_rows == mid.rowCount());
@@ -692,12 +692,12 @@ public:
 	}
 
 	/*
-     * Function: aug_v_3(top, mid, bot)
+     * Function: aug_v(top, mid, bot)
      * Returns the matrix resulting from vertical augmentation
      * of two given matrices
      * Assumes the given matrixes have the same number of rows
      */
-	static const BitMatrix<COLS> aug_v_3(const BitMatrix<COLS> & top, const BitMatrix<COLS> & mid, const BitMatrix<COLS> & bot){ //TODO: optimize
+	static const BitMatrix<COLS> aug_v(const BitMatrix<COLS> & top, const BitMatrix<COLS> & mid, const BitMatrix<COLS> & bot){ //TODO: optimize
 		unsigned int t_rows = top.rowCount();
 		unsigned int m_rows = mid.rowCount();
 		unsigned int b_rows = bot.rowCount();

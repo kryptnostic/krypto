@@ -129,7 +129,7 @@ public:
 		MultiQuadTuple<4*N, N> top = f.get(0) * mat_top;
 		MultiQuadTuple<4*N, N> mid = f.get(0) * mat_mid;
 		MultiQuadTuple<4*N, N> bot = f.get(0) * (mat_botX ^ mat_botY);
-		MultiQuadTuple<4*N, 3*N> aug = MultiQuadTuple<4*N, 3*N>::aug_v(MultiQuadTuple<4*N, 2*N>::aug_v(top, mid), bot);
+		MultiQuadTuple<4*N, 3*N> aug = MultiQuadTuple<4*N, 3*N>::aug_v(top, mid, bot);
 		return aug.template rMult<3*N>(_Cb1);
 	}
 
@@ -148,7 +148,7 @@ public:
 		MultiQuadTuple<3*N, N> top = f.get(1) * mat_top;
 		MultiQuadTuple<3*N, N> mid = f.get(1) * mat_mid;
 		MultiQuadTuple<3*N, N> bot = f.get(1) * mat_bot;
-		MultiQuadTuple<3*N, 3*N> aug = MultiQuadTuple<3*N, 3*N>::aug_v(MultiQuadTuple<3*N, 2*N>::aug_v(top, mid), bot);
+		MultiQuadTuple<3*N, 3*N> aug = MultiQuadTuple<3*N, 3*N>::aug_v(top, mid, bot);
 		return aug.template rMult<3*N>(_Cb2);
 	}
 
@@ -189,7 +189,7 @@ public:
 	const BitMatrix<3*N> get_XOR_Y() const{
 		BitMatrix<N> idN = BitMatrix<N>::squareIdentityMatrix();
 
-		BitMatrix<3*N> Y_top = BitMatrix<3*N>::aug_h(idN, BitMatrix<2*N>::aug_h(idN, idN));
+		BitMatrix<3*N> Y_top = BitMatrix<3*N>::aug_h(idN, idN, idN);
 		return _M * BitMatrix<3*N>::aug_v(Y_top, BitMatrix<3*N>::zeroMatrix(NN)) * _Cb2.inv();
 	}
 
@@ -206,7 +206,7 @@ public:
 		BitMatrix<3*N> Y3 = get_AND_Y3();
 		BitMatrix<7*N> Y3t = BitMatrix<7*N>::aug_h(BitMatrix<4*N>::zeroMatrix(N << 6), Y3);
 
-		BitMatrix<N> contrib = BitMatrix<N>::aug_v_3(get_AND_P(X, Y2), get_AND_Q(X, Y1), get_AND_S(Y1, Y2));
+		BitMatrix<N> contrib = BitMatrix<N>::aug_v(get_AND_P(X, Y2), get_AND_Q(X, Y1), get_AND_S(Y1, Y2));
 		MultiQuadTuple<7*N, N> z_top(contrib, BitVector<N>::zeroVector());
 		z_top = z_top.template rMult<N>(_pk.getB());
 		z_top = z_top ^ MultiQuadTuple<7*N, N>::getMultiQuadTuple(Y3t);
@@ -332,7 +332,7 @@ private:
 				}				
 			}
 		}
-		return BitMatrix<N>::aug_v(BitMatrix<N>::aug_v(top, mid), bot);
+		return BitMatrix<N>::aug_v(top, mid, bot);
 	}
 
 	/*
