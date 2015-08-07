@@ -39,8 +39,8 @@ public:
 	}
 
 	const BitVector<2*N> homomorphicLMM(BitMatrix<N> & K, BitVector<2*N> &x) const{
-		MultiQuadTuple<2*N, 2*N> _gu1 = _bk.get_UNARY_g1(K);
-		MultiQuadTuple<2*N, 2*N> _gu2 = _bk.get_UNARY_g2(K);
+		MultiQuadTuple<2*N, 2*N> _gu1 = _bk.get_UNARY_g1();
+		MultiQuadTuple<2*N, 2*N> _gu2 = _bk.get_UNARY_g2();
 		BitMatrix<4*N> _Z = _bk.get_LMM_Z(K);
 		BitVector<2*N> t = _gu2(_gu1(x));
 		BitVector<4*N> inner = BitVector<4*N>::vcat(x, t);

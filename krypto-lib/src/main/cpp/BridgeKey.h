@@ -58,7 +58,7 @@ public:
 	 * Function: get_UNARY_g1
 	 * Returns the first function of the obfuscation chain for unary operations (e.g. left matrix multiplication)
 	 */
-	const MultiQuadTuple<2*N, 2*N> get_UNARY_g1(const BitMatrix<N> & K) const{
+	const MultiQuadTuple<2*N, 2*N> get_UNARY_g1() const{
 		MultiQuadTupleChain<N,L> f = _pk.getf();
 
 		BitMatrix<2*N> mat_top = _AiM2;
@@ -74,7 +74,7 @@ public:
 	 * Function: get_UNARY_g2
 	 * Returns the second function of the obfuscation chain for unary operations (e.g. left matrix multiplication)
 	 */
-	const MultiQuadTuple<2*N, 2*N> get_UNARY_g2(const BitMatrix<N> & K) const{
+	const MultiQuadTuple<2*N, 2*N> get_UNARY_g2() const{
 		MultiQuadTupleChain<N,L> f = _pk.getf();
 
 		BitMatrix<2*N> mat_top = _Cu1.inv().split_v_2(0);
