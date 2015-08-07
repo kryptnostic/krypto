@@ -276,6 +276,19 @@ public:
     }
 
     /*
+     * Function: getFirstZero()
+     * Returns the index of the first bit that is zero
+     * Returns -1 if all bits are 1
+     */
+    int getFirstZero() const {
+        int r = 0;
+        for (int i = 0; i < numBits; ++i) {
+            if (get(i) == 0) return i;
+        }
+        return -1;
+    }
+
+    /*
      * Function: set(n)
      * Sets the bit at a given index to 1
      */
