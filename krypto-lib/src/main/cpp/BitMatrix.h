@@ -129,7 +129,7 @@ public:
 			T.setRow(r, v); //set rth row to v
 
 			usedRows.insert(r);
-			while (usedRows.count(leadingZeroes) > 0) leadingZeroes++; //update leadingZeroes
+			while (usedRows.count(leadingZeroes) > 0) ++leadingZeroes; //update leadingZeroes
 		}
 		return A*T;		
 	}
@@ -323,6 +323,17 @@ public:
 		if(DEBUG) assert(colIndex >= 0 && colIndex < colCount());
 		int numRows = ROWS << 6;
 		for(int i = 0; i < numRows; ++i) set(i, colIndex, v[i]);
+	}
+
+    /*
+     * Function: setCol(colIndex, val)
+     * Sets an entire given col to a given constant
+     */
+	template <unsigned int ROWS>
+	void setCol(int colIndex, unsigned int val){
+		if(DEBUG) assert(colIndex >= 0 && colIndex < colCount());
+		int numRows = ROWS << 6;
+		for(int i = 0; i < numRows; ++i) set(i, colIndex, val);
 	}
 
     /*
