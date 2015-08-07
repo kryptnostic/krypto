@@ -100,53 +100,39 @@ public:
     /*
      * Function: randomInvertibleMatrix()
      * Returns a random non-identity invertible BitMatrix
+     * Uses modified version of the algorithm by D. Randall
      */
-	static const BitMatrix randomInvertibleMatrix() {//TODO: figure out a better way to generate random invertible matrix
+	static const BitMatrix randomInvertibleMatrix() {
 		int numRows = COLS << 6;
-		BitMatrix<COLS> R = BitMatrix<COLS>::squareRandomMatrix();
-		unsigned int count = 0;
-		while(!R.det() || R.isIdentity()){
-			R = BitMatrix<COLS>::squareRandomMatrix();
-			++count;
-			if(count == 50) return BitMatrix<COLS>::squareIdentityMatrix(); //force termination, not ideal, will update
+		BitMatrix<COLS> A = BitMatrix<COLS>::squareZeroMatrix();
+		BitMatrix<COLS> T = BitMatrix<COLS>::squareZeroMatrix();
+
+		unordered_set<int> usedRows;
+		unsigned int leadingZeroes = 0; //tracks the smallest unused r
+		//bool usedRows[numRows];
+		//memset (&usedRows, 0, numRows * sizeof(bool));
+
+		for(int minorIndex = 0; minorIndex < numRows; ++minorIndex) {
+			BitVector<COLS> v = BitVector<COLS>::randomVectorLeadingZeroes(leadingZeroes); //leading zeroes for performance
+			int r = v.getFirstOne();
+			//while (usedRows[r] && !v.isZero()) { //generate random nonzero vector v with unused first nonzero coord
+			while (usedRows.count(r) > 0 || r == -1) { //generate random nonzero vector v with unused first nonzero coord
+				v = BitVector<COLS>::randomVectorLeadingZeroes(leadingZeroes);
+				r = v.getFirstOne();
+			}
+
+			A.set(minorIndex, r); //first row of minor set to e_r
+
+			for (auto it = usedRows.cbegin(); it != usedRows.cend(); ++it) {
+				v.clear(*it); //set intersection of row with prev cols to 0
+			}
+			T.setRow(r, v); //set rth row to v
+
+			usedRows.insert(r);
+			while (usedRows.count(leadingZeroes) > 0) leadingZeroes++; //update leadingZeroes
 		}
-		return R;		
+		return A*T;		
 	}
-
- //    /*
- //     * Function: randomInvertibleMatrix()
- //     * Returns a random non-identity invertible BitMatrix
- //     */
-	// static const BitMatrix randomInvertibleMatrix2() {//TODO: figure out a better way to generate random invertible matrix
-	// 	int numRows = COLS << 6;
-	// 	BitMatrix<COLS> A = BitMatrix<COLS>::squareZeroMatrix();
-	// 	BitMatrix<COLS> T = BitMatrix<COLS>::
-
-	// 	unordered_set<int> usedRows;
-	// 	//bool usedRows[numRows];
-	// 	//memset (&usedRows, 0, numRows * sizeof(bool));
-
-	// 	for(int minorIndex = 0; minorIndex < numRows; ++minorIndex) {
-	// 		BitVector<COLS> v = BitVector<COLS>::randomVector();
-	// 		int r = v.getFirstZero();
-	// 		//while (usedRows[r] && !v.isZero()) { //generate random nonzero vector v with unused first nonzero coord
-	// 		while (usedRows.find(r) != unordered_set::end && !v.isZero()) { //generate random nonzero vector v with unused first nonzero coord
-	// 			v = BitVector<COLS>::randomVector();
-	// 			r = v.getFirstZero();
-	// 		}
-
-	// 		A.set(minorIndex, r); //first row of minor set to e_r
-
-	// 		for (auto it = usedRows.cbegin(); it != usedRows.cend(); ++it) {
-	// 			v.clear(*it); //set intersection of row with prev cols to 0
-	// 		}
-	// 		T.setRow(r, v); //set rth row of minor to v
-
-	// 		usedRows.insert(r);
-	// 	}
-
-	// 	return A*T;		
-	// }
 
     /*
      * Function: squareIdentityMatrix()

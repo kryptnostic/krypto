@@ -11,40 +11,55 @@ using namespace std;
 #define H 2 
 #define N 1
 #define DEBUG false
-#define TESTRUNS 100
+#define OPRUNS 64
+#define TESTRUNS 10
 
-int main(int argc, char **argv) {
+void testOps() {
+	PrivateKey<N, 2> pk;
+
+	BitMatrix<N> K = BitMatrix<N>::randomMatrix(N << 6);
+	BridgeKey<N, 2> bk(pk, K);
+	PublicKey<N, 2> pub(bk);
+
+	BitVector<N> x = BitVector<N>::randomVector();
+	BitVector<N> y = BitVector<N>::randomVector();
+	BitVector<2*N> encryptedX = pk.encrypt(x);
+	BitVector<2*N> encryptedY = pk.encrypt(y);
+
 	clock_t begin = clock();
+
+	for (int i = 0; i < OPRUNS; ++i) {
+		BitVector<2*N> encryptedLMM = pub.homomorphicLMM(encryptedX);
+		BitVector<2*N> encryptedXOR = pub.homomorphicXOR(encryptedX, encryptedY);
+		BitVector<2*N> encryptedAND = pub.homomorphicAND(encryptedX, encryptedY);
+	}
+
+ 	clock_t end = clock();
+ 	cout << "Time elapsed over " << OPRUNS << " operations of LMM, XOR, and AND: " << double(end - begin) / (CLOCKS_PER_SEC) << " sec" << endl;
+}
+
+void testRuns() {
+		clock_t begin = clock();
 
 	for (int i = 0; i < TESTRUNS; ++i) {
 		// clock_t begin_i = clock();
-		
 		PrivateKey<N, 2> pk;
 
 		BitMatrix<N> K = BitMatrix<N>::randomMatrix(N << 6);
 		BridgeKey<N, 2> bk(pk, K);
 		PublicKey<N, 2> pub(bk);
-
-		BitVector<N> x = BitVector<N>::randomVector();
-		BitVector<N> y = BitVector<N>::randomVector();
-		BitVector<2*N> encryptedX = pk.encrypt(x);
-		BitVector<2*N> encryptedY = pk.encrypt(y);
-
-		BitVector<2*N> encryptedLMM = pub.homomorphicLMM(encryptedX);
-		BitVector<N> unencryptedLMM = pk.decrypt(encryptedLMM);
-
-		BitVector<2*N> encryptedXOR = pub.homomorphicXOR(encryptedX, encryptedY);
-		BitVector<N> unencryptedXOR = pk.decrypt(encryptedXOR);
-
-		BitVector<2*N> encryptedAND = pub.homomorphicAND(encryptedX, encryptedY);
-		BitVector<N> unencryptedAND = pk.decrypt(encryptedAND);
-
+		
 		// clock_t end_i = clock();
 		// cout << "Test Run #" << i << " time: " << double(end_i - begin_i) / (CLOCKS_PER_SEC) << " sec" << endl;
 	}
 
  	clock_t end = clock();
- 	cout << "Average time elapsed over " << TESTRUNS << " runs: " << double(end - begin) / (CLOCKS_PER_SEC * TESTRUNS) << " sec" << endl;
+ 	cout << "Average time elapsed over " << TESTRUNS << " runs of key generation: " << double(end - begin) / (CLOCKS_PER_SEC * TESTRUNS) << " sec" << endl;
+}
+
+int main(int argc, char **argv) {
+	testOps();
+	testRuns();
 
  	fclose(urandom);
 	return 0;
