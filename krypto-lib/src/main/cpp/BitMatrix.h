@@ -349,7 +349,7 @@ public:
      * XORs a given row with a given BitVector
      */
 	inline void xorRow(int rowIndex, const BitVector<COLS> & row){
-		if(DEBUG) assert(rowIndex >= 0 && rowIndex <= rowCount());
+		if(DEBUG) assert(rowIndex >= 0 && rowIndex < rowCount());
 		_rows[rowIndex] ^= row;
 	}
 
@@ -681,8 +681,7 @@ public:
 			BitVector<COLS2> rv = rhs.getRow(i);
 			rows[i] = BitVector<COLS>::vcat(lv, rv);
 		}
-		BitMatrix<COLS> M(rows);
-		return M;
+		return BitMatrix<COLS>(rows);
 	}
 
 	/*
@@ -705,8 +704,7 @@ public:
 			BitVector<COLS3> rv = rhs.getRow(i);
 			rows[i] = BitVector<COLS>::vcat(lv, mv, rv);
 		}
-		BitMatrix<COLS> M(rows);
-		return M;
+		return BitMatrix<COLS>(rows);
 	}
 
 	/*
@@ -746,8 +744,7 @@ public:
 		for(size_t i = 0; i < t_rows; ++i) rows.push_back(top.getRow(i));
 		for(size_t i = 0; i < m_rows; ++i) rows.push_back(mid.getRow(i));
 		for(size_t i = 0; i < b_rows; ++i) rows.push_back(bot.getRow(i));
-		BitMatrix<COLS> M(rows);
-		return M;
+		return BitMatrix<COLS>(rows);
 	}
 
 	/*
@@ -795,7 +792,7 @@ public:
 		const int sub_rowCount = _rows.size() / 2;
 		BitMatrix<COLS> result = BitMatrix<COLS>::zeroMatrix(sub_rowCount);
 		int start = index * sub_rowCount;
-		for(int i = 0; i < sub_rowCount; ++i){
+		for(int i = 0; i < sub_rowCount; ++i){ //TODO: find subvector of vector
 			result.setRow(i, getRow(i+start))                                                                                                                                                                                                                                                                                                                 ;
 		}
 		return result;
