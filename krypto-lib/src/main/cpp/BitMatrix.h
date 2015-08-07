@@ -805,13 +805,18 @@ public:
      */
 	const BitMatrix<COLS> split_v_3 (int index) const{
 		if(DEBUG) assert(index >= 0 && index < 3);
-		const int sub_rowCount = _rows.size() / 3;
+		const unsigned int sub_rowCount = _rows.size() / 3;
+		unsigned int start = index * sub_rowCount;
+		/*
 		BitMatrix<COLS> result = BitMatrix<COLS>::zeroMatrix(sub_rowCount);
 		int start = index * sub_rowCount;
 		for(int i = 0; i < sub_rowCount; ++i){
 			result.setRow(i, getRow(i+start));
 		}
 		return result;
+		*/
+		vector<BitVector<COLS> > subrows(&_rows[index], &_rows[index + sub_rowCount - 1]);
+		return BitMatrix<COLS>(subrows);
 	}
 
 	/*
