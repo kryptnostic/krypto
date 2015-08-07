@@ -13,6 +13,7 @@
 
 #include <vector>
 #include <fstream>
+#include <unordered_set>
 #include "../../main/cpp/BitVector.h"
 //#include "../../../contrib/gtest/gtest.h"
 
@@ -110,6 +111,41 @@ public:
 		}
 		return R;		
 	}
+
+ //    /*
+ //     * Function: randomInvertibleMatrix()
+ //     * Returns a random non-identity invertible BitMatrix
+ //     */
+	// static const BitMatrix randomInvertibleMatrix2() {//TODO: figure out a better way to generate random invertible matrix
+	// 	int numRows = COLS << 6;
+	// 	BitMatrix<COLS> A = BitMatrix<COLS>::squareZeroMatrix();
+	// 	BitMatrix<COLS> T = BitMatrix<COLS>::
+
+	// 	unordered_set<int> usedRows;
+	// 	//bool usedRows[numRows];
+	// 	//memset (&usedRows, 0, numRows * sizeof(bool));
+
+	// 	for(int minorIndex = 0; minorIndex < numRows; ++minorIndex) {
+	// 		BitVector<COLS> v = BitVector<COLS>::randomVector();
+	// 		int r = v.getFirstZero();
+	// 		//while (usedRows[r] && !v.isZero()) { //generate random nonzero vector v with unused first nonzero coord
+	// 		while (usedRows.find(r) != unordered_set::end && !v.isZero()) { //generate random nonzero vector v with unused first nonzero coord
+	// 			v = BitVector<COLS>::randomVector();
+	// 			r = v.getFirstZero();
+	// 		}
+
+	// 		A.set(minorIndex, r); //first row of minor set to e_r
+
+	// 		for (auto it = usedRows.cbegin(); it != usedRows.cend(); ++it) {
+	// 			v.clear(*it); //set intersection of row with prev cols to 0
+	// 		}
+	// 		T.setRow(r, v); //set rth row of minor to v
+
+	// 		usedRows.insert(r);
+	// 	}
+
+	// 	return A*T;		
+	// }
 
     /*
      * Function: squareIdentityMatrix()
