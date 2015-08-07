@@ -275,14 +275,14 @@ public:
     }
 
     /*
-     * Function: getFirstZero()
-     * Returns the index of the first bit that is zero
-     * Returns -1 if all bits are 1
+     * Function: getFirstOne()
+     * Returns the index of the first bit that is 1
+     * Returns -1 if all bits are 0
      */
-    int getFirstZero() const {
+    int getFirstOne() const {
         int r = 0;
         for (int i = 0; i < numBits; ++i) {
-            if (get(i) == 0) return i;
+            if (get(i)) return i;
         }
         return -1;
     }
