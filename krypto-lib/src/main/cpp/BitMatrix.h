@@ -789,13 +789,10 @@ public:
      */
 	const BitMatrix<COLS> split_v_2 (int index) const{
 		if(DEBUG) assert(index >= 0 && index < 2);
-		const int sub_rowCount = _rows.size() / 2;
-		BitMatrix<COLS> result = BitMatrix<COLS>::zeroMatrix(sub_rowCount);
-		int start = index * sub_rowCount;
-		for(int i = 0; i < sub_rowCount; ++i){ //TODO: find subvector of vector
-			result.setRow(i, getRow(i+start))                                                                                                                                                                                                                                                                                                                 ;
-		}
-		return result;
+		const unsigned int sub_rowCount = _rows.size() / 2;
+		unsigned int start = index * sub_rowCount;
+		vector<BitVector<COLS> > subrows(&_rows[start], &_rows[start + sub_rowCount]);
+		return BitMatrix<COLS>(subrows);	
 	}
 
 	/*
@@ -807,8 +804,8 @@ public:
 		if(DEBUG) assert(index >= 0 && index < 3);
 		const unsigned int sub_rowCount = _rows.size() / 3;
 		unsigned int start = index * sub_rowCount;
-		vector<BitVector<COLS> > subrows(&_rows[start], &_rows[start + sub_rowCount - 1]);
-		return BitMatrix<COLS>(subrows);
+		vector<BitVector<COLS> > subrows(&_rows[start], &_rows[start + sub_rowCount]);
+		return BitMatrix<COLS>(subrows);		
 	}
 
 	/*
