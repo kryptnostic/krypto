@@ -22,7 +22,7 @@ using namespace std;
 template<unsigned int N, unsigned int L>
 class PublicKey{
 public:
-	PublicKey(BridgeKey<N,L> &bk, BitMatrix<N> & K) : 
+	PublicKey(BridgeKey<N,L> &bk) : 
 	_bk(bk),
 	//_gu1(bk.get_UNARY_g1()),
 	//_gu2(bk.get_UNARY_g2()),

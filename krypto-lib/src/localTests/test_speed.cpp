@@ -19,7 +19,7 @@ void testOps() {
 
 	BitMatrix<N> K = BitMatrix<N>::randomMatrix(N << 6);
 	BridgeKey<N, 2> bk(pk);
-	PublicKey<N, 2> pub(bk, K);
+	PublicKey<N, 2> pub(bk);
 
 	BitVector<N> x = BitVector<N>::randomVector();
 	BitVector<N> y = BitVector<N>::randomVector();
@@ -47,7 +47,7 @@ void testRuns() {
 
 		BitMatrix<N> K = BitMatrix<N>::randomMatrix(N << 6);
 		BridgeKey<N, 2> bk(pk);
-		PublicKey<N, 2> pub(bk, K);
+		PublicKey<N, 2> pub(bk);
 		
 		// clock_t end_i = clock();
 		// cout << "Test Run #" << i << " time: " << double(end_i - begin_i) / (CLOCKS_PER_SEC) << " sec" << endl;
