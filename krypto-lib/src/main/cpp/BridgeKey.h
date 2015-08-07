@@ -32,7 +32,7 @@ public:
      * Constructs a BridgeKey with a given PrivateKey
      * and BitMatrix K (for left-matrix multiplcation)
      */
-	BridgeKey(PrivateKey<N,L> &pk, BitMatrix<N> K) : 
+	BridgeKey(PrivateKey<N,L> &pk) : 
 	_pk(pk),
 	_R(BitMatrix<N>::randomInvertibleMatrix()),
 	_Rx(BitMatrix<N>::randomInvertibleMatrix()),
@@ -44,14 +44,13 @@ public:
 	_Cu2(pk.getUnaryObfChain()[1]),
 	_Cb1(pk.getBinaryObfChain()[0]),
 	_Cb2(pk.getBinaryObfChain()[1]),
-	_BKBi(pk.getB() * K * pk.getB().inv()),
-	_BKBiAi(_BKBi * pk.getA().inv()),
+	//_BKBi(pk.getB() * K * pk.getB().inv()),
+	//_BKBiAi(_BKBi * pk.getA().inv()),
 	_ARAi(pk.getA() * _R * pk.getA().inv()),
 	_ARxAi(pk.getA() * _Rx * pk.getA().inv()),
 	_ARyAi(pk.getA() * _Ry * pk.getA().inv()),
-	_AiM2(_pk.getA().inv().template pMult<2*N>(_M.inv(), NN, 2*NN-1))
-	{
-	}
+	_AiM2(_pk.getA().inv().template pMult<2*N>(_M.inv(), NN, 2*NN-1))	
+	{}
 
 /* Unary unified code */
 
@@ -59,7 +58,7 @@ public:
 	 * Function: get_UNARY_g1
 	 * Returns the first function of the obfuscation chain for unary operations (e.g. left matrix multiplication)
 	 */
-	const MultiQuadTuple<2*N, 2*N> get_UNARY_g1() const{
+	const MultiQuadTuple<2*N, 2*N> get_UNARY_g1(const BitMatrix<N> & K) const{
 		MultiQuadTupleChain<N,L> f = _pk.getf();
 
 		BitMatrix<2*N> mat_top = _AiM2;
@@ -75,7 +74,7 @@ public:
 	 * Function: get_UNARY_g2
 	 * Returns the second function of the obfuscation chain for unary operations (e.g. left matrix multiplication)
 	 */
-	const MultiQuadTuple<2*N, 2*N> get_UNARY_g2() const{
+	const MultiQuadTuple<2*N, 2*N> get_UNARY_g2(const BitMatrix<N> & K) const{
 		MultiQuadTupleChain<N,L> f = _pk.getf();
 
 		BitMatrix<2*N> mat_top = _Cu1.inv().split_v_2(0);
@@ -94,9 +93,12 @@ public:
 	 * Returns matrix Z used for homomorphic left matrix multiplication
 	 * Dimension of Z: 2*(N * 2^6) by 4*(N * 2^6)
 	 */
-	const BitMatrix<4*N> get_LMM_Z() const{
+	const BitMatrix<4*N> get_LMM_Z(const BitMatrix<N> & K) const{
 		BitMatrix<N> zeroN = BitMatrix<N>::squareZeroMatrix();
 		BitMatrix<N> RAi = _R * _Ai;
+
+		BitMatrix<N> _BKBi = getBKBi(K);
+		BitMatrix<N> _BKBiAi = getBKBiAi(K);
 
 		BitMatrix<2*N> X_top = BitMatrix<2*N>::aug_h(_BKBi, _BKBiAi ^ RAi);
 		BitMatrix<2*N> X_bottom = BitMatrix<2*N>::aug_h(zeroN, _ARAi);
@@ -250,14 +252,14 @@ private:
 	BitMatrix<2*N> _Cu2;
 	BitMatrix<3*N> _Cb1;
 	BitMatrix<3*N> _Cb2;
-	BitMatrix<N> _BKBi; 
-	BitMatrix<N> _BKBiAi;
+	//BitMatrix<N> _BKBi; (leave the comment here just in case we need it later)
+	//BitMatrix<N> _BKBiAi;
 	BitMatrix<N> _ARAi;
 	BitMatrix<N> _ARxAi;
 	BitMatrix<N> _ARyAi;
 	MultiQuadTupleChain<2*N,L> _g_u; //obsfucated chain for unary operations
 	MultiQuadTupleChain<3*N,L> _g_b; //obsfucated chain for binary operations
-	
+		
 	BitMatrix<N> _Ai;
 	BitMatrix<N> _Bi;
 	BitMatrix<2*N> _AiM2;
@@ -266,6 +268,14 @@ private:
 	static const unsigned int NN = N << 6;
 	static const unsigned int twoNN = NN << 1;
 	static const unsigned int threeNN = 3 * NN;
+
+	const BitMatrix<N> getBKBi(const BitMatrix<N> & K) const{
+		return  _pk.getB() * K * _pk.getB().inv();
+	}
+
+	const BitMatrix<N> getBKBiAi(const BitMatrix<N> & K) const{
+		return getBKBi(K) * _pk.getA().inv();
+	}
 
 /*Helper functions for get_AND_z*/
 
@@ -364,13 +374,6 @@ private:
 		for (size_t j = 0; j < NN; ++j) { //cols
 			bool prod = Y1.get(j, level) && Y2.get(j, level); //first row
 			contrib.set(0, j, prod);
-/*
-			for (size_t i = 1; i < threeNN - level; ++i) { //rows
-				bool prod1 = Y1.get(j, level) && Y2.get(j, level + i);
-				bool prod2 = Y1.get(j, level + i) && Y2.get(j, level);
-				contrib.set(i, j, prod1 ^ prod2);
-			}
-*/
 			if(Y1.get(j, level)){
 				for (size_t i = 1; i < threeNN - level; ++i) { //rows
 					bool prod1 = Y2.get(j, level + i);

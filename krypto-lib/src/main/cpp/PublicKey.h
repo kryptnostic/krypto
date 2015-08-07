@@ -22,11 +22,11 @@ using namespace std;
 template<unsigned int N, unsigned int L>
 class PublicKey{
 public:
-	PublicKey(BridgeKey<N,L> &bk) : 
+	PublicKey(BridgeKey<N,L> &bk, BitMatrix<N> & K) : 
 	_bk(bk),
-	_gu1(bk.get_UNARY_g1()),
-	_gu2(bk.get_UNARY_g2()),
-	_Z(bk.get_LMM_Z()),
+	//_gu1(bk.get_UNARY_g1()),
+	//_gu2(bk.get_UNARY_g2()),
+	//_Z(bk.get_LMM_Z()),
 	_gb1(bk.get_BINARY_g1()),
 	_gb2(bk.get_BINARY_g2()),
 	_Xx(bk.get_XOR_Xx()),
@@ -38,7 +38,10 @@ public:
 	{
 	}
 
-	const BitVector<2*N> homomorphicLMM(BitVector<2*N> &x) const{
+	const BitVector<2*N> homomorphicLMM(BitMatrix<N> & K, BitVector<2*N> &x) const{
+		MultiQuadTuple<2*N, 2*N> _gu1 = _bk.get_UNARY_g1(K);
+		MultiQuadTuple<2*N, 2*N> _gu2 = _bk.get_UNARY_g2(K);
+		BitMatrix<4*N> _Z = _bk.get_LMM_Z(K);
 		BitVector<2*N> t = _gu2(_gu1(x));
 		BitVector<4*N> inner = BitVector<4*N>::vcat(x, t);
 
@@ -61,21 +64,12 @@ public:
 		return left ^ mid ^ right;
 	}
 
-	//homomorphic version of the hash MQT
-	//t = encrypted token, d = encrypted document key
-	//todo: modify the inner hash so that H[h'](E(token),E(key)) = h(token,key) so that
-	//h(token,key) can be obtained without revealing token or key
-	/*
-	const BitVector<2*N> homomorphicHash(BitVector<2*N> &t, BitVector<2*N> &d) const{
-		//D(t), the raw token, has length N
-		//D(d), the raw document key, has length N
-	}*/
 
 private:
 	BridgeKey<N, L> _bk;
-	MultiQuadTuple<2*N, 2*N> _gu1;
-	MultiQuadTuple<2*N, 2*N> _gu2;
-	BitMatrix<4*N> _Z;
+	//MultiQuadTuple<2*N, 2*N> _gu1;
+	//MultiQuadTuple<2*N, 2*N> _gu2;
+	//BitMatrix<4*N> _Z;
 	MultiQuadTuple<4*N, 3*N> _gb1;
 	MultiQuadTuple<3*N, 3*N> _gb2;
 	BitMatrix<2*N> _Xx;
@@ -84,6 +78,8 @@ private:
 	MultiQuadTuple<7*N, 2*N> _z;
 	BitMatrix<2*N> _Z1;
 	BitMatrix<2*N> _Z2;
+
+	unsigned int NN = N << 6;
 
 	const BitVector<3*N> calculateT(BitVector<2*N> &x, BitVector<2*N> &y) const{
 		BitVector<4*N> concatXY = BitVector<4*N>::vcat(x, y);

@@ -18,8 +18,8 @@ void testOps() {
 	PrivateKey<N, 2> pk;
 
 	BitMatrix<N> K = BitMatrix<N>::randomMatrix(N << 6);
-	BridgeKey<N, 2> bk(pk, K);
-	PublicKey<N, 2> pub(bk);
+	BridgeKey<N, 2> bk(pk);
+	PublicKey<N, 2> pub(bk, K);
 
 	BitVector<N> x = BitVector<N>::randomVector();
 	BitVector<N> y = BitVector<N>::randomVector();
@@ -29,7 +29,7 @@ void testOps() {
 	clock_t begin = clock();
 
 	for (int i = 0; i < OPRUNS; ++i) {
-		BitVector<2*N> encryptedLMM = pub.homomorphicLMM(encryptedX);
+		BitVector<2*N> encryptedLMM = pub.homomorphicLMM(K, encryptedX);
 		BitVector<2*N> encryptedXOR = pub.homomorphicXOR(encryptedX, encryptedY);
 		BitVector<2*N> encryptedAND = pub.homomorphicAND(encryptedX, encryptedY);
 	}
@@ -46,8 +46,8 @@ void testRuns() {
 		PrivateKey<N, 2> pk;
 
 		BitMatrix<N> K = BitMatrix<N>::randomMatrix(N << 6);
-		BridgeKey<N, 2> bk(pk, K);
-		PublicKey<N, 2> pub(bk);
+		BridgeKey<N, 2> bk(pk);
+		PublicKey<N, 2> pub(bk, K);
 		
 		// clock_t end_i = clock();
 		// cout << "Test Run #" << i << " time: " << double(end_i - begin_i) / (CLOCKS_PER_SEC) << " sec" << endl;
