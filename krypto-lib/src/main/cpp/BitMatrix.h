@@ -365,7 +365,7 @@ public:
 		unsigned int newNumRows = M.rowCount();
 		if(DEBUG) assert(startRowIndex >= 0 && startRowIndex + newNumRows < rowCount());
 		for(size_t i = 0; i < newNumRows; ++i){
-			_rows[i + startRowIndex] = M.getRow(i);
+			_rows[i + startRowIndex] = M._rows[i];
 		}
 	}
 
@@ -482,7 +482,7 @@ public:
 				return BitMatrix<COLS>::squareZeroMatrix(); 
 			}
 		}
-		BitVector<COLS> x = BitVector<COLS>::zeroVector();
+		BitVector<COLS> x;
 		BitMatrix<COLS> X = BitMatrix<COLS>::squareZeroMatrix();
 		for(int j = 0; j < n; ++j){
 			x.zero();

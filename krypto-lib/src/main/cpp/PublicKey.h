@@ -61,6 +61,16 @@ public:
 		return left ^ mid ^ right;
 	}
 
+	//homomorphic version of the hash MQT
+	//t = encrypted token, d = encrypted document key
+	//todo: modify the inner hash so that H[h'](E(token),E(key)) = h(token,key) so that
+	//h(token,key) can be obtained without revealing token or key
+	/*
+	const BitVector<2*N> homomorphicHash(BitVector<2*N> &t, BitVector<2*N> &d) const{
+		//D(t), the raw token, has length N
+		//D(d), the raw document key, has length N
+	}*/
+
 private:
 	BridgeKey<N, L> _bk;
 	MultiQuadTuple<2*N, 2*N> _gu1;
