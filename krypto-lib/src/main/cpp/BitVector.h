@@ -206,9 +206,8 @@ public:
      * equal to the values of an input BitVector
      */
     bool equals(const BitVector<N> & rhs) const {
-        int n = length();
-        for(int i = 0; i < n; ++i){
-            if(get(i) ^ rhs.get(i)) return false;
+        for(unsigned int i = 0; i < N; ++i){
+            if(_bits[i] != rhs._bits[i]) return false;
         }
         return true;
     }

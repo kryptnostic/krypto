@@ -219,14 +219,9 @@ public:
 	const BitMatrix<COLS> operator^(const BitMatrix<COLS> & rhs) const{
 		BitMatrix<COLS> result = *this;
 		const unsigned int numRows = rowCount();
-		const unsigned int numCols = colCount();
-
-		if(DEBUG){
-			assert(numRows == rhs.rowCount());
-			assert(numCols == rhs.colCount());
-		}
+		if(DEBUG) assert(numRows == rhs.rowCount());
 		for(size_t i = 0; i < numRows; ++i){
-			result.setRow(i, result.getRow(i) ^ rhs.getRow(i));
+			result._rows[i] ^= rhs._rows[i];
 		}
 		return result;
 	}
@@ -237,9 +232,9 @@ public:
      * as a given BitMatrix
      */
 	bool equals(const BitMatrix<COLS> & rhs) const{ //untested!
-		int n = rowCount();
+		unsigned int n = rowCount();
 		if(DEBUG) assert(n == rhs.rowCount());
-		for(int i = 0; i < n; ++i){
+		for(size_t i = 0; i < n; ++i){
 			if(!_rows[i].equals(rhs._rows[i])) return false;
 		}
 		return true;
