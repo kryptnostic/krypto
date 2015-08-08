@@ -319,10 +319,24 @@ public:
      * Sets a given col to a given BitVector
      */
 	template <unsigned int ROWS>
-	void setCol(int colIndex, BitVector<ROWS> v){
+	void setCol(int colIndex, const BitVector<ROWS> & v){
 		if(DEBUG) assert(colIndex >= 0 && colIndex < colCount());
 		int numRows = ROWS << 6;
 		for(int i = 0; i < numRows; ++i) set(i, colIndex, v[i]);
+	}
+
+	template <unsigned int ROWS>
+	void setCol(int colIndex){
+		if(DEBUG) assert(colIndex >= 0 && colIndex < colCount());
+		int numRows = ROWS << 6;
+		for(int i = 0; i < numRows; ++i) set(i, colIndex);
+	}
+
+	template <unsigned int ROWS>
+	void clearCol(int colIndex){
+		if(DEBUG) assert(colIndex >= 0 && colIndex < colCount());
+		int numRows = ROWS << 6;
+		for(int i = 0; i < numRows; ++i) clear(i, colIndex);
 	}
 
     /*
@@ -333,7 +347,9 @@ public:
 	void setCol(int colIndex, unsigned int val){
 		if(DEBUG) assert(colIndex >= 0 && colIndex < colCount());
 		int numRows = ROWS << 6;
-		for(int i = 0; i < numRows; ++i) set(i, colIndex, val);
+		if(val) setCol<ROWS>(colIndex);
+		else clearCol<ROWS>(colIndex);
+		//for(int i = 0; i < numRows; ++i) set(i, colIndex, val);
 	}
 
     /*

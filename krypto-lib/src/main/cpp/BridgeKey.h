@@ -44,8 +44,6 @@ public:
 	_Cu2(pk.getUnaryObfChain()[1]),
 	_Cb1(pk.getBinaryObfChain()[0]),
 	_Cb2(pk.getBinaryObfChain()[1]),
-	//_BKBi(pk.getB() * K * pk.getB().inv()),
-	//_BKBiAi(_BKBi * pk.getA().inv()),
 	_ARAi(pk.getA() * _R * pk.getA().inv()),
 	_ARxAi(pk.getA() * _Rx * pk.getA().inv()),
 	_ARyAi(pk.getA() * _Ry * pk.getA().inv()),
@@ -66,7 +64,7 @@ public:
 
 		MultiQuadTuple<2*N, N> top = f.get(0) * mat_top;
 		MultiQuadTuple<2*N, N> bot = f.get(0) * mat_bot;
-		MultiQuadTuple<2*N, 2*N> aug = MultiQuadTuple<2*N, 2*N>::augV(top, bot);
+		MultiQuadTuple<2*N, 2*N> aug ( MultiQuadTuple<2*N, 2*N>::template augV2<N,N>(top, bot) ); //
 		return aug.template rMult<2*N>(_Cu1);
 	}
 
@@ -82,7 +80,7 @@ public:
 
 		MultiQuadTuple<2*N, N> top = f.get(1) * mat_top;
 		MultiQuadTuple<2*N, N> bot = f.get(1) * mat_bot;
-		MultiQuadTuple<2*N, 2*N> aug = MultiQuadTuple<2*N, 2*N>::augV(top, bot);
+		MultiQuadTuple<2*N, 2*N> aug (MultiQuadTuple<2*N, 2*N>::template augV2<N,N>(top, bot)); //
 		return aug.template rMult<2*N>(_Cu2);
 	}
 
@@ -131,7 +129,7 @@ public:
 		MultiQuadTuple<4*N, N> top = f.get(0) * mat_top;
 		MultiQuadTuple<4*N, N> mid = f.get(0) * mat_mid;
 		MultiQuadTuple<4*N, N> bot = f.get(0) * (mat_botX ^ mat_botY);
-		MultiQuadTuple<4*N, 3*N> aug = MultiQuadTuple<4*N, 3*N>::augV(top, mid, bot);
+		MultiQuadTuple<4*N, 3*N> aug = MultiQuadTuple<4*N, 3*N>::augV3(top, mid, bot);
 		return aug.template rMult<3*N>(_Cb1);
 	}
 
@@ -150,7 +148,7 @@ public:
 		MultiQuadTuple<3*N, N> top = f.get(1) * mat_top;
 		MultiQuadTuple<3*N, N> mid = f.get(1) * mat_mid;
 		MultiQuadTuple<3*N, N> bot = f.get(1) * mat_bot;
-		MultiQuadTuple<3*N, 3*N> aug = MultiQuadTuple<3*N, 3*N>::augV(top, mid, bot);
+		MultiQuadTuple<3*N, 3*N> aug = MultiQuadTuple<3*N, 3*N>::augV3(top, mid, bot);
 		return aug.template rMult<3*N>(_Cb2);
 	}
 
@@ -213,7 +211,7 @@ public:
 		z_top = z_top.template rMult<N>(_pk.getB());
 		z_top = z_top ^ MultiQuadTuple<7*N, N>::getMultiQuadTuple(Y3t);
 		MultiQuadTuple<7*N, N> zeroMQT = MultiQuadTuple<7*N, N>::zeroMultiQuadTuple();
-		MultiQuadTuple<7*N, 2*N> z = MultiQuadTuple<7*N, 2*N>::augV(z_top, zeroMQT);
+		MultiQuadTuple<7*N, 2*N> z = MultiQuadTuple<7*N, 2*N>::augV2(z_top, zeroMQT);
 		MultiQuadTuple<7*N, 2*N> result = z.template rMult<2*N>(_M);
 
 		return result;
@@ -252,8 +250,6 @@ private:
 	BitMatrix<2*N> _Cu2;
 	BitMatrix<3*N> _Cb1;
 	BitMatrix<3*N> _Cb2;
-	//BitMatrix<N> _BKBi; (leave the comment here just in case we need it later)
-	//BitMatrix<N> _BKBiAi;
 	BitMatrix<N> _ARAi;
 	BitMatrix<N> _ARxAi;
 	BitMatrix<N> _ARyAi;
