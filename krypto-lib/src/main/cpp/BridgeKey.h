@@ -47,7 +47,7 @@ public:
 	_ARAi(pk.getA() * _R * pk.getA().inv()),
 	_ARxAi(pk.getA() * _Rx * pk.getA().inv()),
 	_ARyAi(pk.getA() * _Ry * pk.getA().inv()),
-	_AiM2(_pk.getA().inv().template pMult<2*N>(_M.inv(), NN, 2*NN-1))	
+	_AiM2(_Ai.template pMult<2*N>(_M.inv(), NN, 2*NN-1))	
 	{}
 
 /* Unary unified code */
@@ -95,8 +95,8 @@ public:
 		BitMatrix<N> zeroN = BitMatrix<N>::squareZeroMatrix();
 		BitMatrix<N> RAi = _R * _Ai;
 
-		BitMatrix<N> _BKBi = _pk.getB() * K * _Bi;//getBKBi(K);
-		BitMatrix<N> _BKBiAi = _BKBi * _Ai;//getBKBiAi(K);
+		BitMatrix<N> _BKBi = _pk.getB() * K * _Bi;
+		BitMatrix<N> _BKBiAi = _BKBi * _Ai;
 
 		BitMatrix<2*N> X_top = BitMatrix<2*N>::augH(_BKBi, _BKBiAi ^ RAi);
 		BitMatrix<2*N> X_bottom = BitMatrix<2*N>::augH(zeroN, _ARAi);
@@ -201,9 +201,9 @@ public:
 	 */
 	const MultiQuadTuple<7*N, 2*N> getANDz() const{
 		BitMatrix<2*N> X = getANDX();
-		BitMatrix<3*N> Y1 = getANDY1();
-		BitMatrix<3*N> Y2 = getANDY2();
-		BitMatrix<3*N> Y3 = getANDY3();
+		BitMatrix<3*N> Y1 = _Bi.pMult(_Cb2.inv(), 0, NN-1);
+		BitMatrix<3*N> Y2 = _Bi.pMult(_Cb2.inv(), NN, 2*NN-1);
+		BitMatrix<3*N> Y3 = _Cb2.inv().splitV3(2);
 		BitMatrix<7*N> Y3t = BitMatrix<7*N>::augH(BitMatrix<4*N>::zeroMatrix(N << 6), Y3);
 
 		BitMatrix<N> contrib = BitMatrix<N>::augV(getANDP(X, Y2), getANDQ(X, Y1), getANDS(Y1, Y2));
@@ -274,33 +274,6 @@ private:
 	const BitMatrix<2*N> getANDX() const{
 		BitMatrix<2*N> inner = BitMatrix<2*N>::augH(BitMatrix<N>::squareIdentityMatrix(), _Ai);
 		return _Bi * inner * _M.inv();
-	}
-
-	/*
-	 * Function: getANDY1
-	 * Returns matrix Y1 used to compute z for homomorphic AND
-	 * Dimension of X: (N * 2^6) by 3*(N * 2^6)
-	 */
-	const BitMatrix<3*N> getANDY1() const{
-		return _Bi.pMult(_Cb2.inv(), 0, NN-1);
-	}
-
-	/*
-	 * Function: getANDY2
-	 * Returns matrix Y2 used to compute z for homomorphic AND
-	 * Dimension of X: (N * 2^6) by 3*(N * 2^6)
-	 */
-	const BitMatrix<3*N> getANDY2() const{
-		return _Bi.pMult(_Cb2.inv(), NN, 2*NN-1);
-	}
-
-	/*
-	 * Function: getANDY3
-	 * Returns matrix Y3 used to compute z for homomorphic AND
-	 * Dimension of X: (N * 2^6) by 3*(N * 2^6)
-	 */
-	const BitMatrix<3*N> getANDY3() const{
-		return _Cb2.inv().splitV3(2);
 	}
 
 	/* 

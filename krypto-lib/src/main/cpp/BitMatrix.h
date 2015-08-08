@@ -721,7 +721,7 @@ public:
      * of two given matrices
      * Assumes the given matrixes have the same number of rows
      */
-	static const BitMatrix<COLS> augV (const BitMatrix<COLS> & top, const BitMatrix<COLS> & bot){ //TODO: optimize
+	static const BitMatrix<COLS> augV(const BitMatrix<COLS> & top, const BitMatrix<COLS> & bot){ //TODO: optimize
 		unsigned int t_rows = top.rowCount();
 		unsigned int b_rows = bot.rowCount();
 		vector< BitVector<COLS> > rows;
