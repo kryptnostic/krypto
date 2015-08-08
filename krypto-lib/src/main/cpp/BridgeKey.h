@@ -32,7 +32,7 @@ public:
      * Constructs a BridgeKey with a given PrivateKey
      * and BitMatrix K (for left-matrix multiplcation)
      */
-	BridgeKey(PrivateKey<N,L> &pk) : 
+	BridgeKey(const PrivateKey<N,L> &pk) : 
 	_pk(pk),
 	_R(BitMatrix<N>::randomInvertibleMatrix()),
 	_Rx(BitMatrix<N>::randomInvertibleMatrix()),
