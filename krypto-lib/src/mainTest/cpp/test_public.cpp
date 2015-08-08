@@ -23,7 +23,7 @@ TEST(PublicKeyTest, testLMM){
 	BitMatrix<N> K = BitMatrix<N>::randomMatrix(N << 6);
 	
 	clock_t begin = clock();
-	BridgeKey<N, 2> bk(pk, K);
+	BridgeKey<N, 2> bk(pk);
 	PublicKey<N, 2> pub(bk);
 	clock_t end = clock();
 	std::cout << "Time used to generate PubKey from PrivKey and BridgeKey: " << double(end - begin) / CLOCKS_PER_SEC << "sec" << endl;
@@ -34,7 +34,7 @@ TEST(PublicKeyTest, testLMM){
 	BitVector<2*N> encryptedY = pk.encrypt(y);
 
 	begin = clock();
-	BitVector<2*N> encryptedLMM = pub.homomorphicLMM(encryptedX);
+	BitVector<2*N> encryptedLMM = pub.homomorphicLMM(K, encryptedX);
 	end = clock();
 	std::cout << "Time used to compute encryptedLMM: " << double(end - begin) / CLOCKS_PER_SEC << " sec" << endl;
 	BitVector<N> unencryptedLMM = pk.decrypt(encryptedLMM);
@@ -45,8 +45,7 @@ TEST(PublicKeyTest, testLMM){
 
 TEST(PublicKeyTest, testXOR){
 	PrivateKey<N, 2> pk;
-	BitMatrix<N> K = BitMatrix<N>::randomMatrix(N << 6);
-	BridgeKey<N, 2> bk(pk, K);
+	BridgeKey<N, 2> bk(pk);
 	PublicKey<N, 2> pub(bk);
 
 	BitVector<N> x = BitVector<N>::randomVector();
@@ -67,8 +66,7 @@ TEST(PublicKeyTest, testXOR){
 
 TEST(PublicKeyTest, testAND){
 	PrivateKey<N, 2> pk;
-	BitMatrix<N> K = BitMatrix<N>::randomMatrix(N << 6);
-	BridgeKey<N, 2> bk(pk, K);
+	BridgeKey<N, 2> bk(pk);
 	PublicKey<N, 2> pub(bk);
 
 	BitVector<N> x = BitVector<N>::randomVector();

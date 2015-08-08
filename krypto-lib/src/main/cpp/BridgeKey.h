@@ -95,8 +95,8 @@ public:
 		BitMatrix<N> zeroN = BitMatrix<N>::squareZeroMatrix();
 		BitMatrix<N> RAi = _R * _Ai;
 
-		BitMatrix<N> _BKBi = getBKBi(K);
-		BitMatrix<N> _BKBiAi = getBKBiAi(K);
+		BitMatrix<N> _BKBi = _pk.getB() * K * _Bi;//getBKBi(K);
+		BitMatrix<N> _BKBiAi = _BKBi * _Ai;//getBKBiAi(K);
 
 		BitMatrix<2*N> X_top = BitMatrix<2*N>::augH(_BKBi, _BKBiAi ^ RAi);
 		BitMatrix<2*N> X_bottom = BitMatrix<2*N>::augH(zeroN, _ARAi);
@@ -212,9 +212,8 @@ public:
 		z_top = z_top ^ MultiQuadTuple<7*N, N>::getMultiQuadTuple(Y3t);
 		MultiQuadTuple<7*N, N> zeroMQT = MultiQuadTuple<7*N, N>::zeroMultiQuadTuple();
 		MultiQuadTuple<7*N, 2*N> z = MultiQuadTuple<7*N, 2*N>::augV2(z_top, zeroMQT);
-		MultiQuadTuple<7*N, 2*N> result = z.template rMult<2*N>(_M);
-
-		return result;
+		
+		return z.template rMult<2*N>(_M);
 	}
 
 	/*
@@ -264,14 +263,6 @@ private:
 	static const unsigned int NN = N << 6;
 	static const unsigned int twoNN = NN << 1;
 	static const unsigned int threeNN = 3 * NN;
-
-	const BitMatrix<N> getBKBi(const BitMatrix<N> & K) const{
-		return  _pk.getB() * K * _pk.getB().inv();
-	}
-
-	const BitMatrix<N> getBKBiAi(const BitMatrix<N> & K) const{
-		return getBKBi(K) * _pk.getA().inv();
-	}
 
 /*Helper functions for getANDz*/
 
