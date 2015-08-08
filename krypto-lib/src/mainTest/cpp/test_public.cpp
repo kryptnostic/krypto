@@ -6,12 +6,7 @@
  */
 
 #include "../../../contrib/gtest/gtest.h"
-#include "../../main/cpp/BitVector.h"
-#include "../../main/cpp/BitMatrix.h"
-#include "../../main/cpp/PrivateKey.h"
-#include "../../main/cpp/BridgeKey.h"
 #include "../../main/cpp/PublicKey.h"
-#include <string>
 #include <time.h>
 
 using namespace testing;
@@ -19,14 +14,16 @@ using namespace testing;
 #define N 1
 
 TEST(PublicKeyTest, testLMM){
+	ASSERT_TRUE(1+1 == 2);
 	PrivateKey<N, 2> pk;
-	BitMatrix<N> K = BitMatrix<N>::randomMatrix(N << 6);
+	BitMatrix<N> K = BitMatrix<N>::squareRandomMatrix();
 	
 	clock_t begin = clock();
 	BridgeKey<N, 2> bk(pk);
 	PublicKey<N, 2> pub(bk);
 	clock_t end = clock();
 	std::cout << "Time used to generate PubKey from PrivKey and BridgeKey: " << double(end - begin) / CLOCKS_PER_SEC << "sec" << endl;
+
 
 	BitVector<N> x = BitVector<N>::randomVector();
 	BitVector<N> y = BitVector<N>::randomVector();

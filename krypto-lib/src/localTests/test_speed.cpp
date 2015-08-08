@@ -77,8 +77,8 @@ void testHash() {
 	clock_t end = clock();
 	cout << "Time for one search match computation: " << double(end - begin) / (CLOCKS_PER_SEC) << " sec" << endl;
 	BitVector<N> dEAddr = pk.decrypt(calculatedEncryptedAddress); 
-	addr.print();
-	dEAddr.print();
+	//addr.print();
+	//dEAddr.print();
 	
 }
 

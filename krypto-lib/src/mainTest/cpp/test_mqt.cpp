@@ -56,6 +56,6 @@ TEST(MQTTests, testAugV){
 	ASSERT_TRUE(13+21 == 34);
 	MultiQuadTuple<N, M> f1 = MultiQuadTuple<N, M>::randomMultiQuadTuple();
 	MultiQuadTuple<N, M> f2 = MultiQuadTuple<N, M>::randomMultiQuadTuple();
-	MultiQuadTuple<N, 2*M> f12 = MultiQuadTuple<N, 2*M>::aug_v(f1,f2);
+	MultiQuadTuple<N, 2*M> f12 = MultiQuadTuple<N, 2*M>::augV2(f1,f2);
 	ASSERT_TRUE(21+34 == 55);
 }

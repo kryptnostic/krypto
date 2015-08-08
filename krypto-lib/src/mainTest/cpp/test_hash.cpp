@@ -1,13 +1,11 @@
 #include "../../../contrib/gtest/gtest.h"
 #include "../../main/cpp/EncryptedSearchPublicKey.h"
-#include <string>
-#include <time.h>
 
 using namespace testing;
 
 #define N 1
 
-TEST(PublicKeyTest, testLMM){
+TEST(PublicKeyTest, testHash){
 	BitVector<N> t = BitVector<N>::randomVector(); //token
 	BitVector<N> d = BitVector<N>::randomVector(); //document key
 	BitVector<2*N> x = BitVector<2*N>::vCat(t, d);
