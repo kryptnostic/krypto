@@ -26,11 +26,11 @@ void testOps1() {
 		BitVector<2*N> encryptedX = pk.encrypt(x);
 
 		BitMatrix<N> K = BitMatrix<N>::randomMatrix(N << 6);
-		BitMatrix<4*N> Z = bk.getLMMZ(K);
 
 		clock_t begin = clock();
 
 		for (int i = 0; i < OPRUNS; ++i) {
+			BitMatrix<4*N> Z = bk.getLMMZ(K);
 			BitVector<2*N> encryptedLMM = pub.homomorphicLMM(Z, encryptedX);
 		}
 
