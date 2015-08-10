@@ -95,3 +95,10 @@ TEST(BitVectorTests, test_parity) {
     v.elements()[ 0 ] = 0xFF;
     ASSERT_FALSE( v.parity() );
 }
+
+TEST(BitVectorTests, test_shift) {
+    BitVector<1> v = BitVector<1>::randomSmallVector();
+    BitVector<1> w = v.leftShift();
+    v.print();
+    w.print();
+}

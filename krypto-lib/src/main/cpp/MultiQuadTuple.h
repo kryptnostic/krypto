@@ -164,6 +164,16 @@ public:
 		return MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS_SUM>(BitMatrix<NUM_OUTPUTS_SUM>::augH(C1, C2, C3), BitVector<NUM_OUTPUTS_SUM>::vCat(c1, c2, c3));
 	}
 
+/* Shifter */
+	
+	const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS> getShifter(){
+		//x_1,x_1x_2,...,x_1x_n (n)
+		//x_2,x_2x_3,...,x_2x_n (n-1)
+		BitMatrix<NUM_OUTPUTS> C = MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS>::zeroContributionMatrix();
+
+	}
+	
+
 /* Access */
 
 	/*
@@ -214,5 +224,9 @@ private:
 	BitVector<NUM_OUTPUTS> _constants; //constant term
 	static const unsigned int numInputBits = (NUM_INPUTS << 6);
 	static const unsigned int numInputMonomials = ((numInputBits * (numInputBits + 1)) >> 1);
+
+	const static zeroContributionMatrix(){
+		return BitMatrix<NUM_OUTPUTS>::zeroMatrix(numInputMonomials);	
+	}
 };
 #endif

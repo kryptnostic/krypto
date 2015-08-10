@@ -112,6 +112,14 @@ public:
         return result;
     }
 
+    const BitVector<N> leftShift(){
+        BitVector<N> result;
+        unsigned int NN = length();
+        for(size_t i = 0; i < NN - 1; ++i)
+            result.set(i, get(i + 1));
+        return result;
+    }
+
 /* Operators */
 
     /*
