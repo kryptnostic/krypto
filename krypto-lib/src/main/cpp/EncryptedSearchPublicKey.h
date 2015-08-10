@@ -31,13 +31,13 @@ public:
 				Ai.template setCol<N>(j, C.getRow(count));
 				++count;
 			}
-			BitVector<2*N> v1 = pub.homomorphicLMM(Ai, t);
+			BitVector<2*N> v1 = pub.homomorphicLMM(bk.getLMMZ(Ai), t);
 			for(size_t j = 0; j < NN; ++j){
 				Ai.template setCol<N>(j, C.getRow(count)); 
 				++count;
 			}
-			BitVector<2*N> v2 = pub.homomorphicLMM(Ai, d);			
-			result = pub.homomorphicXOR(result, pub.homomorphicAND(pub.homomorphicLMM(Ji, t), pub.homomorphicXOR(v1, v2)));
+			BitVector<2*N> v2 = pub.homomorphicLMM(bk.getLMMZ(Ai), d);
+			result = pub.homomorphicXOR(result, pub.homomorphicAND(pub.homomorphicLMM(bk.getLMMZ(Ji), t), pub.homomorphicXOR(v1, v2)));
 		}
 		for(size_t i = 0; i < NN; ++i){
 			Ai.zero();
@@ -47,7 +47,7 @@ public:
 				Ai.template setCol<N>(j, C.getRow(count)); 
 				++count;
 			}
-			result = pub.homomorphicXOR(result, pub.homomorphicAND(pub.homomorphicLMM(Ji, d), pub.homomorphicLMM(Ai, d)));
+			result = pub.homomorphicXOR(result, pub.homomorphicAND(pub.homomorphicLMM(bk.getLMMZ(Ji), d), pub.homomorphicLMM(bk.getLMMZ(Ai), d)));
 		}
 		result = pub.homomorphicXOR(result, _pk.encrypt(h.getConstantTerms()));
 		return result;

@@ -27,10 +27,12 @@ void testOps() {
 	BitVector<2*N> encryptedX = pk.encrypt(x);
 	BitVector<2*N> encryptedY = pk.encrypt(y);
 
+	BitMatrix<4*N> Z = bk.getLMMZ(K); 
+
 	clock_t begin = clock();
 
 	for (int i = 0; i < OPRUNS; ++i) {
-		BitVector<2*N> encryptedLMM = pub.homomorphicLMM(K, encryptedX);
+		BitVector<2*N> encryptedLMM = pub.homomorphicLMM(Z, encryptedX);
 		BitVector<2*N> encryptedXOR = pub.homomorphicXOR(encryptedX, encryptedY);
 		BitVector<2*N> encryptedAND = pub.homomorphicAND(encryptedX, encryptedY);
 	}

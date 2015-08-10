@@ -37,12 +37,11 @@ public:
 	{
 	}
 
-	const BitVector<2*N> homomorphicLMM(const BitMatrix<N> & K, const BitVector<2*N> &x) const{
-		BitMatrix<4*N> _Z = _bk.getLMMZ(K);
+	const BitVector<2*N> homomorphicLMM(const BitMatrix<4*N> & Z, const BitVector<2*N> &x) const{
 		BitVector<2*N> t = _gu2(_gu1(x));
 		BitVector<4*N> inner = BitVector<4*N>::template vCat<2*N, 2*N>(x, t);
 
-		return _Z.template operator*<2*N>(inner);
+		return Z.template operator*<2*N>(inner);
 	}
 
 	const BitVector<2*N> homomorphicXOR(const BitVector<2*N> &x, const BitVector<2*N> &y) const{
