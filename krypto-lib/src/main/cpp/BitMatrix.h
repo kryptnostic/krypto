@@ -839,6 +839,17 @@ public:
 		cout << endl;
 	}
 
+	void printRows(unsigned int startRowIndex, unsigned int endRowIndex) const{
+		if(DEBUG) {
+			assert(startRowIndex <= endRowIndex);
+			assert(startRowIndex >= 0 && startRowIndex < rowCount());
+			assert(endRowIndex < rowCount());
+		}
+		for(size_t i = startRowIndex; i <= endRowIndex; ++i){
+			printRow(i);
+		}
+	}
+
     /*
      * Function: printLastRow()
      * Prints the values of the last row (for debugging)
