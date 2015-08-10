@@ -18,6 +18,8 @@
 
 using namespace std;
 
+#define DEBUG false
+
 //L will be known by the server anyway (as we pass {f_1',...,f_L'} to it)
 template<unsigned int N, unsigned int L>
 class PublicKey{
@@ -60,6 +62,11 @@ public:
 		return left ^ mid ^ right;
 	}
 
+	/*
+	const BitVector<2*N> homomorphicADD(const BitVector<2*N> &x, const BitVector<2*N> &y) const{
+		//TODO	
+	}
+	*/
 
 private:
 	BridgeKey<N, L> _bk;
