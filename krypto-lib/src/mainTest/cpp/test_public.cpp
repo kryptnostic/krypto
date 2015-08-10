@@ -30,8 +30,10 @@ TEST(PublicKeyTest, testLMM){
 	BitVector<2*N> encryptedX = pk.encrypt(x);
 	BitVector<2*N> encryptedY = pk.encrypt(y);
 
+	BitMatrix<4*N> Z = bk.getLMMZ(K); 
+
 	begin = clock();
-	BitVector<2*N> encryptedLMM = pub.homomorphicLMM(K, encryptedX);
+	BitVector<2*N> encryptedLMM = pub.homomorphicLMM(Z, encryptedX);
 	end = clock();
 	std::cout << "Time used to compute encryptedLMM: " << double(end - begin) / CLOCKS_PER_SEC << " sec" << endl;
 	BitVector<N> unencryptedLMM = pk.decrypt(encryptedLMM);
