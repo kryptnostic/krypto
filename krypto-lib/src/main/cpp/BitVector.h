@@ -112,14 +112,6 @@ public:
         return result;
     }
 
-    const BitVector<N> leftShift(){
-        BitVector<N> result;
-        unsigned int NN = length();
-        for(size_t i = 0; i < NN - 1; ++i)
-            result.set(i, get(i + 1));
-        return result;
-    }
-
 /* Operators */
 
     /*
@@ -349,7 +341,7 @@ public:
         else clear(n);
     }
 
-/* Multi-Vector Functions */
+/* Multi-Vector and Sub-Vector */
 
     /*
      * Function: dot(rhs)
@@ -459,6 +451,19 @@ public:
         unsigned int M = (N/3);
         memcpy(r.elements(), _bits+(part*M), M*sizeof(unsigned long long));
         return r;
+    }
+
+    /*
+     * Function: leftShift(n)
+     * Returns a BitVector with the values of the current BitVector
+     * shifted to the left by n and trailing zeroes
+     */
+    const BitVector<N> leftShift(unsigned int n){
+        BitVector<N> result;
+        unsigned int numBits = length();
+        for(size_t i = 0; i < numBits - n; ++i)
+            result.set(i, get(i + n));
+        return result;
     }
 
 /* Print */

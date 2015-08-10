@@ -12,85 +12,80 @@ using namespace std;
 #define H 2
 #define N 1
 #define DEBUG false
-#define OPRUNS 100
-#define TESTRUNS 10
+#define OPRUNS 10
+#define TESTRUNS 100
 
 void testOps1() {
-	PrivateKey<N, 2> pk;
-
-	BitMatrix<N> K = BitMatrix<N>::randomMatrix(N << 6);
+ 	PrivateKey<N, 2> pk;
 	BridgeKey<N, 2> bk(pk);
 	PublicKey<N, 2> pub(bk);
+	clock_t diff = 0;
 
-	BitVector<N> x = BitVector<N>::randomVector();
-	BitVector<N> y = BitVector<N>::randomVector();
-	BitVector<2*N> encryptedX = pk.encrypt(x);
-	BitVector<2*N> encryptedY = pk.encrypt(y);
+	for (int run = 0; run < TESTRUNS; ++run) {
+		BitVector<N> x = BitVector<N>::randomVector();
+		BitVector<2*N> encryptedX = pk.encrypt(x);
 
-	BitMatrix<4*N> Z = bk.getLMMZ(K); 
+		BitMatrix<N> K = BitMatrix<N>::randomMatrix(N << 6);
 
-	clock_t begin = clock();
+		clock_t begin = clock();
 
-	for (int i = 0; i < OPRUNS; ++i) {
-		BitVector<2*N> encryptedLMM = pub.homomorphicLMM(Z, encryptedX);
-		// BitVector<2*N> encryptedXOR = pub.homomorphicXOR(encryptedX, encryptedY);
-		// BitVector<2*N> encryptedAND = pub.homomorphicAND(encryptedX, encryptedY);
-	}
+		for (int i = 0; i < OPRUNS; ++i) {
+			BitMatrix<4*N> Z = bk.getLMMZ(K);
+			BitVector<2*N> encryptedLMM = pub.homomorphicLMM(Z, encryptedX);
+		}
 
- 	clock_t end = clock();
- 	cout << "Average time elapsed over " << OPRUNS << " operations of LMM: " << double(end - begin) / (CLOCKS_PER_SEC * OPRUNS) << " sec" << endl;
+ 		clock_t end = clock();
+ 		diff += (end - begin);
+ 	}
+ 	cout << "Average time elapsed over " << OPRUNS * TESTRUNS << " operations of LMM: " << double(diff) / (CLOCKS_PER_SEC * OPRUNS * TESTRUNS) << " sec" << endl;
 }
 
 void testOps2() {
  	PrivateKey<N, 2> pk;
-
-	BitMatrix<N> K = BitMatrix<N>::randomMatrix(N << 6);
 	BridgeKey<N, 2> bk(pk);
 	PublicKey<N, 2> pub(bk);
+	clock_t diff = 0;
 
-	BitVector<N> x = BitVector<N>::randomVector();
-	BitVector<N> y = BitVector<N>::randomVector();
-	BitVector<2*N> encryptedX = pk.encrypt(x);
-	BitVector<2*N> encryptedY = pk.encrypt(y);
+	for (int run = 0; run < TESTRUNS; ++run) {
+		BitVector<N> x = BitVector<N>::randomVector();
+		BitVector<N> y = BitVector<N>::randomVector();
+		BitVector<2*N> encryptedX = pk.encrypt(x);
+		BitVector<2*N> encryptedY = pk.encrypt(y);
 
-	BitMatrix<4*N> Z = bk.getLMMZ(K); 
+		clock_t begin = clock();
 
-	clock_t begin = clock();
+		for (int i = 0; i < OPRUNS; ++i) {
+			BitVector<2*N> encryptedXOR = pub.homomorphicXOR(encryptedX, encryptedY);
+		}
 
-	for (int i = 0; i < OPRUNS; ++i) {
-		// BitVector<2*N> encryptedLMM = pub.homomorphicLMM(Z, encryptedX);
-		BitVector<2*N> encryptedXOR = pub.homomorphicXOR(encryptedX, encryptedY);
-		// BitVector<2*N> encryptedAND = pub.homomorphicAND(encryptedX, encryptedY);
-	}
-
- 	clock_t end = clock();
- 	cout << "Average time elapsed over " << OPRUNS << " operations of XOR: " << double(end - begin) / (CLOCKS_PER_SEC * OPRUNS) << " sec" << endl;
+ 		clock_t end = clock();
+ 		diff += (end - begin);
+ 	}
+ 	cout << "Average time elapsed over " << OPRUNS * TESTRUNS << " operations of XOR: " << double(diff) / (CLOCKS_PER_SEC * OPRUNS * TESTRUNS) << " sec" << endl;
 }
 
 void testOps3() {
  	PrivateKey<N, 2> pk;
-
-	BitMatrix<N> K = BitMatrix<N>::randomMatrix(N << 6);
 	BridgeKey<N, 2> bk(pk);
 	PublicKey<N, 2> pub(bk);
+	clock_t diff = 0;
 
-	BitVector<N> x = BitVector<N>::randomVector();
-	BitVector<N> y = BitVector<N>::randomVector();
-	BitVector<2*N> encryptedX = pk.encrypt(x);
-	BitVector<2*N> encryptedY = pk.encrypt(y);
+	for (int run = 0; run < TESTRUNS; ++run) {
+		BitVector<N> x = BitVector<N>::randomVector();
+		BitVector<N> y = BitVector<N>::randomVector();
+		BitVector<2*N> encryptedX = pk.encrypt(x);
+		BitVector<2*N> encryptedY = pk.encrypt(y);
 
-	BitMatrix<4*N> Z = bk.getLMMZ(K); 
+		clock_t begin = clock();
 
-	clock_t begin = clock();
+		for (int i = 0; i < OPRUNS; ++i) {
+			BitVector<2*N> encryptedAND = pub.homomorphicAND(encryptedX, encryptedY);
+		}
 
-	for (int i = 0; i < OPRUNS; ++i) {
-		// BitVector<2*N> encryptedLMM = pub.homomorphicLMM(Z, encryptedX);
-		// BitVector<2*N> encryptedXOR = pub.homomorphicXOR(encryptedX, encryptedY);
-		BitVector<2*N> encryptedAND = pub.homomorphicAND(encryptedX, encryptedY);
-	}
-
- 	clock_t end = clock();
- 	cout << "Average time elapsed over " << OPRUNS << " operations of AND: " << double(end - begin) / (CLOCKS_PER_SEC * OPRUNS) << " sec" << endl;
+ 		clock_t end = clock();
+ 		diff += (end - begin);
+ 	}
+ 	cout << "Average time elapsed over " << OPRUNS * TESTRUNS << " operations of AND: " << double(diff) / (CLOCKS_PER_SEC * OPRUNS * TESTRUNS) << " sec" << endl;
 }
 
 void testClientRuns() {
@@ -108,7 +103,7 @@ void testClientRuns() {
 	}
 
  	clock_t end = clock();
- 	cout << "Average time elapsed over " << TESTRUNS << " runs of Private & Bridge key generation: " << double(end - begin) / (CLOCKS_PER_SEC * TESTRUNS) << " sec" << endl;
+ 	cout << "Average time elapsed over " << TESTRUNS << " runs of private & bridge key generation: " << double(end - begin) / (CLOCKS_PER_SEC * TESTRUNS) << " sec" << endl;
 }
 
 void testPublicKeyRuns() {
@@ -127,7 +122,7 @@ void testPublicKeyRuns() {
 		diff += (end_i - begin_i);
 	}
 
- 	cout << "Average time elapsed over " << TESTRUNS << " runs of Public key generation: " << double(diff) / (CLOCKS_PER_SEC * TESTRUNS) << " sec" << endl;
+ 	cout << "Average time elapsed over " << TESTRUNS << " runs of public key generation: " << double(diff) / (CLOCKS_PER_SEC * TESTRUNS) << " sec" << endl;
 }
 
 void testHash() {
@@ -161,7 +156,7 @@ int main(int argc, char **argv) {
 	testOps3();
 	testClientRuns();
 	testPublicKeyRuns();
-	testHash();
+	//testHash();
  	fclose(urandom);
 	return 0;
 }
