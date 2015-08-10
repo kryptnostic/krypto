@@ -166,11 +166,24 @@ public:
 
 /* Shifter */
 	
-	const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS> getShifter(){
-		//x_1,x_1x_2,...,x_1x_n (n)
-		//x_2,x_2x_3,...,x_2x_n (n-1)
-		BitMatrix<NUM_OUTPUTS> C = MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS>::zeroContributionMatrix();
+	/*
+	 * Function: leftShift()
+	 * Generates a shifter function such that g(x << 1) === f(x) for g = f.leftShift()
+	 */
+	const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS> leftShift() const{
+		BitMatrix<NUM_OUTPUTS> newContributionT = MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS>::zeroContributionMatrix();
+		unsigned int oldCount = numInputBits; //totally skip the coefficients for x_1
+		unsigned int newCount = 0;
+		for(size_t i = 1; i < numInputBits; ++i){
 
+			for(size_t j = i; j < numInputBits; ++j){
+				newContributionT.setRow(newCount, _contributionsT.getRow(oldCount));
+				++oldCount; 
+				++newCount;
+			}		
+			++newCount;
+		}
+		return MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS>(newContributionT, _constants/*.leftShift()*/);
 	}
 	
 
@@ -225,7 +238,7 @@ private:
 	static const unsigned int numInputBits = (NUM_INPUTS << 6);
 	static const unsigned int numInputMonomials = ((numInputBits * (numInputBits + 1)) >> 1);
 
-	const static zeroContributionMatrix(){
+	const static BitMatrix<NUM_OUTPUTS> zeroContributionMatrix(){
 		return BitMatrix<NUM_OUTPUTS>::zeroMatrix(numInputMonomials);	
 	}
 };

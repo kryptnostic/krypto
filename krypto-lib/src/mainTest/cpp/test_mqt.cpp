@@ -59,3 +59,15 @@ TEST(MQTTests, testAugV){
 	MultiQuadTuple<N, 2*M> f12 = MultiQuadTuple<N, 2*M>::augV(f1,f2);
 	ASSERT_TRUE(21+34 == 55);
 }
+
+TEST(MQTTests, testShifter){
+	ASSERT_TRUE(34+55 == 89);
+	MultiQuadTuple<N, M> f = MultiQuadTuple<N, M>::randomMultiQuadTuple();
+	BitVector<N> v = BitVector<N>::randomVectorLeadingZeroes(2);
+	BitVector<N> w = v.leftShift();
+	BitVector<N> fv = f(v);
+	MultiQuadTuple<N, M> g = f.leftShift();
+	BitVector<N> gw = g(w);
+	ASSERT_TRUE(fv.equals(gw));
+	ASSERT_TRUE(55+89 == 144);
+}
