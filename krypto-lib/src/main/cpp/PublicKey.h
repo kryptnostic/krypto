@@ -22,11 +22,10 @@ using namespace std;
 template<unsigned int N, unsigned int L>
 class PublicKey{
 public:
-	PublicKey(BridgeKey<N,L> &bk) : 
+	PublicKey(const BridgeKey<N,L> &bk) : 
 	_bk(bk),
-	//_gu1(bk.getUnaryG1()),
-	//_gu2(bk.getUnaryG2()),
-	//_Z(bk.getLMMZ()),
+	_gu1(bk.getUnaryG1()),
+	_gu2(bk.getUnaryG2()),
 	_gb1(bk.getBinaryG1()),
 	_gb2(bk.getBinaryG2()),
 	_Xx(bk.getXORXx()),
@@ -38,23 +37,20 @@ public:
 	{
 	}
 
-	const BitVector<2*N> homomorphicLMM(BitMatrix<N> & K, BitVector<2*N> &x) const{
-		MultiQuadTuple<2*N, 2*N> _gu1 = _bk.getUnaryG1();
-		MultiQuadTuple<2*N, 2*N> _gu2 = _bk.getUnaryG2();
-		BitMatrix<4*N> _Z = _bk.getLMMZ(K);
+	const BitVector<2*N> homomorphicLMM(const BitMatrix<4*N> & Z, const BitVector<2*N> &x) const{
 		BitVector<2*N> t = _gu2(_gu1(x));
-		BitVector<4*N> inner = BitVector<4*N>::vCat(x, t);
+		BitVector<4*N> inner = BitVector<4*N>::template vCat<2*N, 2*N>(x, t);
 
-		return _Z.template operator*<2*N>(inner);
+		return Z.template operator*<2*N>(inner);
 	}
 
-	const BitVector<2*N> homomorphicXOR(BitVector<2*N> &x, BitVector<2*N> &y) const{
-		BitVector<3*N> t = calculateT(x, y);
+	const BitVector<2*N> homomorphicXOR(const BitVector<2*N> &x, const BitVector<2*N> &y) const{
+		BitVector<3*N> t = binaryT(x, y);
 		return _Xx.template operator*<2*N>(x) ^ _Xy.template operator*<2*N>(y) ^ _Y.template operator*<2*N>(t);
 	}
 
-	const BitVector<2*N> homomorphicAND(BitVector<2*N> &x, BitVector<2*N> &y) const{
-		BitVector<3*N> t = calculateT(x, y);
+	const BitVector<2*N> homomorphicAND(const BitVector<2*N> &x, const BitVector<2*N> &y) const{
+		BitVector<3*N> t = binaryT(x, y);
 		BitVector<7*N> coordinates = BitVector<7*N>::vCat(x, y, t);
 		
 		BitVector<2*N> left = _z(coordinates);
@@ -67,9 +63,8 @@ public:
 
 private:
 	BridgeKey<N, L> _bk;
-	//MultiQuadTuple<2*N, 2*N> _gu1;
-	//MultiQuadTuple<2*N, 2*N> _gu2;
-	//BitMatrix<4*N> _Z;
+	MultiQuadTuple<2*N, 2*N> _gu1;
+	MultiQuadTuple<2*N, 2*N> _gu2;
 	MultiQuadTuple<4*N, 3*N> _gb1;
 	MultiQuadTuple<3*N, 3*N> _gb2;
 	BitMatrix<2*N> _Xx;
@@ -81,8 +76,8 @@ private:
 
 	unsigned int NN = N << 6;
 
-	const BitVector<3*N> calculateT(BitVector<2*N> &x, BitVector<2*N> &y) const{
-		BitVector<4*N> concatXY = BitVector<4*N>::vCat(x, y);
+	const BitVector<3*N> binaryT(const BitVector<2*N> &x, const BitVector<2*N> &y) const{
+		BitVector<4*N> concatXY = BitVector<4*N>::template vCat<2*N, 2*N>(x, y);
 		return _gb2(_gb1(concatXY));
 	}
 };

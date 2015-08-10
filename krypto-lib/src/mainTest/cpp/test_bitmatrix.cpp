@@ -101,29 +101,29 @@ TEST(BitMatrixTests, testIdentity){
 
 TEST(BitMatrixTests, testSplit) {
 	BitMatrix<2*N> I = BitMatrix<2*N>::squareIdentityMatrix();
-	BitMatrix<N> I1 = I.split_h_2(0); 
-	BitMatrix<N> I2 = I.split_h_2(1);
-	BitMatrix<N> I11 = I1.split_v_2(0);
-	BitMatrix<N> I12 = I1.split_v_2(1);
-	BitMatrix<N> I21 = I2.split_v_2(0);
-	BitMatrix<N> I22 = I2.split_v_2(1);
+	BitMatrix<N> I1 = I.splitH2(0); 
+	BitMatrix<N> I2 = I.splitH2(1);
+	BitMatrix<N> I11 = I1.splitV2(0);
+	BitMatrix<N> I12 = I1.splitV2(1);
+	BitMatrix<N> I21 = I2.splitV2(0);
+	BitMatrix<N> I22 = I2.splitV2(1);
 	ASSERT_TRUE(I11.isIdentity());
 	ASSERT_FALSE(I12.isIdentity());
 	ASSERT_FALSE(I21.isIdentity());
 	ASSERT_TRUE(I22.isIdentity());
 
 	BitMatrix<3*N> J = BitMatrix<3*N>::squareIdentityMatrix();
-	BitMatrix<N> J1 = J.split_h_3(0);
-	BitMatrix<N> J11 = J1.split_v_3(0);
+	BitMatrix<N> J1 = J.splitH3(0);
+	BitMatrix<N> J11 = J1.splitV3(0);
 	ASSERT_TRUE(J11.isIdentity());
 }
 
 TEST(BitMatrixTest, testAug){
 	BitMatrix<N> I = BitMatrix<N>::squareIdentityMatrix();
 	BitMatrix<N> O = BitMatrix<N>::squareZeroMatrix();
-	BitMatrix<2*N> IO = BitMatrix<2*N>::aug_h(I, O);
-	BitMatrix<2*N> OI = BitMatrix<2*N>::aug_h(O, I);
-	BitMatrix<2*N> IOOI = BitMatrix<2*N>::aug_v(IO, OI);
+	BitMatrix<2*N> IO = BitMatrix<2*N>::augH(I, O);
+	BitMatrix<2*N> OI = BitMatrix<2*N>::augH(O, I);
+	BitMatrix<2*N> IOOI = BitMatrix<2*N>::augV(IO, OI);
 	ASSERT_TRUE(IOOI.isIdentity());
 }
 

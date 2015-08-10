@@ -138,21 +138,21 @@ public:
 	 * Function: augV(f1, f2)
 	 * Returns the matrix resulting from vertical augmentation of two given MultiQuadTuples
 	 */
-	template<unsigned int NUM_OUTPUTS1, unsigned int NUM_OUTPUTS2>
+	template<unsigned int NUM_OUTPUTS1, unsigned int NUM_OUTPUTS2> //augV
 	static const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS1+NUM_OUTPUTS2> augV(const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS1> & f1, const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS2> & f2){
 		BitMatrix<NUM_OUTPUTS1> C1 = f1.getTransposedContributionMatrix();
 		BitMatrix<NUM_OUTPUTS2> C2 = f2.getTransposedContributionMatrix();
 		BitVector<NUM_OUTPUTS1> c1 = f1.getConstantTerms();
 		BitVector<NUM_OUTPUTS2> c2 = f2.getConstantTerms(); 
 		const unsigned int NUM_OUTPUTS_SUM = NUM_OUTPUTS1 + NUM_OUTPUTS2;
-		return MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS_SUM>(BitMatrix<NUM_OUTPUTS_SUM>::augH(C1, C2), BitVector<NUM_OUTPUTS_SUM>::vCat(c1, c2));
+		return MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS_SUM>(BitMatrix<NUM_OUTPUTS_SUM>::augH(C1, C2), BitVector<NUM_OUTPUTS_SUM>::template vCat<NUM_OUTPUTS1, NUM_OUTPUTS2>(c1, c2));
 	}	
 
 	/*
 	 * Function: augV(f1, f2, f3)
 	 * Returns the matrix resulting from vertical augmentation of three given MultiQuadTuples
 	 */
-	template<unsigned int NUM_OUTPUTS1, unsigned int NUM_OUTPUTS2, unsigned int NUM_OUTPUTS3>
+	template<unsigned int NUM_OUTPUTS1, unsigned int NUM_OUTPUTS2, unsigned int NUM_OUTPUTS3> //augV
 	static const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS1+NUM_OUTPUTS2+NUM_OUTPUTS3> augV(const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS1> & f1, const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS2> & f2, const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS3> & f3){
 		BitMatrix<NUM_OUTPUTS1> C1 = f1.getTransposedContributionMatrix();
 		BitMatrix<NUM_OUTPUTS2> C2 = f2.getTransposedContributionMatrix();

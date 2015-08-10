@@ -32,7 +32,7 @@ public:
      * Constructs a BridgeKey with a given PrivateKey
      * and BitMatrix K (for left-matrix multiplcation)
      */
-	BridgeKey(PrivateKey<N,L> &pk) : 
+	BridgeKey(const PrivateKey<N,L> &pk) : 
 	_pk(pk),
 	_R(BitMatrix<N>::randomInvertibleMatrix()),
 	_Rx(BitMatrix<N>::randomInvertibleMatrix()),
@@ -44,12 +44,10 @@ public:
 	_Cu2(pk.getUnaryObfChain()[1]),
 	_Cb1(pk.getBinaryObfChain()[0]),
 	_Cb2(pk.getBinaryObfChain()[1]),
-	//_BKBi(pk.getB() * K * pk.getB().inv()),
-	//_BKBiAi(_BKBi * pk.getA().inv()),
 	_ARAi(pk.getA() * _R * pk.getA().inv()),
 	_ARxAi(pk.getA() * _Rx * pk.getA().inv()),
 	_ARyAi(pk.getA() * _Ry * pk.getA().inv()),
-	_AiM2(_pk.getA().inv().template pMult<2*N>(_M.inv(), NN, 2*NN-1))	
+	_AiM2(_Ai.template pMult<2*N>(_M.inv(), NN, 2*NN-1))	
 	{}
 
 /* Unary unified code */
@@ -66,7 +64,8 @@ public:
 
 		MultiQuadTuple<2*N, N> top = f.get(0) * matTop;
 		MultiQuadTuple<2*N, N> bot = f.get(0) * matBot;
-		MultiQuadTuple<2*N, 2*N> aug = MultiQuadTuple<2*N, 2*N>::augV(top, bot);
+		//MultiQuadTuple<2*N, 2*N> aug = MultiQuadTuple<2*N, 2*N>::augV(top, bot);
+		MultiQuadTuple<2*N, 2*N> aug ( MultiQuadTuple<2*N, 2*N>::template augV<N,N>(top, bot) );
 		return aug.template rMult<2*N>(_Cu1);
 	}
 
@@ -80,9 +79,10 @@ public:
 		BitMatrix<2*N> matTop = _Cu1.inv().splitV2(0);
 		BitMatrix<2*N> matBot = _Cu1.inv().splitV2(1);
 
+		//MultiQuadTuple<2*N, 2*N> aug = MultiQuadTuple<2*N, 2*N>::augV(top, bot);
 		MultiQuadTuple<2*N, N> top = f.get(1) * matTop;
 		MultiQuadTuple<2*N, N> bot = f.get(1) * matBot;
-		MultiQuadTuple<2*N, 2*N> aug = MultiQuadTuple<2*N, 2*N>::augV(top, bot);
+		MultiQuadTuple<2*N, 2*N> aug (MultiQuadTuple<2*N, 2*N>::template augV<N,N>(top, bot));
 		return aug.template rMult<2*N>(_Cu2);
 	}
 
@@ -97,8 +97,8 @@ public:
 		BitMatrix<N> zeroN = BitMatrix<N>::squareZeroMatrix();
 		BitMatrix<N> RAi = _R * _Ai;
 
-		BitMatrix<N> _BKBi = getBKBi(K);
-		BitMatrix<N> _BKBiAi = getBKBiAi(K);
+		BitMatrix<N> _BKBi = _pk.getB() * K * _Bi;
+		BitMatrix<N> _BKBiAi = _BKBi * _Ai;
 
 		BitMatrix<2*N> XTop = BitMatrix<2*N>::augH(_BKBi, _BKBiAi ^ RAi);
 		BitMatrix<2*N> XBot = BitMatrix<2*N>::augH(zeroN, _ARAi);
@@ -203,9 +203,9 @@ public:
 	 */
 	const MultiQuadTuple<7*N, 2*N> getANDz() const{
 		BitMatrix<2*N> X = getANDX();
-		BitMatrix<3*N> Y1 = getANDY1();
-		BitMatrix<3*N> Y2 = getANDY2();
-		BitMatrix<3*N> Y3 = getANDY3();
+		BitMatrix<3*N> Y1 = _Bi.pMult(_Cb2.inv(), 0, NN-1);
+		BitMatrix<3*N> Y2 = _Bi.pMult(_Cb2.inv(), NN, 2*NN-1);
+		BitMatrix<3*N> Y3 = _Cb2.inv().splitV3(2);
 		BitMatrix<7*N> Y3t = BitMatrix<7*N>::augH(BitMatrix<4*N>::zeroMatrix(N << 6), Y3);
 
 		BitMatrix<N> contrib = BitMatrix<N>::augV(getANDP(X, Y2), getANDQ(X, Y1), getANDS(Y1, Y2));
@@ -213,10 +213,9 @@ public:
 		zTop = zTop.template rMult<N>(_pk.getB());
 		zTop = zTop ^ MultiQuadTuple<7*N, N>::getMultiQuadTuple(Y3t);
 		MultiQuadTuple<7*N, N> zeroMQT = MultiQuadTuple<7*N, N>::zeroMultiQuadTuple();
-		MultiQuadTuple<7*N, 2*N> z = MultiQuadTuple<7*N, 2*N>::augV(zTop, zeroMQT);
-		MultiQuadTuple<7*N, 2*N> result = z.template rMult<2*N>(_M);
 
-		return result;
+		MultiQuadTuple<7*N, 2*N> z = MultiQuadTuple<7*N, 2*N>::augV(zTop, zeroMQT);
+		return z.template rMult<2*N>(_M);
 	}
 
 	/*
@@ -252,8 +251,6 @@ private:
 	BitMatrix<2*N> _Cu2;
 	BitMatrix<3*N> _Cb1;
 	BitMatrix<3*N> _Cb2;
-	//BitMatrix<N> _BKBi; (leave the comment here just in case we need it later)
-	//BitMatrix<N> _BKBiAi;
 	BitMatrix<N> _ARAi;
 	BitMatrix<N> _ARxAi;
 	BitMatrix<N> _ARyAi;
@@ -269,14 +266,6 @@ private:
 	static const unsigned int twoNN = NN << 1;
 	static const unsigned int threeNN = 3 * NN;
 
-	const BitMatrix<N> getBKBi(const BitMatrix<N> & K) const{
-		return  _pk.getB() * K * _pk.getB().inv();
-	}
-
-	const BitMatrix<N> getBKBiAi(const BitMatrix<N> & K) const{
-		return getBKBi(K) * _pk.getA().inv();
-	}
-
 /*Helper functions for getANDz*/
 
 	/*
@@ -287,33 +276,6 @@ private:
 	const BitMatrix<2*N> getANDX() const{
 		BitMatrix<2*N> inner = BitMatrix<2*N>::augH(BitMatrix<N>::squareIdentityMatrix(), _Ai);
 		return _Bi * inner * _M.inv();
-	}
-
-	/*
-	 * Function: getANDY1
-	 * Returns matrix Y1 used to compute z for homomorphic AND
-	 * Dimension of X: (N * 2^6) by 3*(N * 2^6)
-	 */
-	const BitMatrix<3*N> getANDY1() const{
-		return _Bi.pMult(_Cb2.inv(), 0, NN-1);
-	}
-
-	/*
-	 * Function: getANDY2
-	 * Returns matrix Y2 used to compute z for homomorphic AND
-	 * Dimension of X: (N * 2^6) by 3*(N * 2^6)
-	 */
-	const BitMatrix<3*N> getANDY2() const{
-		return _Bi.pMult(_Cb2.inv(), NN, 2*NN-1);
-	}
-
-	/*
-	 * Function: getANDY3
-	 * Returns matrix Y3 used to compute z for homomorphic AND
-	 * Dimension of X: (N * 2^6) by 3*(N * 2^6)
-	 */
-	const BitMatrix<3*N> getANDY3() const{
-		return _Cb2.inv().splitV3(2);
 	}
 
 	/* 

@@ -236,8 +236,9 @@ public:
      * Function: elements()
      * Returns the underlying array of bits
      */
-    unsigned long long * elements() /*const*/ {
-        return _bits;
+    unsigned long long * elements() const {
+        //return _bits;
+        return startPtr;
     }
     
     /*
@@ -363,7 +364,7 @@ public:
      * two given BitVectors
      */
     template <unsigned int N1, unsigned int N2>
-    static const BitVector<N1 + N2> vCat(BitVector<N1> & v1, BitVector<N2> & v2){
+    static const BitVector<N1 + N2> vCat(const BitVector<N1> & v1, const BitVector<N2> & v2){
         const int N_SUM = N1 + N2;
         BitVector<N_SUM> result;
         unsigned long long *b1 = v1.elements();
@@ -379,7 +380,7 @@ public:
      * three given BitVectors
      */
     template <unsigned int N1, unsigned int N2, unsigned int N3>
-    static const BitVector<N1 + N2 + N3> vCat(BitVector<N1> & v1, BitVector<N2> & v2, BitVector<N3> & v3){
+    static const BitVector<N1 + N2 + N3> vCat(const BitVector<N1> & v1, const BitVector<N2> & v2, const BitVector<N3> & v3){
         const int N_SUM = N1 + N2 + N3;
         BitVector<N_SUM> result;
         unsigned long long *b1 = v1.elements();
@@ -459,6 +460,7 @@ public:
 
 private:
     unsigned long long _bits[N]; //array of bit values
+    unsigned long long *startPtr = &_bits[0];
     static const unsigned int numBits = N << 6; //number of bits in the array
 };
 

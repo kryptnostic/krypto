@@ -45,7 +45,6 @@ public:
      * Returns the encrypted ciphertext (length 2N * 2^6) of the plaintext (length N * 2^6)
      */
 	const BitVector<2*N> encrypt(const BitVector<N> &m) const{//returns x = E(m, r) given a plaintext m 
-		//For now, we assume that m is padded and hashed. These operations will be included later.
 		BitVector<N> r = BitVector<N>::randomVector();
 		BitVector<N> top = _B.template operator*<N>(m) ^ (r ^ _f(r));
 		BitVector<N> bottom = _A.template operator*<N>(r);
