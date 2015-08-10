@@ -724,9 +724,8 @@ public:
 	static const BitMatrix<COLS> augV(const BitMatrix<COLS> & top, const BitMatrix<COLS> & bot){ //TODO: optimize
 		unsigned int t_rows = top.rowCount();
 		unsigned int b_rows = bot.rowCount();
-		vector< BitVector<COLS> > rows;
+		vector< BitVector<COLS> > rows(top._rows);
 		rows.reserve(t_rows + b_rows);
-		rows.insert(rows.end(), top._rows.begin(), top._rows.end());
 		rows.insert(rows.end(), bot._rows.begin(), bot._rows.end());
 		return BitMatrix<COLS>(rows);
 	}
@@ -741,9 +740,8 @@ public:
 		unsigned int t_rows = top.rowCount();
 		unsigned int m_rows = mid.rowCount();
 		unsigned int b_rows = bot.rowCount();
-		vector< BitVector<COLS> > rows;
+		vector< BitVector<COLS> > rows(top._rows);
 		rows.reserve(t_rows + m_rows + b_rows);
-		rows.insert(rows.end(), top._rows.begin(), top._rows.end());
 		rows.insert(rows.end(), mid._rows.begin(), mid._rows.end());
 		rows.insert(rows.end(), bot._rows.begin(), bot._rows.end());
 		return BitMatrix<COLS>(rows);
@@ -791,10 +789,10 @@ public:
      */
 	const BitMatrix<COLS> splitV2 (int index) const{
 		if(DEBUG) assert(index >= 0 && index < 2);
-		const unsigned int sub_rowCount = _rows.size() / 2;
-		unsigned int start = index * sub_rowCount;
-		vector<BitVector<COLS> > subrows(&_rows[start], &_rows[start + sub_rowCount]);
-		return BitMatrix<COLS>(subrows);	
+		const unsigned int subRowCount = _rows.size() / 2;
+		unsigned int start = index * subRowCount;
+		vector< BitVector<COLS> > subrows(&_rows[start], &_rows[start + subRowCount]);
+		return BitMatrix<COLS>(subrows);
 	}
 
 	/*
@@ -804,10 +802,10 @@ public:
      */
 	const BitMatrix<COLS> splitV3 (int index) const{
 		if(DEBUG) assert(index >= 0 && index < 3);
-		const unsigned int sub_rowCount = _rows.size() / 3;
-		unsigned int start = index * sub_rowCount;
-		vector<BitVector<COLS> > subrows(&_rows[start], &_rows[start + sub_rowCount]);
-		return BitMatrix<COLS>(subrows);		
+		const unsigned int subRowCount = _rows.size() / 3;
+		unsigned int start = index * subRowCount;
+		vector< BitVector<COLS> > subrows(&_rows[start], &_rows[start + subRowCount]);
+		return BitMatrix<COLS>(subrows);
 	}
 
 	/*
