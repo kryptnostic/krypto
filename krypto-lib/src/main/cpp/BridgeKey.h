@@ -64,8 +64,7 @@ public:
 
 		MultiQuadTuple<2*N, N> top = f.get(0) * matTop;
 		MultiQuadTuple<2*N, N> bot = f.get(0) * matBot;
-		//MultiQuadTuple<2*N, 2*N> aug = MultiQuadTuple<2*N, 2*N>::augV(top, bot);
-		MultiQuadTuple<2*N, 2*N> aug ( MultiQuadTuple<2*N, 2*N>::template augV<N,N>(top, bot) );
+		MultiQuadTuple<2*N, 2*N> aug = MultiQuadTuple<2*N, 2*N>::augV(top, bot);
 		return aug.template rMult<2*N>(_Cu1);
 	}
 
@@ -79,10 +78,9 @@ public:
 		BitMatrix<2*N> matTop = _Cu1.inv().splitV2(0);
 		BitMatrix<2*N> matBot = _Cu1.inv().splitV2(1);
 
-		//MultiQuadTuple<2*N, 2*N> aug = MultiQuadTuple<2*N, 2*N>::augV(top, bot);
 		MultiQuadTuple<2*N, N> top = f.get(1) * matTop;
 		MultiQuadTuple<2*N, N> bot = f.get(1) * matBot;
-		MultiQuadTuple<2*N, 2*N> aug (MultiQuadTuple<2*N, 2*N>::template augV<N,N>(top, bot));
+		MultiQuadTuple<2*N, 2*N> aug = MultiQuadTuple<2*N, 2*N>::augV(top, bot);
 		return aug.template rMult<2*N>(_Cu2);
 	}
 
