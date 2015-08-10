@@ -8,14 +8,14 @@
 using namespace std;
 
 #define L 1
-#define M 1 
-#define H 2 
+#define M 1
+#define H 2
 #define N 1
 #define DEBUG false
-#define OPRUNS 64
+#define OPRUNS 100
 #define TESTRUNS 10
 
-void testOps() {
+void testOps1() {
 	PrivateKey<N, 2> pk;
 
 	BitMatrix<N> K = BitMatrix<N>::randomMatrix(N << 6);
@@ -33,15 +33,67 @@ void testOps() {
 
 	for (int i = 0; i < OPRUNS; ++i) {
 		BitVector<2*N> encryptedLMM = pub.homomorphicLMM(Z, encryptedX);
+		// BitVector<2*N> encryptedXOR = pub.homomorphicXOR(encryptedX, encryptedY);
+		// BitVector<2*N> encryptedAND = pub.homomorphicAND(encryptedX, encryptedY);
+	}
+
+ 	clock_t end = clock();
+ 	cout << "Average time elapsed over " << OPRUNS << " operations of LMM: " << double(end - begin) / (CLOCKS_PER_SEC * OPRUNS) << " sec" << endl;
+}
+
+void testOps2() {
+ 	PrivateKey<N, 2> pk;
+
+	BitMatrix<N> K = BitMatrix<N>::randomMatrix(N << 6);
+	BridgeKey<N, 2> bk(pk);
+	PublicKey<N, 2> pub(bk);
+
+	BitVector<N> x = BitVector<N>::randomVector();
+	BitVector<N> y = BitVector<N>::randomVector();
+	BitVector<2*N> encryptedX = pk.encrypt(x);
+	BitVector<2*N> encryptedY = pk.encrypt(y);
+
+	BitMatrix<4*N> Z = bk.getLMMZ(K); 
+
+	clock_t begin = clock();
+
+	for (int i = 0; i < OPRUNS; ++i) {
+		// BitVector<2*N> encryptedLMM = pub.homomorphicLMM(Z, encryptedX);
 		BitVector<2*N> encryptedXOR = pub.homomorphicXOR(encryptedX, encryptedY);
+		// BitVector<2*N> encryptedAND = pub.homomorphicAND(encryptedX, encryptedY);
+	}
+
+ 	clock_t end = clock();
+ 	cout << "Average time elapsed over " << OPRUNS << " operations of XOR: " << double(end - begin) / (CLOCKS_PER_SEC * OPRUNS) << " sec" << endl;
+}
+
+void testOps3() {
+ 	PrivateKey<N, 2> pk;
+
+	BitMatrix<N> K = BitMatrix<N>::randomMatrix(N << 6);
+	BridgeKey<N, 2> bk(pk);
+	PublicKey<N, 2> pub(bk);
+
+	BitVector<N> x = BitVector<N>::randomVector();
+	BitVector<N> y = BitVector<N>::randomVector();
+	BitVector<2*N> encryptedX = pk.encrypt(x);
+	BitVector<2*N> encryptedY = pk.encrypt(y);
+
+	BitMatrix<4*N> Z = bk.getLMMZ(K); 
+
+	clock_t begin = clock();
+
+	for (int i = 0; i < OPRUNS; ++i) {
+		// BitVector<2*N> encryptedLMM = pub.homomorphicLMM(Z, encryptedX);
+		// BitVector<2*N> encryptedXOR = pub.homomorphicXOR(encryptedX, encryptedY);
 		BitVector<2*N> encryptedAND = pub.homomorphicAND(encryptedX, encryptedY);
 	}
 
  	clock_t end = clock();
- 	cout << "Time elapsed over " << OPRUNS << " operations of LMM, XOR, and AND: " << double(end - begin) / (CLOCKS_PER_SEC) << " sec" << endl;
+ 	cout << "Average time elapsed over " << OPRUNS << " operations of AND: " << double(end - begin) / (CLOCKS_PER_SEC * OPRUNS) << " sec" << endl;
 }
 
-void testRuns() {
+void testClientRuns() {
 	clock_t begin = clock();
 
 	for (int i = 0; i < TESTRUNS; ++i) {
@@ -50,14 +102,32 @@ void testRuns() {
 
 		BitMatrix<N> K = BitMatrix<N>::randomMatrix(N << 6);
 		BridgeKey<N, 2> bk(pk);
-		PublicKey<N, 2> pub(bk);
 		
 		// clock_t end_i = clock();
 		// cout << "Test Run #" << i << " time: " << double(end_i - begin_i) / (CLOCKS_PER_SEC) << " sec" << endl;
 	}
 
  	clock_t end = clock();
- 	cout << "Average time elapsed over " << TESTRUNS << " runs of key generation: " << double(end - begin) / (CLOCKS_PER_SEC * TESTRUNS) << " sec" << endl;
+ 	cout << "Average time elapsed over " << TESTRUNS << " runs of Private & Bridge key generation: " << double(end - begin) / (CLOCKS_PER_SEC * TESTRUNS) << " sec" << endl;
+}
+
+void testPublicKeyRuns() {
+	clock_t diff = 0;
+
+	for (int i = 0; i < TESTRUNS; ++i) {
+		PrivateKey<N, 2> pk;
+
+		BitMatrix<N> K = BitMatrix<N>::randomMatrix(N << 6);
+		BridgeKey<N, 2> bk(pk);
+
+		clock_t begin_i = clock();
+		PublicKey<N, 2> pub(bk);
+		clock_t end_i = clock();
+
+		diff += (end_i - begin_i);
+	}
+
+ 	cout << "Average time elapsed over " << TESTRUNS << " runs of Public key generation: " << double(diff) / (CLOCKS_PER_SEC * TESTRUNS) << " sec" << endl;
 }
 
 void testHash() {
@@ -85,8 +155,12 @@ void testHash() {
 }
 
 int main(int argc, char **argv) {
-	testOps();
-	testRuns();
+	cout << "Speed tests with " << (N << 6) << " bit plaintext" << endl;
+	testOps1();
+	testOps2();
+	testOps3();
+	testClientRuns();
+	testPublicKeyRuns();
 	testHash();
  	fclose(urandom);
 	return 0;
