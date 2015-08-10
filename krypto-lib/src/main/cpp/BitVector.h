@@ -85,6 +85,16 @@ public:
     }
 
     /*
+     * Function: randomVector()
+     * Returns a BitVector with leading term zeroed
+     */
+    static const BitVector<N> randomSmallVector(){
+        BitVector<N> result = BitVector<N>::randomVector();
+        result.clear(0); 
+        return result;
+    }
+
+    /*
      * Function: randomVectorLeadingZeroes(n)
      * Returns a BitVector with n leading zeroes followed by random values
      * Assumes n < numBits

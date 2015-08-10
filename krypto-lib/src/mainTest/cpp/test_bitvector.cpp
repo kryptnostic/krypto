@@ -8,6 +8,11 @@ TEST(BitVectorTests, test_random) {
 	ASSERT_TRUE(bv.length() == 64);
 }
 
+TEST(BitVectorTests, test_smallrandom){
+    BitVector<1> bv = BitVector<1>::randomSmallVector();
+    ASSERT_TRUE(!bv.get(0));
+}
+
 TEST(BitVectorTests, test_clear) {
 	BitVector<1> bv = BitVector<1>::randomVector();
     
