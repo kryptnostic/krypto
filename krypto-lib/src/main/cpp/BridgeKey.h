@@ -13,7 +13,6 @@
 #define krypto_BridgeKey_h
 
 #include "PrivateKey.h"
-#include "MultiQuadTuple.h"
 //#include <emscripten/bind.h>
 
 /*

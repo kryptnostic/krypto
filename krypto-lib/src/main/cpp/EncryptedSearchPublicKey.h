@@ -2,8 +2,6 @@
 #define krypto_EncryptedSearchPublicKey_h
 
 #include "PublicKey.h"
-#include "BridgeKey.h"
-#include "MultiQuadTuple.h"
 //#include <emscripten/bind.h>
 
 template<unsigned int N, unsigned int L>

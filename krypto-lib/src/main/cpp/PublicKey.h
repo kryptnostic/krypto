@@ -13,7 +13,6 @@
 #define krypto_PublicKey_h
 
 #include "BridgeKey.h"
-#include "MultiQuadTuple.h"
 //#include <emscripten/bind.h>
 
 #define DEBUG false
