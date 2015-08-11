@@ -64,7 +64,7 @@ TEST(MQTTests, testShifter){
 	ASSERT_TRUE(34+55 == 89);
 	MultiQuadTuple<N, M> f = MultiQuadTuple<N, M>::randomMultiQuadTuple();
 	BitVector<N> v = BitVector<N>::randomVectorLeadingZeroes(2);
-	BitVector<N> w = v.leftShift();
+	BitVector<N> w = v.leftShift(1);
 	BitVector<N> fv = f(v);
 	MultiQuadTuple<N, M> g = f.leftShift();
 	BitVector<N> gw = g(w);
