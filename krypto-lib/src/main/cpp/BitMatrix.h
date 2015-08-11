@@ -20,7 +20,6 @@
 using namespace std;
 
 #define DEBUG false
-#define NUM_THREADS 5
 
 /*
  * Template for BitMatrix
@@ -348,7 +347,6 @@ public:
 		int numRows = ROWS << 6;
 		if (val) setCol<ROWS>(colIndex);
 		else clearCol<ROWS>(colIndex);
-		//for (int i = 0; i < numRows; ++i) set(i, colIndex, val);
 	}
 
     /*

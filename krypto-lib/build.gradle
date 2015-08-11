@@ -12,6 +12,7 @@ model {
             		cppCompiler.withArguments { args ->
             			args << "-std=c++14"
                         args << "-O3"
+                        //args << "-I \"Downloads/emsdk_portable/emscripten/tag-1.34.4/system/include/\"" (whatever directory that contains <emscripten/bind.h>)
             		}
             }
         }
