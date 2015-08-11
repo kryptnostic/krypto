@@ -13,10 +13,8 @@
 #define krypto_BridgeKey_h
 
 #include "PrivateKey.h"
-#include "BitMatrix.h"
 #include "MultiQuadTuple.h"
-
-using namespace std;
+//#include <emscripten/bind.h>
 
 /*
  * Template for BridgeKey

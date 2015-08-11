@@ -4,9 +4,7 @@
 #include "PublicKey.h"
 #include "BridgeKey.h"
 #include "MultiQuadTuple.h"
-#include "BitMatrix.h"
-
-using namespace std;
+//#include <emscripten/bind.h>
 
 template<unsigned int N, unsigned int L>
 class EncryptedSearchPublicKey{
@@ -59,4 +57,15 @@ private:
 	static const unsigned int twoNN = NN << 1;
 };
 
+/*
+EMSCRIPTEN_BINDINGS(my_class_example) {
+	class_<EncryptedSearchPublicKey>("EncryptedSearchPublicKey")
+    .constructor<PrivateKey>()
+
+    .function("incrementX", &MyClass::incrementX)
+    .property("x", &MyClass::getX, &MyClass::setX)
+    .class_function("getStringFromInstance", &MyClass::getStringFromInstance)
+    ;
+}
+*/
 #endif/* defined(__krypto__EncryptedSearchPublicKey__) */

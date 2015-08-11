@@ -14,9 +14,7 @@
 
 #include "BridgeKey.h"
 #include "MultiQuadTuple.h"
-#include "BitMatrix.h"
-
-using namespace std;
+//#include <emscripten/bind.h>
 
 #define DEBUG false
 

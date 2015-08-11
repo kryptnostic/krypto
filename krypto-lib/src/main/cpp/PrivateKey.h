@@ -12,10 +12,8 @@
 #ifndef krypto_PrivateKey_h
 #define krypto_PrivateKey_h
 
-#include "BitMatrix.h"
 #include "MultiQuadTupleChain.h"
-
-using namespace std;
+//#include <emscripten/bind.h>
 
 /*
  * Template for PrivateKey

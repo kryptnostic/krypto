@@ -14,9 +14,10 @@
 #include <vector>
 #include <fstream>
 #include <unordered_set>
-#include <pthread.h>
-#include "../../main/cpp/BitVector.h"
+//#include <pthread.h>
+#include "BitVector.h"
 //#include "../../../contrib/gtest/gtest.h"
+//#include <emscripten/bind.h>
 
 using namespace std;
 
