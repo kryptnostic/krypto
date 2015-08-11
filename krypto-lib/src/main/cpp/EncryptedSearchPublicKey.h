@@ -4,6 +4,8 @@
 #include "PublicKey.h"
 //#include <emscripten/bind.h>
 
+//using namespace emscripten;
+
 template<unsigned int N, unsigned int L>
 class EncryptedSearchPublicKey{
 public:
@@ -56,14 +58,12 @@ private:
 };
 
 /*
-EMSCRIPTEN_BINDINGS(my_class_example) {
+EMSCRIPTEN_BINDINGS(encrypted_search_public_key) {
 	class_<EncryptedSearchPublicKey>("EncryptedSearchPublicKey")
     .constructor<PrivateKey>()
-
-    .function("incrementX", &MyClass::incrementX)
-    .property("x", &MyClass::getX, &MyClass::setX)
-    .class_function("getStringFromInstance", &MyClass::getStringFromInstance)
+    .function("homomorphicHash", &EncryptedSearch::homomorphicHash)
     ;
 }
 */
+
 #endif/* defined(__krypto__EncryptedSearchPublicKey__) */
