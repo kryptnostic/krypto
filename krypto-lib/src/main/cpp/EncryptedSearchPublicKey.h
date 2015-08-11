@@ -2,9 +2,6 @@
 #define krypto_EncryptedSearchPublicKey_h
 
 #include "PublicKey.h"
-//#include <emscripten/bind.h>
-
-//using namespace emscripten;
 
 template<unsigned int N, unsigned int L>
 class EncryptedSearchPublicKey{
@@ -56,14 +53,5 @@ private:
 	static const unsigned int NN = N << 6;
 	static const unsigned int twoNN = NN << 1;
 };
-
-/*
-EMSCRIPTEN_BINDINGS(encrypted_search_public_key) {
-	class_<EncryptedSearchPublicKey>("EncryptedSearchPublicKey")
-    .constructor<PrivateKey>()
-    .function("homomorphicHash", &EncryptedSearch::homomorphicHash)
-    ;
-}
-*/
 
 #endif/* defined(__krypto__EncryptedSearchPublicKey__) */
