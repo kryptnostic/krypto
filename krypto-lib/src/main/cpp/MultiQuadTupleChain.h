@@ -47,7 +47,7 @@ public:
 		_tuple.push_back(f);
 	}
 
-	MultiQuadTuple<N,N> get(const int index){
+	const MultiQuadTuple<N,N> get(const int index) const{
 		return _tuple[index];
 	}
 
