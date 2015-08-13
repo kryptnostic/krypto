@@ -468,7 +468,7 @@ public:
 	const BitMatrix<COLS> inv(bool & invertible) const{
 		size_t n = rowCount();
 		if (DEBUG) assert(n == colCount());
-		BitMatrix<COLS> A = *this;
+		BitMatrix<COLS> A(*this);
 		BitMatrix<COLS> I = BitMatrix<COLS>::squareIdentityMatrix();
 		for (int k = 0; k < n; ++k) {
 			int pos = -1, i = k;

@@ -83,23 +83,23 @@ void testRightCompose(MultiQuadTuple<N, M> &f, BitVector<N> &x){ //f:N->M, D:M->
 void testBridgeKeyInstantiation(PrivateKey<N, 2> &pk) {
 	cout << "BRIDGE KEY TEST:" << endl << endl;
 
-	BridgeKey<N, 2*N> bk(pk, BitMatrix<N>::squareIdentityMatrix());
+	BridgeKey<N, 2*N> bk(pk);
 
-	MultiQuadTuple<2*N, 2*N> u_g1 = bk.get_UNARY_g1();
-	MultiQuadTuple<2*N, 2*N> u_g2 = bk.get_UNARY_g2();
+	MultiQuadTuple<2*N, 2*N> u_g1 = bk.getUnaryG1();
+	MultiQuadTuple<2*N, 2*N> u_g2 = bk.getUnaryG2();
 
-	BitMatrix<4*N> Z = bk.get_LMM_Z();
+	BitMatrix<4*N> Z = bk.getLMMZ(BitMatrix<N>::squareIdentityMatrix());
 
-	MultiQuadTuple<4*N, 3*N> b_g1 = bk.get_BINARY_g1();
-	MultiQuadTuple<3*N, 3*N> b_g2 = bk.get_BINARY_g2();
+	MultiQuadTuple<4*N, 3*N> b_g1 = bk.getBinaryG1();
+	MultiQuadTuple<3*N, 3*N> b_g2 = bk.getBinaryG2();
 
-	BitMatrix<2*N> Xx = bk.get_XOR_Xx();
-	BitMatrix<2*N> Xy = bk.get_XOR_Xy();
-	BitMatrix<3*N> Y = bk.get_XOR_Y();
+	BitMatrix<2*N> Xx = bk.getXORXx();
+	BitMatrix<2*N> Xy = bk.getXORXy();
+	BitMatrix<3*N> Y = bk.getXORY();
 
-	BitMatrix<2*N> Z1 = bk.get_AND_Z1();
-	BitMatrix<2*N> Z2 = bk.get_AND_Z2();
-	MultiQuadTuple<7*N, 2*N> z = bk.get_AND_z();
+	BitMatrix<2*N> Z1 = bk.getANDZ1();
+	BitMatrix<2*N> Z2 = bk.getANDZ2();
+	MultiQuadTuple<7*N, 2*N> z = bk.getANDz();
 
 	cout << "---------------------------------" << endl;
 }
@@ -107,8 +107,7 @@ void testBridgeKeyInstantiation(PrivateKey<N, 2> &pk) {
 void testPublicKey(PrivateKey<N, 2> &pk) {
 	cout << "PUBLIC KEY TEST:" << endl << endl;
 
-	BitMatrix<N> K = BitMatrix<N>::randomMatrix(N << 6);
-	BridgeKey<N, 2> bk(pk, K);
+	BridgeKey<N, 2> bk(pk);
 	PublicKey<N, 2> pub(bk);
 
 	BitVector<N> x = BitVector<N>::randomVector();
@@ -125,8 +124,10 @@ void testPublicKey(PrivateKey<N, 2> &pk) {
 	y.print();
 	cout << endl << "------" << endl;
 
+	BitMatrix<N> K = BitMatrix<N>::randomMatrix(N << 6);
+	BitMatrix<4*N> Z = bk.getLMMZ(K);
 
-	BitVector<2*N> encryptedLMM = pub.homomorphicLMM(encryptedX);
+	BitVector<2*N> encryptedLMM = pub.homomorphicLMM(Z, encryptedX);
 	BitVector<N> unencryptedLMM = pk.decrypt(encryptedLMM);
 
 	cout << "LMM: D(H(E(x))) = ";
