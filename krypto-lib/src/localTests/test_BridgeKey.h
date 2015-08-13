@@ -43,8 +43,8 @@ public:
      */
     const MultiQuadTuple<7*N, 2*N> getANDz() const{
         BitMatrix<2*N> X = getANDX();
-        BitMatrix<3*N> Y1 = _Bi.pMult(_Cb2.inv(), 0, NN-1);
-        BitMatrix<3*N> Y2 = _Bi.pMult(_Cb2.inv(), NN, 2*NN-1);
+        BitMatrix<3*N> Y1 = _Bi.pMult(_Cb2, 0, NN-1);
+        BitMatrix<3*N> Y2 = _Bi.pMult(_Cb2, NN, 2*NN-1);
         BitMatrix<3*N> Y3 = _Cb2.inv().splitV3(2);
         BitMatrix<7*N> Y3t = BitMatrix<7*N>::augH(BitMatrix<4*N>::zeroMatrix(N << 6), Y3);
 
