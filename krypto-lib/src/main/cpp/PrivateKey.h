@@ -21,7 +21,8 @@
 template<unsigned int N, unsigned int L>
 class PrivateKey {
 
-template<unsigned int M, unsigned int K> friend class BridgeKey;
+template<unsigned int N1, unsigned int L1> friend class BridgeKey;
+template<unsigned int N2, unsigned int L2> friend class EncryptedSearchPrivateKey;
 
 public:
 

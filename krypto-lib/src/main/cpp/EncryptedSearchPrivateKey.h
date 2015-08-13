@@ -34,15 +34,9 @@ private:
 		MultiQuadTuple<N,N> g = MultiQuadTuple<N,N>::randomMultiQuadTuple();
 		BitMatrix<N> Cs1 = BitMatrix<N>::randomInvertibleMatrix(); 
 		BitMatrix<N> Cs2 = BitMatrix<N>::randomInvertibleMatrix();
-		/*
-		//MultiQuadTuple<N,N> 0 = _h.template rMult<N>(Cs1);
-		
-		//MultiQuadTuple<N,N> g1 = (_f.get(0).rMult(Cs2)) * Cs1.inv();
-		//MultiQuadTuple<N,N> g2 = (_f.get(1) ^ g) * Cs2.inv();
-		//_g.addFunctionTuple(g0);
-		//_g.addFunctionTuple(g1);
-		//_g.addFunctionTuple(g2);
-		*/
+		MultiQuadTuple<2*N,N> g0 = _h.template rMult<N>(Cs1);
+		MultiQuadTuple<N,N> g1 = (_pk.getf().get(0).template rMult<N>(Cs2)) * Cs1.inv();
+		//MultiQuadTuple<N,N> g2 = (_pk.getf().get(1) ^ g) * Cs2.inv();
 	}
 };
 
