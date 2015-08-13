@@ -18,6 +18,8 @@
 using namespace std;
 //using namespace emscripten
 
+#define MANUALCLEAR false
+
 //TODO: Wrap this in a class that can release the file handle and automatically select a good source of randomness on Windows.
 //file pointer urandom must be closed by any class importing BitVector
 static FILE * urandom = std::fopen("/dev/urandom", "rb" );
@@ -92,9 +94,9 @@ public:
      */
     static const BitVector<N> & zeroVector() {
         static BitVector<N> v;
-        // for (unsigned int i = 0; i < N; ++i) {
-        //     v._bits[i] &= 0;
-        // }
+        if (MANUALCLEAR) {
+            v.zero();
+        }
         if (!v.isZero()) cout << "returning a nonzero \"zero\" vector!" << endl;
         return v;
     }
