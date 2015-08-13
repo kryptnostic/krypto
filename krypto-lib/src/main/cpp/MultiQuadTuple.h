@@ -119,7 +119,7 @@ public:
 	 * Returns the MultiQuadTuple as a result of right composition with a given linear transformation.
 	 */
 	template<unsigned int NUM_OUTEROUTPUTS>
-	const MultiQuadTuple<NUM_INPUTS, NUM_OUTEROUTPUTS> rMult(const BitMatrix<NUM_OUTPUTS> & C) {
+	const MultiQuadTuple<NUM_INPUTS, NUM_OUTEROUTPUTS> rMult(const BitMatrix<NUM_OUTPUTS> & C) const{
 		if(DEBUG) assert(C.rowCount() == NUM_OUTEROUTPUTS << 6); 
 		return MultiQuadTuple<NUM_INPUTS, NUM_OUTEROUTPUTS>(_contributionsT * (C.template T<NUM_OUTEROUTPUTS>()), C.template operator*<NUM_OUTEROUTPUTS>(_constants));
 	}

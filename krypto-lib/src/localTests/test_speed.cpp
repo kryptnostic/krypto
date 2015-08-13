@@ -11,10 +11,9 @@ using namespace std;
 #define DEBUG false
 #define OPRUNS 10
 #define TESTRUNS 100
-#define SEARCHABLE false
 
 void testOps1() {
- 	PrivateKey<N, 2> pk(SEARCHABLE);
+ 	PrivateKey<N, 2> pk;
 	BridgeKey<N, 2> bk(pk);
 	PublicKey<N, 2> pub(bk);
 	clock_t diff = 0;
@@ -39,7 +38,7 @@ void testOps1() {
 }
 
 void testOps2() {
- 	PrivateKey<N, 2> pk(SEARCHABLE);
+ 	PrivateKey<N, 2> pk;
 	BridgeKey<N, 2> bk(pk);
 	PublicKey<N, 2> pub(bk);
 	clock_t diff = 0;
@@ -63,7 +62,7 @@ void testOps2() {
 }
 
 void testOps3() {
- 	PrivateKey<N, 2> pk(SEARCHABLE);
+ 	PrivateKey<N, 2> pk;
 	BridgeKey<N, 2> bk(pk);
 	PublicKey<N, 2> pub(bk);
 	clock_t diff = 0;
@@ -91,7 +90,7 @@ void testClientRuns() {
 
 	for (int i = 0; i < TESTRUNS; ++i) {
 		// clock_t begin_i = clock();
-		PrivateKey<N, 2> pk(SEARCHABLE);
+		PrivateKey<N, 2> pk;
 
 		BitMatrix<N> K = BitMatrix<N>::randomMatrix(N << 6);
 		BridgeKey<N, 2> bk(pk);
@@ -108,7 +107,7 @@ void testPublicKeyRuns() {
 	clock_t diff = 0;
 
 	for (int i = 0; i < TESTRUNS; ++i) {
-		PrivateKey<N, 2> pk(SEARCHABLE);
+		PrivateKey<N, 2> pk;
 
 		BitMatrix<N> K = BitMatrix<N>::randomMatrix(N << 6);
 		BridgeKey<N, 2> bk(pk);
@@ -126,19 +125,16 @@ void testPublicKeyRuns() {
 void testHash() {
 	BitVector<N> t = BitVector<N>::randomVector(); //token
 	BitVector<N> d = BitVector<N>::randomVector(); //document key
-	BitVector<2*N> x = BitVector<2*N>::vCat(t, d);
 	MultiQuadTuple<2*N, N> h = MultiQuadTuple<2*N, N>::randomMultiQuadTuple();
-	BitVector<N> addr = h(x);
-	PrivateKey<N, 2> pk(SEARCHABLE);
-	BitVector<2*N> encryptedAddress = pk.encrypt(addr);
+	PrivateKey<N, 2> pk;
 	BridgeKey<N, 2> bk(pk);
-	PublicKey<N, 2> pub(bk);
 	EncryptedSearchPublicKey<N, 2> sk(pk); 
-	
+	EncryptedSearchPrivateKey<N, 2> rk(pk, h);
+	EncryptedSearchPublicKey<N, 2> sk(rk, bk); 
 	BitVector<2*N> encryptedT = pk.encrypt(t);
 	BitVector<2*N> encryptedD = pk.encrypt(d);
 	clock_t begin = clock();
-	BitVector<2*N> calculatedEncryptedAddress = sk.homomorphicHash(h, encryptedT, encryptedD);
+	BitVector<2*N> calculatedEncryptedAddress = sk.homomorphicHash(encryptedT, encryptedD);
 	clock_t end = clock();
 	cout << "Time for one search match computation: " << double(end - begin) / (CLOCKS_PER_SEC) << " sec" << endl;
 	BitVector<N> dEAddr = pk.decrypt(calculatedEncryptedAddress); 	

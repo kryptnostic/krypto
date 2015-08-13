@@ -11,7 +11,6 @@ using namespace std;
 #define H 2 
 #define N 1
 #define DEBUG false
-#define SEARCHABLE false
 
 void testEvaluateMQT(MultiQuadTuple<N, M> &f, BitVector<N> &x){ //f:N->M
 	cout << "MQT EVALUATION TEST:" << endl << endl;
@@ -176,7 +175,7 @@ int main(int argc, char **argv) {
 	// testRightCompose(f, x);
 	// testEvaluateMQT(f, x);
 
-	PrivateKey<N, 2> pk(SEARCHABLE);
+	PrivateKey<N, 2> pk;
 
  	// testBridgeKeyInstantiation(pk);
 	testPublicKey(pk);
