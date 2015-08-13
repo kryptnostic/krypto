@@ -1,48 +1,26 @@
 #include <iostream>
+#include "test_BridgeKey.h"
 
 using namespace std;
 
+#define N 2
 
-#define DEBUG false
-#define TESTRUNS 1
+void testOps1() {
+    BridgeKey<N, 2> bk;
 
-#define numBits 64
+    MultiQuadTuple<7*N, 2*N> _z = bk.getANDz();
+    // BitVector<6> zero = BitVector<6>::zeroVector();
+    // zero.print();
 
-
-/*
- * Function: get(n)
- * Returns the value of the bit at a given index
- */
-bool get(unsigned long long x, unsigned int n) {
-    return (x & (1ul << (n & 63ul))) != 0;
-}
-
-/*
- * Function: set(n)
- * Sets the bit at a given index to 1
- */
-void set(unsigned long long &x, unsigned int n) {
-    x |= (1ul << (n & 63ul));
-}
-
-/*
- * Function: print()
- * Prints the values of the current BitVector
- * Ex. [1, 0, 0, 1, 0, 1, 1, 0]
- */
-void print(unsigned long long x) {
-    std::cout << "[";
-    for (int i = 0; i < numBits - 1; ++i) {
-        std::cout << get(x, i) << ", ";
-    }
-    std::cout << get(x, numBits - 1) << "]" << std::endl;
+    clock_t diff = 0;
+    cout << double(diff) << endl;
 }
 
 int main(int argc, char **argv) {
 
-    unsigned long long x = 0ull;
-    set(x, 5);
-    print(x);
+    for (int i = 0; i < 2; ++i) testOps1();
+    // BitVector<6> zero = BitVector<6>::zeroVector();
+    // zero.print();
 
     return 0;
 }
