@@ -12,7 +12,7 @@
 #ifndef krypto_BridgeKey_h
 #define krypto_BridgeKey_h
 
-#include "test_MultiQuadTuple.h"
+#include "embug_MultiQuadTuple.h"
 
 /*
  * Template for BridgeKey
@@ -30,8 +30,7 @@ public:
      */
     BridgeKey() : 
     _M(BitMatrix<2*N>::squareIdentityMatrix()),
-    _Ai(BitMatrix<N>::squareIdentityMatrix().inv()),
-    _Bi(BitMatrix<N>::squareIdentityMatrix().inv()),
+    _A(BitMatrix<N>::squareIdentityMatrix()),
     _Cb2(BitMatrix<3*N>::squareIdentityMatrix())
     {}
 
@@ -42,13 +41,11 @@ public:
      * Returns function tuple z used for homomorphic AND
      */
     const MultiQuadTuple<7*N, 2*N> getANDz() const{
-        BitMatrix<2*N> X = getANDX();
-        BitMatrix<3*N> Y1 = _Bi.pMult(_Cb2, 0, NN-1);
-        BitMatrix<3*N> Y2 = _Bi.pMult(_Cb2, NN, 2*NN-1);
-        BitMatrix<3*N> Y3 = _Cb2.inv().splitV3(2);
-        BitMatrix<7*N> Y3t = BitMatrix<7*N>::augH(BitMatrix<4*N>::zeroMatrix(N << 6), Y3);
+        BitMatrix<2*N> X = BitMatrix<2*N>::zeroMatrix(NN);
+        BitMatrix<3*N> Y1 = BitMatrix<3*N>::zeroMatrix(NN);
+        BitMatrix<7*N> Y3t = BitMatrix<7*N>::zeroMatrix(NN);
 
-        BitMatrix<N> contrib = BitMatrix<N>::augV(getANDP(X, Y2), getANDQ(X, Y1), getANDS(Y1, Y2));
+        BitMatrix<N> contrib = BitMatrix<N>::augV(getANDP(X, Y1), getANDQ(X, Y1), getANDS(Y1, Y1));
         MultiQuadTuple<7*N, N> zTop(contrib, BitVector<N>::zeroVector());
         MultiQuadTuple<7*N, N> zeroMQT = MultiQuadTuple<7*N, N>::zeroMultiQuadTuple();
 
@@ -61,8 +58,7 @@ private:
     BitMatrix<2*N> _M;
     BitMatrix<3*N> _Cb2;
         
-    BitMatrix<N> _Ai;
-    BitMatrix<N> _Bi;
+    BitMatrix<N> _A;
     static const unsigned int twoN = N << 1;
     static const unsigned int threeN = 3 * N;
     static const unsigned int NN = N << 6;
@@ -71,16 +67,6 @@ private:
 
 /*Helper functions for getANDz*/
 
-    /*
-     * Function: getANDX
-     * Returns matrix X used to compute z for homomorphic AND
-     * Dimension of X: (N * 2^6) by 2*(N * 2^6)
-     */
-    const BitMatrix<2*N> getANDX() const{
-        BitMatrix<2*N> inner = BitMatrix<2*N>::augH(BitMatrix<N>::squareIdentityMatrix(), _Ai);
-        return _Bi * inner * _M.inv();
-    }
-
     /* 
      * Function: getANDPk
      * top chunk of contrib matrix for z for homomorphic AND
@@ -88,25 +74,9 @@ private:
      * Dimension: 7 * 64N - level
      */
     const BitMatrix<N> getANDPk(const int level, const BitMatrix<2*N> &X, const BitMatrix<3*N> &Y2) const{
-        BitMatrix<N> top = BitMatrix<N>::zeroMatrix(twoNN - level); //not sure if there's obob here
-
+        BitMatrix<N> top = BitMatrix<N>::zeroMatrix(twoNN - level);
         BitMatrix<N> mid = BitMatrix<N>::zeroMatrix(twoNN);
-        for (size_t j = 0; j < NN; ++j) { //col within middle block
-            if(X.get(j, level)){ 
-                for (size_t i = 0; i < twoNN; ++i) { //row within middle block
-                    mid.set(i, j, X.get(j, i));
-                }               
-            }
-        }
-
         BitMatrix<N> bot = BitMatrix<N>::zeroMatrix(threeNN);
-        for (int j = 0; j < NN; ++j) { //col within bottom block
-            if(X.get(j, level)){
-                for (size_t i = 0; i < threeNN; ++i) { //row within bottom block        
-                    bot.set(i, j, Y2.get(j, i));
-                }               
-            }
-        }
         return BitMatrix<N>::augV(top, mid, bot);
     }
 
