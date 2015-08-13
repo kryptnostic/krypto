@@ -65,17 +65,17 @@ public:
 	*/
 
 private:
-	BridgeKey<N, L> _bk;
-	MultiQuadTuple<2*N, 2*N> _gu1;
-	MultiQuadTuple<2*N, 2*N> _gu2;
-	MultiQuadTuple<4*N, 3*N> _gb1;
-	MultiQuadTuple<3*N, 3*N> _gb2;
-	BitMatrix<2*N> _Xx;
-	BitMatrix<2*N> _Xy;
-	BitMatrix<3*N> _Y;
-	MultiQuadTuple<7*N, 2*N> _z;
-	BitMatrix<2*N> _Z1;
-	BitMatrix<2*N> _Z2;
+	const BridgeKey<N, L> _bk;
+	const MultiQuadTuple<2*N, 2*N> _gu1;
+	const MultiQuadTuple<2*N, 2*N> _gu2;
+	const MultiQuadTuple<4*N, 3*N> _gb1;
+	const MultiQuadTuple<3*N, 3*N> _gb2;
+	const BitMatrix<2*N> _Xx;
+	const BitMatrix<2*N> _Xy;
+	const BitMatrix<3*N> _Y;
+	const MultiQuadTuple<7*N, 2*N> _z;
+	const BitMatrix<2*N> _Z1;
+	const BitMatrix<2*N> _Z2;
 
 	unsigned int NN = N << 6;
 

@@ -236,24 +236,24 @@ public:
 
 
 private:
-	PrivateKey<N,L> _pk;
-	BitMatrix<N> _R; //TODO: delegate the random matrix generation task to some other class?
-	BitMatrix<N> _Rx;
-	BitMatrix<N> _Ry;
-	BitMatrix<2*N> _M;
-	BitMatrix<2*N> _Cu1;
-	BitMatrix<2*N> _Cu2;
-	BitMatrix<3*N> _Cb1;
-	BitMatrix<3*N> _Cb2;
-	BitMatrix<N> _ARAi;
-	BitMatrix<N> _ARxAi;
-	BitMatrix<N> _ARyAi;
+	const PrivateKey<N,L> _pk;
+	const BitMatrix<N> _R; //TODO: delegate the random matrix generation task to some other class?
+	const BitMatrix<N> _Rx;
+	const BitMatrix<N> _Ry;
+	const BitMatrix<2*N> _M;
+	const BitMatrix<2*N> _Cu1;
+	const BitMatrix<2*N> _Cu2;
+	const BitMatrix<3*N> _Cb1;
+	const BitMatrix<3*N> _Cb2;
+	const BitMatrix<N> _ARAi;
+	const BitMatrix<N> _ARxAi;
+	const BitMatrix<N> _ARyAi;
 	MultiQuadTupleChain<2*N,L> _gu; //obsfucated chain for unary operations
 	MultiQuadTupleChain<3*N,L> _gb; //obsfucated chain for binary operations
 		
-	BitMatrix<N> _Ai;
-	BitMatrix<N> _Bi;
-	BitMatrix<2*N> _AiM2;
+	const BitMatrix<N> _Ai;
+	const BitMatrix<N> _Bi;
+	const BitMatrix<2*N> _AiM2;
 	static const unsigned int twoN = N << 1;
 	static const unsigned int threeN = 3 * N;
 	static const unsigned int NN = N << 6;

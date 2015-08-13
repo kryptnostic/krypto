@@ -49,7 +49,7 @@ public:
 	}
 
 private:
-	PrivateKey<N, L> _pk;
+	const PrivateKey<N, L> _pk;
 	static const unsigned int NN = N << 6;
 	static const unsigned int twoNN = NN << 1;
 };

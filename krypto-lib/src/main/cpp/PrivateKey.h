@@ -88,8 +88,8 @@ protected:
 	}
 
 private:
-	BitMatrix<N> _A, _B; //SL_n(F_2)
-	BitMatrix<2*N> _M; //SL_{2n}(F_2)
+	const BitMatrix<N> _A, _B; //SL_n(F_2)
+	const BitMatrix<2*N> _M; //SL_{2n}(F_2)
 	MultiQuadTupleChain<N,L> _f; //{f_1,...,f_L} random quadratic function tuples
 	vector<BitMatrix<2*N> > _Cu; //chain of obfuscation matrix for unary operations
 	vector<BitMatrix<3*N> > _Cb; //chain of obfuscation matrix for binary operations
