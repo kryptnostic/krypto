@@ -98,7 +98,7 @@ TEST(BitVectorTests, test_parity) {
 
 TEST(BitVectorTests, test_shift) {
     BitVector<1> v = BitVector<1>::randomSmallVector();
-    BitVector<1> w = v.leftShift();
+    BitVector<1> w = v.leftShift(1);
     v.print();
     w.print();
 }
