@@ -14,10 +14,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
-//#include <emscripten/bind.h>
 
 using namespace std;
-//using namespace emscripten
 
 //TODO: Wrap this in a class that can release the file handle and automatically select a good source of randomness on Windows.
 //file pointer urandom must be closed by any class importing BitVector

@@ -13,7 +13,6 @@
 #define krypto_PrivateKey_h
 
 #include "MultiQuadTupleChain.h"
-//#include <emscripten/bind.h>
 
 /*
  * Template for PrivateKey
@@ -30,12 +29,13 @@ public:
      * Constructor
      * Constructs a PrivateKey with randomly initialized private variables
      */
-	PrivateKey():
+	PrivateKey(bool searchable):
 		_A(BitMatrix<N>::randomInvertibleMatrix()),
 		_B(BitMatrix<N>::randomInvertibleMatrix()),
 		_M(BitMatrix<2*N>::randomInvertibleMatrix()),
 		_f(MultiQuadTupleChain<N,L>::randomMultiQuadTupleChain()){
 		generateObfuscationMatrixChains();
+		if(searchable) generateSearchObfuscationMatrixChains();
 	}
 
     /*
@@ -93,10 +93,16 @@ private:
 	MultiQuadTupleChain<N,L> _f; //{f_1,...,f_L} random quadratic function tuples
 	vector<BitMatrix<2*N> > _Cu; //chain of obfuscation matrix for unary operations
 	vector<BitMatrix<3*N> > _Cb; //chain of obfuscation matrix for binary operations
+	vector<BitMatrix<2*N> > _Cs; //chain of obfuscation matrix for encrypted search
 	void generateObfuscationMatrixChains(){ //generates C_{u1},...,C_{uL} and C_{b1},...,C_{bL}
 		for(size_t i = 0; i < L; ++i){
 			_Cu.push_back(BitMatrix<(2*N)>::randomInvertibleMatrix());
 			_Cb.push_back(BitMatrix<(3*N)>::randomInvertibleMatrix());
+		}
+	}
+	void generateSearchObfuscationMatrixChains(){ //generates C_{u1},...,C_{uL} and C_{b1},...,C_{bL}
+		for(size_t i = 0; i < L; ++i){
+			_Cs.push_back(BitMatrix<(2*N)>::randomInvertibleMatrix());
 		}
 	}
 };

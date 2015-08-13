@@ -15,7 +15,6 @@
 #include <fstream>
 #include <unordered_set>
 #include "BitVector.h"
-//#include <emscripten/bind.h>
 
 using namespace std;
 

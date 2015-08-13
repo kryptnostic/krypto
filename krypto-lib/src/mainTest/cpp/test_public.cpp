@@ -15,7 +15,7 @@ using namespace testing;
 
 TEST(PublicKeyTest, testLMM){
 	ASSERT_TRUE(1+1 == 2);
-	PrivateKey<N, 2> pk;
+	PrivateKey<N, 2> pk(false);
 	BitMatrix<N> K = BitMatrix<N>::squareRandomMatrix();
 	
 	clock_t begin = clock();
@@ -43,7 +43,7 @@ TEST(PublicKeyTest, testLMM){
 }
 
 TEST(PublicKeyTest, testXOR){
-	PrivateKey<N, 2> pk;
+	PrivateKey<N, 2> pk(false);
 	BridgeKey<N, 2> bk(pk);
 	PublicKey<N, 2> pub(bk);
 
@@ -64,7 +64,7 @@ TEST(PublicKeyTest, testXOR){
 }
 
 TEST(PublicKeyTest, testAND){
-	PrivateKey<N, 2> pk;
+	PrivateKey<N, 2> pk(false);
 	BridgeKey<N, 2> bk(pk);
 	PublicKey<N, 2> pub(bk);
 

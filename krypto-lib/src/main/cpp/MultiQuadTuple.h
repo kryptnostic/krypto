@@ -12,7 +12,6 @@
 #define __krypto__MultiQuadTuple__
 
 #include "BitMatrix.h"
-//#include <emscripten/bind.h>
 
 #define DEBUG false
 

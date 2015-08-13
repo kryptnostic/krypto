@@ -11,7 +11,7 @@ TEST(PublicKeyTest, testHash){
 	BitVector<2*N> x = BitVector<2*N>::vCat(t, d);
 	MultiQuadTuple<2*N, N> h = MultiQuadTuple<2*N, N>::randomMultiQuadTuple();
 	BitVector<N> addr = h(x);
-	PrivateKey<N, 2> pk;
+	PrivateKey<N, 2> pk(false);
 	BitVector<2*N> encryptedAddress = pk.encrypt(addr);
 	BridgeKey<N, 2> bk(pk);
 	PublicKey<N, 2> pub(bk);
