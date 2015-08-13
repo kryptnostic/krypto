@@ -1,7 +1,7 @@
 #include "../main/cpp/MultiQuadTuple.h"
 #include "../main/cpp/BridgeKey.h"
 #include "../main/cpp/PublicKey.h"
-#include "../main/cpp/EncryptedSearchPublicKey.h"
+#include "../main/cpp/SearchPublicKey.h"
 #include <iostream>
 #include <time.h>
 
@@ -128,9 +128,9 @@ void testHash() {
 	MultiQuadTuple<2*N, N> h = MultiQuadTuple<2*N, N>::randomMultiQuadTuple();
 	PrivateKey<N, 2> pk;
 	BridgeKey<N, 2> bk(pk);
-	EncryptedSearchPublicKey<N, 2> sk(pk); 
-	EncryptedSearchPrivateKey<N, 2> rk(pk, h);
-	EncryptedSearchPublicKey<N, 2> sk(rk, bk); 
+	SearchPublicKey<N, 2> sk(pk); 
+	SearchPrivateKey<N, 2> rk(pk, h);
+	SearchPublicKey<N, 2> sk(rk, bk); 
 	BitVector<2*N> encryptedT = pk.encrypt(t);
 	BitVector<2*N> encryptedD = pk.encrypt(d);
 	clock_t begin = clock();

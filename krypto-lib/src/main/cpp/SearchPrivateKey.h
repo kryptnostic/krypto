@@ -1,12 +1,12 @@
-#ifndef krypto_EncryptedSearchPrivateKey_h
-#define krypto_EncryptedSearchPrivateKey_h
+#ifndef krypto_SearchPrivateKey_h
+#define krypto_SearchPrivateKey_h
 
 #include "PrivateKey.h"
 
 template<unsigned int N, unsigned int L>
-class EncryptedSearchPrivateKey{
+class SearchPrivateKey{
 public:
-	EncryptedSearchPrivateKey(const PrivateKey<N, L> & pk, const MultiQuadTuple<2*N,N> & h) : 
+	SearchPrivateKey(const PrivateKey<N, L> & pk, const MultiQuadTuple<2*N,N> & h) : 
 	_pk(pk), _h(h), 
 	_s(pk.encrypt(BitVector<N>::zeroVector())), 
 	_v(pk.encrypt(h.getConstantTerms())),
@@ -29,7 +29,7 @@ public:
 	}
 
 	const MultiQuadTuple<N,N> getG2() const{
-		return _g1;
+		return _g2;
 	}
 
 	/*
@@ -70,4 +70,4 @@ private:
 	static const unsigned int twoNN = NN << 1;
 };
 
-#endif/* defined(__krypto__EncryptedSearchPrivateKey__) */
+#endif/* defined(__krypto__SearchPrivateKey__) */

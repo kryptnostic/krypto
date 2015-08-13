@@ -1,14 +1,14 @@
-#ifndef krypto_EncryptedSearchPublicKey_h
-#define krypto_EncryptedSearchPublicKey_h
+#ifndef krypto_SearchPublicKey_h
+#define krypto_SearchPublicKey_h
 
 #include "PublicKey.h"
-#include "EncryptedSearchPrivateKey.h"
+#include "SearchPrivateKey.h"
 
 template<unsigned int N, unsigned int L>
-class EncryptedSearchPublicKey{
+class SearchPublicKey{
 public:
 
-	EncryptedSearchPublicKey(const EncryptedSearchPrivateKey<N, L> & rk, const BridgeKey<N, L> & bk):
+	SearchPublicKey(const SearchPrivateKey<N, L> & rk, const BridgeKey<N, L> & bk):
 	_rk(rk), _bk(bk), 
 	_h(rk.getHash()),
 	_g0(rk.getG0()), 
@@ -70,7 +70,7 @@ public:
 
 private:
 	BridgeKey<N, L> _bk;
-	EncryptedSearchPrivateKey<N, L> _rk;
+	SearchPrivateKey<N, L> _rk;
 	MultiQuadTuple<2*N,N> _h;
 	MultiQuadTuple<2*N,N> _g0;
 	MultiQuadTuple<N,N> _g1;
@@ -79,4 +79,4 @@ private:
 	static const unsigned int twoNN = NN << 1;
 };
 
-#endif/* defined(__krypto__EncryptedSearchPublicKey__) */
+#endif/* defined(__krypto__SearchPublicKey__) */
