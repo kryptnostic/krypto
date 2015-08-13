@@ -9,8 +9,17 @@ class EncryptedSearchPublicKey{
 public:
 
 	EncryptedSearchPublicKey(const EncryptedSearchPrivateKey<N, L> & rk, const BridgeKey<N, L> & bk):
-	_rk(rk), _bk(bk), _h(rk.getHash()){}
+	_rk(rk), _bk(bk), 
+	_h(rk.getHash()),
+	_g0(rk.getG0()), 
+	_g1(rk.getG1()), 
+	_g2(rk.getG2())
+	{}
 
+	/*
+	 * Function: homomorphicHash
+	 * Returns H[h](E(t), E(d)), should be made a private function
+	 */
 	const BitVector<2*N> homomorphicHash(const BitVector<2*N> & t, const BitVector<2*N> & d) const{
 		PublicKey<N, L> pub(_bk);
 		BitVector<2*N> result = _rk.getS();
@@ -48,9 +57,13 @@ public:
 		return result;
 	}
 
+	/*
+	 * Function: getAddress(t, d)
+	 * Returns the raw address of token t in document d (if available)
+	 */
 	const BitVector<N> getAddress(const BitVector<2*N> & t, const BitVector<2*N> & d) const{
 		BitVector<2*N> E_f = homomorphicHash(t, d);
-		//TODO: compute E_g from h_2,h_1,h_0
+		//TODO: compute E_g from g_2,g_1,g_0
 		//TODO: compute result using D_g and E_g
 		return BitVector<N>::zeroVector(); //TODO
 	}
@@ -59,6 +72,9 @@ private:
 	BridgeKey<N, L> _bk;
 	EncryptedSearchPrivateKey<N, L> _rk;
 	MultiQuadTuple<2*N,N> _h;
+	MultiQuadTuple<2*N,N> _g0;
+	MultiQuadTuple<N,N> _g1;
+	MultiQuadTuple<N,N> _g2;
 	static const unsigned int NN = N << 6;
 	static const unsigned int twoNN = NN << 1;
 };
