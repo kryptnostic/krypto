@@ -73,26 +73,6 @@ public:
     }
 
     /*
-     * Function: randomMatrix(numRows)
-     * Returns a random BitMatrix with a given number of rows
-     */
-    static const BitMatrix randomMatrix(const int numRows) {
-        vector< BitVector<COLS> > rows(numRows);
-        for (int i = 0; i < numRows; ++i) {
-            rows[i] = BitVector<COLS>::randomVector();
-        }
-        return BitMatrix(rows);
-    }
-
-    /*
-     * Function: squareRandomMatrix()
-     * Returns a random square BitMatrix
-     */
-    static const BitMatrix squareRandomMatrix() {
-        return randomMatrix(COLS << 6);
-    }
-
-    /*
      * Function: squareIdentityMatrix()
      * Returns a square identity BitMatrix
      */

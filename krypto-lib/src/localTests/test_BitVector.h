@@ -99,19 +99,6 @@ public:
         return v;
     }
 
-    /*
-     * Function: randomVector()
-     * Returns a BitVector with random values
-     */
-    static const BitVector<N> randomVector() {
-        BitVector<N> result;
-        
-        while( result.isZero() ) {
-            std::fread(&result._bits, sizeof( unsigned long long ), N, urandom );
-        }
-        return result;
-    }
-
 /* Operators */
 
     /*
