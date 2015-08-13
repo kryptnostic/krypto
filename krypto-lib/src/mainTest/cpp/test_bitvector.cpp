@@ -8,6 +8,11 @@ TEST(BitVectorTests, test_random) {
 	ASSERT_TRUE(bv.length() == 64);
 }
 
+TEST(BitVectorTests, test_smallrandom){
+    BitVector<1> bv = BitVector<1>::randomSmallVector();
+    ASSERT_TRUE(!bv.get(0));
+}
+
 TEST(BitVectorTests, test_clear) {
 	BitVector<1> bv = BitVector<1>::randomVector();
     
@@ -89,4 +94,11 @@ TEST(BitVectorTests, test_parity) {
     
     v.elements()[ 0 ] = 0xFF;
     ASSERT_FALSE( v.parity() );
+}
+
+TEST(BitVectorTests, test_shift) {
+    BitVector<1> v = BitVector<1>::randomSmallVector();
+    BitVector<1> w = v.leftShift();
+    v.print();
+    w.print();
 }
