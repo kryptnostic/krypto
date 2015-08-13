@@ -93,6 +93,7 @@ private:
 	MultiQuadTupleChain<N,L> _f; //{f_1,...,f_L} random quadratic function tuples
 	vector<BitMatrix<2*N> > _Cu; //chain of obfuscation matrix for unary operations
 	vector<BitMatrix<3*N> > _Cb; //chain of obfuscation matrix for binary operations
+	
 	void generateObfuscationMatrixChains(){ //generates C_{u1},...,C_{uL} and C_{b1},...,C_{bL}
 		for(size_t i = 0; i < L; ++i){
 			_Cu.push_back(BitMatrix<(2*N)>::randomInvertibleMatrix());
