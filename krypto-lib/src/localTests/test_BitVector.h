@@ -16,6 +16,9 @@
 #include <assert.h>
 
 using namespace std;
+//using namespace emscripten
+
+#define MANUALCLEAR false
 
 //TODO: Wrap this in a class that can release the file handle and automatically select a good source of randomness on Windows.
 //file pointer urandom must be closed by any class importing BitVector
@@ -60,6 +63,29 @@ public:
         }
     }
 
+    /*
+     * Function: isZero()
+     * Returns whether the current BitVector is a zero vector
+     */
+    const bool isZero() const {
+        for (unsigned int i = 0; i < N; ++i) {
+            if (_bits[i] != 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /*
+     * Function: zero()
+     * Sets the current BitVector to be a zero vector
+     */
+    void zero(){
+        for (unsigned int i = 0; i < N; ++i) {
+            _bits[i] &= 0;
+        }
+    }
+
 /* Generation */
 
     /*
@@ -68,51 +94,11 @@ public:
      */
     static const BitVector<N> & zeroVector() {
         static BitVector<N> v;
-        for (unsigned int i = 0; i < N; ++i) {
-            v._bits[i] &= 0;
+        if (MANUALCLEAR) {
+            v.zero();
         }
+        if (!v.isZero()) cout << "returning a nonzero \"zero\" vector!" << endl;
         return v;
-    }
-
-    /*
-     * Function: randomVector()
-     * Returns a BitVector with random values
-     */
-    static const BitVector<N> randomVector() {
-        BitVector<N> result;
-        
-        while( result.isZero() ) {
-            std::fread(&result._bits, sizeof( unsigned long long ), N, urandom );
-        }
-        return result;
-    }
-
-    /*
-     * Function: randomVector()
-     * Returns a BitVector with leading term zeroed
-     */
-    static const BitVector<N> randomSmallVector(){
-        BitVector<N> result = BitVector<N>::randomVector();
-        result.clear(0); 
-        return result;
-    }
-
-    /*
-     * Function: randomVectorLeadingZeroes(n)
-     * Returns a BitVector with n leading zeroes followed by random values
-     * Assumes n < numBits
-     */
-    static const BitVector<N> randomVectorLeadingZeroes(unsigned int n) {
-        BitVector<N> result;
-        
-        while( result.isZero() ) {
-            std::fread(&result._bits, sizeof( unsigned long long ), N, urandom );
-        }
-
-        for (int i = 0; i < n; ++i) {
-            result.clear(i);
-        }
-        return result;
     }
 
 /* Operators */
@@ -276,47 +262,11 @@ public:
     }
 
     /*
-     * Function: isZero()
-     * Returns whether the current BitVector is a zero vector
-     */
-    const bool isZero() const {
-        for (unsigned int i = 0; i < N; ++i) {
-            if (_bits[i] != 0) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /*
-     * Function: zero()
-     * Sets the current BitVector to be a zero vector
-     */
-    void zero(){
-        for (unsigned int i = 0; i < N; ++i) {
-            _bits[i] &= 0;
-        }
-    }
-
-    /*
      * Function: get(n)
      * Returns the value of the bit at a given index
      */
     bool get(unsigned int n) const {
         return (_bits[n >> 6] & (1ull << (n & 63ull))) != 0;
-    }
-
-    /*
-     * Function: getFirstOne()
-     * Returns the index of the first bit that is 1
-     * Returns -1 if all bits are 0
-     */
-    int getFirstOne() const {
-        int r = 0;
-        for (int i = 0; i < numBits; ++i) {
-            if (get(i)) return i;
-        }
-        return -1;
     }
 
     /*

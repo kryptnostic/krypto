@@ -1,0 +1,6 @@
+# executable
+test_local
+test_speed
+
+#debugging files
+*.dSYM
