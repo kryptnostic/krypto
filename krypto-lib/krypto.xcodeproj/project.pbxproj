@@ -20,12 +20,12 @@
 		DBEE40361B7E63FA0066EE7A /* test_priv.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DBEE40321B7E63FA0066EE7A /* test_priv.cpp */; };
 		DBEE40371B7E63FA0066EE7A /* test_public.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DBEE40331B7E63FA0066EE7A /* test_public.cpp */; };
 		DBEE40501B7E65A30066EE7A /* BridgeKey.h in Headers */ = {isa = PBXBuildFile; fileRef = DBEE40491B7E65A30066EE7A /* BridgeKey.h */; };
-		DBEE40511B7E65A30066EE7A /* EncryptedSearchPrivateKey.h in Headers */ = {isa = PBXBuildFile; fileRef = DBEE404A1B7E65A30066EE7A /* EncryptedSearchPrivateKey.h */; };
-		DBEE40521B7E65A30066EE7A /* EncryptedSearchPublicKey.h in Headers */ = {isa = PBXBuildFile; fileRef = DBEE404B1B7E65A30066EE7A /* EncryptedSearchPublicKey.h */; };
 		DBEE40531B7E65A30066EE7A /* MultiQuadTuple.h in Headers */ = {isa = PBXBuildFile; fileRef = DBEE404C1B7E65A30066EE7A /* MultiQuadTuple.h */; };
 		DBEE40541B7E65A30066EE7A /* MultiQuadTupleChain.h in Headers */ = {isa = PBXBuildFile; fileRef = DBEE404D1B7E65A30066EE7A /* MultiQuadTupleChain.h */; };
 		DBEE40551B7E65A30066EE7A /* PrivateKey.h in Headers */ = {isa = PBXBuildFile; fileRef = DBEE404E1B7E65A30066EE7A /* PrivateKey.h */; };
 		DBEE40561B7E65A30066EE7A /* PublicKey.h in Headers */ = {isa = PBXBuildFile; fileRef = DBEE404F1B7E65A30066EE7A /* PublicKey.h */; };
+		DBEE406E1B7E73670066EE7A /* SearchPrivateKey.h in Headers */ = {isa = PBXBuildFile; fileRef = DBEE406C1B7E73670066EE7A /* SearchPrivateKey.h */; };
+		DBEE406F1B7E73670066EE7A /* SearchPublicKey.h in Headers */ = {isa = PBXBuildFile; fileRef = DBEE406D1B7E73670066EE7A /* SearchPublicKey.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,12 +54,12 @@
 		DBEE40321B7E63FA0066EE7A /* test_priv.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_priv.cpp; sourceTree = "<group>"; };
 		DBEE40331B7E63FA0066EE7A /* test_public.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_public.cpp; sourceTree = "<group>"; };
 		DBEE40491B7E65A30066EE7A /* BridgeKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BridgeKey.h; sourceTree = "<group>"; };
-		DBEE404A1B7E65A30066EE7A /* EncryptedSearchPrivateKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EncryptedSearchPrivateKey.h; sourceTree = "<group>"; };
-		DBEE404B1B7E65A30066EE7A /* EncryptedSearchPublicKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EncryptedSearchPublicKey.h; sourceTree = "<group>"; };
 		DBEE404C1B7E65A30066EE7A /* MultiQuadTuple.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiQuadTuple.h; sourceTree = "<group>"; };
 		DBEE404D1B7E65A30066EE7A /* MultiQuadTupleChain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiQuadTupleChain.h; sourceTree = "<group>"; };
 		DBEE404E1B7E65A30066EE7A /* PrivateKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrivateKey.h; sourceTree = "<group>"; };
 		DBEE404F1B7E65A30066EE7A /* PublicKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PublicKey.h; sourceTree = "<group>"; };
+		DBEE406C1B7E73670066EE7A /* SearchPrivateKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchPrivateKey.h; sourceTree = "<group>"; };
+		DBEE406D1B7E73670066EE7A /* SearchPublicKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchPublicKey.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -136,9 +136,9 @@
 		DBCB8B4B1AB0F06E00772347 /* cpp */ = {
 			isa = PBXGroup;
 			children = (
+				DBEE406C1B7E73670066EE7A /* SearchPrivateKey.h */,
+				DBEE406D1B7E73670066EE7A /* SearchPublicKey.h */,
 				DBEE40491B7E65A30066EE7A /* BridgeKey.h */,
-				DBEE404A1B7E65A30066EE7A /* EncryptedSearchPrivateKey.h */,
-				DBEE404B1B7E65A30066EE7A /* EncryptedSearchPublicKey.h */,
 				DBEE404C1B7E65A30066EE7A /* MultiQuadTuple.h */,
 				DBEE404D1B7E65A30066EE7A /* MultiQuadTupleChain.h */,
 				DBEE404E1B7E65A30066EE7A /* PrivateKey.h */,
@@ -179,14 +179,14 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DBEE40511B7E65A30066EE7A /* EncryptedSearchPrivateKey.h in Headers */,
 				DB2E686A1AB0F0E100CA2C07 /* gtest.h in Headers */,
 				DBEE40551B7E65A30066EE7A /* PrivateKey.h in Headers */,
 				DBCB8B551AB0F06E00772347 /* BitMatrix.h in Headers */,
 				DBEE40531B7E65A30066EE7A /* MultiQuadTuple.h in Headers */,
+				DBEE406E1B7E73670066EE7A /* SearchPrivateKey.h in Headers */,
 				DBCB8B561AB0F06E00772347 /* BitVector.h in Headers */,
-				DBEE40521B7E65A30066EE7A /* EncryptedSearchPublicKey.h in Headers */,
 				DBEE40541B7E65A30066EE7A /* MultiQuadTupleChain.h in Headers */,
+				DBEE406F1B7E73670066EE7A /* SearchPublicKey.h in Headers */,
 				DBEE40501B7E65A30066EE7A /* BridgeKey.h in Headers */,
 				DBEE40561B7E65A30066EE7A /* PublicKey.h in Headers */,
 			);

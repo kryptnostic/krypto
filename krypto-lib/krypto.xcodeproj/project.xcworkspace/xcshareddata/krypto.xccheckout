@@ -7,14 +7,14 @@
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>97D59991-A937-4DC0-A7CC-12735F2B8949</string>
 	<key>IDESourceControlProjectName</key>
-	<string>project</string>
+	<string>krypto</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>03B720AC38C8E1D47942290C6818CD8B5D8CBA8D</key>
 		<string>github.com:kryptnostic/krypto.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>krypto-lib/krypto.xcodeproj/project.xcworkspace</string>
+	<string>krypto-lib/krypto.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>03B720AC38C8E1D47942290C6818CD8B5D8CBA8D</key>
