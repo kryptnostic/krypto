@@ -7,7 +7,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
-public class KryptnosticEngineWrapper {
+public class KryptnosticEngine {
 
     static {
         final String osName = System.getProperty( "os.name" ).toLowerCase();
@@ -16,7 +16,7 @@ public class KryptnosticEngineWrapper {
         if ( !osName.contains( "linux" ) ){
             extension = "dylib";
         }
-        final InputStream binaryAsStream = KryptnosticEngineWrapper.class.getResourceAsStream( libraryName + extension );
+        final InputStream binaryAsStream = KryptnosticEngine.class.getResourceAsStream( libraryName + extension );
         final Path outputPath = Paths.get( "tmp", "kryptnostic", "fhe" + extension );
         try {
             Files.copy( binaryAsStream , outputPath , StandardCopyOption.REPLACE_EXISTING );
@@ -27,14 +27,47 @@ public class KryptnosticEngineWrapper {
         System.load( outputPath.toAbsolutePath().toString() );
     }
 
-    public native void KryptnosticEngine( String serverGlobalHash );
-    public native void KryptnosticEngine( String privateKey, String publicKey, String serverGlobalHash );
+    private final long handle;
 
+    public KryptnosticEngine( String serverGlobalHash ) {
+        handle = KryptnosticEngineNative( serverGlobalHash );
+    }
+
+    public KryptnosticEngine( String privateKey, String publicKey, String serverGlobalHash ) {
+        handle = KryptnosticEngineNative( privateKey, publicKey, serverGlobalHash );
+    }
+
+    //
+    //    Constructors
+    //
+    private native long KryptnosticEngineNative( String serverGlobalHash );
+    private native long KryptnosticEngineNative( String privateKey, String publicKey, String serverGlobalHash );
+
+    //
+    //    Keys
+    //
     public native String getPrivateKeys();
     public native String getPublicKeys();
     public native String getServerSearchFunction();
     public native String getXor();
     public native String getAnd();
     public native String getShift();
+
+    //
+    //    Transformers
+    //
+    public native void mapTokenToKey( String word, String objectID );
+    public native void getEncryptedSearchTerm( String word );
+    public native void getBridgeKey( String docKey );
+
+    //
+    //    Generators
+    //
+    public native void genDocKey( String objectId );
+
+    //
+    //    Setters
+    //
+    public native void setDocKey( String objectId, String docKey );
 
 }
