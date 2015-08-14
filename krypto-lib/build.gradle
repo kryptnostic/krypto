@@ -12,6 +12,8 @@ model {
             		cppCompiler.withArguments { args ->
             			args << "-std=c++11"
                         args << "-O3"
+                        args << "-fslp-vectorize-aggressive"
+                        args << "-march=native"
                         //args << "-I \"Downloads/emsdk_portable/emscripten/tag-1.34.4/system/include/\"" (whatever directory that contains <emscripten/bind.h>)
             		}
             }

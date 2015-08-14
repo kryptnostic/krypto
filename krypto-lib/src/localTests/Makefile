@@ -4,7 +4,7 @@
   # compiler flags:
   #  -g    adds debugging information to the executable file
   #  -Wall turns on most, but not all, compiler warnings
-  CFLAGS  = -g -Wall --std=c++14 -O3
+  CFLAGS  = -g -Wall --std=c++14 -O3 -fslp-vectorize-aggressive -march=native
 
   DEPS = ../main/cpp/BitMatrix.h ../main/cpp/BitVector.h ../main/cpp/PrivateKey.h ../main/cpp/BridgeKey.h ../main/cpp/PublicKey.h ../main/cpp/MultiQuadTuple.h ../main/cpp/MultiQuadTupleChain.h
 
