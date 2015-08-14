@@ -6,9 +6,9 @@
 template<unsigned int N, unsigned int L>
 class SearchPrivateKey{
 public:
-	SearchPrivateKey(const PrivateKey<N, L> & pk, const MultiQuadTuple<2*N,N> & h) : 
-	_pk(pk), _h(h), 
-	_s(pk.encrypt(BitVector<N>::zeroVector())), 
+	SearchPrivateKey(const PrivateKey<N, L> & pk, const MultiQuadTuple<2*N,N> & h) :
+	_pk(pk), _h(h),
+	_s(pk.encrypt(BitVector<N>::zeroVector())),
 	_v(pk.encrypt(h.getConstantTerms())),
 	_g(MultiQuadTuple<N,N>::randomMultiQuadTuple()),
 	_Cs1(BitMatrix<N>::randomInvertibleMatrix()),
@@ -40,9 +40,9 @@ public:
 	}
 
 	/*
-	 * Returns the zero vector encrypted to obfuscate server during 
-	 * address calculation. 
-	 */	 
+	 * Returns the zero vector encrypted to obfuscate server during
+	 * address calculation.
+	 */
 	const BitVector<2*N> getS() const{
 		return _s;
 	}
@@ -55,10 +55,13 @@ public:
 		return _v;
 	}
 
+/* Decrypter for re-encryption */
+
+
 private:
 	PrivateKey<N, L> _pk;
 	MultiQuadTuple<2*N,N> _h;
-	BitVector<2*N> _s; //obfuscation vector to use during search 
+	BitVector<2*N> _s; //obfuscation vector to use during search
 	BitVector<2*N> _v; //obfuscation vector to use during search
 	MultiQuadTuple<N,N> _g; //random function generated for zero knowledge re-encryption
 	BitMatrix<N> _Cs1;
