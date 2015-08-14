@@ -121,14 +121,14 @@ public:
 	 * and inserts the document key into a stored hash set
 	 * Returns 0 if object has an existing key
 	 */
-	// const UUID getDocKey(const string & objectId) const{
-	// 	UUID docKey = generateDocKey(objectId);
-	// 	if (!isZero(docKey)) { //objectId already used
-	// 		while (docKeySet.count(docKey) == 1) docKey = generateDocKey(objectId); //generated new key
-	// 		docKeySet.insert(docKey);
-	// 	}
-	// 	return docKey;
-	// }
+	const UUID getDocKey(const string & objectId) const{
+		UUID docKey = generateDocKey(objectId);
+		if (!docKey.isZero()) { //objectId already used
+			while (docKeySet.count(docKey) == 1) docKey = generateDocKey(objectId); //generated new key
+			docKeySet.insert(docKey);
+		}
+		return docKey;
+	}
 
 /* Transformers */
 
@@ -168,7 +168,7 @@ private:
 	const string _serialAnd;
 	const string _serialLeftShift;
 	const unordered_set<UUID> docKeySet;
-	const unordered_map<UUID, UUID> docToKeyMap();
+	const unordered_map<UUID, UUID> docToKeyMap;
 
 /* Generators */
 
@@ -177,13 +177,13 @@ private:
 	 * Returns a serialized random unused document key
 	 * Returns 0 if object has an existing key
 	 */
-	// const UUID generateDocKey(const UUID & objectId) const{
-	// 	UUID docKey;
-	// 	if (docToKeyMap.count(objectId) == 0) {
-	//         docKey = randomUUID();
-	// 	}
-	// 	return docKey;
-	// }
+	const UUID generateDocKey(const UUID & objectId) const{
+		UUID docKey;
+		if (docToKeyMap.count(objectId) == 0) {
+	        docKey.randomize();
+		}
+		return docKey;
+	}
 
 };
 

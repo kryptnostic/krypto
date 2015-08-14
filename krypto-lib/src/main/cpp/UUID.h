@@ -1,13 +1,13 @@
 //
-//  KryptnosticEngine.h
+//  UUID.h
 //  krypto
 //
-//  Created by Peng Hui How and Robin Zhang on 8/13/15.
+//  Created by Robin Zhang on 8/14/15.
 //  Copyright (c) 2015 Kryptnostic. All rights reserved.
 //
-//  C++ implementation of the Kryptnostic Engine
-//  Provides get functions for all of the cryptographic keys and functions
-//  necessary for Kryptnostic search functionality
+//  C++ implementation of the UUID
+//  Serves as an extension of unsigned long longs
+//  with extended hash function and comparators
 //
 
 #include "BitVector.h"
@@ -16,29 +16,32 @@ using namespace std;
 
 struct UUID
 {
+	/* Data */
 	unsigned long long first;
 	unsigned long long second;
+
+	/* Boolean */
+	const bool isZero() {
+		return (first == 0) && (second == 0);
+	}
+
+	/* Generator */
+
+	/*
+	 * Function: randomUUID()
+	 * Modifies current UUID to be a random nonzero UUID
+	 */
+	const void randomize() {
+	    while( first == 0 && second == 0 ) {
+	        std::fread(&first, sizeof( unsigned long long ), 2, urandom );
+	    }
+	}
 };
 
-/* Generators */
-
 /*
- * Function: randomUUID()
- * Returns a random nonzero UUID
- */
-// const struct UUID randomUUID() {
-// 	UUID result;
-//     // while( result.first == 0 && result.second == 0 ) {
-//     //     std::fread(&result.first, sizeof( unsigned long long ), 2, urandom );
-//     // }
-// 	return result;
-// }
-
-/*
- * Function: hashUUID()
+ * Function: hash<UUID>()(id)
  * Hashes a UUID by taking the sum of the standard hashes of its components
  */
-
 template<>
 struct hash<UUID>
 { 
@@ -50,6 +53,10 @@ struct hash<UUID>
     }
 };
 
+/*
+ * Function: equal_to<UUID>()(id)
+ * Compares two UUIDs by directly comparing their components
+ */
 template<>
 struct equal_to<UUID>
 { 
@@ -57,10 +64,3 @@ struct equal_to<UUID>
 	    return (lhs.first == rhs.first) && (lhs.second && rhs.second);
 	}
 };
-
-
-/* Boolean */
-
-// const bool isZero(UUID id) {
-// 	return (id.first == 0) && (id.first == 0);
-// }
