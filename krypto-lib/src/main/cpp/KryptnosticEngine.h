@@ -118,12 +118,12 @@ public:
 	 * Function: getDocKey
 	 * Returns a serialized random unused document key
 	 * and inserts the document key into a stored hash set
-	 * Returns NULL if object has an existing key
+	 * Returns empty string if object has an existing key
 	 */
 	const string getDocKey(const string & objectId) const{
 		string docKey = generateDocKey(objectId);
-		if (docKey != NULL) {
-			
+		if (docKey != "") {
+
 		}
 		return docKey;
 	}
@@ -165,14 +165,14 @@ private:
 	const string _serialXor;
 	const string _serialAnd;
 	const string _serialLeftShift;
-	const unordered_set docKeySet;
+	const unordered_set<string> docKeySet;
 
 /* Generators */
 
 	/*
 	 * Function: generateDocKey
 	 * Returns a serialized random unused document key
-	 * Returns NULL if object has an existing key
+	 * Returns empty string if object has an existing key
 	 */
 	const string generateDocKey(const string & objectId) const{
 		return "";
