@@ -30,24 +30,25 @@ public class KryptnosticEngine {
     private final long handle;
 
     public KryptnosticEngine( String serverGlobalHash ) {
-        handle = KryptnosticEngineNative( serverGlobalHash );
+        handle = initKryptnosticEngine( serverGlobalHash.getBytes() );
     }
 
     public KryptnosticEngine( String privateKey, String publicKey, String serverGlobalHash ) {
-        handle = KryptnosticEngineNative( privateKey, publicKey, serverGlobalHash );
+        handle = initKryptnosticEngine( privateKey.getBytes(), publicKey.getBytes(), serverGlobalHash.getBytes() );
     }
 
     //
     //    Constructors
     //
-    private native long KryptnosticEngineNative( String serverGlobalHash );
-    private native long KryptnosticEngineNative( String privateKey, String publicKey, String serverGlobalHash );
+    private native long initKryptnosticEngine( byte[] serverGlobalHash );
+    private native long initKryptnosticEngine( byte[] privateKey, byte[] publicKey, byte[] serverGlobalHash );
 
     //
     //    Keys
     //
     public native String getPrivateKeys();
     public native String getPublicKeys();
+    //    Factory with separate serialization
     public native String getServerSearchFunction();
     public native String getXor();
     public native String getAnd();
@@ -56,18 +57,18 @@ public class KryptnosticEngine {
     //
     //    Transformers
     //
-    public native void mapTokenToKey( String word, String objectID );
-    public native void getEncryptedSearchTerm( String word );
-    public native void getBridgeKey( String docKey );
+    public native String mapTokenToKey( String word, String objectID );
+    public native String getEncryptedSearchTerm( String word );
+    public native String getBridgeKey( String docKey );
 
     //
     //    Generators
     //
-    public native void genDocKey( String objectId );
+    public native String genDocKey( String objectId );
 
     //
     //    Setters
     //
-    public native void setDocKey( String objectId, String docKey );
+    public native String setDocKey( String objectId, String docKey );
 
 }
