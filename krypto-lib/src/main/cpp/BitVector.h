@@ -248,8 +248,7 @@ public:
      * Returns the underlying array of bits
      */
     unsigned long long * elements() const {
-        //return _bits;
-        return startPtr;
+        return const_cast<unsigned long long *> (_bits);
     }
     
     /*
@@ -484,7 +483,6 @@ public:
 
 private:
     unsigned long long _bits[N]; //array of bit values
-    unsigned long long *startPtr = &_bits[0];
     static const unsigned int numBits = N << 6; //number of bits in the array
 };
 
