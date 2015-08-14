@@ -6,6 +6,11 @@ task wrapper(type: Wrapper) {
     gradleVersion = '2.4'
 }
 
+
+task buildEmscripten(type: Exec) {
+    commandLine './buildEmscripten.sh'
+}
+
 task buildGoogleTestMac(type: Exec) {
     commandLine './buildGoogleTestMac.sh'
 }
@@ -26,4 +31,8 @@ if (osname.contains('windows')) {
 } else {
     print "Building for linux."
     assemble.dependsOn buildGoogleTest
+}
+
+assemble.finalizedBy {
+    buildEmscripten
 }

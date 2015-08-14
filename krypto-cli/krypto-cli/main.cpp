@@ -8,9 +8,6 @@
 
 #include <iostream>
 #include <chrono>
-#include "BitVector.h"
-#include "MultivariatePolynomialFunction.h"
-#include "BitMatrix.h"
 #include "../../../contrib/gtest/gtest.h"
 
 using namespace testing;
@@ -20,13 +17,15 @@ int main(int argc, char * argv[]) {
     testing::InitGoogleTest(&argc, argv);
     RUN_ALL_TESTS();
     // insert code here...
+/*
     std::cout << "Hello, World!\n";
     BitVector<NUM_LONGS> x = BitVector<NUM_LONGS>::randomVector();
     BitVector<NUM_LONGS> zero;
+
     MultivariatePolynomialFunction<NUM_LONGS,NUM_LONGS> f = move( MultivariatePolynomialFunction<NUM_LONGS,NUM_LONGS>::denseRandomMultivariateFunctions() );
 
     BitVector<NUM_LONGS> y = f(x);
-
+     
     x.print();
     if( !(zero ==  y) ) {
         y.print();
@@ -42,11 +41,13 @@ int main(int argc, char * argv[]) {
     for(int i = 0 ; i < numInputs; ++i ) {
         f( inputs[ i ] );
     }
+    
     auto stop = std::chrono::high_resolution_clock::now();
     
     auto total =std::chrono::duration_cast<std::chrono::nanoseconds>(stop-start).count();
 
     std::cout<<"Total time: "<< total <<" nanos"<<std::endl;
     std::cout<<"Mean time: "<< total/double(numInputs) <<" nanos"<<std::endl;
+    */
     return 0;
 }
