@@ -190,9 +190,11 @@ private:
 	 */
 	const unsigned int randomUInt() {
 		unsigned int docKey = 0;
+		FILE * urandom = std::fopen("/dev/urandom", "rb" );
         while( docKey == 0 ) {
             std::fread(&docKey, sizeof( unsigned int ), 1, urandom );
         }
+        fclose(urandom);
 		return docKey;
 	}
 };

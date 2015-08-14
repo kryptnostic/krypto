@@ -147,6 +147,5 @@ int main(int argc, char **argv) {
 	testClientRuns();
 	testPublicKeyRuns();
 	testHash();
- 	fclose(urandom);
 	return 0;
 }
