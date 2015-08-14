@@ -154,7 +154,7 @@ public:
 	 * Sets the document key of a given object to a given document key
 	 * Returns whether the operation was valid and successful
 	 */
-	const bool setDocKey(const string & objectId, const string & docKey) const{
+	const bool setDocKey(const unsigned int & objectId, const unsigned int & docKey) const{
 		return false;
 	}
 
@@ -176,7 +176,7 @@ private:
 	 * Returns a serialized random unused document key
 	 * Returns 0 if object has an existing key
 	 */
-	const unsigned int generateDocKey(const string & objectId) const{
+	const unsigned int generateDocKey(const unsigned int & objectId) const{
 		unsigned int docKey = 0;
 		if (docToKeyMap.count(objectId) == 0) {
 	        docKey = randomUInt();
