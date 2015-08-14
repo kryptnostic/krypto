@@ -29,7 +29,9 @@ public:
      * Constructor
      * Constructs a Kryptnostic Engine from scratch
      */
-	KryptnosticEngine(const string serverGlobal) {
+	KryptnosticEngine(const string serverGlobal) :
+	_serverGlobal(serverGlobal)
+	{
 
 	}
 
@@ -37,7 +39,11 @@ public:
      * Constructor
      * Constructs a Kryptnostic Engine given private and public keys
      */
-	KryptnosticEngine(const PrivateKey<N, L> pk, const PublicKey<N, L> bk, const string serverGlobal) {
+	KryptnosticEngine(const string serverGlobal, const PrivateKey<N, L> pk, const PublicKey<N, L> bk) :
+	_serverGlobal(serverGlobal),
+	_pk(pk),
+	_bk(bk)
+	{
 		
 	}
 
@@ -45,8 +51,15 @@ public:
      * Constructor
      * Constructs a fresh Kryptnostic Engine given all keys
      */
-	KryptnosticEngine(const PrivateKey<N, L> pk, const PublicKey<N, L> bk, const string oldXor,
-		const string oldAnd, const string oldLeftShift, const string oldDocKey, const string serverGlobal) {
+	KryptnosticEngine(const string serverGlobal, const PrivateKey<N, L> pk, const PublicKey<N, L> bk, const string oldXor,
+		const string oldAnd, const string oldLeftShift, const string oldDocKey) :
+	_serverGlobal(serverGlobal),
+	_pk(pk),
+	_bk(bk),
+	_serialXor(oldXor),
+	_serialAnd(oldAnd),
+	_serialLeftShift(oldLeftShift)
+	{
 		
 	}
 
@@ -57,7 +70,7 @@ public:
 	 * Returns a serialized private key
 	 */
 	const string getPrivateKey() const{
-		
+		return "";
 	}
 
 	/*
@@ -65,7 +78,7 @@ public:
 	 * Returns a serialized public key
 	 */
 	const string getPublicKey() const{
-		
+		return "";
 	}
 
 	/*
@@ -73,7 +86,7 @@ public:
 	 * Returns a serialized homomorphic hash function
 	 */
 	const string getServerSearchFunction() const{
-		
+		return "";
 	}
 
 	/*
@@ -81,7 +94,7 @@ public:
 	 * Returns a serialized function that performs bitwise Xor operations
 	 */
 	const string getXor() const{
-		
+		return _serialXor;
 	}
 
 	/*
@@ -89,7 +102,7 @@ public:
 	 * Returns a serialized function that performs bitwise AND operations
 	 */
 	const string getAnd() const{
-		
+		return _serialAnd;
 	}
 
 	/*
@@ -97,7 +110,7 @@ public:
 	 * Returns a serialized function that performs left shift operations
 	 */
 	const string getLeftShift() const{
-		
+		return _serialLeftShift;
 	}
 
 	/*
@@ -105,7 +118,7 @@ public:
 	 * Returns a serialized document key for a given object
 	 */
 	const string getDocKey(string objectId) const{
-		
+		return "";
 	}
 
 /* Transformers */
@@ -115,7 +128,7 @@ public:
 	 * Returns the serialized result from hashing a given token and a given document key
 	 */
 	const string getHashedToken(string token, string docKey) const{
-		
+		return "";
 	}
 
 	/*
@@ -123,7 +136,7 @@ public:
 	 * Returns a serialized encrypted search term
 	 */
 	const string getEncryptedSearchTerm(string objectId) const{
-		
+		return "";
 	}
 
 /* Generators */
@@ -135,7 +148,7 @@ public:
 	 * Returns NULL if object has an existing key
 	 */
 	const string generateDocKey(string objectId) const{
-		
+		return "";
 	}
 
 /* Setters */
@@ -146,13 +159,17 @@ public:
 	 * Returns whether the operation was valid and successful
 	 */
 	const bool setDocKey(string objectId, string docKey) const{
-		
+		return false;
 	}
 
 private:
-	// const PrivateKey<N, L> _pk;
-	// const BridgeKey<N, L> _bk;
-	// const PublicKey<N, L> _pubk;
+	const string _serverGlobal;
+	const PrivateKey<N, L> _pk;
+	const BridgeKey<N, L> _bk;
+	const PublicKey<N, L> _pubk;
+	const string _serialXor;
+	const string _serialAnd;
+	const string _serialLeftShift;
 
 };
 
