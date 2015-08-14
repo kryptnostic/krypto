@@ -121,10 +121,12 @@ public:
 	 * and inserts the document key into a stored hash set
 	 * Returns 0 if object has an existing key
 	 */
-	const UUID getDocKey(const string & objectId) const{
+	const UUID getDocKey(const UUID & objectId) const{
 		UUID docKey = generateDocKey(objectId);
 		if (!docKey.isZero()) { //objectId already used
 			while (docKeySet.count(docKey) == 1) docKey = generateDocKey(objectId); //generated new key
+
+			docToKeyMap.insert(pair<UUID, UUID>(objectId, docKey));
 			docKeySet.insert(docKey);
 		}
 		return docKey;
@@ -136,7 +138,7 @@ public:
 	 * Function: getHashedToken
 	 * Returns the serialized result from hashing a given token and a given document key
 	 */
-	const string getHashedToken(const string & token, const string & docKey) const{
+	const string getHashedToken(const string & token, const UUID & docKey) const{
 		return "";
 	}
 
@@ -144,7 +146,7 @@ public:
 	 * Function: getEncryptedSearchTerm
 	 * Returns a serialized encrypted search term
 	 */
-	const string getEncryptedSearchTerm(const string & objectId) const{
+	const string getEncryptedSearchTerm(const UUID & objectId) const{
 		return "";
 	}
 
@@ -156,6 +158,10 @@ public:
 	 * Returns whether the operation was valid and successful
 	 */
 	const bool setDocKey(const UUID & objectId, const UUID & docKey) const{
+		if (docToKeyMap.count(objectId) != 0) {
+			docToKeyMap[objectId] = docKey;
+			return true;
+		}
 		return false;
 	}
 
