@@ -10,54 +10,57 @@
 //  necessary for Kryptnostic search functionality
 //
 
-#ifndef krypto_UUID_h
-#define krypto_UUID_h
+#include "BitVector.h"
 
-class UUID {
+using namespace std;
 
-public:
-
-/* Constructors */
-
-	/*
-     * Constructor
-     * Constructs a zero UUID
-     */
-	UUID() :
-	array()
-	{
-		array[0] = 0ull;
-		array[1] = 0ull;
-	}
-
-
-/* Keys */
-
-	/*
-	 * Function: setDocKey
-	 * Sets the document key of a given object to a given document key
-	 * Returns whether the operation was valid and successful
-	 */
-	// const bool setDocKey(const unsigned int & objectId, const unsigned int & docKey) const{
-	// 	return false;
-	// }
-
-private:
-	unsigned long long array[2];
+struct UUID
+{
+	unsigned long long first;
+	unsigned long long second;
+};
 
 /* Generators */
 
-	/*
-	 * Function: randomUInt()
-	 * Returns a random nonzero unsigned int
-	 */
-	// const unsigned int randomUInt() {
-	// 	unsigned int docKey = 0;
- //        while( docKey == 0 ) {
- //            std::fread(&docKey, sizeof( unsigned int ), 1, urandom );
- //        }
-	// 	return docKey;
-	// }
+/*
+ * Function: randomUUID()
+ * Returns a random nonzero UUID
+ */
+// const struct UUID randomUUID() {
+// 	UUID result;
+//     // while( result.first == 0 && result.second == 0 ) {
+//     //     std::fread(&result.first, sizeof( unsigned long long ), 2, urandom );
+//     // }
+// 	return result;
+// }
+
+/*
+ * Function: hashUUID()
+ * Hashes a UUID by taking the sum of the standard hashes of its components
+ */
+
+template<>
+struct hash<UUID>
+{ 
+    size_t operator()(UUID const& id) const
+    {
+        size_t const h1 ( hash<unsigned long long>()(id.first) );
+        size_t const h2 ( hash<unsigned long long>()(id.second) );
+        return h1 + h2;
+    }
 };
 
-#endif
+template<>
+struct equal_to<UUID>
+{ 
+	bool operator()(const UUID &lhs, const UUID &rhs) {
+	    return (lhs.first == rhs.first) && (lhs.second && rhs.second);
+	}
+};
+
+
+/* Boolean */
+
+// const bool isZero(UUID id) {
+// 	return (id.first == 0) && (id.first == 0);
+// }

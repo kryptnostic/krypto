@@ -15,6 +15,7 @@
 
 #include "PublicKey.h"
 #include "SearchPublicKey.h"
+#include "UUID.h"
 #include <string>
 #include <unordered_map>
 
@@ -120,14 +121,14 @@ public:
 	 * and inserts the document key into a stored hash set
 	 * Returns 0 if object has an existing key
 	 */
-	const unsigned int getDocKey(const string & objectId) const{
-		unsigned int docKey = generateDocKey(objectId);
-		if (docKey != 0) { //objectId already used
-			while (docKeySet.count(docKey) == 1) docKey = generateDocKey(objectId); //generated new key
-			docKeySet.insert(docKey);
-		}
-		return docKey;
-	}
+	// const UUID getDocKey(const string & objectId) const{
+	// 	UUID docKey = generateDocKey(objectId);
+	// 	if (!isZero(docKey)) { //objectId already used
+	// 		while (docKeySet.count(docKey) == 1) docKey = generateDocKey(objectId); //generated new key
+	// 		docKeySet.insert(docKey);
+	// 	}
+	// 	return docKey;
+	// }
 
 /* Transformers */
 
@@ -154,7 +155,7 @@ public:
 	 * Sets the document key of a given object to a given document key
 	 * Returns whether the operation was valid and successful
 	 */
-	const bool setDocKey(const unsigned int & objectId, const unsigned int & docKey) const{
+	const bool setDocKey(const UUID & objectId, const UUID & docKey) const{
 		return false;
 	}
 
@@ -166,8 +167,8 @@ private:
 	const string _serialXor;
 	const string _serialAnd;
 	const string _serialLeftShift;
-	const unordered_set<unsigned int> docKeySet;
-	const unordered_map<unsigned int, unsigned int> docToKeyMap;
+	const unordered_set<UUID> docKeySet;
+	const unordered_map<UUID, UUID> docToKeyMap();
 
 /* Generators */
 
@@ -176,25 +177,14 @@ private:
 	 * Returns a serialized random unused document key
 	 * Returns 0 if object has an existing key
 	 */
-	const unsigned int generateDocKey(const unsigned int & objectId) const{
-		unsigned int docKey = 0;
-		if (docToKeyMap.count(objectId) == 0) {
-	        docKey = randomUInt();
-		}
-		return docKey;
-	}
+	// const UUID generateDocKey(const UUID & objectId) const{
+	// 	UUID docKey;
+	// 	if (docToKeyMap.count(objectId) == 0) {
+	//         docKey = randomUUID();
+	// 	}
+	// 	return docKey;
+	// }
 
-	/*
-	 * Function: randomUInt()
-	 * Returns a random nonzero unsigned int
-	 */
-	const unsigned int randomUInt() {
-		unsigned int docKey = 0;
-        while( docKey == 0 ) {
-            std::fread(&docKey, sizeof( unsigned int ), 1, urandom );
-        }
-		return docKey;
-	}
 };
 
 #endif
