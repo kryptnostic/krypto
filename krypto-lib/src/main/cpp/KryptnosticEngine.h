@@ -10,7 +10,7 @@
 //  necessary for Kryptnostic search functionality
 //
 
-#ifndef krypto_KryptnosticEnginer_h
+#ifndef krypto_KryptnosticEngine_h
 #define krypto_KryptnosticEngine_h
 
 #include "PublicKey.h"
@@ -37,7 +37,7 @@ public:
      * Constructor
      * Constructs a Kryptnostic Engine given private and public keys
      */
-	KryptnosticEngine(const PrivateKey pk, const PublicKey bk, const string serverGlobal) {
+	KryptnosticEngine(const PrivateKey<N, L> pk, const PublicKey<N, L> bk, const string serverGlobal) {
 		
 	}
 
@@ -45,7 +45,8 @@ public:
      * Constructor
      * Constructs a fresh Kryptnostic Engine given all keys
      */
-	KryptnosticEngine(const PrivateKey pk, const PublicKey bk, const string serverGlobal) {
+	KryptnosticEngine(const PrivateKey<N, L> pk, const PublicKey<N, L> bk, const string oldXor,
+		const string oldAnd, const string oldLeftShift, const string oldDocKey, const string serverGlobal) {
 		
 	}
 
