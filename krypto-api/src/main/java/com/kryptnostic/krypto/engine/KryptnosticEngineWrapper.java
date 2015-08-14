@@ -7,7 +7,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
-public class KryptnosticEngine {
+public class KryptnosticEngineWrapper {
 
     static {
         final String osName = System.getProperty( "os.name" ).toLowerCase();
@@ -16,7 +16,7 @@ public class KryptnosticEngine {
         if ( !osName.contains( "linux" ) ){
             extension = "dylib";
         }
-        final InputStream binaryAsStream = KryptnosticEngine.class.getResourceAsStream( libraryName + extension );
+        final InputStream binaryAsStream = KryptnosticEngineWrapper.class.getResourceAsStream( libraryName + extension );
         final Path outputPath = Paths.get( "tmp", "kryptnostic", "fhe" + extension );
         try {
             Files.copy( binaryAsStream , outputPath , StandardCopyOption.REPLACE_EXISTING );
@@ -27,7 +27,14 @@ public class KryptnosticEngine {
         System.load( outputPath.toAbsolutePath().toString() );
     }
 
-    public KryptnosticEngine() {
-    }
+    public native void KryptnosticEngine( String serverGlobalHash );
+    public native void KryptnosticEngine( String privateKey, String publicKey, String serverGlobalHash );
+
+    public native String getPrivateKeys();
+    public native String getPublicKeys();
+    public native String getServerSearchFunction();
+    public native String getXor();
+    public native String getAnd();
+    public native String getShift();
 
 }
