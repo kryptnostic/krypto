@@ -10,7 +10,7 @@ using namespace std;
 #define N 1
 #define DEBUG false
 #define OPRUNS 10
-#define TESTRUNS 100
+#define TESTRUNS 2
 
 void testOps1() {
  	PrivateKey<N, 2> pk;

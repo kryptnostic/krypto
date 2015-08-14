@@ -237,7 +237,7 @@ public:
 
 private:
 	const PrivateKey<N,L> _pk;
-	const BitMatrix<N> _R; //TODO: delegate the random matrix generation task to some other class?
+	const BitMatrix<N> _R;
 	const BitMatrix<N> _Rx;
 	const BitMatrix<N> _Ry;
 	const BitMatrix<2*N> _M;
@@ -248,8 +248,6 @@ private:
 	const BitMatrix<N> _ARAi;
 	const BitMatrix<N> _ARxAi;
 	const BitMatrix<N> _ARyAi;
-	MultiQuadTupleChain<2*N,L> _gu; //obsfucated chain for unary operations
-	MultiQuadTupleChain<3*N,L> _gb; //obsfucated chain for binary operations
 		
 	const BitMatrix<N> _Ai;
 	const BitMatrix<N> _Bi;
