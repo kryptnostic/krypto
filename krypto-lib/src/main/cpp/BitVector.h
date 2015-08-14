@@ -17,6 +17,9 @@
 
 using namespace std;
 
+//TODO: Wrap this in a class that can release the file handle and automatically select a good source of randomness on Windows.
+//file pointer urandom must be closed by any class importing BitVector
+static FILE * urandom = std::fopen("/dev/urandom", "rb" );
 
 /*
  * Template for BitVector
@@ -77,9 +80,7 @@ public:
         BitVector<N> result;
         
         while( result.isZero() ) {
-            FILE * urandom = std::fopen("/dev/urandom", "rb" );
             std::fread(&result._bits, sizeof( unsigned long long ), N, urandom );
-            fclose(urandom);
         }
         return result;
     }
@@ -100,7 +101,12 @@ public:
      * Assumes n < numBits
      */
     static const BitVector<N> randomVectorLeadingZeroes(unsigned int n) {
-        BitVector<N> result = BitVector<N>::randomVector();
+        BitVector<N> result;
+        
+        while( result.isZero() ) {
+            std::fread(&result._bits, sizeof( unsigned long long ), N, urandom );
+        }
+
         for (int i = 0; i < n; ++i) {
             result.clear(i);
         }
