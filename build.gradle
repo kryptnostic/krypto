@@ -14,6 +14,18 @@ task buildGoogleTest(type: Exec) {
     commandLine './buildGoogleTest.sh'
 }
 
+task buildFullJar(dependsOn: ':krypto-api:GenerateJniHeaders') {
+	// depends on generating headers
+	// run build lib
+	tasks.getByPath(':krypto-lib:build').execute()
+	// move libs
+	exec {
+        commandLine "cp", "krypto-lib/build/binaries/mainSharedLibrary/release/*", "krypto-api/src/main/resources/"
+    }
+	// run jar api
+	tasks.getByPath(':krypto-api:jar').execute()
+}
+
 //Determine OS 
 //TODO: Add Windows support.
 def osname = System.properties['os.name'].toLowerCase().toLowerCase()
