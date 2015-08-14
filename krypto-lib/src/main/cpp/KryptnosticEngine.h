@@ -16,6 +16,7 @@
 #include "PublicKey.h"
 #include "SearchPublicKey.h"
 #include <string>
+#include <unordered_set>
 
 
 template<unsigned int N, unsigned int L>
@@ -115,10 +116,16 @@ public:
 
 	/*
 	 * Function: getDocKey
-	 * Returns a serialized document key for a given object
+	 * Returns a serialized random unused document key
+	 * and inserts the document key into a stored hash set
+	 * Returns NULL if object has an existing key
 	 */
-	const string getDocKey(string objectId) const{
-		return "";
+	const string getDocKey(const string & objectId) const{
+		string docKey = generateDocKey(objectId);
+		if (docKey != NULL) {
+			
+		}
+		return docKey;
 	}
 
 /* Transformers */
@@ -127,7 +134,7 @@ public:
 	 * Function: getHashedToken
 	 * Returns the serialized result from hashing a given token and a given document key
 	 */
-	const string getHashedToken(string token, string docKey) const{
+	const string getHashedToken(const string & token, const string & docKey) const{
 		return "";
 	}
 
@@ -135,19 +142,7 @@ public:
 	 * Function: getEncryptedSearchTerm
 	 * Returns a serialized encrypted search term
 	 */
-	const string getEncryptedSearchTerm(string objectId) const{
-		return "";
-	}
-
-/* Generators */
-
-	/*
-	 * Function: generateDocKey
-	 * Returns a serialized random unused document key
-	 * and inserts the document key into a stored hash set
-	 * Returns NULL if object has an existing key
-	 */
-	const string generateDocKey(string objectId) const{
+	const string getEncryptedSearchTerm(const string & objectId) const{
 		return "";
 	}
 
@@ -158,7 +153,7 @@ public:
 	 * Sets the document key of a given object to a given document key
 	 * Returns whether the operation was valid and successful
 	 */
-	const bool setDocKey(string objectId, string docKey) const{
+	const bool setDocKey(const string & objectId, const string & docKey) const{
 		return false;
 	}
 
@@ -170,6 +165,18 @@ private:
 	const string _serialXor;
 	const string _serialAnd;
 	const string _serialLeftShift;
+	const unordered_set docKeySet;
+
+/* Generators */
+
+	/*
+	 * Function: generateDocKey
+	 * Returns a serialized random unused document key
+	 * Returns NULL if object has an existing key
+	 */
+	const string generateDocKey(const string & objectId) const{
+		return "";
+	}
 
 };
 
