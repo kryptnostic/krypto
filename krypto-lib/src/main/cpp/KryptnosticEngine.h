@@ -16,7 +16,7 @@
 #include "PublicKey.h"
 #include "SearchPublicKey.h"
 #include <string>
-#include <unordered_set>
+#include <unordered_map>
 
 
 template<unsigned int N, unsigned int L>
@@ -53,7 +53,7 @@ public:
      * Constructs a fresh Kryptnostic Engine given all keys
      */
 	KryptnosticEngine(const string serverGlobal, const PrivateKey<N, L> pk, const PublicKey<N, L> bk, const string oldXor,
-		const string oldAnd, const string oldLeftShift, const string oldDocKey) :
+		const string oldAnd, const string oldLeftShift) :
 	_serverGlobal(serverGlobal),
 	_pk(pk),
 	_bk(bk),
@@ -118,12 +118,13 @@ public:
 	 * Function: getDocKey
 	 * Returns a serialized random unused document key
 	 * and inserts the document key into a stored hash set
-	 * Returns empty string if object has an existing key
+	 * Returns 0 if object has an existing key
 	 */
-	const string getDocKey(const string & objectId) const{
-		string docKey = generateDocKey(objectId);
-		if (docKey != "") {
-
+	const unsigned int getDocKey(const string & objectId) const{
+		unsigned int docKey = generateDocKey(objectId);
+		if (docKey != 0) { //objectId already used
+			while (docKeySet.count(docKey) == 1) docKey = generateDocKey(objectId); //generated new key
+			docKeySet.insert(docKey);
 		}
 		return docKey;
 	}
@@ -165,19 +166,35 @@ private:
 	const string _serialXor;
 	const string _serialAnd;
 	const string _serialLeftShift;
-	const unordered_set<string> docKeySet;
+	const unordered_set<unsigned int> docKeySet;
+	const unordered_map<unsigned int, unsigned int> docToKeyMap;
 
 /* Generators */
 
 	/*
 	 * Function: generateDocKey
 	 * Returns a serialized random unused document key
-	 * Returns empty string if object has an existing key
+	 * Returns 0 if object has an existing key
 	 */
-	const string generateDocKey(const string & objectId) const{
-		return "";
+	const unsigned int generateDocKey(const string & objectId) const{
+		unsigned int docKey = 0;
+		if (docToKeyMap.count(objectId) == 0) {
+	        docKey = randomUInt();
+		}
+		return docKey;
 	}
 
+	/*
+	 * Function: randomUInt()
+	 * Returns a random nonzero unsigned int
+	 */
+	const unsigned int randomUInt() {
+		unsigned int docKey = 0;
+        while( docKey == 0 ) {
+            std::fread(&docKey, sizeof( unsigned int ), 1, urandom );
+        }
+		return docKey;
+	}
 };
 
 #endif
