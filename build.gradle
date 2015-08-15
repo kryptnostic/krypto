@@ -14,16 +14,20 @@ task buildGoogleTest(type: Exec) {
     commandLine './buildGoogleTest.sh'
 }
 
-task buildFullJar(dependsOn: ':krypto-api:GenerateJniHeaders') {
-	// depends on generating headers
-	// run build lib
-	tasks.getByPath(':krypto-lib:build').execute()
-	// move libs
-	exec {
-        commandLine "cp", "krypto-lib/build/binaries/mainSharedLibrary/release/*", "krypto-api/src/main/resources/"
-    }
-	// run jar api
-	tasks.getByPath(':krypto-api:jar').execute()
+task copyBinariesToApi(type: Copy, dependsOn: 'krypto-lib:build') {
+    from 'krypto-lib/build/binaries/mainSharedLibrary/release/'
+    into 'krypto-api/src/main/resources'
+    include( '**/*.so', '**/*.dylib' )
+}
+
+//task buildFullJar(dependsOn: ':krypto-api:GenerateJniHeaders') << {
+task buildFullJar(dependsOn: [':krypto-api:GenerateJniHeaders', ':krypto-api:jar'] ) << {
+    // run build lib
+    tasks.getByPath(':krypto-lib:build').execute()
+    // move libs
+    tasks.getByPath('copyBinariesToApi').execute()
+    // run jar api
+    tasks.getByPath(':krypto-api:jar').execute()
 }
 
 //Determine OS 
