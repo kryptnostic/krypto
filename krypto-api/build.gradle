@@ -1,8 +1,6 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
 
-apply from: "http://api.krypt.int/gradle/kryptnostic.gradle"
-
 task GenerateJniHeaders(description: 'Generate the JNI headers for kryptnostic engine', dependsOn: 'classes') << {
     ext.cp = sourceSets.main.output.classesDir
     ext.resourcesOut = "../krypto-lib/src/main/cpp/"
