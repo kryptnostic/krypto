@@ -5,15 +5,25 @@ task wrapper(type: Wrapper) {
     gradleVersion = '2.4'
 }
 
+def osname = System.properties['os.name'].toLowerCase().toLowerCase()
+
+ext.home=System.env.'JAVA_HOME'
+ext.includes='linux'
+if (osname.contains('mac')) {
+    ext.includes='darwin'
+}
+
 model {
 	toolChains {
         clang(Clang) {
             eachPlatform {
-            		cppCompiler.withArguments { args ->
-            			args << "-std=c++11"
-                        args << "-O3"
-                        //args << "-I \"Downloads/emsdk_portable/emscripten/tag-1.34.4/system/include/\"" (whatever directory that contains <emscripten/bind.h>)
-            		}
+            	cppCompiler.withArguments { args ->
+            		args << "-std=c++11"
+                    args << "-O3"
+                    args << "-I${home}/include/"
+                    args << "-I${home}/include/${includes}/"
+                    //args << "-I \"Downloads/emsdk_portable/emscripten/tag-1.34.4/system/include/\"" (whatever directory that contains <emscripten/bind.h>)
+            	}
             }
         }
     }

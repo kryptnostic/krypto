@@ -16,7 +16,7 @@ task buildGoogleTest(type: Exec) {
 
 task copyBinariesToApi(type: Copy, dependsOn: 'krypto-lib:build') {
     from 'krypto-lib/build/binaries/mainSharedLibrary/release/'
-    into 'krypto-api/src/main/resources'
+    into 'krypto-api/src/main/resources/com/kryptnostic/krypto/engine/'
     include( '**/*.so', '**/*.dylib' )
 }
 
@@ -38,8 +38,10 @@ if (osname.contains('windows')) {
     print "Too close for missiles switching to guns."
 } else if (osname.contains('mac') ) {
     print "build for mac"
+    ext.includes="darwin"
     assemble.dependsOn buildGoogleTestMac
 } else {
     print "Building for linux."
+    ext.includes="linux"
     assemble.dependsOn buildGoogleTest
 }
