@@ -38,9 +38,13 @@ public class KryptnosticEngine {
         handle = initKryptnosticEngine( privateKey.getBytes(), publicKey.getBytes(), serverGlobalHash.getBytes() );
     }
 
+    public KryptnosticEngine() {
+        handle = initKryptnosticEngine();
+    }
     //
     //    Constructors
     //
+    private native long initKryptnosticEngine();
     private native long initKryptnosticEngine( byte[] serverGlobalHash );
     private native long initKryptnosticEngine( byte[] privateKey, byte[] publicKey, byte[] serverGlobalHash );
 
