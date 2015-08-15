@@ -20,7 +20,6 @@ task copyBinariesToApi(type: Copy, dependsOn: 'krypto-lib:build') {
     include( '**/*.so', '**/*.dylib' )
 }
 
-//task buildFullJar(dependsOn: ':krypto-api:GenerateJniHeaders') << {
 task buildFullJar(dependsOn: [':krypto-api:GenerateJniHeaders', ':krypto-api:jar'] ) << {
     // run build lib
     tasks.getByPath(':krypto-lib:build').execute()
