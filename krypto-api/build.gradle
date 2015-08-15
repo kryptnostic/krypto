@@ -1,5 +1,6 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
+apply plugin: 'maven'
 
 task GenerateJniHeaders(description: 'Generate the JNI headers for kryptnostic engine', dependsOn: 'classes') << {
     ext.cp = sourceSets.main.output.classesDir
@@ -12,3 +13,13 @@ task GenerateJniHeaders(description: 'Generate the JNI headers for kryptnostic e
 }
 
 jar.dependsOn(':copyBinariesToApi')
+
+repositories {
+  maven {
+    url 'http://repo.maven.apache.org/maven2'
+  }
+}
+
+dependencies {
+  testCompile "junit:junit:4.11"
+}
