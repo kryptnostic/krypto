@@ -11,15 +11,16 @@ public class KryptnosticEngine {
 
     static {
         final String osName = System.getProperty( "os.name" ).toLowerCase();
-        final String libraryName = "mainlib";
-        String extension = "so";
+        final String libraryName = "libmain";
+        String extension = ".so";
         if ( !osName.contains( "linux" ) ){
-            extension = "dylib";
+            extension = ".dylib";
         }
-        final InputStream binaryAsStream = KryptnosticEngine.class.getResourceAsStream( libraryName + extension );
-        final Path outputPath = Paths.get( "tmp", "kryptnostic", "fhe" + extension );
+        InputStream binary = KryptnosticEngine.class.getClassLoader().getResourceAsStream( libraryName + extension );
+        final Path outputPath = Paths.get( System.getProperty( "java.io.tmpdir" ), "kryptnostic", "fhe" + extension );
         try {
-            Files.copy( binaryAsStream , outputPath , StandardCopyOption.REPLACE_EXISTING );
+            Files.createDirectories( Paths.get( System.getProperty( "java.io.tmpdir" ), "kryptnostic") );
+            Files.copy( binary , outputPath , StandardCopyOption.REPLACE_EXISTING );
         } catch ( IOException e1 ) {
             System.out.println( "Failed to copy file from resource storage to " + outputPath );
             System.out.println( e1.getStackTrace() );
