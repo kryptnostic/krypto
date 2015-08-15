@@ -9,10 +9,10 @@ class SearchPublicKey{
 public:
 
 	SearchPublicKey(const SearchPrivateKey<N, L> & rk, const BridgeKey<N, L> & bk):
-	_rk(rk), _bk(bk), 
+	_rk(rk), _bk(bk),
 	_h(rk.getHash()),
-	_g0(rk.getG0()), 
-	_g1(rk.getG1()), 
+	_g0(rk.getG0()),
+	_g1(rk.getG1()),
 	_g2(rk.getG2())
 	{}
 
@@ -37,7 +37,7 @@ public:
 			}
 			BitVector<2*N> v1 = pub.homomorphicLMM(_bk.getLMMZ(Ai), t);
 			for(size_t j = 0; j < NN; ++j){
-				Ai.template setCol<N>(j, C.getRow(count)); 
+				Ai.template setCol<N>(j, C.getRow(count));
 				++count;
 			}
 			BitVector<2*N> v2 = pub.homomorphicLMM(_bk.getLMMZ(Ai), d);
@@ -48,7 +48,7 @@ public:
 			Ji.zero();
 			Ji.template setCol<N>(i);
 			for(size_t j = i; j < NN; ++j){
-				Ai.template setCol<N>(j, C.getRow(count)); 
+				Ai.template setCol<N>(j, C.getRow(count));
 				++count;
 			}
 			result = pub.homomorphicXOR(result, pub.homomorphicAND(pub.homomorphicLMM(_bk.getLMMZ(Ji), d), pub.homomorphicLMM(_bk.getLMMZ(Ai), d)));
@@ -65,6 +65,7 @@ public:
 		BitVector<2*N> E_f = homomorphicHash(t, d);
 		//TODO: compute E_g from g_2,g_1,g_0
 		//TODO: compute result using D_g and E_g
+		//test commit
 		return BitVector<N>::zeroVector(); //TODO
 	}
 
