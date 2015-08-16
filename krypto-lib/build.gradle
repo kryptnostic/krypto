@@ -96,5 +96,5 @@ def findGoogleTestCoreLibForPlatform(Platform platform) {
 clean.dependsOn('cleanJniHeaders')
 
 task cleanJniHeaders(type: Delete) {
-    delete "src/main/cpp/com_kryptnostic_krypto_engine_KryptnosticEngine.h"
+    delete 'src/main/cpp/com_kryptnostic_krypto_engine_KryptnosticEngine.h'
 }
