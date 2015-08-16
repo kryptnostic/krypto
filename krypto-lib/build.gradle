@@ -92,3 +92,9 @@ def findGoogleTestCoreLibForPlatform(Platform platform) {
         return "linux/libgtest.a"
     }
 }
+
+clean.dependsOn('cleanJniHeaders')
+
+task cleanJniHeaders(type: Delete) {
+    delete "src/main/cpp/com_kryptnostic_krypto_engine_KryptnosticEngine.h"
+}
