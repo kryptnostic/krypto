@@ -11,11 +11,21 @@
 		DB2E686A1AB0F0E100CA2C07 /* gtest.h in Headers */ = {isa = PBXBuildFile; fileRef = DB2E68681AB0F0E100CA2C07 /* gtest.h */; };
 		DBCB8B551AB0F06E00772347 /* BitMatrix.h in Headers */ = {isa = PBXBuildFile; fileRef = DBCB8B4C1AB0F06E00772347 /* BitMatrix.h */; };
 		DBCB8B561AB0F06E00772347 /* BitVector.h in Headers */ = {isa = PBXBuildFile; fileRef = DBCB8B4D1AB0F06E00772347 /* BitVector.h */; };
-		DBCB8B571AB0F06E00772347 /* MultivariatePolynomialFunction.h in Headers */ = {isa = PBXBuildFile; fileRef = DBCB8B4E1AB0F06E00772347 /* MultivariatePolynomialFunction.h */; };
 		DBCB8B581AB0F06E00772347 /* test_bitmatrix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DBCB8B511AB0F06E00772347 /* test_bitmatrix.cpp */; };
 		DBCB8B591AB0F06E00772347 /* test_bitvector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DBCB8B521AB0F06E00772347 /* test_bitvector.cpp */; };
 		DBCB8B5A1AB0F06E00772347 /* test_main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DBCB8B531AB0F06E00772347 /* test_main.cpp */; };
 		DBCB8B5B1AB0F06E00772347 /* test_trivial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DBCB8B541AB0F06E00772347 /* test_trivial.cpp */; };
+		DBEE40341B7E63FA0066EE7A /* test_hash.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DBEE40301B7E63FA0066EE7A /* test_hash.cpp */; };
+		DBEE40351B7E63FA0066EE7A /* test_mqt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DBEE40311B7E63FA0066EE7A /* test_mqt.cpp */; };
+		DBEE40361B7E63FA0066EE7A /* test_priv.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DBEE40321B7E63FA0066EE7A /* test_priv.cpp */; };
+		DBEE40371B7E63FA0066EE7A /* test_public.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DBEE40331B7E63FA0066EE7A /* test_public.cpp */; };
+		DBEE40501B7E65A30066EE7A /* BridgeKey.h in Headers */ = {isa = PBXBuildFile; fileRef = DBEE40491B7E65A30066EE7A /* BridgeKey.h */; };
+		DBEE40531B7E65A30066EE7A /* MultiQuadTuple.h in Headers */ = {isa = PBXBuildFile; fileRef = DBEE404C1B7E65A30066EE7A /* MultiQuadTuple.h */; };
+		DBEE40541B7E65A30066EE7A /* MultiQuadTupleChain.h in Headers */ = {isa = PBXBuildFile; fileRef = DBEE404D1B7E65A30066EE7A /* MultiQuadTupleChain.h */; };
+		DBEE40551B7E65A30066EE7A /* PrivateKey.h in Headers */ = {isa = PBXBuildFile; fileRef = DBEE404E1B7E65A30066EE7A /* PrivateKey.h */; };
+		DBEE40561B7E65A30066EE7A /* PublicKey.h in Headers */ = {isa = PBXBuildFile; fileRef = DBEE404F1B7E65A30066EE7A /* PublicKey.h */; };
+		DBEE406E1B7E73670066EE7A /* SearchPrivateKey.h in Headers */ = {isa = PBXBuildFile; fileRef = DBEE406C1B7E73670066EE7A /* SearchPrivateKey.h */; };
+		DBEE406F1B7E73670066EE7A /* SearchPublicKey.h in Headers */ = {isa = PBXBuildFile; fileRef = DBEE406D1B7E73670066EE7A /* SearchPublicKey.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,11 +45,21 @@
 		DBC7982C1A3A7C73003E7EC8 /* libkrypto.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libkrypto.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DBCB8B4C1AB0F06E00772347 /* BitMatrix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BitMatrix.h; sourceTree = "<group>"; };
 		DBCB8B4D1AB0F06E00772347 /* BitVector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BitVector.h; sourceTree = "<group>"; };
-		DBCB8B4E1AB0F06E00772347 /* MultivariatePolynomialFunction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultivariatePolynomialFunction.h; sourceTree = "<group>"; };
 		DBCB8B511AB0F06E00772347 /* test_bitmatrix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_bitmatrix.cpp; sourceTree = "<group>"; };
 		DBCB8B521AB0F06E00772347 /* test_bitvector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_bitvector.cpp; sourceTree = "<group>"; };
 		DBCB8B531AB0F06E00772347 /* test_main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_main.cpp; sourceTree = "<group>"; };
 		DBCB8B541AB0F06E00772347 /* test_trivial.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_trivial.cpp; sourceTree = "<group>"; };
+		DBEE40301B7E63FA0066EE7A /* test_hash.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_hash.cpp; sourceTree = "<group>"; };
+		DBEE40311B7E63FA0066EE7A /* test_mqt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_mqt.cpp; sourceTree = "<group>"; };
+		DBEE40321B7E63FA0066EE7A /* test_priv.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_priv.cpp; sourceTree = "<group>"; };
+		DBEE40331B7E63FA0066EE7A /* test_public.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_public.cpp; sourceTree = "<group>"; };
+		DBEE40491B7E65A30066EE7A /* BridgeKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BridgeKey.h; sourceTree = "<group>"; };
+		DBEE404C1B7E65A30066EE7A /* MultiQuadTuple.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiQuadTuple.h; sourceTree = "<group>"; };
+		DBEE404D1B7E65A30066EE7A /* MultiQuadTupleChain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiQuadTupleChain.h; sourceTree = "<group>"; };
+		DBEE404E1B7E65A30066EE7A /* PrivateKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrivateKey.h; sourceTree = "<group>"; };
+		DBEE404F1B7E65A30066EE7A /* PublicKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PublicKey.h; sourceTree = "<group>"; };
+		DBEE406C1B7E73670066EE7A /* SearchPrivateKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchPrivateKey.h; sourceTree = "<group>"; };
+		DBEE406D1B7E73670066EE7A /* SearchPublicKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchPublicKey.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -116,9 +136,15 @@
 		DBCB8B4B1AB0F06E00772347 /* cpp */ = {
 			isa = PBXGroup;
 			children = (
+				DBEE406C1B7E73670066EE7A /* SearchPrivateKey.h */,
+				DBEE406D1B7E73670066EE7A /* SearchPublicKey.h */,
+				DBEE40491B7E65A30066EE7A /* BridgeKey.h */,
+				DBEE404C1B7E65A30066EE7A /* MultiQuadTuple.h */,
+				DBEE404D1B7E65A30066EE7A /* MultiQuadTupleChain.h */,
+				DBEE404E1B7E65A30066EE7A /* PrivateKey.h */,
+				DBEE404F1B7E65A30066EE7A /* PublicKey.h */,
 				DBCB8B4C1AB0F06E00772347 /* BitMatrix.h */,
 				DBCB8B4D1AB0F06E00772347 /* BitVector.h */,
-				DBCB8B4E1AB0F06E00772347 /* MultivariatePolynomialFunction.h */,
 			);
 			path = cpp;
 			sourceTree = "<group>";
@@ -134,6 +160,10 @@
 		DBCB8B501AB0F06E00772347 /* cpp */ = {
 			isa = PBXGroup;
 			children = (
+				DBEE40301B7E63FA0066EE7A /* test_hash.cpp */,
+				DBEE40311B7E63FA0066EE7A /* test_mqt.cpp */,
+				DBEE40321B7E63FA0066EE7A /* test_priv.cpp */,
+				DBEE40331B7E63FA0066EE7A /* test_public.cpp */,
 				DBCB8B511AB0F06E00772347 /* test_bitmatrix.cpp */,
 				DBCB8B521AB0F06E00772347 /* test_bitvector.cpp */,
 				DBCB8B531AB0F06E00772347 /* test_main.cpp */,
@@ -150,9 +180,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				DB2E686A1AB0F0E100CA2C07 /* gtest.h in Headers */,
-				DBCB8B571AB0F06E00772347 /* MultivariatePolynomialFunction.h in Headers */,
+				DBEE40551B7E65A30066EE7A /* PrivateKey.h in Headers */,
 				DBCB8B551AB0F06E00772347 /* BitMatrix.h in Headers */,
+				DBEE40531B7E65A30066EE7A /* MultiQuadTuple.h in Headers */,
+				DBEE406E1B7E73670066EE7A /* SearchPrivateKey.h in Headers */,
 				DBCB8B561AB0F06E00772347 /* BitVector.h in Headers */,
+				DBEE40541B7E65A30066EE7A /* MultiQuadTupleChain.h in Headers */,
+				DBEE406F1B7E73670066EE7A /* SearchPublicKey.h in Headers */,
+				DBEE40501B7E65A30066EE7A /* BridgeKey.h in Headers */,
+				DBEE40561B7E65A30066EE7A /* PublicKey.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -231,8 +267,12 @@
 				DB2E68691AB0F0E100CA2C07 /* gtest-all.cc in Sources */,
 				DBCB8B591AB0F06E00772347 /* test_bitvector.cpp in Sources */,
 				DBCB8B581AB0F06E00772347 /* test_bitmatrix.cpp in Sources */,
+				DBEE40351B7E63FA0066EE7A /* test_mqt.cpp in Sources */,
 				DBCB8B5A1AB0F06E00772347 /* test_main.cpp in Sources */,
 				DBCB8B5B1AB0F06E00772347 /* test_trivial.cpp in Sources */,
+				DBEE40361B7E63FA0066EE7A /* test_priv.cpp in Sources */,
+				DBEE40341B7E63FA0066EE7A /* test_hash.cpp in Sources */,
+				DBEE40371B7E63FA0066EE7A /* test_public.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -256,6 +296,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -301,11 +342,13 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_OPTIMIZATION_LEVEL = fast;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -327,7 +370,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_X86_VECTOR_INSTRUCTIONS = avx;
+				CLANG_X86_VECTOR_INSTRUCTIONS = avx2;
 				COMBINE_HIDPI_IMAGES = YES;
 				EXECUTABLE_PREFIX = lib;
 				HEADER_SEARCH_PATHS = (
@@ -348,7 +391,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_X86_VECTOR_INSTRUCTIONS = avx;
+				CLANG_X86_VECTOR_INSTRUCTIONS = avx2;
 				COMBINE_HIDPI_IMAGES = YES;
 				EXECUTABLE_PREFIX = lib;
 				GCC_OPTIMIZATION_LEVEL = fast;

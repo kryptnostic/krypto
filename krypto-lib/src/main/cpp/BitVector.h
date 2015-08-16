@@ -68,9 +68,7 @@ public:
      */
     static const BitVector<N> & zeroVector() {
         static BitVector<N> v;
-        for (unsigned int i = 0; i < N; ++i) {
-            v._bits[i] &= 0;
-        }
+        v.zero();
         return v;
     }
 
