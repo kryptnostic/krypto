@@ -12,7 +12,11 @@ For mac:
 For linux:
 
 	> ./gradlew buildGoogleTest :krypto-lib:build
-	
+
+To automagically build a jar for jni access to krypto, run:
+
+	> ./gradlew buildFullJar
+
 Builds currently depend on clang3.7 for c++14 features. This is only tends to be an issue on older versions of linux.
 
 The easiest way to do development is to use the included xcode projects which are setup such that GoogleTests can be debugged from within XCode by using the krypto-cli project.

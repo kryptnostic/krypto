@@ -1,3 +1,4 @@
 rootProject.name='krypto'
 
 include 'krypto-lib'
+include 'krypto-api'

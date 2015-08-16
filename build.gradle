@@ -19,6 +19,21 @@ task buildGoogleTest(type: Exec) {
     commandLine './buildGoogleTest.sh'
 }
 
+task copyBinariesToApi(type: Copy, dependsOn: 'krypto-lib:build') {
+    from 'krypto-lib/build/binaries/mainSharedLibrary/release/'
+    into 'krypto-api/src/main/resources/com/kryptnostic/krypto/engine/'
+    include( '**/*.so', '**/*.dylib' )
+}
+
+task buildFullJar(dependsOn: [':krypto-api:GenerateJniHeaders', ':krypto-api:jar'] ) << {
+    // run build lib
+    tasks.getByPath(':krypto-lib:build').execute()
+    // move libs
+    tasks.getByPath('copyBinariesToApi').execute()
+    // run jar api
+    tasks.getByPath(':krypto-api:jar').execute()
+}
+
 //Determine OS 
 //TODO: Add Windows support.
 def osname = System.properties['os.name'].toLowerCase().toLowerCase()
@@ -27,9 +42,11 @@ if (osname.contains('windows')) {
     print "Too close for missiles switching to guns."
 } else if (osname.contains('mac') ) {
     print "build for mac"
+    ext.includes="darwin"
     assemble.dependsOn buildGoogleTestMac
 } else {
     print "Building for linux."
+    ext.includes="linux"
     assemble.dependsOn buildGoogleTest
 }
 

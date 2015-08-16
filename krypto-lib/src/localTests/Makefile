@@ -4,7 +4,7 @@
   # compiler flags:
   #  -g    adds debugging information to the executable file
   #  -Wall turns on most, but not all, compiler warnings
-  CFLAGS  = -g -Wall --std=c++14 -O3
+  CFLAGS  = -g -Wall --std=c++14 -O3 -I$(JAVA_HOME)/include/ -I$(JAVA_HOME)/include/darwin/ -I$(JAVA_HOME)/include/linux/
 
   DEPS = ../main/cpp/BitMatrix.h ../main/cpp/BitVector.h ../main/cpp/PrivateKey.h ../main/cpp/BridgeKey.h ../main/cpp/PublicKey.h ../main/cpp/MultiQuadTuple.h ../main/cpp/MultiQuadTupleChain.h
 
