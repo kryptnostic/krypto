@@ -18,7 +18,7 @@ void testInstantiateUUID() {
 		UUID id1;
 		UUID id2;
 
-		if (equal_to<UUID>()(id1, id2)) cout << "yes" << endl;
+		if (id1 == id2) cout << "yes" << endl;
 		else cout << "no" << endl;
 
 		id1.print();

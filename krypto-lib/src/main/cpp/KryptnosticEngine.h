@@ -123,16 +123,16 @@ public:
 	 * Function: getDocKey
 	 * Returns a serialized random unused document key
 	 * and inserts the document key into a stored hash set
-	 * Returns 0 if object has an existing key
+	 * Returns existing key if object has an existing key
 	 */
-	const UUID getDocKey(const UUID & objectId) const{
+	const UUID getDocKey(const UUID & objectId) {
 		UUID docKey = generateDocKey(objectId);
 		if (!docKey.isZero()) { //objectId already used
 			while (docKeySet.count(docKey) == 1) docKey = generateDocKey(objectId); //generated new key
 
-			docToKeyMap.insert(pair<UUID, UUID>(objectId, docKey));
+			docToKeyMap[objectId] = docKey;
 			docKeySet.insert(docKey);
-		}
+		} else docKey = docToKeyMap[objectId];
 		return docKey;
 	}
 
@@ -161,7 +161,7 @@ public:
 	 * Sets the document key of a given object to a given document key
 	 * Returns whether the operation was valid and successful
 	 */
-	const bool setDocKey(const UUID & objectId, const UUID & docKey) const{
+	const bool setDocKey(const UUID & objectId, const UUID & docKey) {
 		if (docToKeyMap.count(objectId) != 0) {
 			docToKeyMap[objectId] = docKey;
 			return true;
@@ -177,8 +177,8 @@ private:
 	const string _serialXor;
 	const string _serialAnd;
 	const string _serialLeftShift;
-	const unordered_set<UUID> docKeySet;
-	const unordered_map<UUID, UUID> docToKeyMap;
+	unordered_set<UUID> docKeySet;
+	unordered_map<UUID, UUID> docToKeyMap;
 
 /* Generators */
 

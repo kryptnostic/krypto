@@ -10,13 +10,29 @@ using namespace std;
 #define OPRUNS 1
 #define TESTRUNS 1
 
-void testInstantiateUUID() {
+void testInstantiateKE() {
 	clock_t diff = 0;
 
 	for (int run = 0; run < TESTRUNS; ++run) {
 		clock_t begin = clock();
 
-		KryptnosticEngine<N, L> engine1("yo");
+		string serverGlobal = "yo";
+		KryptnosticEngine<N, L> engine(serverGlobal);
+
+		UUID objectId1;
+		objectId1.randomize();
+
+		cout << "Current docKey = ";
+		engine.getDocKey(objectId1).print();
+
+		cout << "Randomly generated docKey2 = ";
+		UUID docKey2;
+		docKey2.randomize();
+		docKey2.print();
+
+		cout << "Current docKey = ";
+		engine.setDocKey(objectId1, docKey2);
+		engine.getDocKey(objectId1).print();
 
 		clock_t end = clock();
  		diff += (end - begin);
@@ -26,7 +42,7 @@ void testInstantiateUUID() {
 
 
 int main(int argc, char **argv) {
-	cout << "UUID tests" << endl;
-	testInstantiateUUID();
+	cout << "KryptnosticEngine tests" << endl;
+	testInstantiateKE();
 	return 0;
 }

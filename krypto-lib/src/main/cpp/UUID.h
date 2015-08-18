@@ -26,8 +26,16 @@ struct UUID
 	 * Function: isZero()
 	 * Returns whether current UUID is zero
 	 */
-	const bool isZero() {
+	const bool isZero() const {
 		return (first == 0) && (second == 0);
+	}
+
+	/*
+	 * Operator: ==(rhs)
+	 * Compares two UUIDs by directly comparing their components
+	 */
+	bool operator==(const UUID &rhs) const {
+	    return (first == rhs.first) && (second == rhs.second);
 	}
 
 	/* Generator */
@@ -86,16 +94,4 @@ struct hash<UUID>
         size_t const h2 ( hash<unsigned long long>()(id.second) );
         return h1 + h2;
     }
-};
-
-/*
- * Function: equal_to<UUID>()(lhs, rhs)
- * Compares two UUIDs by directly comparing their components
- */
-template<>
-struct equal_to<UUID>
-{ 
-	bool operator()(const UUID &lhs, const UUID &rhs) {
-	    return (lhs.first == rhs.first) && (lhs.second == rhs.second);
-	}
 };
