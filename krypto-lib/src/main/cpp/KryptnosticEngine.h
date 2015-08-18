@@ -32,7 +32,10 @@ public:
      * Constructs a Kryptnostic Engine from scratch
      */
 	KryptnosticEngine(const string serverGlobal) :
-	_serverGlobal(serverGlobal)
+	_serverGlobal(serverGlobal),
+	_pk(),
+	_bk(_pk),
+	_pubk(_bk)
 	{
 
 	}
@@ -41,10 +44,11 @@ public:
      * Constructor
      * Constructs a Kryptnostic Engine given private and public keys
      */
-	KryptnosticEngine(const string serverGlobal, const PrivateKey<N, L> pk, const PublicKey<N, L> bk) :
+	KryptnosticEngine(const string serverGlobal, const PrivateKey<N, L> pk, const PublicKey<N, L> pubk) :
 	_serverGlobal(serverGlobal),
 	_pk(pk),
-	_bk(bk)
+	_bk(_pk),
+	_pubk(pubk)
 	{
 		
 	}

@@ -11,8 +11,10 @@
   # the build target executable:
   TARGET1 = test_speed
   TARGET2 = test_local
+  TARGET3 = test_UUID
+  TARGET4 = test_KryptnosticEngine
 
-  all: $(TARGET1) $(TARGET2)
+  all: $(TARGET1) $(TARGET2) $(TARGET3) $(TARGET4)
 
   $(TARGET1): $(TARGET1).cpp $(DEPS)
 	$(CC) $(CFLAGS) -o $(TARGET1) $(TARGET1).cpp
@@ -20,5 +22,11 @@
   $(TARGET2): $(TARGET2).cpp $(DEPS)
 	$(CC) $(CFLAGS) -o $(TARGET2) $(TARGET2).cpp
 
+  $(TARGET3): $(TARGET3).cpp $(DEPS)
+	$(CC) $(CFLAGS) -o $(TARGET3) $(TARGET3).cpp
+
+  $(TARGET4): $(TARGET4).cpp $(DEPS)
+	$(CC) $(CFLAGS) -o $(TARGET4) $(TARGET4).cpp
+
   clean:
-	$(RM) $(TARGET1) $(TARGET2)
+	$(RM) $(TARGET1) $(TARGET2) $(TARGET3) $(TARGET4)
