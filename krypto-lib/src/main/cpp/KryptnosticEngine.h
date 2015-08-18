@@ -18,9 +18,10 @@
 #include "UUID.h"
 #include <string>
 #include <unordered_map>
-// #include <emscripten/emscripten.h>
-// #include <emscripten/bind.h>
+#include <emscripten/emscripten.h>
+#include <emscripten/bind.h>
 
+using namespace emscripten;
 
 template<unsigned int N, unsigned int L>
 class KryptnosticEngine {
@@ -37,7 +38,8 @@ public:
 	_serverGlobal(serverGlobal),
 	_pk(),
 	_bk(_pk),
-	_pubk(_bk)
+	_pubk(_bk),
+	vector()
 	{
 
 	}
@@ -50,7 +52,8 @@ public:
 	_serverGlobal(serverGlobal),
 	_pk(pk),
 	_bk(_pk),
-	_pubk(pubk)
+	_pubk(pubk),
+	vector()
 	{
 		
 	}
@@ -66,7 +69,8 @@ public:
 	_bk(bk),
 	_serialXor(oldXor),
 	_serialAnd(oldAnd),
-	_serialLeftShift(oldLeftShift)
+	_serialLeftShift(oldLeftShift),
+	vector()
 	{
 		
 	}
@@ -77,10 +81,10 @@ public:
 	 * Function: getPrivateKey
 	 * Returns a serialized private key
 	 */
-	const string getPrivateKey() const{
-		// unsigned char * pointer;
-		// return emscripten::memory_view<unsigned char>(1, pointer);
-		return "";
+	const memory_view<unsigned char> getPrivateKey() const{
+		cout << "size of vector " << sizeof(vector) << endl; //for testing
+		unsigned char * pointer = (unsigned char *) &vector;
+		return memory_view<unsigned char>(sizeof(vector), pointer);
 	}
 
 	/*
@@ -181,6 +185,7 @@ private:
 	const string _serialXor;
 	const string _serialAnd;
 	const string _serialLeftShift;
+	const BitVector<1> vector; //for testing purposes
 	unordered_set<UUID> docKeySet;
 	unordered_map<UUID, UUID> docToKeyMap;
 
@@ -200,5 +205,9 @@ private:
 	}
 
 };
+
+	// EMSCRIPTEN_BINDINGS(KryptnosticEngine) {
+	// 	emscripten::value_object<unsigned char>("blob");
+	// }
 
 #endif

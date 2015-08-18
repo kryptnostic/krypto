@@ -1,6 +1,10 @@
 #include "../main/cpp/KryptnosticEngine.h"
 #include <iostream>
+#include <stdio.h>
+#include <string.h>
 #include <time.h>
+#include <emscripten/emscripten.h>
+#include <emscripten/bind.h>
 
 using namespace std;
 
@@ -33,6 +37,12 @@ void testInstantiateKE() {
 		cout << "Current docKey = ";
 		engine.setDocKey(objectId1, docKey2);
 		engine.getDocKey(objectId1).print();
+
+
+		emscripten::memory_view<unsigned char> pk = engine.getPrivateKey();
+		emscripten::memory_view<unsigned char> pk2 = engine.getPrivateKey();
+		memcpy(&pk2, &pk, sizeof(pk));
+		cout << "size of memory view = " << sizeof(pk) << endl;
 
 		clock_t end = clock();
  		diff += (end - begin);
