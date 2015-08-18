@@ -1,6 +1,8 @@
 # executable
 test_local
 test_speed
+test_UUID
+test_KryptnosticEngine
 
 #debugging files
 *.dSYM

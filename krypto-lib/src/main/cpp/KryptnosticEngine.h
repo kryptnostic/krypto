@@ -18,6 +18,8 @@
 #include "UUID.h"
 #include <string>
 #include <unordered_map>
+// #include <emscripten/emscripten.h>
+// #include <emscripten/bind.h>
 
 
 template<unsigned int N, unsigned int L>
@@ -76,6 +78,8 @@ public:
 	 * Returns a serialized private key
 	 */
 	const string getPrivateKey() const{
+		// unsigned char * pointer;
+		// return emscripten::memory_view<unsigned char>(1, pointer);
 		return "";
 	}
 
