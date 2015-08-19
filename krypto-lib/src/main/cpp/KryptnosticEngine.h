@@ -91,50 +91,50 @@ public:
 	 * Function: getPublicKey
 	 * Returns a serialized public key
 	 */
-	const memory_view<unsigned char> getPublicKey() const{
+	const val getPublicKey() const{
 		unsigned char * pointer = (unsigned char *) &vector;
 		vector.print();
-		return memory_view<unsigned char>(sizeof(vector), pointer);
+		return val(memory_view<unsigned char>(sizeof(vector), pointer));
 	}
 
 	/*
 	 * Function: getServerSearchFunction
 	 * Returns a serialized homomorphic hash function
 	 */
-	const memory_view<unsigned char> getServerSearchFunction() const{
+	const val getServerSearchFunction() const{
 		unsigned char * pointer = (unsigned char *) &vector;
 		vector.print();
-		return memory_view<unsigned char>(sizeof(vector), pointer);
+		return val(memory_view<unsigned char>(sizeof(vector), pointer));
 	}
 
 	/*
 	 * Function: getXor
 	 * Returns a serialized function that performs bitwise Xor operations
 	 */
-	const memory_view<unsigned char> getXor() const{
+	const val getXor() const{
 		unsigned char * pointer = (unsigned char *) &vector;
 		vector.print();
-		return memory_view<unsigned char>(sizeof(vector), pointer);
+		return val(memory_view<unsigned char>(sizeof(vector), pointer));
 	}
 
 	/*
 	 * Function: getAnd
 	 * Returns a serialized function that performs bitwise AND operations
 	 */
-	const memory_view<unsigned char> getAnd() const{
+	const val getAnd() const{
 		unsigned char * pointer = (unsigned char *) &vector;
 		vector.print();
-		return memory_view<unsigned char>(sizeof(vector), pointer);
+		return val(memory_view<unsigned char>(sizeof(vector), pointer));
 	}
 
 	/*
 	 * Function: getLeftShift
 	 * Returns a serialized function that performs left shift operations
 	 */
-	const memory_view<unsigned char> getLeftShift() const{
+	const val getLeftShift() const{
 		unsigned char * pointer = (unsigned char *) &vector;
 		vector.print();
-		return memory_view<unsigned char>(sizeof(vector), pointer);
+		return val(memory_view<unsigned char>(sizeof(vector), pointer));
 	}
 
 	/*
@@ -143,7 +143,7 @@ public:
 	 * and inserts the document key into a stored hash set
 	 * Returns existing key if object has an existing key
 	 */
-	const UUID getDocKey(const UUID & objectId) {
+	const val getDocKey(const UUID & objectId) {
 		UUID docKey = generateDocKey(objectId);
 		if (!docKey.isZero()) { //objectId already used
 			while (docKeySet.count(docKey) == 1) docKey = generateDocKey(objectId); //generated new key
@@ -151,7 +151,7 @@ public:
 			docToKeyMap[objectId] = docKey;
 			docKeySet.insert(docKey);
 		} else docKey = docToKeyMap[objectId];
-		return docKey;
+		return val(docKey);
 	}
 
 /* Transformers */
@@ -160,20 +160,20 @@ public:
 	 * Function: getHashedToken
 	 * Returns the serialized result from hashing a given token and a given document key
 	 */
-	const memory_view<unsigned char> getHashedToken(const string & token, const UUID & docKey) const{
+	const val getHashedToken(const string & token, const UUID & docKey) const{
 		unsigned char * pointer = (unsigned char *) &vector;
 		vector.print();
-		return memory_view<unsigned char>(sizeof(vector), pointer);
+		return val(memory_view<unsigned char>(sizeof(vector), pointer));
 	}
 
 	/*
 	 * Function: getEncryptedSearchTerm
 	 * Returns a serialized encrypted search term
 	 */
-	const memory_view<unsigned char> getEncryptedSearchTerm(const UUID & objectId) const{
+	const val getEncryptedSearchTerm(const string & word) const{
 		unsigned char * pointer = (unsigned char *) &vector;
 		vector.print();
-		return memory_view<unsigned char>(sizeof(vector), pointer);
+		return val(memory_view<unsigned char>(sizeof(vector), pointer));
 	}
 
 /* Setters */
