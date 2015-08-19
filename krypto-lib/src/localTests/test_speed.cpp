@@ -7,7 +7,7 @@
 
 using namespace std;
 
-#define N 1
+#define N 2
 #define DEBUG false
 #define OPRUNS 10
 #define TESTRUNS 100
