@@ -39,7 +39,7 @@ public:
 	_pk(),
 	_bk(_pk),
 	_pubk(_bk),
-	vector()
+	vector(BitVector<1>::randomVector())
 	{
 
 	}
@@ -53,7 +53,7 @@ public:
 	_pk(pk),
 	_bk(_pk),
 	_pubk(pubk),
-	vector()
+	vector(BitVector<1>::randomVector())
 	{
 		
 	}
@@ -70,7 +70,7 @@ public:
 	_serialXor(oldXor),
 	_serialAnd(oldAnd),
 	_serialLeftShift(oldLeftShift),
-	vector()
+	vector(BitVector<1>::randomVector())
 	{
 		
 	}
@@ -82,8 +82,8 @@ public:
 	 * Returns a serialized private key
 	 */
 	const memory_view<unsigned char> getPrivateKey() const{
-		cout << "size of vector " << sizeof(vector) << endl; //for testing
 		unsigned char * pointer = (unsigned char *) &vector;
+		vector.print();
 		return memory_view<unsigned char>(sizeof(vector), pointer);
 	}
 
@@ -91,8 +91,10 @@ public:
 	 * Function: getPublicKey
 	 * Returns a serialized public key
 	 */
-	const string getPublicKey() const{
-		return "";
+	const memory_view<unsigned char> getPublicKey() const{
+		unsigned char * pointer = (unsigned char *) &vector;
+		vector.print();
+		return memory_view<unsigned char>(sizeof(vector), pointer);
 	}
 
 	/*

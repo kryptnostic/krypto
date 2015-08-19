@@ -40,9 +40,8 @@ void testInstantiateKE() {
 
 
 		emscripten::memory_view<unsigned char> pk = engine.getPrivateKey();
-		emscripten::memory_view<unsigned char> pk2 = engine.getPrivateKey();
-		memcpy(&pk2, &pk, sizeof(pk));
-		cout << "size of memory view = " << sizeof(pk) << endl;
+		BitVector<1> vector = * (BitVector<1> *) pk.data;
+		vector.print();
 
 		clock_t end = clock();
  		diff += (end - begin);
