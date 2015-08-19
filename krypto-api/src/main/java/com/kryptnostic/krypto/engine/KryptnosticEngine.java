@@ -31,11 +31,11 @@ public class KryptnosticEngine {
     private final long handle;
 
     public KryptnosticEngine( byte[] serverGlobalHash ) {
-        handle = initKryptnosticEngine( serverGlobalHash.getBytes() );
+        handle = initKryptnosticEngine( serverGlobalHash );
     }
 
     public KryptnosticEngine( byte[] privateKey, byte[] publicKey, byte[] serverGlobalHash ) {
-        handle = initKryptnosticEngine( privateKey.getBytes(), publicKey.getBytes(), serverGlobalHash.getBytes() );
+        handle = initKryptnosticEngine( privateKey, publicKey, serverGlobalHash );
     }
 
     public KryptnosticEngine() {
