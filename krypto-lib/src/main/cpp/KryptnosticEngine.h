@@ -81,10 +81,10 @@ public:
 	 * Function: getPrivateKey
 	 * Returns a serialized private key
 	 */
-	const memory_view<unsigned char> getPrivateKey() const{
+	const val getPrivateKey() const{
 		unsigned char * pointer = (unsigned char *) &vector;
 		vector.print();
-		return memory_view<unsigned char>(sizeof(vector), pointer);
+		return val(memory_view<unsigned char>(sizeof(vector), pointer));
 	}
 
 	/*
