@@ -207,23 +207,3 @@ private:
 
 };
 #endif
-
-EMSCRIPTEN_BINDINGS(crypto_module) {
-	class_< KryptnosticEngine >("KryptnosticEngine")
-		.constructor<>()
-		.function("getPrivateKey", &KryptnosticEngine::getPrivateKey)
-		.function("getPublicKey", &KryptnosticEngine::getPublicKey)
-		.function("getServerSearchFunction", &KryptnosticEngine::getServerSearchFunction)
-		.function("getXor", &KryptnosticEngine::getXor)
-		.function("getAnd", &KryptnosticEngine::getAnd)
-		.function("getLeftShift", &KryptnosticEngine::getLeftShift)
-		.function("getDocKey", &KryptnosticEngine::getDocKey)
-		.function("setDocKey", &KryptnosticEngine::setDocKey)
-		.function("getHashedToken", &KryptnosticEngine::getHashedToken)
-		.function("getEncryptedSearchTerm", &KryptnosticEngine::getEncryptedSearchTerm)
-		;
-}
-
-	// EMSCRIPTEN_BINDINGS(KryptnosticEngine) {
-	// 	emscripten::value_object<unsigned char>("blob");
-	// }
