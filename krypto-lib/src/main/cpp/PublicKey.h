@@ -20,7 +20,7 @@
 template<unsigned int N, unsigned int L>
 class PublicKey{
 public:
-	PublicKey(const BridgeKey<N,L> &bk) : 
+	PublicKey(const BridgeKey<N,L> &bk) :
 	_bk(bk),
 	_gu1(bk.getUnaryG1()),
 	_gu2(bk.getUnaryG2()),
@@ -50,17 +50,17 @@ public:
 	const BitVector<2*N> homomorphicAND(const BitVector<2*N> &x, const BitVector<2*N> &y) const{
 		BitVector<3*N> t = binaryT(x, y);
 		BitVector<7*N> coordinates = BitVector<7*N>::vCat(x, y, t);
-		
+
 		BitVector<2*N> left = _z(coordinates);
 		BitVector<2*N> mid = _Z1.template operator*<2*N>(x);
 		BitVector<2*N> right = _Z2.template operator*<2*N>(y);
-		
+
 		return left ^ mid ^ right;
 	}
 
 	/*
 	const BitVector<2*N> homomorphicADD(const BitVector<2*N> &x, const BitVector<2*N> &y) const{
-		//TODO	
+		//TODO
 	}
 	*/
 
@@ -76,8 +76,6 @@ private:
 	const MultiQuadTuple<7*N, 2*N> _z;
 	const BitMatrix<2*N> _Z1;
 	const BitMatrix<2*N> _Z2;
-
-	unsigned int NN = N << 6;
 
 	const BitVector<3*N> binaryT(const BitVector<2*N> &x, const BitVector<2*N> &y) const{
 		BitVector<4*N> concatXY = BitVector<4*N>::template vCat<2*N, 2*N>(x, y);

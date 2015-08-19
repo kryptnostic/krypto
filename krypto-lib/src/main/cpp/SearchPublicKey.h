@@ -27,27 +27,27 @@ public:
 		BitMatrix<N> C = _h.getTransposedContributionMatrix();
 		BitMatrix<N> Ai = BitMatrix<N>::squareZeroMatrix();
 		BitMatrix<N> Ji = BitMatrix<N>::squareZeroMatrix();
-		for(size_t i = 0; i < NN; ++i){
+		for(size_t i = 0; i < N; ++i){
 			Ai.zero();
 			Ji.zero();
 			Ji.template setCol<N>(i);
-			for(size_t j = i; j < NN; ++j){
+			for(size_t j = i; j < N; ++j){
 				Ai.template setCol<N>(j, C.getRow(count));
 				++count;
 			}
 			BitVector<2*N> v1 = pub.homomorphicLMM(_bk.getLMMZ(Ai), t);
-			for(size_t j = 0; j < NN; ++j){
+			for(size_t j = 0; j < N; ++j){
 				Ai.template setCol<N>(j, C.getRow(count));
 				++count;
 			}
 			BitVector<2*N> v2 = pub.homomorphicLMM(_bk.getLMMZ(Ai), d);
 			result = pub.homomorphicXOR(result, pub.homomorphicAND(pub.homomorphicLMM(_bk.getLMMZ(Ji), t), pub.homomorphicXOR(v1, v2)));
 		}
-		for(size_t i = 0; i < NN; ++i){
+		for(size_t i = 0; i < N; ++i){
 			Ai.zero();
 			Ji.zero();
 			Ji.template setCol<N>(i);
-			for(size_t j = i; j < NN; ++j){
+			for(size_t j = i; j < N; ++j){
 				Ai.template setCol<N>(j, C.getRow(count));
 				++count;
 			}
@@ -76,8 +76,6 @@ private:
 	MultiQuadTuple<2*N,N> _g0;
 	MultiQuadTuple<N,N> _g1;
 	MultiQuadTuple<N,N> _g2;
-	static const unsigned int NN = N << 6;
-	static const unsigned int twoNN = NN << 1;
 };
 
 #endif/* defined(__krypto__SearchPublicKey__) */

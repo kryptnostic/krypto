@@ -69,8 +69,6 @@ private:
 	MultiQuadTuple<2*N,N> _g0;
 	MultiQuadTuple<N,N> _g1;
 	MultiQuadTuple<N,N> _g2;
-	static const unsigned int NN = N << 6;
-	static const unsigned int twoNN = NN << 1;
 };
 
 #endif/* defined(__krypto__SearchPrivateKey__) */
