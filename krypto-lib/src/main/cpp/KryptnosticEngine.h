@@ -101,32 +101,40 @@ public:
 	 * Function: getServerSearchFunction
 	 * Returns a serialized homomorphic hash function
 	 */
-	const string getServerSearchFunction() const{
-		return "";
+	const memory_view<unsigned char> getServerSearchFunction() const{
+		unsigned char * pointer = (unsigned char *) &vector;
+		vector.print();
+		return memory_view<unsigned char>(sizeof(vector), pointer);
 	}
 
 	/*
 	 * Function: getXor
 	 * Returns a serialized function that performs bitwise Xor operations
 	 */
-	const string getXor() const{
-		return _serialXor;
+	const memory_view<unsigned char> getXor() const{
+		unsigned char * pointer = (unsigned char *) &vector;
+		vector.print();
+		return memory_view<unsigned char>(sizeof(vector), pointer);
 	}
 
 	/*
 	 * Function: getAnd
 	 * Returns a serialized function that performs bitwise AND operations
 	 */
-	const string getAnd() const{
-		return _serialAnd;
+	const memory_view<unsigned char> getAnd() const{
+		unsigned char * pointer = (unsigned char *) &vector;
+		vector.print();
+		return memory_view<unsigned char>(sizeof(vector), pointer);
 	}
 
 	/*
 	 * Function: getLeftShift
 	 * Returns a serialized function that performs left shift operations
 	 */
-	const string getLeftShift() const{
-		return _serialLeftShift;
+	const memory_view<unsigned char> getLeftShift() const{
+		unsigned char * pointer = (unsigned char *) &vector;
+		vector.print();
+		return memory_view<unsigned char>(sizeof(vector), pointer);
 	}
 
 	/*
@@ -152,16 +160,20 @@ public:
 	 * Function: getHashedToken
 	 * Returns the serialized result from hashing a given token and a given document key
 	 */
-	const string getHashedToken(const string & token, const UUID & docKey) const{
-		return "";
+	const memory_view<unsigned char> getHashedToken(const string & token, const UUID & docKey) const{
+		unsigned char * pointer = (unsigned char *) &vector;
+		vector.print();
+		return memory_view<unsigned char>(sizeof(vector), pointer);
 	}
 
 	/*
 	 * Function: getEncryptedSearchTerm
 	 * Returns a serialized encrypted search term
 	 */
-	const string getEncryptedSearchTerm(const UUID & objectId) const{
-		return "";
+	const memory_view<unsigned char> getEncryptedSearchTerm(const UUID & objectId) const{
+		unsigned char * pointer = (unsigned char *) &vector;
+		vector.print();
+		return memory_view<unsigned char>(sizeof(vector), pointer);
 	}
 
 /* Setters */
