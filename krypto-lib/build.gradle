@@ -5,17 +5,27 @@ task wrapper(type: Wrapper) {
     gradleVersion = '2.4'
 }
 
+def osname = System.properties['os.name'].toLowerCase().toLowerCase()
+
+ext.home=System.env.'JAVA_HOME'
+ext.includes='linux'
+if (osname.contains('mac')) {
+    ext.includes='darwin'
+}
+
 model {
 	toolChains {
         clang(Clang) {
             eachPlatform {
-            		cppCompiler.withArguments { args ->
-            			args << "-std=c++11"
-                        args << "-O3"
-                        args << "-fslp-vectorize-aggressive"
-                        args << "-march=native"
-                        //args << "-I \"Downloads/emsdk_portable/emscripten/tag-1.34.4/system/include/\"" (whatever directory that contains <emscripten/bind.h>)
-            		}
+            	cppCompiler.withArguments { args ->
+            		args << "-std=c++11"
+                    args << "-O3"
+                    args << "-fslp-vectorize-aggressive"
+                    args << "-march=native"
+                    args << "-I${home}/include/"
+                    args << "-I${home}/include/${includes}/"
+                    //args << "-I \"Downloads/emsdk_portable/emscripten/tag-1.34.4/system/include/\"" (whatever directory that contains <emscripten/bind.h>)
+            	}
             }
         }
     }
@@ -83,4 +93,10 @@ def findGoogleTestCoreLibForPlatform(Platform platform) {
     } else {
         return "linux/libgtest.a"
     }
+}
+
+clean.dependsOn('cleanJniHeaders')
+
+task cleanJniHeaders(type: Delete) {
+    delete 'src/main/cpp/com_kryptnostic_krypto_engine_KryptnosticEngine.h'
 }

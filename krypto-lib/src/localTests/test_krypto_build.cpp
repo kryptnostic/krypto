@@ -7,10 +7,10 @@
 
 using namespace std;
 
-#define N 2
+#define N 1
 #define DEBUG false
 #define OPRUNS 10
-#define TESTRUNS 100
+#define TESTRUNS 2
 
 void testOps1() {
  	PrivateKey<N, 2> pk;
@@ -128,6 +128,7 @@ void testHash() {
 	MultiQuadTuple<2*N, N> h = MultiQuadTuple<2*N, N>::randomMultiQuadTuple();
 	PrivateKey<N, 2> pk;
 	BridgeKey<N, 2> bk(pk);
+	SearchPublicKey<N, 2> sk(pk); 
 	SearchPrivateKey<N, 2> rk(pk, h);
 	SearchPublicKey<N, 2> sk(rk, bk); 
 	BitVector<2*N> encryptedT = pk.encrypt(t);
@@ -146,7 +147,7 @@ int main(int argc, char **argv) {
 	testOps3();
 	testClientRuns();
 	testPublicKeyRuns();
-	testHash();
+	//testHash();
  	fclose(urandom);
 	return 0;
 }
