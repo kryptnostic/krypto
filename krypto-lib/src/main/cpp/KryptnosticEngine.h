@@ -13,7 +13,6 @@
 #ifndef krypto_KryptnosticEngine_h
 #define krypto_KryptnosticEngine_h
 
-#include "PublicKey.h"
 #include "SearchPublicKey.h"
 #include "UUID.h"
 #include <string>
@@ -21,9 +20,12 @@
 #include <emscripten/emscripten.h>
 #include <emscripten/bind.h>
 
+#define N 2
+#define L 2
+
 using namespace emscripten;
 
-template<unsigned int N, unsigned int L>
+//template<unsigned int N, unsigned int L>
 class KryptnosticEngine {
 
 public:
@@ -34,8 +36,7 @@ public:
      * Constructor
      * Constructs a Kryptnostic Engine from scratch
      */
-	KryptnosticEngine(const string serverGlobal) :
-	_serverGlobal(serverGlobal),
+	KryptnosticEngine() :
 	_pk(),
 	_bk(_pk),
 	_pubk(_bk),
@@ -48,8 +49,7 @@ public:
      * Constructor
      * Constructs a Kryptnostic Engine given private and public keys
      */
-	KryptnosticEngine(const string serverGlobal, const PrivateKey<N, L> pk, const PublicKey<N, L> pubk) :
-	_serverGlobal(serverGlobal),
+	KryptnosticEngine(const PrivateKey<N, L> pk, const PublicKey<N, L> pubk) :
 	_pk(pk),
 	_bk(_pk),
 	_pubk(pubk),
@@ -62,11 +62,11 @@ public:
      * Constructor
      * Constructs a fresh Kryptnostic Engine given all keys
      */
-	KryptnosticEngine(const string serverGlobal, const PrivateKey<N, L> pk, const PublicKey<N, L> bk, const string oldXor,
+	KryptnosticEngine(const PrivateKey<N, L> pk, const PublicKey<N, L> pubk, const string oldXor,
 		const string oldAnd, const string oldLeftShift) :
-	_serverGlobal(serverGlobal),
 	_pk(pk),
-	_bk(bk),
+	_bk(_pk),
+	_pubk(pubk),
 	_serialXor(oldXor),
 	_serialAnd(oldAnd),
 	_serialLeftShift(oldLeftShift),
@@ -180,7 +180,6 @@ public:
 	}
 
 private:
-	const string _serverGlobal;
 	const PrivateKey<N, L> _pk;
 	const BridgeKey<N, L> _bk;
 	const PublicKey<N, L> _pubk;
@@ -207,9 +206,24 @@ private:
 	}
 
 };
+#endif
+
+EMSCRIPTEN_BINDINGS(crypto_module) {
+	class_< KryptnosticEngine >("KryptnosticEngine")
+		.constructor<>()
+		.function("getPrivateKey", &KryptnosticEngine::getPrivateKey)
+		.function("getPublicKey", &KryptnosticEngine::getPublicKey)
+		.function("getServerSearchFunction", &KryptnosticEngine::getServerSearchFunction)
+		.function("getXor", &KryptnosticEngine::getXor)
+		.function("getAnd", &KryptnosticEngine::getAnd)
+		.function("getLeftShift", &KryptnosticEngine::getLeftShift)
+		.function("getDocKey", &KryptnosticEngine::getDocKey)
+		.function("setDocKey", &KryptnosticEngine::setDocKey)
+		.function("getHashedToken", &KryptnosticEngine::getHashedToken)
+		.function("getEncryptedSearchTerm", &KryptnosticEngine::getEncryptedSearchTerm)
+		;
+}
 
 	// EMSCRIPTEN_BINDINGS(KryptnosticEngine) {
 	// 	emscripten::value_object<unsigned char>("blob");
 	// }
-
-#endif

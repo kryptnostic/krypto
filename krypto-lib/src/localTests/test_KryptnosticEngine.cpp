@@ -20,8 +20,7 @@ void testInstantiateKE() {
 	for (int run = 0; run < TESTRUNS; ++run) {
 		clock_t begin = clock();
 
-		string serverGlobal = "yo";
-		KryptnosticEngine<N, L> engine(serverGlobal);
+		KryptnosticEngine engine;
 
 		UUID objectId1;
 		objectId1.randomize();
