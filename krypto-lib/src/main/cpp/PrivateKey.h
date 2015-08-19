@@ -42,7 +42,7 @@ public:
      * Function: encrypt(m)
      * Returns the encrypted ciphertext (length 2N * 2^6) of the plaintext (length N * 2^6)
      */
-	const BitVector<2*N> encrypt(const BitVector<N> &m) const{//returns x = E(m, r) given a plaintext m 
+	const BitVector<2*N> encrypt(const BitVector<N> &m) const{//returns x = E(m, r) given a plaintext m
 		BitVector<N> r = BitVector<N>::randomVector();
 		BitVector<N> top = _B.template operator*<N>(m) ^ (r ^ _f(r));
 		BitVector<N> bottom = _A.template operator*<N>(r);
@@ -59,7 +59,7 @@ public:
 		mix.proj(x1, x2);
 		BitVector<N> Aix2 = _A.solve(x2);
 		BitVector<N> fAix2 = _f(Aix2);
-		return _B.solve(x1 ^ (Aix2 ^ fAix2)); 
+		return _B.solve(x1 ^ (Aix2 ^ fAix2));
 	}
 
 protected:
@@ -67,7 +67,7 @@ protected:
 		return _A;
 	}
 
-	const BitMatrix<N> getB() const{ 
+	const BitMatrix<N> getB() const{
 		return _B;
 	}
 
@@ -82,7 +82,7 @@ protected:
 	const vector<BitMatrix<2*N> > getUnaryObfChain() const{
 		return _Cu;
 	}
-	
+
 	const vector<BitMatrix<3*N> > getBinaryObfChain() const{
 		return _Cb;
 	}
@@ -93,9 +93,9 @@ private:
 	MultiQuadTupleChain<N,L> _f; //{f_1,...,f_L} random quadratic function tuples
 	vector<BitMatrix<2*N> > _Cu; //chain of obfuscation matrix for unary operations
 	vector<BitMatrix<3*N> > _Cb; //chain of obfuscation matrix for binary operations
-	
+
 	void generateObfuscationMatrixChains(){ //generates C_{u1},...,C_{uL} and C_{b1},...,C_{bL}
-		for(size_t i = 0; i < L; ++i){
+		for(unsigned int i = 0; i < L; ++i){
 			_Cu.push_back(BitMatrix<(2*N)>::randomInvertibleMatrix());
 			_Cb.push_back(BitMatrix<(3*N)>::randomInvertibleMatrix());
 		}

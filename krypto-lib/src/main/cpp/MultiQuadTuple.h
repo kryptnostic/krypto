@@ -71,7 +71,7 @@ public:
 	 * Return the evaluation result on a given BitVector.
 	 */
 	const BitVector<NUM_OUTPUTS> operator()(const BitVector<NUM_INPUTS> & input) const {
-		BitVector<NUM_OUTPUTS> result;
+		BitVector<NUM_OUTPUTS> result = BitVector<NUM_OUTPUTS>::zeroVector();
 		unsigned int count = 0;
 		for(unsigned int i = 0; i < NUM_INPUTS; ++i){
 			if(input[i]){
@@ -172,18 +172,18 @@ public:
 	 * Generates a shifter function such that g(x << 1) === f(x) for g = f.leftShift()
 	 */
 	const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS> leftShift() const{
-		BitMatrix<NUM_OUTPUTS> newContributionT = MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS>::zeroContributionMatrix();
+		BitMatrix<NUM_OUTPUTS> newContributions = MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS>::zeroContributionMatrix();
 		unsigned int oldCount = NUM_INPUTS; //totally skip the coefficients for x_1
 		unsigned int newCount = 0;
 		for(unsigned int i = 1; i < NUM_INPUTS; ++i){
 			for(unsigned int j = i; j < NUM_INPUTS; ++j){
-				newContributionT.setRow(newCount, _contributions.getRow(oldCount));
+				newContributions.setRow(newCount, _contributions.getRow(oldCount));
 				++oldCount;
 				++newCount;
 			}
 			++newCount;
 		}
-		return MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS>(newContributionT, _constants/*.leftShift()*/);
+		return MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS>(newContributions, _constants/*.leftShift()*/);
 	}
 
 
@@ -225,11 +225,11 @@ public:
 		return result;
 	}
 private:
-	BitMatrix<NUM_OUTPUTS> _contributions;
-	BitVector<NUM_OUTPUTS> _constants; //constant term
+	BitMatrix<NUM_INPUT_MONOMIALS, NUM_OUTPUTS> _contributions;
+	BitVector<NUM_OUTPUTS> _constants; //constant terms
 
 	const static BitMatrix<NUM_OUTPUTS> zeroContributionMatrix(){
-		return BitMatrix<NUM_OUTPUTS>::zeroMatrix(NUM_INPUT_MONOMIALS);
+		return BitMatrix<NUM_INPUT_MONOMIALS, NUM_OUTPUTS>::zeroMatrix();
 	}
 };
 #endif
