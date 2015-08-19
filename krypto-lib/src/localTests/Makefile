@@ -4,7 +4,7 @@
   # compiler flags:
   #  -g    adds debugging information to the executable file
   #  -Wall turns on most, but not all, compiler warnings
-  CFLAGS  = -g -Wall --std=c++14 -O3 -fslp-vectorize-aggressive -march=native
+  CFLAGS  = -g -Wall --std=c++14 -O3 -fslp-vectorize-aggressive -march=native -I$(JAVA_HOME)/include/ -I$(JAVA_HOME)/include/darwin/ -I$(JAVA_HOME)/include/linux/
 
   DEPS1 = ../main/cpp/BitMatrix.h ../main/cpp/BitVector.h ../main/cpp/MultiQuadTuple.h ../main/cpp/MultiQuadTupleChain.h ../main/cpp/PrivateKey.h ../main/cpp/BridgeKey.h ../main/cpp/PublicKey.h
   DEPS2 = ../main/cpp/SearchPrivateKey.h ../main/cpp/SearchPublicKey.h ../main/cpp/UUID.h ../main/cpp/KryptnosticEngine.h
@@ -30,4 +30,8 @@
 	$(CC) $(CFLAGS) -o $(TARGET4) $(TARGET4).cpp
 
   clean:
+<<<<<<< HEAD
 	$(RM) $(TARGET1) $(TARGET2) $(TARGET3) $(TARGET4)
+=======
+	$(RM) $(TARGET1) $(TARGET2)
+>>>>>>> d90ffda38b163324a419b1bfbfb203f836146bd7
