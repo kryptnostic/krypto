@@ -111,15 +111,19 @@ private:
      * Returns the matrix portion of the hash function
      * Applied to x concatenated with y
      */
-	const BitMatrix<2*N> generateHashMatrix() const{ //dimensions are off
+	const BitMatrix<4*N> generateHashMatrix() const{
 		BitMatrix<2*N> Mi = _pk.getM().inv();
 		BitMatrix<2*N> Mi1 = Mi.splitV(0);
 		BitMatrix<2*N> Mi2 = Mi.splitV(1);
 
 		BitMatrix<2*N> left = _pk.getB().inv() * Mi1;
 		BitMatrix<2*N> right = _pk.getA().inv() * Mi2;
-		BitMatrix<2*N> decryptMatrix = left ^ right;
-		return _K * (BitMatrix<2*N>::augV(decryptMatrix, decryptMatrix));
+		BitMatrix<2*N> decryptMatrix = left ^ right; //n x 2n
+		
+		BitMatrix<2*N> zero = BitMatrix<2*N>::zeroMatrix(N << 6);
+		BitMatrix<4*N> top = BitMatrix<2*N>::augH(decryptMatrix, zero);
+		BitMatrix<4*N> bot = BitMatrix<2*N>::augH(zero, decryptMatrix);
+		return _K * (BitMatrix<2*N>::augV(top, bot));
 	}
 
 	/*
@@ -127,7 +131,7 @@ private:
      * Returns the K (f2 C || f2 C) portion of the hash function
      * Applied to concealedF1(x) concatenated with concealedF1(y)
      */
-	const MultiQuadTuple<2*N, N> generateAugmentedF2() const{ //dimensions are off
+	const MultiQuadTuple<2*N, N> generateAugmentedF2() const{
 		MultiQuadTuple<N, N> f2 = _pk.getf().get(1);
 		MultiQuadTuple<N, N> topBot = (f2 * _C);
 		MultiQuadTuple<2*N, 2*N> augmentedDecrypt = MultiQuadTuple<2*N, 2*N>::augV(topBot, topBot);
@@ -139,7 +143,7 @@ private:
      * Returns the f1 C portion of the hash function
      * Applied to x and y separately
      */
-	const MultiQuadTuple<N, N> generateConcealedF1() const{ //dimensions are off
+	const MultiQuadTuple<2*N, N> generateConcealedF1() const{
 		MultiQuadTuple<N, N> f1 = _pk.getf().get(0);
 
 		BitMatrix<2*N> Mi2 = _pk.getM().inv().splitV(1);
