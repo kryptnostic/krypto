@@ -13,6 +13,7 @@ task GenerateJniHeaders(description: 'Generate the JNI headers for kryptnostic e
 }
 
 jar.dependsOn(':copyBinariesToApi')
+clean.dependsOn('cleanKryptoLib')
 
 repositories {
   maven {
@@ -22,4 +23,8 @@ repositories {
 
 dependencies {
   testCompile "junit:junit:4.11"
+}
+
+task cleanKryptoLib(type: Delete) {
+  delete 'src/main/resources/com/kryptnostic/krypto/engine/libmain.dylib'
 }

@@ -30,12 +30,12 @@ public class KryptnosticEngine {
 
     private final long handle;
 
-    public KryptnosticEngine( String serverGlobalHash ) {
-        handle = initKryptnosticEngine( serverGlobalHash.getBytes() );
+    public KryptnosticEngine( byte[] serverGlobalHash ) {
+        handle = initKryptnosticEngine( serverGlobalHash );
     }
 
-    public KryptnosticEngine( String privateKey, String publicKey, String serverGlobalHash ) {
-        handle = initKryptnosticEngine( privateKey.getBytes(), publicKey.getBytes(), serverGlobalHash.getBytes() );
+    public KryptnosticEngine( byte[] privateKey, byte[] publicKey, byte[] serverGlobalHash ) {
+        handle = initKryptnosticEngine( privateKey, publicKey, serverGlobalHash );
     }
 
     public KryptnosticEngine() {
@@ -51,29 +51,29 @@ public class KryptnosticEngine {
     //
     //    Keys
     //
-    public native String getPrivateKeys();
-    public native String getPublicKeys();
+    public native byte[] getPrivateKeys();
+    public native byte[] getPublicKeys();
     //    Factory with separate serialization
-    public native String getServerSearchFunction();
-    public native String getXor();
-    public native String getAnd();
-    public native String getShift();
+    public native byte[] getServerSearchFunction();
+    public native byte[] getXor();
+    public native byte[] getAnd();
+    public native byte[] getShift();
 
     //
     //    Transformers
     //
-    public native String mapTokenToKey( String word, String objectID );
-    public native String getEncryptedSearchTerm( String word );
-    public native String getBridgeKey( String docKey );
+    public native byte[] mapTokenToKey( byte[] word, byte[] objectID );
+    public native byte[] getEncryptedSearchTerm( byte[] word );
+    public native byte[] getBridgeKey( byte[] docKey );
 
     //
     //    Generators
     //
-    public native String genDocKey( String objectId );
+    public native byte[] genDocKey( byte[] objectId );
 
     //
     //    Setters
     //
-    public native String setDocKey( String objectId, String docKey );
+    public native byte[] setDocKey( byte[] objectId, byte[] docKey );
 
 }
