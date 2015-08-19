@@ -30,8 +30,4 @@
 	$(CC) $(CFLAGS) -o $(TARGET4) $(TARGET4).cpp
 
   clean:
-<<<<<<< HEAD
 	$(RM) $(TARGET1) $(TARGET2) $(TARGET3) $(TARGET4)
-=======
-	$(RM) $(TARGET1) $(TARGET2)
->>>>>>> d90ffda38b163324a419b1bfbfb203f836146bd7
