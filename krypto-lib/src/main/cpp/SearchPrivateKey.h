@@ -3,10 +3,10 @@
 
 #include "PrivateKey.h"
 
-template<unsigned int N, unsigned int L>
+template<unsigned int N>
 class SearchPrivateKey{
 public:
-	SearchPrivateKey(const PrivateKey<N, L> & pk, const MultiQuadTuple<2*N,N> & h) :
+	SearchPrivateKey(const PrivateKey<N> & pk, const MultiQuadTuple<2*N,N> & h) :
 	_pk(pk), _h(h),
 	_s(pk.encrypt(BitVector<N>::zeroVector())),
 	_v(pk.encrypt(h.getConstantTerms())),
@@ -59,7 +59,7 @@ public:
 
 
 private:
-	PrivateKey<N, L> _pk;
+	PrivateKey<N> _pk;
 	MultiQuadTuple<2*N,N> _h;
 	BitVector<2*N> _s; //obfuscation vector to use during search
 	BitVector<2*N> _v; //obfuscation vector to use during search

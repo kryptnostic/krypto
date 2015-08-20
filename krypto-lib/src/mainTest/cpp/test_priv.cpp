@@ -7,7 +7,7 @@ using namespace testing;
 #define N 64
 
 TEST(PrivKeyTests, testEncryptionAndDecryption){
-	PrivateKey<N,2> pk;
+	PrivateKey<N> pk;
 	BitVector<N> m = BitVector<N>::randomVector();
 	BitVector<2*N> c = pk.encrypt(m);
 	BitVector<N> mt = pk.decrypt(c);

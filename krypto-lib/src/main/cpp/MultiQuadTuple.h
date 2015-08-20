@@ -14,7 +14,6 @@
 #include "BitMatrix.h"
 
 #define NUM_INPUT_MONOMIALS ((NUM_INPUTS * (NUM_INPUTS + 1)) >> 1)
-#define NUM_INNER_INPUT_MONOMIALS ((NUM_INNER_INPUTS * (NUM_INNER_INPUTS + 1)) / 2)
 
 template<unsigned int NUM_INPUTS, unsigned int NUM_OUTPUTS>
 class MultiQuadTuple {
@@ -96,9 +95,7 @@ public:
 	template<unsigned int NUM_INNER_INPUTS>
 	const MultiQuadTuple<NUM_INNER_INPUTS, NUM_OUTPUTS> operator*(const BitMatrix<NUM_INPUTS, NUM_INNER_INPUTS> & inner) const{
 		BitMatrix<NUM_INNER_INPUTS, NUM_INPUTS> innerTranspose = inner.transpose();
-		//const unsigned int NUM_INNER_INPUT_MONOMIALS = MultiQuadTuple<NUM_INNER_INPUTS, NUM_OUTPUTS>::NUM_INPUT_MONOMIALS;//getInputMonomialCount();
-		//BitMatrix<NUM_INNER_INPUT_MONOMIALS, NUM_OUTPUTS> result = BitMatrix<NUM_INNER_INPUT_MONOMIALS, NUM_OUTPUTS>::zeroMatrix();
-		BitMatrix<((NUM_INNER_INPUTS * (NUM_INNER_INPUTS + 1)) / 2), NUM_OUTPUTS> result = BitMatrix<((NUM_INNER_INPUTS * (NUM_INNER_INPUTS + 1)) / 2), NUM_OUTPUTS>::zeroMatrix();
+		BitMatrix<((NUM_INNER_INPUTS * (NUM_INNER_INPUTS + 1)) >> 1), NUM_OUTPUTS> result = BitMatrix<((NUM_INNER_INPUTS * (NUM_INNER_INPUTS + 1)) >> 1), NUM_OUTPUTS>::zeroMatrix();
 		unsigned int input_count = 0;
 		unsigned int limit = NUM_INPUTS;
 		for(int i = 0; i < NUM_INPUTS; ++i){
@@ -124,7 +121,7 @@ public:
 	template<unsigned int NUM_OUTER_OUTPUTS>
 	const MultiQuadTuple<NUM_INPUTS, NUM_OUTER_OUTPUTS> rMult(
 		const BitMatrix<NUM_OUTER_OUTPUTS, NUM_OUTPUTS> & outer) const{
-		return MultiQuadTuple<NUM_INPUTS, NUM_OUTER_OUTPUTS>(_contributions * (outer.transpose()), outer.template operator*<NUM_OUTER_OUTPUTS>(_constants));
+		return MultiQuadTuple<NUM_INPUTS, NUM_OUTER_OUTPUTS>(_contributions.template operator*<NUM_OUTER_OUTPUTS>(outer.transpose()), outer.template operator*<NUM_OUTER_OUTPUTS>(_constants));
 	}
 
 /* MultiQuadTuple-MultiQuadTuple Operations */

@@ -18,11 +18,11 @@
  * Template for PrivateKey
  * Length of plaintext = N * 2^6, Length of obfuscation chain = L
  */
-template<unsigned int N, unsigned int L>
+template<unsigned int N>
 class PrivateKey {
 
-template<unsigned int N1, unsigned int L1> friend class BridgeKey;
-template<unsigned int N2, unsigned int L2> friend class SearchPrivateKey;
+template<unsigned int N1> friend class BridgeKey;
+template<unsigned int N2> friend class SearchPrivateKey;
 
 public:
 
@@ -34,7 +34,7 @@ public:
 		_A(BitMatrix<N>::randomInvertibleMatrix()),
 		_B(BitMatrix<N>::randomInvertibleMatrix()),
 		_M(BitMatrix<2*N>::randomInvertibleMatrix()),
-		_f(MultiQuadTupleChain<N,L>::randomMultiQuadTupleChain()){
+		_f(MultiQuadTupleChain<N,2>::randomMultiQuadTupleChain()){
 		generateObfuscationMatrixChains();
 	}
 
@@ -75,7 +75,7 @@ protected:
 		return _M;
 	}
 
-	const MultiQuadTupleChain<N,L> getf() const{
+	const MultiQuadTupleChain<N,2> getf() const{
 		return _f;
 	}
 
@@ -90,12 +90,12 @@ protected:
 private:
 	const BitMatrix<N> _A, _B; //SL_n(F_2)
 	const BitMatrix<2*N> _M; //SL_{2n}(F_2)
-	MultiQuadTupleChain<N,L> _f; //{f_1,...,f_L} random quadratic function tuples
+	MultiQuadTupleChain<N,2> _f; //{f_1,...,f_L} random quadratic function tuples
 	vector<BitMatrix<2*N> > _Cu; //chain of obfuscation matrix for unary operations
 	vector<BitMatrix<3*N> > _Cb; //chain of obfuscation matrix for binary operations
 
 	void generateObfuscationMatrixChains(){ //generates C_{u1},...,C_{uL} and C_{b1},...,C_{bL}
-		for(unsigned int i = 0; i < L; ++i){
+		for(unsigned int i = 0; i < 2; ++i){
 			_Cu.push_back(BitMatrix<(2*N)>::randomInvertibleMatrix());
 			_Cb.push_back(BitMatrix<(3*N)>::randomInvertibleMatrix());
 		}

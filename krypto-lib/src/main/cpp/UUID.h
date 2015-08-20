@@ -44,7 +44,7 @@ struct UUID
  */
 template<>
 struct hash<UUID>
-{ 
+{
     size_t operator()(UUID const& id) const
     {
         size_t const h1 ( hash<unsigned long long>()(id.first) );
@@ -59,7 +59,7 @@ struct hash<UUID>
  */
 template<>
 struct equal_to<UUID>
-{ 
+{
 	bool operator()(const UUID &lhs, const UUID &rhs) {
 	    return (lhs.first == rhs.first) && (lhs.second && rhs.second);
 	}

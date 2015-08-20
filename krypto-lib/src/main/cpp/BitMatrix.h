@@ -373,7 +373,7 @@ public:
 	void setSubMatrix(size_t startRowIndex, const BitMatrix<NEWROWS,COLS> & M) {
 		if (DEBUG) assert(startRowIndex >= 0 && startRowIndex + NEWROWS < ROWS);
 		for (size_t i = 0; i < NEWROWS; ++i) {
-			_rows[i + startRowIndex] = M._rows[i];
+			_rows[i + startRowIndex] = M.getRow(i);
 		}
 	}
 

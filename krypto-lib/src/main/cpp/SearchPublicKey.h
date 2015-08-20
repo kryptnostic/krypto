@@ -4,11 +4,11 @@
 #include "PublicKey.h"
 #include "SearchPrivateKey.h"
 
-template<unsigned int N, unsigned int L>
+template<unsigned int N>
 class SearchPublicKey{
 public:
 
-	SearchPublicKey(const SearchPrivateKey<N, L> & rk, const BridgeKey<N, L> & bk):
+	SearchPublicKey(const SearchPrivateKey<N> & rk, const BridgeKey<N> & bk):
 	_rk(rk), _bk(bk),
 	_h(rk.getHash()),
 	_g0(rk.getG0()),
@@ -21,7 +21,7 @@ public:
 	 * Returns H[h](E(t), E(d)), should be made a private function
 	 */
 	const BitVector<2*N> homomorphicHash(const BitVector<2*N> & t, const BitVector<2*N> & d) const{
-		PublicKey<N, L> pub(_bk);
+		PublicKey<N> pub(_bk);
 		BitVector<2*N> result = _rk.getS();
 		unsigned int count = 0;
 		BitMatrix<N> C = _h.getTransposedContributionMatrix();
@@ -70,8 +70,8 @@ public:
 	}
 
 private:
-	BridgeKey<N, L> _bk;
-	SearchPrivateKey<N, L> _rk;
+	BridgeKey<N> _bk;
+	SearchPrivateKey<N> _rk;
 	MultiQuadTuple<2*N,N> _h;
 	MultiQuadTuple<2*N,N> _g0;
 	MultiQuadTuple<N,N> _g1;

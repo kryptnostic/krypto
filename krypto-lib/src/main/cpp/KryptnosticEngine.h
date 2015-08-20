@@ -20,7 +20,7 @@
 #include <unordered_map>
 
 
-template<unsigned int N, unsigned int L>
+template<unsigned int N>
 class KryptnosticEngine {
 
 public:
@@ -41,19 +41,19 @@ public:
      * Constructor
      * Constructs a Kryptnostic Engine given private and public keys
      */
-	KryptnosticEngine(const string serverGlobal, const PrivateKey<N, L> pk, const PublicKey<N, L> bk) :
+	KryptnosticEngine(const string serverGlobal, const PrivateKey<N> pk, const PublicKey<N> bk) :
 	_serverGlobal(serverGlobal),
 	_pk(pk),
 	_bk(bk)
 	{
-		
+
 	}
 
 	/*
      * Constructor
      * Constructs a fresh Kryptnostic Engine given all keys
      */
-	KryptnosticEngine(const string serverGlobal, const PrivateKey<N, L> pk, const PublicKey<N, L> bk, const string oldXor,
+	KryptnosticEngine(const string serverGlobal, const PrivateKey<N> pk, const PublicKey<N> bk, const string oldXor,
 		const string oldAnd, const string oldLeftShift) :
 	_serverGlobal(serverGlobal),
 	_pk(pk),
@@ -62,7 +62,7 @@ public:
 	_serialAnd(oldAnd),
 	_serialLeftShift(oldLeftShift)
 	{
-		
+
 	}
 
 /* Keys */
@@ -167,9 +167,9 @@ public:
 
 private:
 	const string _serverGlobal;
-	const PrivateKey<N, L> _pk;
-	const BridgeKey<N, L> _bk;
-	const PublicKey<N, L> _pubk;
+	const PrivateKey<N> _pk;
+	const BridgeKey<N> _bk;
+	const PublicKey<N> _pubk;
 	const string _serialXor;
 	const string _serialAnd;
 	const string _serialLeftShift;
