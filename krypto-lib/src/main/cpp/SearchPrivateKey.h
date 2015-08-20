@@ -84,7 +84,7 @@ public:
 	}
 
 private:
-	PrivateKey<N, L> _pk;
+	PrivateKey<N> _pk;
 	BitMatrix<2*N> _K;
 	BitMatrix<N> _C;
 
@@ -153,20 +153,6 @@ private:
      */
 	const MultiQuadTuple<2*N, N> generateConcealedF1() const{
 		MultiQuadTuple<N, N> f1 = _pk.getf().get(0);
-
-<<<<<<< HEAD
-private:
-	PrivateKey<N> _pk;
-	MultiQuadTuple<2*N,N> _h;
-	BitVector<2*N> _s; //obfuscation vector to use during search
-	BitVector<2*N> _v; //obfuscation vector to use during search
-	MultiQuadTuple<N,N> _g; //random function generated for zero knowledge re-encryption
-	BitMatrix<N> _Cs1;
-	BitMatrix<N> _Cs2;
-	MultiQuadTuple<2*N,N> _g0;
-	MultiQuadTuple<N,N> _g1;
-	MultiQuadTuple<N,N> _g2;
-=======
 		BitMatrix<2*N> Mi2 = _pk.getM().inv().splitV(1);
 		BitMatrix<2*N> inner = _pk.getA().inv() * Mi2;
 		return (f1 * inner).rMult(_C.inv());
@@ -185,7 +171,6 @@ private:
 		}
 		return docKey;
 	}
->>>>>>> 6bd17686328ee6aef030ddaec78f67f07686eb92
 };
 
 #endif/* defined(__krypto__SearchPrivateKey__) */
