@@ -378,6 +378,18 @@ public:
 	}
 
     /*
+     * Function: setSubMatrix(M, startRowIndex, numRows)
+     * Set a matrix to the submatrix of a given matrix starting from a given row
+     */
+    template<unsigned int NEWROWS>
+	void setMatrix(const BitMatrix<NEWROWS,COLS> & M, unsigned int startRowIndex) {
+		//if (DEBUG) {} TODO
+		for (unsigned int i = 0; i < ROWS; ++i) {
+			_rows[i] = M.getRow(i + startRowIndex);
+		}
+	}
+
+    /*
      * Function: isIdentity()
      * Returns whether the current BitMatrix is an identity matrix
      */
@@ -1017,6 +1029,7 @@ private:
  * Function: hash<UUID>()(id)
  * Hashes a UUID by taking the sum of the standard hashes of its components
  */
+/*
 template<unsigned int N>
 struct hash< BitMatrix<N> >
 {
@@ -1030,4 +1043,5 @@ struct hash< BitMatrix<N> >
         return sum;
     }
 };
+*/
 #endif
