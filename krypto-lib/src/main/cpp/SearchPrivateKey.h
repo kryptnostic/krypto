@@ -2,61 +2,20 @@
 #define krypto_SearchPrivateKey_h
 
 #include "PrivateKey.h"
+#include "UUID.h"
+#include <unordered_map>
+#include <unordered_set>
 
 template<unsigned int N, unsigned int L>
 class SearchPrivateKey{
 public:
-	SearchPrivateKey(const PrivateKey<N, L> & pk, const MultiQuadTuple<2*N,N> & h) :
+	SearchPrivateKey(const PrivateKey<N, L> & pk) :
 	_pk(pk),
-	_h(h),
-	_s(pk.encrypt(BitVector<N>::zeroVector())),
-	_v(pk.encrypt(h.getConstantTerms())),
-	_g(MultiQuadTuple<N,N>::randomMultiQuadTuple()),
-	_Cs1(BitMatrix<N>::randomInvertibleMatrix()),
-	_Cs2(BitMatrix<N>::randomInvertibleMatrix()),
-	_g0(_h.template rMult<N>(_Cs1)),
-	_g1((_pk.getf().get(0).template rMult<N>(_Cs2)) * _Cs1.inv()),
-	_g2((_pk.getf().get(1) ^ _g) * _Cs2.inv()),
 	_K(generateK()),
 	_C(BitMatrix<N>::randomInvertibleMatrix())
 	{ }
 
 /* Getters */
-
-	const MultiQuadTuple<2*N,N> getG0() const{
-		return _g0;
-	}
-
-	const MultiQuadTuple<N,N> getG1() const{
-		return _g1;
-	}
-
-	const MultiQuadTuple<N,N> getG2() const{
-		return _g2;
-	}
-
-	/*
-     * Returns the global hash function given by the server.
-	 */
-	const MultiQuadTuple<2*N,N> getHash() const{
-		return _h;
-	}
-
-	/*
-	 * Returns the zero vector encrypted to obfuscate server during
-	 * address calculation.
-	 */
-	const BitVector<2*N> getS() const{
-		return _s;
-	}
-
-	/*
-	 * Returns the constants vector of the global hash function encrypted to obfuscate server during
-	 * address calculation.
-	 */
-	const BitVector<2*N> getV() const{
-		return _v;
-	}
 
 	/*
      * Function: generateK()
@@ -66,25 +25,74 @@ public:
 		return _K;
 	}
 
-/* Decrypter for re-encryption */
+	/*
+	 * Function: getDocKey
+	 * Returns a serialized random unused document key
+	 * and inserts the document key into a stored hash set
+	 * Returns existing key if object has an existing key
+	 */
+	const BitVector<N> getDocKey( const UUID & objectId) {
+		BitVector<N> docKey = generateDocKey(objectId);
+		if (!docKey.isZero()) { //objectId already used
+			while (docKeySet.count(docKey) == 1) docKey = generateDocKey(objectId); //generated new key
+			docToKeyMap[objectId] = docKey;
+			docKeySet.insert(docKey);
+		} else docKey = docToKeyMap[objectId];
+		return docKey;
+	}
 
+	/*
+	 * Function: setDocKey
+	 * Sets the document key of a given object to a given document key
+	 * Returns whether the operation was valid and successful
+	 */
+	const bool setDocKey(const UUID & objectId, const BitVector<N> & docKey) {
+		if (docToKeyMap.count(objectId) != 0) {
+			docToKeyMap[objectId] = docKey;
+			return true;
+		}
+		return false;
+	}
+
+	/*
+	 * Function: getDocAddressFunction
+	 * Returns a serialized random unused document address function L
+	 * and inserts the document address function into a stored hash set
+	 * Returns existing address function if object has an existing key
+	 */
+	const BitMatrix<2*N> getDocAddressFunction(const UUID & objectId) {
+		BitMatrix<2*N> addressMatrix;
+		if (docKeySet.count(objectId) == 0) { //objectId already used
+			addressMatrix = generateK();
+			while (addressMatrix.docAddressFunctionSet.count(addressMatrix) == 1) addressMatrix = generateK(); //generated new matrix
+			docToAddressFunctionMap[objectId] = addressMatrix;
+			docAddressFunctionSet.insert(addressMatrix);
+		} else addressMatrix = docToAddressFunctionMap[objectId];
+		return addressMatrix;
+	}
+
+	/*
+	 * Function: getAddress
+	 * Given a token and a document key, returns the address for the
+	 * associated metadatum
+	 */
+	const BitVector<N> getAddress(const BitVector<N> & token, const UUID & objectId) {
+		BitVector<N> docKey = docToKeyMap[objectId];
+		BitMatrix<2*N> addressMatrix = docToAddressFunctionMap[objectId];
+
+		return addressMatrix * (BitVector<2*N>::vCat(token, objectId));
+	}
 
 private:
 	PrivateKey<N, L> _pk;
-	MultiQuadTuple<2*N,N> _h;
-	BitVector<2*N> _s; //obfuscation vector to use during search
-	BitVector<2*N> _v; //obfuscation vector to use during search
-	MultiQuadTuple<N,N> _g; //random function generated for zero knowledge re-encryption
-	BitMatrix<N> _Cs1;
-	BitMatrix<N> _Cs2;
-	MultiQuadTuple<2*N,N> _g0;
-	MultiQuadTuple<N,N> _g1;
-	MultiQuadTuple<N,N> _g2;
-	static const unsigned int NN = N << 6;
-	static const unsigned int twoNN = NN << 1;
-
 	BitMatrix<2*N> _K;
 	BitMatrix<N> _C;
+
+	unordered_set<BitVector<N> > docKeySet;
+	unordered_set<BitMatrix<2*N> > docAddressFunctionSet;
+	unordered_map<UUID, BitVector<N> > docToKeyMap;
+	unordered_map<UUID, BitMatrix<2*N> > docToAddressFunctionMap;
+
 
 	/*
      * Function: generateK()
@@ -119,7 +127,7 @@ private:
 		BitMatrix<2*N> left = _pk.getB().inv() * Mi1;
 		BitMatrix<2*N> right = _pk.getA().inv() * Mi2;
 		BitMatrix<2*N> decryptMatrix = left ^ right; //n x 2n
-		
+
 		BitMatrix<2*N> zero = BitMatrix<2*N>::zeroMatrix(N << 6);
 		BitMatrix<4*N> top = BitMatrix<2*N>::augH(decryptMatrix, zero);
 		BitMatrix<4*N> bot = BitMatrix<2*N>::augH(zero, decryptMatrix);
@@ -149,6 +157,20 @@ private:
 		BitMatrix<2*N> Mi2 = _pk.getM().inv().splitV(1);
 		BitMatrix<2*N> inner = _pk.getA().inv() * Mi2;
 		return (f1 * inner).rMult(_C.inv());
+	}
+
+
+	/*
+	 * Function: generateDocKey
+	 * Returns a serialized random unused document key
+	 * Returns 0 if object has an existing key
+	 */
+	const BitVector<N> generateDocKey(const UUID & objectId) const{
+		BitVector<N> docKey = BitVector<N>::randomVector();
+		if (docToKeyMap.count(objectId) == 0) {
+	        docKey = BitVector<N>::randomVector();
+		}
+		return docKey;
 	}
 };
 
