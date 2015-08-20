@@ -1,0 +1,73 @@
+#include "../../../contrib/gtest/gtest.h"
+#include "../../main/cpp/MultiQuadTuple.h"
+#include <string>
+#include <ctime>
+using namespace testing;
+
+#define L 64
+#define M 64
+#define K 128
+#define N 64
+#define DEBUG false
+
+TEST(MQTTests, testInit){//assert equality later, as there's obob now
+	//C: L->N, f: N->M, D: M->K
+	ASSERT_TRUE(1+1 == 2);
+	MultiQuadTuple<N, M> f = MultiQuadTuple<N, M>::randomMultiQuadTuple();
+	BitVector<N> y = BitVector<N>::randomVector();
+	BitVector<M> fy = f(y);
+	ASSERT_TRUE(1+2 == 3);
+}
+
+TEST(MQTTests, testMatToMQT){
+	BitMatrix<M, N> X = BitMatrix<M, N>::randomMatrix();
+	BitVector<N> x = BitVector<N>::randomVector();
+	BitVector<M> Xx = X.template operator*<M>(x);
+	MultiQuadTuple<N, M> f = MultiQuadTuple<N, M>::getMultiQuadTuple(X);
+	BitVector<M> fx = f(x);
+	ASSERT_TRUE(fx.equals(Xx));
+}
+
+TEST(MQTTests, testLeftComp){
+	ASSERT_TRUE(2+3 == 5);
+	MultiQuadTuple<N, M> f = MultiQuadTuple<N, M>::randomMultiQuadTuple();
+	BitMatrix<N, L> C = BitMatrix<N, L>::randomMatrix();
+	BitVector<L> x = BitVector<L>::randomVector();
+	MultiQuadTuple<L, M> fC = f*C;
+	BitVector<M> fC_x = fC(x);
+	BitVector<M> f_Cx = f(C.template operator*<N>(x));
+	ASSERT_TRUE(fC_x.equals(f_Cx));
+	ASSERT_TRUE(3+5 == 8);
+}
+
+TEST(MQTTests, testRightComp){
+	ASSERT_TRUE(5+8 == 13);
+	MultiQuadTuple<N, M> f = MultiQuadTuple<N, M>::randomMultiQuadTuple();
+	BitMatrix<K, M> D = BitMatrix<K, M>::randomMatrix();
+	MultiQuadTuple<N, K> Df = f.rMult<K>(D);
+	BitVector<N> x = BitVector<N>::randomVector();
+	BitVector<K> Df_x = Df(x);
+	BitVector<K> D_fx = D.template operator*<K>(f(x));
+	ASSERT_TRUE(Df_x.equals(D_fx));
+	ASSERT_TRUE(8+13 == 21);
+}
+
+TEST(MQTTests, testAugV){
+	ASSERT_TRUE(13+21 == 34);
+	MultiQuadTuple<N, M> f1 = MultiQuadTuple<N, M>::randomMultiQuadTuple();
+	MultiQuadTuple<N, M> f2 = MultiQuadTuple<N, M>::randomMultiQuadTuple();
+	MultiQuadTuple<N, 2*M> f12 = MultiQuadTuple<N, 2*M>::augV(f1,f2);
+	ASSERT_TRUE(21+34 == 55);
+}
+
+TEST(MQTTests, testShifter){
+	ASSERT_TRUE(34+55 == 89);
+	MultiQuadTuple<N, M> f = MultiQuadTuple<N, M>::randomMultiQuadTuple();
+	BitVector<N> v = BitVector<N>::randomVectorLeadingZeroes(2);
+	BitVector<N> w = v.leftShift(1);
+	BitVector<N> fv = f(v);
+	MultiQuadTuple<N, M> g = f.leftShift();
+	BitVector<N> gw = g(w);
+	ASSERT_TRUE(fv.equals(gw));
+	ASSERT_TRUE(55+89 == 144);
+}

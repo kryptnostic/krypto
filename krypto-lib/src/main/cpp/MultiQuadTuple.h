@@ -14,6 +14,7 @@
 #include "BitMatrix.h"
 
 #define NUM_INPUT_MONOMIALS ((NUM_INPUTS * (NUM_INPUTS + 1)) >> 1)
+#define NUM_INNER_INPUT_MONOMIALS ((NUM_INNER_INPUTS * (NUM_INNER_INPUTS + 1)) / 2)
 
 template<unsigned int NUM_INPUTS, unsigned int NUM_OUTPUTS>
 class MultiQuadTuple {
@@ -54,7 +55,7 @@ public:
 	 * Generates a MultiQuadTuple equivalent to a given linear transformation.
 	 */
 	const static MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS> getMultiQuadTuple(const BitMatrix<NUM_OUTPUTS, NUM_INPUTS> & M){
-		BitMatrix<NUM_INPUTS, NUM_OUTPUTS> Mt = M.template transpose<NUM_OUTPUTS>();
+		BitMatrix<NUM_INPUTS, NUM_OUTPUTS> Mt = M.transpose();
 		BitMatrix<NUM_INPUT_MONOMIALS, NUM_OUTPUTS> result = BitMatrix<NUM_INPUT_MONOMIALS, NUM_OUTPUTS>::zeroMatrix();
 		unsigned int count = 0;
 		for(int limit = NUM_INPUTS; limit > 0; --limit){
@@ -94,13 +95,14 @@ public:
 	 */
 	template<unsigned int NUM_INNER_INPUTS>
 	const MultiQuadTuple<NUM_INNER_INPUTS, NUM_OUTPUTS> operator*(const BitMatrix<NUM_INPUTS, NUM_INNER_INPUTS> & inner) const{
-		BitMatrix<NUM_INPUTS> innerTranspose = inner.template transpose<NUM_INPUTS>();
-		const unsigned int NUM_INNER_INPUT_MONOMIALS = MultiQuadTuple<NUM_INNER_INPUTS, NUM_OUTPUTS>::getInputMonomialCount();
-		BitMatrix<NUM_INNER_INPUT_MONOMIALS, NUM_OUTPUTS> result = BitMatrix<NUM_INNER_INPUT_MONOMIALS, NUM_OUTPUTS>::zeroMatrix();
+		BitMatrix<NUM_INNER_INPUTS, NUM_INPUTS> innerTranspose = inner.transpose();
+		//const unsigned int NUM_INNER_INPUT_MONOMIALS = MultiQuadTuple<NUM_INNER_INPUTS, NUM_OUTPUTS>::NUM_INPUT_MONOMIALS;//getInputMonomialCount();
+		//BitMatrix<NUM_INNER_INPUT_MONOMIALS, NUM_OUTPUTS> result = BitMatrix<NUM_INNER_INPUT_MONOMIALS, NUM_OUTPUTS>::zeroMatrix();
+		BitMatrix<((NUM_INNER_INPUTS * (NUM_INNER_INPUTS + 1)) / 2), NUM_OUTPUTS> result = BitMatrix<((NUM_INNER_INPUTS * (NUM_INNER_INPUTS + 1)) / 2), NUM_OUTPUTS>::zeroMatrix();
 		unsigned int input_count = 0;
 		unsigned int limit = NUM_INPUTS;
 		for(int i = 0; i < NUM_INPUTS; ++i){
-			BitMatrix<NUM_OUTPUTS> Ai = innerTranspose.template pMult<NUM_OUTPUTS>(_contributions, i, NUM_INPUTS - 1, input_count, input_count + limit - 1);
+			BitMatrix<NUM_INNER_INPUTS, NUM_OUTPUTS> Ai = innerTranspose.template pMult<NUM_INPUT_MONOMIALS, NUM_OUTPUTS>(_contributions, i, NUM_INPUTS - 1, input_count, input_count + limit - 1);
 			input_count += limit;
 			--limit;
 			for(unsigned int j = 0; j < NUM_INNER_INPUTS; ++j){
@@ -122,7 +124,7 @@ public:
 	template<unsigned int NUM_OUTER_OUTPUTS>
 	const MultiQuadTuple<NUM_INPUTS, NUM_OUTER_OUTPUTS> rMult(
 		const BitMatrix<NUM_OUTER_OUTPUTS, NUM_OUTPUTS> & outer) const{
-		return MultiQuadTuple<NUM_INPUTS, NUM_OUTER_OUTPUTS>(_contributions * (outer.template transpose<NUM_OUTER_OUTPUTS>()), outer.template operator*<NUM_OUTER_OUTPUTS>(_constants));
+		return MultiQuadTuple<NUM_INPUTS, NUM_OUTER_OUTPUTS>(_contributions * (outer.transpose()), outer.template operator*<NUM_OUTER_OUTPUTS>(_constants));
 	}
 
 /* MultiQuadTuple-MultiQuadTuple Operations */
@@ -141,12 +143,12 @@ public:
 	 */
 	template<unsigned int NUM_OUTPUTS1, unsigned int NUM_OUTPUTS2> //augV
 	static const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS1+NUM_OUTPUTS2> augV(const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS1> & f1, const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS2> & f2){
-		BitMatrix<NUM_OUTPUTS1> C1 = f1.getContributions();
-		BitMatrix<NUM_OUTPUTS2> C2 = f2.getContributions();
+		BitMatrix<NUM_INPUT_MONOMIALS, NUM_OUTPUTS1> C1 = f1.getContributions();
+		BitMatrix<NUM_INPUT_MONOMIALS, NUM_OUTPUTS2> C2 = f2.getContributions();
 		BitVector<NUM_OUTPUTS1> c1 = f1.getConstants();
 		BitVector<NUM_OUTPUTS2> c2 = f2.getConstants();
 		const unsigned int NUM_OUTPUTS_SUM = NUM_OUTPUTS1 + NUM_OUTPUTS2;
-		return MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS_SUM>(BitMatrix<NUM_OUTPUTS_SUM>::augH(C1, C2), BitVector<NUM_OUTPUTS_SUM>::template vCat<NUM_OUTPUTS1, NUM_OUTPUTS2>(c1, c2));
+		return MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS_SUM>(BitMatrix<NUM_INPUT_MONOMIALS, NUM_OUTPUTS_SUM>::augH(C1, C2), BitVector<NUM_OUTPUTS_SUM>::template vCat<NUM_OUTPUTS1, NUM_OUTPUTS2>(c1, c2));
 	}
 
 	/*
@@ -155,14 +157,14 @@ public:
 	 */
 	template<unsigned int NUM_OUTPUTS1, unsigned int NUM_OUTPUTS2, unsigned int NUM_OUTPUTS3> //augV
 	static const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS1+NUM_OUTPUTS2+NUM_OUTPUTS3> augV(const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS1> & f1, const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS2> & f2, const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS3> & f3){
-		BitMatrix<NUM_OUTPUTS1> C1 = f1.getContributions();
-		BitMatrix<NUM_OUTPUTS2> C2 = f2.getContributions();
-		BitMatrix<NUM_OUTPUTS2> C3 = f3.getContributions();
+		BitMatrix<NUM_INPUT_MONOMIALS, NUM_OUTPUTS1> C1 = f1.getContributions();
+		BitMatrix<NUM_INPUT_MONOMIALS, NUM_OUTPUTS2> C2 = f2.getContributions();
+		BitMatrix<NUM_INPUT_MONOMIALS, NUM_OUTPUTS2> C3 = f3.getContributions();
 		BitVector<NUM_OUTPUTS1> c1 = f1.getConstants();
 		BitVector<NUM_OUTPUTS2> c2 = f2.getConstants();
 		BitVector<NUM_OUTPUTS2> c3 = f3.getConstants();
 		const unsigned int NUM_OUTPUTS_SUM = NUM_OUTPUTS1 + NUM_OUTPUTS2 + NUM_OUTPUTS3;
-		return MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS_SUM>(BitMatrix<NUM_OUTPUTS_SUM>::augH(C1, C2, C3), BitVector<NUM_OUTPUTS_SUM>::vCat(c1, c2, c3));
+		return MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS_SUM>(BitMatrix<NUM_INPUT_MONOMIALS, NUM_OUTPUTS_SUM>::augH(C1, C2, C3), BitVector<NUM_OUTPUTS_SUM>::vCat(c1, c2, c3));
 	}
 
 /* Shifter */
@@ -172,7 +174,7 @@ public:
 	 * Generates a shifter function such that g(x << 1) === f(x) for g = f.leftShift()
 	 */
 	const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS> leftShift() const{
-		BitMatrix<NUM_OUTPUTS> newContributions = MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS>::zeroContributionMatrix();
+		BitMatrix<NUM_INPUT_MONOMIALS, NUM_OUTPUTS> newContributions = MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS>::zeroContributionMatrix();
 		unsigned int oldCount = NUM_INPUTS; //totally skip the coefficients for x_1
 		unsigned int newCount = 0;
 		for(unsigned int i = 1; i < NUM_INPUTS; ++i){
@@ -228,7 +230,7 @@ private:
 	BitMatrix<NUM_INPUT_MONOMIALS, NUM_OUTPUTS> _contributions;
 	BitVector<NUM_OUTPUTS> _constants; //constant terms
 
-	const static BitMatrix<NUM_OUTPUTS> zeroContributionMatrix(){
+	const static BitMatrix<NUM_INPUT_MONOMIALS, NUM_OUTPUTS> zeroContributionMatrix(){
 		return BitMatrix<NUM_INPUT_MONOMIALS, NUM_OUTPUTS>::zeroMatrix();
 	}
 };

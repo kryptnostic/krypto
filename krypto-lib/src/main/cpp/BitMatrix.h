@@ -617,39 +617,33 @@ public:
      * by a submatrix of the current matrix as specified by
      * given rows and columns
      */
-/*
-	template<unsigned int START_ROW, unsigned int START_COL, unsigned int SUBROWS, unsigned int RHS_ROWS , unsigned int RHS_COLS>
-	const BitMatrix<SUBROWS,RHS_COLS> pMult(const BitMatrix<RHS_ROWS, RHS_COLS> & rhs ) const{
-		BitMatrix<SUBROWS,RHS_COLS> result;
-        for (size_t i = START_ROW; i < (START_ROW + SUBROWS); ++i) {
-            for (size_t j = START_COL; j < (START_COL + RHS_ROWS); ++j) {
-            }
-        }
-    }
-*/
-    /*
-	template<unsigned int SUBROWS , unsigned int SUBCOLS>
-	const BitMatrix<SUBROWS,SUBCOLS> pMult(const BitMatrix<SUBROWS, SUBCOLS> & rhs,
-		unsigned int startCol, unsigned int startRow ) const{
-		BitMatrix<ROWS,NEWCOLS> result;
+	template<unsigned int RHS_ROWS, unsigned int RHS_COLS>
+	const BitMatrix<ROWS, RHS_COLS> pMult(const BitMatrix<RHS_ROWS, RHS_COLS> & rhs,
+		unsigned int startCol, unsigned int endCol, unsigned int startRow, unsigned int endRow) const{
+		if (DEBUG) {
+			assert(startCol >= 0 && endCol < COLS);
+			assert(endCol >= startCol);
+			assert(startRow >= 0 && endRow < RHS_ROWS);
+			assert(endRow >= startRow);
+			assert(startCol + endRow == startRow + endCol);
+		}
+		BitMatrix<ROWS, RHS_COLS> result = BitMatrix<ROWS, RHS_COLS>::zeroMatrix();
 		for (size_t j = startCol; j <= endCol; ++j) {
 			size_t rhsRow = startRow + (j - startCol);
 			for (size_t i = 0; i < ROWS; ++i) {
 				if (get(i, j)) {
-                    result[ i ] ^= rhs[ i - START_ROW  ];
+					result.setRow(i, result.getRow(i) ^ rhs.getRow(rhsRow));
 				}
 			}
 		}
 		return result;
 	}
-	*/
-    /*
-    template<unsigned int NEWROWS>
-	const BitMatrix<NEWROWS, COLS> pMult(const BitMatrix<NEWROWS,COLS> & rhs,
+
+	template<unsigned int RHS_ROWS, unsigned int RHS_COLS>
+	const BitMatrix<ROWS, RHS_COLS> pMult(const BitMatrix<RHS_ROWS, RHS_COLS> & rhs,
 		unsigned int startRow, unsigned int endRow) const{
-        assert( (endRow-startRow) == NEWROWS );
-		return pMult<NEWROWS, COLS>(rhs, 0, _colCount-1, startRow, endRow);
-	}*/
+		return pMult<RHS_ROWS, RHS_COLS>(rhs, 0, COLS-1, startRow, endRow);
+	}
 
 	/*
      * Function: pMult(v, startCol, endCol, startRow, endRow)
@@ -657,9 +651,7 @@ public:
      * by a submatrix of the current matrix as specified by
      * given rows and columns
      */
-    /*
-	template <unsigned int NEWCOLS>
-	const BitMatrix<ROWS,NEWCOLS> pMult(const BitVector<COLS> & v, unsigned int startCol,
+	const BitVector<ROWS> pMult(const BitVector<COLS> & v, unsigned int startCol,
 		unsigned int endCol, unsigned int startIndex, unsigned int endIndex) const{
 		if (DEBUG) {
 			assert(startCol >= 0 && endCol < COLS);
@@ -668,7 +660,7 @@ public:
 			assert(endIndex >= startIndex);
 			assert(startCol + endIndex == startIndex + endCol);
 		}
-		BitVector<NEWCOLS> result;
+		BitVector<ROWS> result = BitVector<ROWS>::zeroVector();
 		for (size_t j = startCol; j <= endCol; ++j) {
 			size_t rhsIndex = startIndex + (j-startCol);
 			for (size_t i = 0; i < ROWS; ++i) {
@@ -677,7 +669,7 @@ public:
 				}
 			}
 		}
-	}*/
+	}
 
 	/*
      * Function: augH(lhs, rhs)
