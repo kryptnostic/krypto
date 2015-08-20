@@ -1,0 +1,30 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'maven'
+
+task GenerateJniHeaders(description: 'Generate the JNI headers for kryptnostic engine', dependsOn: 'classes') << {
+    ext.cp = sourceSets.main.output.classesDir
+    ext.resourcesOut = "../krypto-lib/src/main/cpp/"
+    //sourceSets.main.output.resourcesDir
+    ext.cl = "com.kryptnostic.krypto.engine.KryptnosticEngine"
+    exec {
+        commandLine "javah", "-jni", "-d", "${resourcesOut}", "-classpath", "${cp}", "${cl}"
+    }
+}
+
+jar.dependsOn(':copyBinariesToApi')
+clean.dependsOn('cleanKryptoLib')
+
+repositories {
+  maven {
+    url 'http://repo.maven.apache.org/maven2'
+  }
+}
+
+dependencies {
+  testCompile "junit:junit:4.11"
+}
+
+task cleanKryptoLib(type: Delete) {
+  delete 'src/main/resources/com/kryptnostic/krypto/engine/libmain.dylib'
+}
