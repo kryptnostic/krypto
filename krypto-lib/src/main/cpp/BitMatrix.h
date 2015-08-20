@@ -1013,4 +1013,21 @@ private:
 	}
 };
 
+/*
+ * Function: hash<UUID>()(id)
+ * Hashes a UUID by taking the sum of the standard hashes of its components
+ */
+template<unsigned int N>
+struct hash< BitMatrix<N> >
+{
+    size_t operator()(BitMatrix<N> const& matrix) const
+    {
+    	size_t sum = 0;
+    	for (int i = 0; i < matrix.rowCount(); ++i) {
+    		size_t const h ( hash<BitVector<N> >()(matrix.getRow(i)) );
+    		sum += h;
+    	}
+        return sum;
+    }
+};
 #endif

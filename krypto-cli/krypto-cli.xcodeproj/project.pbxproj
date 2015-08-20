@@ -7,11 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		DB3CA66F1AB6C0C700A0FBC7 /* test_bitmatrix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DB3CA66B1AB6C0C700A0FBC7 /* test_bitmatrix.cpp */; };
-		DB3CA6701AB6C0C700A0FBC7 /* test_bitvector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DB3CA66C1AB6C0C700A0FBC7 /* test_bitvector.cpp */; };
-		DB3CA6721AB6C0C700A0FBC7 /* test_trivial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DB3CA66E1AB6C0C700A0FBC7 /* test_trivial.cpp */; };
-		DBAD367D1A3A9EAE00E13DBD /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DBAD367C1A3A9EAE00E13DBD /* main.cpp */; };
-		DBAD368A1A3A9ECA00E13DBD /* libkrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DBAD36891A3A9ECA00E13DBD /* libkrypto.a */; };
+		DBEE40581B7E69A70066EE7A /* libkrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DBEE40571B7E69A70066EE7A /* libkrypto.a */; };
+		DBEE40611B7E71C70066EE7A /* test_bitmatrix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DBEE40591B7E71C70066EE7A /* test_bitmatrix.cpp */; };
+		DBEE40621B7E71C70066EE7A /* test_bitvector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DBEE405A1B7E71C70066EE7A /* test_bitvector.cpp */; };
+		DBEE40631B7E71C70066EE7A /* test_hash.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DBEE405B1B7E71C70066EE7A /* test_hash.cpp */; };
+		DBEE40641B7E71C70066EE7A /* test_main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DBEE405C1B7E71C70066EE7A /* test_main.cpp */; };
+		DBEE40651B7E71C70066EE7A /* test_mqt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DBEE405D1B7E71C70066EE7A /* test_mqt.cpp */; };
+		DBEE40661B7E71C70066EE7A /* test_priv.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DBEE405E1B7E71C70066EE7A /* test_priv.cpp */; };
+		DBEE40671B7E71C70066EE7A /* test_public.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DBEE405F1B7E71C70066EE7A /* test_public.cpp */; };
+		DBEE40681B7E71C70066EE7A /* test_trivial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DBEE40601B7E71C70066EE7A /* test_trivial.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -27,12 +31,16 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		DB3CA66B1AB6C0C700A0FBC7 /* test_bitmatrix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_bitmatrix.cpp; sourceTree = "<group>"; };
-		DB3CA66C1AB6C0C700A0FBC7 /* test_bitvector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_bitvector.cpp; sourceTree = "<group>"; };
-		DB3CA66E1AB6C0C700A0FBC7 /* test_trivial.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_trivial.cpp; sourceTree = "<group>"; };
 		DBAD36791A3A9EAE00E13DBD /* krypto-cli */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "krypto-cli"; sourceTree = BUILT_PRODUCTS_DIR; };
-		DBAD367C1A3A9EAE00E13DBD /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		DBAD36891A3A9ECA00E13DBD /* libkrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libkrypto.a; path = "../../Library/Developer/Xcode/DerivedData/krypto-brugrykonhqlaaaoxodhczavarho/Build/Products/Debug/libkrypto.a"; sourceTree = "<group>"; };
+		DBEE40571B7E69A70066EE7A /* libkrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libkrypto.a; path = "../../../Library/Developer/Xcode/DerivedData/krypto-gtuwxarymtkevfancbsoikmjbcmz/Build/Products/Debug/libkrypto.a"; sourceTree = "<group>"; };
+		DBEE40591B7E71C70066EE7A /* test_bitmatrix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_bitmatrix.cpp; sourceTree = "<group>"; };
+		DBEE405A1B7E71C70066EE7A /* test_bitvector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_bitvector.cpp; sourceTree = "<group>"; };
+		DBEE405B1B7E71C70066EE7A /* test_hash.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_hash.cpp; sourceTree = "<group>"; };
+		DBEE405C1B7E71C70066EE7A /* test_main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_main.cpp; sourceTree = "<group>"; };
+		DBEE405D1B7E71C70066EE7A /* test_mqt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_mqt.cpp; sourceTree = "<group>"; };
+		DBEE405E1B7E71C70066EE7A /* test_priv.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_priv.cpp; sourceTree = "<group>"; };
+		DBEE405F1B7E71C70066EE7A /* test_public.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_public.cpp; sourceTree = "<group>"; };
+		DBEE40601B7E71C70066EE7A /* test_trivial.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_trivial.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -40,7 +48,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DBAD368A1A3A9ECA00E13DBD /* libkrypto.a in Frameworks */,
+				DBEE40581B7E69A70066EE7A /* libkrypto.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -59,9 +67,14 @@
 		DB3CA66A1AB6C0C700A0FBC7 /* cpp */ = {
 			isa = PBXGroup;
 			children = (
-				DB3CA66B1AB6C0C700A0FBC7 /* test_bitmatrix.cpp */,
-				DB3CA66C1AB6C0C700A0FBC7 /* test_bitvector.cpp */,
-				DB3CA66E1AB6C0C700A0FBC7 /* test_trivial.cpp */,
+				DBEE40591B7E71C70066EE7A /* test_bitmatrix.cpp */,
+				DBEE405A1B7E71C70066EE7A /* test_bitvector.cpp */,
+				DBEE405B1B7E71C70066EE7A /* test_hash.cpp */,
+				DBEE405C1B7E71C70066EE7A /* test_main.cpp */,
+				DBEE405D1B7E71C70066EE7A /* test_mqt.cpp */,
+				DBEE405E1B7E71C70066EE7A /* test_priv.cpp */,
+				DBEE405F1B7E71C70066EE7A /* test_public.cpp */,
+				DBEE40601B7E71C70066EE7A /* test_trivial.cpp */,
 			);
 			path = cpp;
 			sourceTree = "<group>";
@@ -69,8 +82,8 @@
 		DBAD36701A3A9EAE00E13DBD = {
 			isa = PBXGroup;
 			children = (
+				DBEE40571B7E69A70066EE7A /* libkrypto.a */,
 				DB3CA6691AB6C0C700A0FBC7 /* mainTest */,
-				DBAD36891A3A9ECA00E13DBD /* libkrypto.a */,
 				DBAD367B1A3A9EAE00E13DBD /* krypto-cli */,
 				DBAD367A1A3A9EAE00E13DBD /* Products */,
 			);
@@ -87,7 +100,6 @@
 		DBAD367B1A3A9EAE00E13DBD /* krypto-cli */ = {
 			isa = PBXGroup;
 			children = (
-				DBAD367C1A3A9EAE00E13DBD /* main.cpp */,
 			);
 			path = "krypto-cli";
 			sourceTree = "<group>";
@@ -148,10 +160,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DB3CA66F1AB6C0C700A0FBC7 /* test_bitmatrix.cpp in Sources */,
-				DBAD367D1A3A9EAE00E13DBD /* main.cpp in Sources */,
-				DB3CA6721AB6C0C700A0FBC7 /* test_trivial.cpp in Sources */,
-				DB3CA6701AB6C0C700A0FBC7 /* test_bitvector.cpp in Sources */,
+				DBEE40651B7E71C70066EE7A /* test_mqt.cpp in Sources */,
+				DBEE40611B7E71C70066EE7A /* test_bitmatrix.cpp in Sources */,
+				DBEE40661B7E71C70066EE7A /* test_priv.cpp in Sources */,
+				DBEE40681B7E71C70066EE7A /* test_trivial.cpp in Sources */,
+				DBEE40641B7E71C70066EE7A /* test_main.cpp in Sources */,
+				DBEE40631B7E71C70066EE7A /* test_hash.cpp in Sources */,
+				DBEE40671B7E71C70066EE7A /* test_public.cpp in Sources */,
+				DBEE40621B7E71C70066EE7A /* test_bitvector.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -228,6 +244,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 			};
 			name = Release;
@@ -243,6 +260,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/krypto-brugrykonhqlaaaoxodhczavarho/Build/Products/Debug",
+					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/krypto-gtuwxarymtkevfancbsoikmjbcmz/Build/Products/Debug",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				"USER_HEADER_SEARCH_PATHS[arch=*]" = "../krypto-lib/**";
@@ -261,6 +279,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/krypto-brugrykonhqlaaaoxodhczavarho/Build/Products/Debug",
+					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/krypto-gtuwxarymtkevfancbsoikmjbcmz/Build/Products/Debug",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				"USER_HEADER_SEARCH_PATHS[arch=*]" = "../krypto-lib/**";

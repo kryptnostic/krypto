@@ -13,14 +13,13 @@
 #ifndef krypto_KryptnosticEngine_h
 #define krypto_KryptnosticEngine_h
 
-#include "PublicKey.h"
 #include "SearchPublicKey.h"
-#include "UUID.h"
 #include <string>
-#include <unordered_map>
+#include <emscripten/emscripten.h>
+#include <emscripten/bind.h>
 
+#define N 128
 
-template<unsigned int N>
 class KryptnosticEngine {
 
 public:
@@ -31,8 +30,12 @@ public:
      * Constructor
      * Constructs a Kryptnostic Engine from scratch
      */
-	KryptnosticEngine(const string serverGlobal) :
-	_serverGlobal(serverGlobal)
+	KryptnosticEngine() :
+	_pk(),
+	_bk(_pk),
+	_pubk(_bk),
+	_spk(_pk),
+	vector(BitVector<1>::randomVector())
 	{
 
 	}
@@ -41,10 +44,12 @@ public:
      * Constructor
      * Constructs a Kryptnostic Engine given private and public keys
      */
-	KryptnosticEngine(const string serverGlobal, const PrivateKey<N> pk, const PublicKey<N> bk) :
-	_serverGlobal(serverGlobal),
+	KryptnosticEngine(const PrivateKey<N> pk, const PublicKey<N> pubk) :
 	_pk(pk),
-	_bk(bk)
+	_bk(_pk),
+	_pubk(pubk),
+	_spk(_pk),
+	vector(BitVector<1>::randomVector())
 	{
 
 	}
@@ -53,14 +58,16 @@ public:
      * Constructor
      * Constructs a fresh Kryptnostic Engine given all keys
      */
-	KryptnosticEngine(const string serverGlobal, const PrivateKey<N> pk, const PublicKey<N> bk, const string oldXor,
+	KryptnosticEngine(const PrivateKey<N> pk, const PublicKey<N> pubk, const string oldXor,
 		const string oldAnd, const string oldLeftShift) :
-	_serverGlobal(serverGlobal),
 	_pk(pk),
-	_bk(bk),
+	_bk(_pk),
+	_pubk(pubk),
+	_spk(_pk),
 	_serialXor(oldXor),
 	_serialAnd(oldAnd),
-	_serialLeftShift(oldLeftShift)
+	_serialLeftShift(oldLeftShift),
+	vector(BitVector<1>::randomVector())
 	{
 
 	}
@@ -71,65 +78,70 @@ public:
 	 * Function: getPrivateKey
 	 * Returns a serialized private key
 	 */
-	const string getPrivateKey() const{
-		return "";
+	const val getPrivateKey() const{
+		unsigned char * pointer = (unsigned char *) &vector;
+		vector.print();
+		return val(memory_view<unsigned char>(sizeof(vector), pointer));
 	}
 
 	/*
 	 * Function: getPublicKey
 	 * Returns a serialized public key
 	 */
-	const string getPublicKey() const{
-		return "";
+	const val getPublicKey() const{
+		unsigned char * pointer = (unsigned char *) &vector;
+		vector.print();
+		return val(memory_view<unsigned char>(sizeof(vector), pointer));
 	}
 
 	/*
 	 * Function: getServerSearchFunction
 	 * Returns a serialized homomorphic hash function
 	 */
-	const string getServerSearchFunction() const{
-		return "";
+	const val getServerSearchFunction() const{
+		unsigned char * pointer = (unsigned char *) &vector;
+		vector.print();
+		return val(memory_view<unsigned char>(sizeof(vector), pointer));
 	}
 
 	/*
 	 * Function: getXor
 	 * Returns a serialized function that performs bitwise Xor operations
 	 */
-	const string getXor() const{
-		return _serialXor;
+	const val getXor() const{
+		unsigned char * pointer = (unsigned char *) &vector;
+		vector.print();
+		return val(memory_view<unsigned char>(sizeof(vector), pointer));
 	}
 
 	/*
 	 * Function: getAnd
 	 * Returns a serialized function that performs bitwise AND operations
 	 */
-	const string getAnd() const{
-		return _serialAnd;
+	const val getAnd() const{
+		unsigned char * pointer = (unsigned char *) &vector;
+		vector.print();
+		return val(memory_view<unsigned char>(sizeof(vector), pointer));
 	}
 
 	/*
 	 * Function: getLeftShift
 	 * Returns a serialized function that performs left shift operations
 	 */
-	const string getLeftShift() const{
-		return _serialLeftShift;
+	const val getLeftShift() const{
+		unsigned char * pointer = (unsigned char *) &vector;
+		vector.print();
+		return val(memory_view<unsigned char>(sizeof(vector), pointer));
 	}
 
 	/*
 	 * Function: getDocKey
 	 * Returns a serialized random unused document key
 	 * and inserts the document key into a stored hash set
-	 * Returns 0 if object has an existing key
+	 * Returns existing key if object has an existing key
 	 */
-	const UUID getDocKey(const UUID & objectId) const{
-		UUID docKey = generateDocKey(objectId);
-		if (!docKey.isZero()) { //objectId already used
-			while (docKeySet.count(docKey) == 1) docKey = generateDocKey(objectId); //generated new key
-
-			docToKeyMap.insert(pair<UUID, UUID>(objectId, docKey));
-			docKeySet.insert(docKey);
-		}
-		return docKey;
+	 val getDocKey(const UUID & objectId) {
+		return val(_spk.getDocKey(objectId));
 	}
 
 /* Transformers */
@@ -138,16 +150,20 @@ public:
 	 * Function: getHashedToken
 	 * Returns the serialized result from hashing a given token and a given document key
 	 */
-	const string getHashedToken(const string & token, const UUID & docKey) const{
-		return "";
+	const val getHashedToken(const string & token, const UUID & docKey) const{
+		unsigned char * pointer = (unsigned char *) &vector;
+		vector.print();
+		return val(memory_view<unsigned char>(sizeof(vector), pointer));
 	}
 
 	/*
 	 * Function: getEncryptedSearchTerm
 	 * Returns a serialized encrypted search term
 	 */
-	const string getEncryptedSearchTerm(const UUID & objectId) const{
-		return "";
+	const val getEncryptedSearchTerm(const string & word) const{
+		unsigned char * pointer = (unsigned char *) &vector;
+		vector.print();
+		return val(memory_view<unsigned char>(sizeof(vector), pointer));
 	}
 
 /* Setters */
@@ -157,24 +173,21 @@ public:
 	 * Sets the document key of a given object to a given document key
 	 * Returns whether the operation was valid and successful
 	 */
-	const bool setDocKey(const UUID & objectId, const UUID & docKey) const{
-		if (docToKeyMap.count(objectId) != 0) {
-			docToKeyMap[objectId] = docKey;
-			return true;
-		}
-		return false;
+	const bool setDocKey(const UUID & objectId, const BitVector<N> & docKey) {
+		return _spk.setDocKey(objectId, docKey);
 	}
 
 private:
-	const string _serverGlobal;
 	const PrivateKey<N> _pk;
 	const BridgeKey<N> _bk;
 	const PublicKey<N> _pubk;
+	SearchPrivateKey<N> _spk;
 	const string _serialXor;
 	const string _serialAnd;
 	const string _serialLeftShift;
-	const unordered_set<UUID> docKeySet;
-	const unordered_map<UUID, UUID> docToKeyMap;
+	const BitVector<1> vector; //for testing purposes
+	unordered_set<UUID> docKeySet;
+	unordered_map<UUID, UUID> docToKeyMap;
 
 /* Generators */
 
@@ -192,5 +205,4 @@ private:
 	}
 
 };
-
 #endif
