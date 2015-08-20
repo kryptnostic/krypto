@@ -8,8 +8,6 @@
 
 using namespace std;
 
-#define N 1
-#define L 2
 #define DEBUG false
 #define OPRUNS 1
 #define TESTRUNS 1
@@ -22,25 +20,25 @@ void testInstantiateKE() {
 
 		KryptnosticEngine engine;
 
-		UUID objectId1;
-		objectId1.randomize();
+		// UUID objectId1;
+		// objectId1.randomize();
 
-		cout << "Current docKey = ";
-		engine.getDocKey(objectId1).print();
+		// cout << "Current docKey = ";
+		// engine.getDocKey(objectId1).print();
 
-		cout << "Randomly generated docKey2 = ";
-		UUID docKey2;
-		docKey2.randomize();
-		docKey2.print();
+		// cout << "Randomly generated docKey2 = ";
+		// UUID docKey2;
+		// docKey2.randomize();
+		// docKey2.print();
 
-		cout << "Current docKey = ";
-		engine.setDocKey(objectId1, docKey2);
-		engine.getDocKey(objectId1).print();
+		// cout << "Current docKey = ";
+		// engine.setDocKey(objectId1, docKey2);
+		// engine.getDocKey(objectId1).print();
 
 
-		emscripten::memory_view<unsigned char> pk = engine.getPrivateKey();
-		BitVector<1> vector = * (BitVector<1> *) pk.data;
-		vector.print();
+		// emscripten::memory_view<unsigned char> pk = engine.getPrivateKey();
+		// BitVector<1> vector = * (BitVector<1> *) pk.data;
+		// vector.print();
 
 		clock_t end = clock();
  		diff += (end - begin);

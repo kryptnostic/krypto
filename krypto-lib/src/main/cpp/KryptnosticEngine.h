@@ -14,9 +14,7 @@
 #define krypto_KryptnosticEngine_h
 
 #include "SearchPublicKey.h"
-#include "UUID.h"
 #include <string>
-#include <unordered_map>
 #include <emscripten/emscripten.h>
 #include <emscripten/bind.h>
 
@@ -40,6 +38,7 @@ public:
 	_pk(),
 	_bk(_pk),
 	_pubk(_bk),
+	_spk(_pk),
 	vector(BitVector<1>::randomVector())
 	{
 
@@ -53,6 +52,7 @@ public:
 	_pk(pk),
 	_bk(_pk),
 	_pubk(pubk),
+	_spk(_pk),
 	vector(BitVector<1>::randomVector())
 	{
 		
@@ -67,6 +67,7 @@ public:
 	_pk(pk),
 	_bk(_pk),
 	_pubk(pubk),
+	_spk(_pk),
 	_serialXor(oldXor),
 	_serialAnd(oldAnd),
 	_serialLeftShift(oldLeftShift),
@@ -143,15 +144,8 @@ public:
 	 * and inserts the document key into a stored hash set
 	 * Returns existing key if object has an existing key
 	 */
-	const val getDocKey(const UUID & objectId) {
-		UUID docKey = generateDocKey(objectId);
-		if (!docKey.isZero()) { //objectId already used
-			while (docKeySet.count(docKey) == 1) docKey = generateDocKey(objectId); //generated new key
-
-			docToKeyMap[objectId] = docKey;
-			docKeySet.insert(docKey);
-		} else docKey = docToKeyMap[objectId];
-		return val(docKey);
+	 val getDocKey(const UUID & objectId) {
+		return val(_spk.getDocKey(objectId));
 	}
 
 /* Transformers */
@@ -183,18 +177,15 @@ public:
 	 * Sets the document key of a given object to a given document key
 	 * Returns whether the operation was valid and successful
 	 */
-	const bool setDocKey(const UUID & objectId, const UUID & docKey) {
-		if (docToKeyMap.count(objectId) != 0) {
-			docToKeyMap[objectId] = docKey;
-			return true;
-		}
-		return false;
+	const bool setDocKey(const UUID & objectId, const BitVector<N> & docKey) {
+		return _spk.setDocKey(objectId, docKey);
 	}
 
 private:
 	const PrivateKey<N, L> _pk;
 	const BridgeKey<N, L> _bk;
 	const PublicKey<N, L> _pubk;
+	SearchPrivateKey<N, L> _spk;
 	const string _serialXor;
 	const string _serialAnd;
 	const string _serialLeftShift;

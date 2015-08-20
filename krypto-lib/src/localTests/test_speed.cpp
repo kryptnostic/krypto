@@ -122,22 +122,22 @@ void testPublicKeyRuns() {
  	cout << "Average time elapsed over " << TESTRUNS << " runs of public key generation: " << double(diff) / (CLOCKS_PER_SEC * TESTRUNS) << " sec" << endl;
 }
 
-void testHash() {
-	BitVector<N> t = BitVector<N>::randomVector(); //token
-	BitVector<N> d = BitVector<N>::randomVector(); //document key
-	MultiQuadTuple<2*N, N> h = MultiQuadTuple<2*N, N>::randomMultiQuadTuple();
-	PrivateKey<N, 2> pk;
-	BridgeKey<N, 2> bk(pk);
-	SearchPrivateKey<N, 2> rk(pk, h);
-	SearchPublicKey<N, 2> sk(rk, bk); 
-	BitVector<2*N> encryptedT = pk.encrypt(t);
-	BitVector<2*N> encryptedD = pk.encrypt(d);
-	clock_t begin = clock();
-	BitVector<2*N> calculatedEncryptedAddress = sk.homomorphicHash(encryptedT, encryptedD);
-	clock_t end = clock();
-	cout << "Time for one search match computation: " << double(end - begin) / (CLOCKS_PER_SEC) << " sec" << endl;
-	BitVector<N> dEAddr = pk.decrypt(calculatedEncryptedAddress); 	
-}
+// void testHash() {
+// 	BitVector<N> t = BitVector<N>::randomVector(); //token
+// 	BitVector<N> d = BitVector<N>::randomVector(); //document key
+// 	MultiQuadTuple<2*N, N> h = MultiQuadTuple<2*N, N>::randomMultiQuadTuple();
+// 	PrivateKey<N, 2> pk;
+// 	BridgeKey<N, 2> bk(pk);
+// 	SearchPrivateKey<N, 2> rk(pk, h);
+// 	SearchPublicKey<N, 2> sk(rk, bk); 
+// 	BitVector<2*N> encryptedT = pk.encrypt(t);
+// 	BitVector<2*N> encryptedD = pk.encrypt(d);
+// 	clock_t begin = clock();
+// 	BitVector<2*N> calculatedEncryptedAddress = sk.homomorphicHash(encryptedT, encryptedD);
+// 	clock_t end = clock();
+// 	cout << "Time for one search match computation: " << double(end - begin) / (CLOCKS_PER_SEC) << " sec" << endl;
+// 	BitVector<N> dEAddr = pk.decrypt(calculatedEncryptedAddress); 	
+// }
 
 int main(int argc, char **argv) {
 	cout << "Speed tests with " << (N << 6) << " bit plaintext" << endl;
@@ -146,7 +146,7 @@ int main(int argc, char **argv) {
 	testOps3();
 	testClientRuns();
 	testPublicKeyRuns();
-	testHash();
+	//testHash();
  	fclose(urandom);
 	return 0;
 }
