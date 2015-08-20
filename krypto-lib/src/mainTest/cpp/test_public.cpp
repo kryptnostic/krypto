@@ -62,6 +62,7 @@ TEST(PublicKeyTest, testXOR){
 
 	ASSERT_TRUE(expectedXOR.equals(unencryptedXOR));
 }
+
 /*
 TEST(PublicKeyTest, testAND){
 	PrivateKey<N> pk;
@@ -80,5 +81,4 @@ TEST(PublicKeyTest, testAND){
 	BitVector<N> expectedAND = x & y;
 
 	ASSERT_TRUE(expectedAND.equals(unencryptedAND));
-}
-*/
+}*/
