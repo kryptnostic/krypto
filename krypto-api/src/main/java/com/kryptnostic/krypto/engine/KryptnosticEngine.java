@@ -17,7 +17,7 @@ public class KryptnosticEngine {
             extension = ".dylib";
         }
         InputStream binary = KryptnosticEngine.class.getClassLoader().getResourceAsStream( libraryName + extension );
-        final Path outputPath = Paths.get( System.getProperty( "java.io.tmpdir" ), "kryptnostic", "fhe" + extension );
+        final Path outputPath = Paths.get( System.getProperty( "java.io.tmpdir" ), "kryptnostic", libraryName + extension );
         try {
             Files.createDirectories( Paths.get( System.getProperty( "java.io.tmpdir" ), "kryptnostic") );
             Files.copy( binary , outputPath , StandardCopyOption.REPLACE_EXISTING );
@@ -30,22 +30,18 @@ public class KryptnosticEngine {
 
     private final long handle;
 
-    public KryptnosticEngine( byte[] serverGlobalHash ) {
-        handle = initKryptnosticEngine( serverGlobalHash );
+    public KryptnosticEngine() {
+        handle = initKryptnosticEngine();
     }
 
     public KryptnosticEngine( byte[] privateKey, byte[] publicKey, byte[] serverGlobalHash ) {
         handle = initKryptnosticEngine( privateKey, publicKey, serverGlobalHash );
     }
 
-    public KryptnosticEngine() {
-        handle = initKryptnosticEngine();
-    }
     //
     //    Constructors
     //
     private native long initKryptnosticEngine();
-    private native long initKryptnosticEngine( byte[] serverGlobalHash );
     private native long initKryptnosticEngine( byte[] privateKey, byte[] publicKey, byte[] serverGlobalHash );
 
     //
@@ -53,6 +49,7 @@ public class KryptnosticEngine {
     //
     public native byte[] getPrivateKeys();
     public native byte[] getPublicKeys();
+
     //    Factory with separate serialization
     public native byte[] getServerSearchFunction();
     public native byte[] getXor();
@@ -74,6 +71,6 @@ public class KryptnosticEngine {
     //
     //    Setters
     //
-    public native byte[] setDocKey( byte[] objectId, byte[] docKey );
+    public native boolean setDocKey( byte[] objectId, byte[] docKey );
 
 }
