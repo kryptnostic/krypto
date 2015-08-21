@@ -30,47 +30,18 @@ public class KryptnosticEngine {
 
     private final long handle;
 
-    public KryptnosticEngine() {
-        handle = initKryptnosticEngine();
-    }
-
-    public KryptnosticEngine( byte[] privateKey, byte[] publicKey, byte[] serverGlobalHash ) {
-        handle = initKryptnosticEngine( privateKey, publicKey, serverGlobalHash );
+    public KryptnosticEngine( byte[] clientHashFunction, byte[] conversionMatrix, byte[] docSearchKey ) {
+        handle = initKryptnosticEngine( clientHashFunction, conversionMatrix, docSearchKey );
     }
 
     //
     //    Constructors
     //
-    private native long initKryptnosticEngine();
-    private native long initKryptnosticEngine( byte[] privateKey, byte[] publicKey, byte[] serverGlobalHash );
+    // ryan sends docSearchKey, convMatrix per document & clientHashFunc per session
+    // make a set of Pair<ConvMatrix, docSearchKey>
+    private native long initKryptnosticEngine( byte[] clientHashFunction, byte[] conversionMatrix, byte[] docSearchKey );
 
-    //
-    //    Keys
-    //
-    public native byte[] getPrivateKeys();
-    public native byte[] getPublicKeys();
-
-    //    Factory with separate serialization
-    public native byte[] getServerSearchFunction();
-    public native byte[] getXor();
-    public native byte[] getAnd();
-    public native byte[] getShift();
-
-    //
-    //    Transformers
-    //
-    public native byte[] mapTokenToKey( byte[] word, byte[] objectID );
-    public native byte[] getEncryptedSearchTerm( byte[] word );
-    public native byte[] getBridgeKey( byte[] docKey );
-
-    //
-    //    Generators
-    //
-    public native byte[] genDocKey( byte[] objectId );
-
-    //
-    //    Setters
-    //
-    public native boolean setDocKey( byte[] objectId, byte[] docKey );
+    // search => call this
+    public native long getAddress( byte[] encSearchToken );
 
 }
