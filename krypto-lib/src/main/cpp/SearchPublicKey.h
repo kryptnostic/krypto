@@ -17,7 +17,6 @@ public:
 	 * Returns H[h](E(t), E(d)), should be made a private function
 	 * COMMENTED OUT FOR NOW AS SOME THE CALL TO getTransposedContributionMatrix should be changed
 	 */
-<<<<<<< HEAD
 	const BitVector<2*N> homomorphicHash() const{
 		BitVector<2*N> result;
 		return BitVector<2*N>::zeroVector();
