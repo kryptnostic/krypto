@@ -104,10 +104,10 @@ private:
      */
 	const BitMatrix<N, 2*N> generateK() const{
 		const unsigned int half = N >> 1;
-		BitMatrix<half, half> K11 = BitMatrix<half>::randomInvertibleMatrix();
-		BitMatrix<half, half> K12 = BitMatrix<half>::randomInvertibleMatrix();
-		BitMatrix<half, half> K23 = BitMatrix<half>::randomInvertibleMatrix();
-		BitMatrix<half, half> K24 = BitMatrix<half>::randomInvertibleMatrix();
+		BitMatrix<half> K11 = BitMatrix<half>::randomInvertibleMatrix();
+		BitMatrix<half> K12 = BitMatrix<half>::randomInvertibleMatrix();
+		BitMatrix<half> K23 = BitMatrix<half>::randomInvertibleMatrix();
+		BitMatrix<half> K24 = BitMatrix<half>::randomInvertibleMatrix();
 		BitMatrix<half, N> zero = BitMatrix<half, N>::zeroMatrix();
 
 		BitMatrix<half, 2*N> top = BitMatrix<half, 2*N>::augH(BitMatrix<half, N>::augH(K11, K12), zero);

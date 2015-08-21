@@ -3,7 +3,7 @@
 //  krypto
 //
 //  Created by Peng Hui How and Robin Zhang on 8/13/15.
-//  Copyright (c) 2015 Kryptnostic. All rights reserved.
+//  Copyright (c) 20645 Kryptnostic. All rights reserved.
 //
 //  C++ implementation of the client-side Kryptnostic Engine
 //  Provides get functions for all of the cryptographic keys and functions
@@ -35,7 +35,7 @@ public:
 	KryptnosticEngineClient() :
 	_pk(),
 	_spk(_pk),
-	vector(BitVector<1>::randomVector())
+	vector(BitVector<64>::randomVector())
 	{
 
 	}
@@ -47,7 +47,7 @@ public:
 	KryptnosticEngineClient(const PrivateKey<N> pk, const SearchPrivateKey<N> spk) :
 	_pk(pk),
 	_spk(spk),
-	vector(BitVector<1>::randomVector())
+	vector(BitVector<64>::randomVector())
 	{
 
 	}
@@ -169,6 +169,6 @@ public:
 private:
 	const PrivateKey<N> _pk;
 	SearchPrivateKey<N> _spk;
-	const BitVector<1> vector; //for testing purposes
+	const BitVector<64> vector; //for testing purposes
 };
 #endif
