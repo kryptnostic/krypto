@@ -14,6 +14,7 @@
 #define krypto_KryptnosticEngineClient_h
 
 #include "SearchPrivateKey.h"
+#include "ClientHashFunction"
 #include <string>
 #include <emscripten/emscripten.h>
 #include <emscripten/bind.h>
@@ -59,9 +60,8 @@ public:
 	 * Returns a serialized private key
 	 */
 	const val getPrivateKey() const{
-		unsigned char * pointer = (unsigned char *) &vector;
-		vector.print();
-		return val(memory_view<unsigned char>(sizeof(vector), pointer));
+		unsigned char * pointer = (unsigned char *) &_pk;
+		return val(memory_view<unsigned char>(sizeof(_pk), pointer));
 	}
 
 	/*
@@ -69,9 +69,8 @@ public:
 	 * Returns a serialized search private key
 	 */
 	const val getSearchPrivateKey() const{
-		unsigned char * pointer = (unsigned char *) &vector;
-		vector.print();
-		return val(memory_view<unsigned char>(sizeof(vector), pointer));
+		unsigned char * pointer = (unsigned char *) &_spk;
+		return val(memory_view<unsigned char>(sizeof(_spk), pointer));
 	}
 
 	/*
@@ -80,6 +79,7 @@ public:
 	 * of the ClientHashFunction
 	 */
 	const val getClientHashFunction() {
+		ClientHashFunction chf = {_spk.generateHashMatrix(), _spk.generateAugmentedF2(), _spk.generateConcealedF1()};
 		unsigned char * pointer = (unsigned char *) &vector;
 		vector.print();
 		return val(memory_view<unsigned char>(sizeof(vector), pointer));
@@ -167,7 +167,6 @@ public:
 	}
 
 private:
-	const PrivateKey<N> _pk;
 	SearchPrivateKey<N> _spk;
 	const BitVector<64> vector; //for testing purposes
 };

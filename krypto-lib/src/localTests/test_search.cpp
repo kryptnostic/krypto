@@ -1,5 +1,4 @@
 #include "../main/cpp/SearchPrivateKey.h"
-#include "../main/cpp/SearchPublicKey.h"
 #include <iostream>
 #include <time.h>
 
@@ -10,7 +9,7 @@ using namespace std;
 #define OPRUNS 1
 #define TESTRUNS 1
 
-void testInstantiateUUID() {
+void testSearch()) {
 	clock_t diff = 0;
 
 	for (int run = 0; run < TESTRUNS; ++run) {
@@ -21,6 +20,7 @@ void testInstantiateUUID() {
 		clock_t begin = clock();
 
 		SearchPrivateKey spk;
+		cout << "size of spk is " << sizeof(spk) << endl;
 
 		clock_t end = clock();
  		diff += (end - begin);
@@ -31,6 +31,6 @@ void testInstantiateUUID() {
 
 int main(int argc, char **argv) {
 	cout << "Search tests" << endl;
-	testInstantiateUUID();
+	testSearch();
 	return 0;
 }

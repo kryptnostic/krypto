@@ -1,1 +1,0 @@
-g++ -g --std=c++11 test_local.cpp -o test_local

@@ -1,11 +1,10 @@
-// #include "../main/cpp/MultiQuadTuple.h"
-// #include "../main/cpp/BridgeKey.h"
-// #include "../main/cpp/PublicKey.h"
-// #include "../main/cpp/SearchPublicKey.h"
-// #include <iostream>
-// #include <time.h>
+#include "../main/cpp/MultiQuadTuple.h"
+#include "../main/cpp/BridgeKey.h"
+#include "../main/cpp/PublicKey.h"
+#include <iostream>
+#include <time.h>
 
-// using namespace std;
+using namespace std;
 
 // #define N 2
 // #define DEBUG false
@@ -139,14 +138,16 @@
 // // 	BitVector<N> dEAddr = pk.decrypt(calculatedEncryptedAddress); 	
 // // }
 
-// int main(int argc, char **argv) {
-// 	cout << "Speed tests with " << (N << 6) << " bit plaintext" << endl;
-// 	testOps1();
-// 	testOps2();
-// 	testOps3();
-// 	testClientRuns();
-// 	testPublicKeyRuns();
-// 	//testHash();
-//  	fclose(urandom);
-// 	return 0;
-// }
+int main(int argc, char **argv) {
+	// cout << "Speed tests with " << (N << 6) << " bit plaintext" << endl;
+	// testOps1();
+	// testOps2();
+	// testOps3();
+	// testClientRuns();
+	// testPublicKeyRuns();
+	//testHash();
+ 	// fclose(urandom);
+ 	cout << "hi" << endl;
+	return 0;
+}
+
