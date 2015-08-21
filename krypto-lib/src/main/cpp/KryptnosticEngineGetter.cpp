@@ -27,7 +27,7 @@ EMSCRIPTEN_BINDINGS(crypto_module) {
 		.function("getSearchPrivateKey", &KryptnosticEngineClient::getSearchPrivateKey)
 		.function("getClientHashFunction", &KryptnosticEngineClient::getClientHashFunction)
 		.function("getDocumentAddressFunction", &KryptnosticEngineClient::getDocumentAddressFunction)
-		.function("getConversionMatrix", &KryptnosticEngineClient::getConversionMatrix)
+		.function("getDocumentConversionMatrix", &KryptnosticEngineClient::getDocumentConversionMatrix)
 		.function("getDocumentIndexPair", &KryptnosticEngineClient::getDocumentIndexPair)
 		.function("getEncryptedSearchToken", &KryptnosticEngineClient::getEncryptedSearchToken)
 		.function("getDocumentSharingPair", &KryptnosticEngineClient::getDocumentSharingPair)

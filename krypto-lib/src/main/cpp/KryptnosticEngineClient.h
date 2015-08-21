@@ -111,11 +111,11 @@ public:
 	}
 
 	/*
-	 * Function: getConversionMatrix
+	 * Function: getDocumentConversionMatrix
 	 * Returns a serialized BitMatrix generated as the
-	 * ConversionMatrix L_i K_\Omega^\cross for a document
+	 * DocumentConversionMatrix L_i K_\Omega^\cross for a document
 	 */
-	const val getConversionMatrix(const UUID & objectId) {
+	const val getDocumentConversionMatrix(const UUID & objectId) {
 		unsigned char * pointer = (unsigned char *) &vector;
 		vector.print();
 		return val(memory_view<unsigned char>(sizeof(vector), pointer));
@@ -123,7 +123,7 @@ public:
 
 	/*
 	 * Function: getDocumentIndexPair
-	 * Returns a serialized pair of (FHE-encrypted DocumentSearchKey, ConversionMatrix)
+	 * Returns a serialized pair of (FHE-encrypted DocumentSearchKey, DocumentConversionMatrix)
 	 */
 	const val getDocumentIndexPair(const UUID & objectId) const{
 		unsigned char * pointer = (unsigned char *) &vector;
