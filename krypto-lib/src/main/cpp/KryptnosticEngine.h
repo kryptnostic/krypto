@@ -32,9 +32,8 @@ public:
      */
 	KryptnosticEngine() :
 	_pk(),
-	_bk(_pk),
-	_pubk(_bk),
 	_spk(_pk),
+	_spubk(_spk),
 	vector(BitVector<1>::randomVector())
 	{
 
@@ -44,35 +43,16 @@ public:
      * Constructor
      * Constructs a Kryptnostic Engine given private and public keys
      */
-	KryptnosticEngine(const PrivateKey<N> pk, const PublicKey<N> pubk) :
+	KryptnosticEngine(const PrivateKey<N> pk, const SearchPrivateKey<N> spk, const SearchPublicKey<N> spubk) :
 	_pk(pk),
-	_bk(_pk),
-	_pubk(pubk),
-	_spk(_pk),
+	_spk(spk),
+	_spubk(spubk),
 	vector(BitVector<1>::randomVector())
 	{
 
 	}
 
-	/*
-     * Constructor
-     * Constructs a fresh Kryptnostic Engine given all keys
-     */
-	KryptnosticEngine(const PrivateKey<N> pk, const PublicKey<N> pubk, const string oldXor,
-		const string oldAnd, const string oldLeftShift) :
-	_pk(pk),
-	_bk(_pk),
-	_pubk(pubk),
-	_spk(_pk),
-	_serialXor(oldXor),
-	_serialAnd(oldAnd),
-	_serialLeftShift(oldLeftShift),
-	vector(BitVector<1>::randomVector())
-	{
-
-	}
-
-/* Keys */
+/* Registration */
 
 	/*
 	 * Function: getPrivateKey
@@ -85,82 +65,111 @@ public:
 	}
 
 	/*
-	 * Function: getPublicKey
-	 * Returns a serialized public key
+	 * Function: getSearchPrivateKey
+	 * Returns a serialized search private key
 	 */
-	const val getPublicKey() const{
+	const val getSearchPrivateKey() const{
 		unsigned char * pointer = (unsigned char *) &vector;
 		vector.print();
 		return val(memory_view<unsigned char>(sizeof(vector), pointer));
 	}
 
 	/*
-	 * Function: getServerSearchFunction
-	 * Returns a serialized homomorphic hash function
+	 * Function: getSearchPublicKey
+	 * Returns a serialized search public key
 	 */
-	const val getServerSearchFunction() const{
+	const val getSearchPublicKey() const{
 		unsigned char * pointer = (unsigned char *) &vector;
 		vector.print();
 		return val(memory_view<unsigned char>(sizeof(vector), pointer));
 	}
 
 	/*
-	 * Function: getXor
-	 * Returns a serialized function that performs bitwise Xor operations
+	 * Function: getClientHashFunction
+	 * Returns a serialized concatenation of the three components
+	 * of the ClientHashFunction
 	 */
-	const val getXor() const{
+	const val getClientHashFunction() {
 		unsigned char * pointer = (unsigned char *) &vector;
 		vector.print();
 		return val(memory_view<unsigned char>(sizeof(vector), pointer));
 	}
 
-	/*
-	 * Function: getAnd
-	 * Returns a serialized function that performs bitwise AND operations
-	 */
-	const val getAnd() const{
-		unsigned char * pointer = (unsigned char *) &vector;
-		vector.print();
-		return val(memory_view<unsigned char>(sizeof(vector), pointer));
-	}
+/* Indexing */
 
 	/*
-	 * Function: getLeftShift
-	 * Returns a serialized function that performs left shift operations
-	 */
-	const val getLeftShift() const{
-		unsigned char * pointer = (unsigned char *) &vector;
-		vector.print();
-		return val(memory_view<unsigned char>(sizeof(vector), pointer));
-	}
-
-	/*
-	 * Function: getDocKey
+	 * Function: getDocumentSearchKey
 	 * Returns a serialized random unused document key
 	 * and inserts the document key into a stored hash set
 	 * Returns existing key if object has an existing key
 	 */
-	 val getDocKey(const UUID & objectId) {
-		return val(_spk.getDocKey(objectId));
-	}
-
-/* Transformers */
-
-	/*
-	 * Function: getHashedToken
-	 * Returns the serialized result from hashing a given token and a given document key
-	 */
-	const val getHashedToken(const string & token, const UUID & docKey) const{
+	const val getDocumentSearchKey(const UUID & objectId) {
 		unsigned char * pointer = (unsigned char *) &vector;
 		vector.print();
 		return val(memory_view<unsigned char>(sizeof(vector), pointer));
 	}
 
 	/*
-	 * Function: getEncryptedSearchTerm
-	 * Returns a serialized encrypted search term
+	 * Function: getDocumentAddressFunction
+	 * Returns a serialized BitMatrix generated as the
+	 * DocumentAddressFunction L_i for a document
 	 */
-	const val getEncryptedSearchTerm(const string & word) const{
+	const val getDocumentAddressFunction(const UUID & objectId) {
+		unsigned char * pointer = (unsigned char *) &vector;
+		vector.print();
+		return val(memory_view<unsigned char>(sizeof(vector), pointer));
+	}
+
+	/*
+	 * Function: getConversionMatrix
+	 * Returns a serialized BitMatrix generated as the
+	 * ConversionMatrix L_i K_\Omega^\cross for a document
+	 */
+	const val getConversionMatrix(const UUID & objectId) {
+		unsigned char * pointer = (unsigned char *) &vector;
+		vector.print();
+		return val(memory_view<unsigned char>(sizeof(vector), pointer));
+	}
+
+	/*
+	 * Function: getDocumentIndexPair
+	 * Returns a serialized pair of (FHE-encrypted DocumentSearchKey, ConversionMatrix)
+	 */
+	const val getDocumentIndexPair(const UUID & objectId) const{
+		unsigned char * pointer = (unsigned char *) &vector;
+		vector.print();
+		return val(memory_view<unsigned char>(sizeof(vector), pointer));
+	}
+
+	/*
+	 * Function: getMetadataAddress
+	 * Returns the serialized address from a given token and documentSearchKey
+	 */
+	const val getMetadataAddress(const string & token, const BitVector<N> & docKey) const{
+		unsigned char * pointer = (unsigned char *) &vector;
+		vector.print();
+		return val(memory_view<unsigned char>(sizeof(vector), pointer));
+	}
+
+/* Searching */
+
+	/*
+	 * Function: getEncryptedSearchToken
+	 * Returns a serialized FHE-encrypted search token
+	 */
+	const val getEncryptedSearchToken(const string & word) const{
+		unsigned char * pointer = (unsigned char *) &vector;
+		vector.print();
+		return val(memory_view<unsigned char>(sizeof(vector), pointer));
+	}
+
+/* Sharing */
+
+	/*
+	 * Function: getDocumentSharingPair
+	 * Returns a serialized pair of (DocumentSearchKey, DocumentAddressFunction)
+	 */
+	const val getDocumentSharingPair(const UUID & objectId) const{
 		unsigned char * pointer = (unsigned char *) &vector;
 		vector.print();
 		return val(memory_view<unsigned char>(sizeof(vector), pointer));
@@ -179,30 +188,73 @@ public:
 
 private:
 	const PrivateKey<N> _pk;
-	const BridgeKey<N> _bk;
-	const PublicKey<N> _pubk;
 	SearchPrivateKey<N> _spk;
-	const string _serialXor;
-	const string _serialAnd;
-	const string _serialLeftShift;
+	SearchPublicKey<N> _spubk;
 	const BitVector<1> vector; //for testing purposes
-	unordered_set<UUID> docKeySet;
-	unordered_map<UUID, UUID> docToKeyMap;
-
-/* Generators */
-
-	/*
-	 * Function: generateDocKey
-	 * Returns a serialized random unused document key
-	 * Returns 0 if object has an existing key
-	 */
-	const UUID generateDocKey(const UUID & objectId) const{
-		UUID docKey;
-		if (docToKeyMap.count(objectId) == 0) {
-	        docKey.randomize();
-		}
-		return docKey;
-	}
-
 };
 #endif
+
+	//const BridgeKey<N> _bk;
+	//const PublicKey<N> _pubk;
+	// const string _serialXor;
+	// const string _serialAnd;
+	// const string _serialLeftShift;
+
+
+	// /*
+ //     * Constructor
+ //     * Constructs a fresh Kryptnostic Engine given all keys
+ //     */
+	// KryptnosticEngine(const PrivateKey<N> pk, const PublicKey<N> pubk, const string oldXor,
+	// 	const string oldAnd, const string oldLeftShift) :
+	// _pk(pk),
+	// _bk(_pk),
+	// _pubk(pubk),
+	// _spk(_pk),
+	// _serialXor(oldXor),
+	// _serialAnd(oldAnd),
+	// _serialLeftShift(oldLeftShift),
+	// vector(BitVector<1>::randomVector())
+	// {
+
+	// }
+
+	// /*
+	//  * Function: getPublicKey
+	//  * Returns a serialized public key
+	//  */
+	// const val getPublicKey() const{
+	// 	unsigned char * pointer = (unsigned char *) &vector;
+	// 	vector.print();
+	// 	return val(memory_view<unsigned char>(sizeof(vector), pointer));
+	// }
+
+	// /*
+	//  * Function: getXor
+	//  * Returns a serialized function that performs bitwise Xor operations
+	//  */
+	// const val getXor() const{
+	// 	unsigned char * pointer = (unsigned char *) &vector;
+	// 	vector.print();
+	// 	return val(memory_view<unsigned char>(sizeof(vector), pointer));
+	// }
+
+	// /*
+	//  * Function: getAnd
+	//  * Returns a serialized function that performs bitwise AND operations
+	//  */
+	// const val getAnd() const{
+	// 	unsigned char * pointer = (unsigned char *) &vector;
+	// 	vector.print();
+	// 	return val(memory_view<unsigned char>(sizeof(vector), pointer));
+	// }
+
+	// /*
+	//  * Function: getLeftShift
+	//  * Returns a serialized function that performs left shift operations
+	//  */
+	// const val getLeftShift() const{
+	// 	unsigned char * pointer = (unsigned char *) &vector;
+	// 	vector.print();
+	// 	return val(memory_view<unsigned char>(sizeof(vector), pointer));
+	// }
