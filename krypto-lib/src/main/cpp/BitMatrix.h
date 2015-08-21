@@ -1028,13 +1028,13 @@ private:
  * Hashes a UUID by taking the sum of the standard hashes of its components
  */
 
-template<unsigned int N>
-struct std::hash< BitMatrix<N> >
+template<unsigned int N, unsigned int M>
+struct std::hash< BitMatrix<M, N> >
 {
-    size_t operator()(BitMatrix<N> const& matrix) const
+    size_t operator()(BitMatrix<M, N> const& matrix) const
     {
     	size_t sum = 0;
-    	for (int i = 0; i < matrix.rowCount(); ++i) {
+    	for (int i = 0; i < M; ++i) {
     		size_t const h ( hash<BitVector<N> >()(matrix.getRow(i)) );
     		sum += h;
     	}
