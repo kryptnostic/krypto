@@ -6,13 +6,15 @@
 #include <unordered_map>
 #include <unordered_set>
 
+//N should be a multiple of 128, otherwise BitVector would create
+//the incorrect number of unsigned long longs
 template<unsigned int N>
 class SearchPrivateKey{
 public:
 	SearchPrivateKey(const PrivateKey<N> & pk) :
 	_pk(pk),
 	_K(generateK()),
-	_C(BitMatrix<N, N>::randomInvertibleMatrix())
+	_C(BitMatrix<N>::randomInvertibleMatrix())
 	{ }
 
 /* Getters */
@@ -60,8 +62,8 @@ public:
 	 * and inserts the document address function into a stored hash set
 	 * Returns existing address function if object has an existing key
 	 */
-	const BitMatrix<2*N> getDocAddressFunction(const UUID & objectId) {
-		BitMatrix<2*N> addressMatrix;
+	const BitMatrix<N, 2*N> getDocAddressFunction(const UUID & objectId) {
+		BitMatrix<N, 2*N> addressMatrix;
 		if (docKeySet.count(objectId) == 0) { //objectId already used
 			addressMatrix = generateK();
 			while (addressMatrix.docAddressFunctionSet.count(addressMatrix) == 1) addressMatrix = generateK(); //generated new matrix
@@ -78,7 +80,7 @@ public:
 	 */
 	const BitVector<N> getAddress(const BitVector<N> & token, const UUID & objectId) {
 		BitVector<N> docKey = docToKeyMap[objectId];
-		BitMatrix<2*N> addressMatrix = docToAddressFunctionMap[objectId];
+		BitMatrix<N, 2*N> addressMatrix = docToAddressFunctionMap[objectId];
 
 		return addressMatrix * (BitVector<2*N>::vCat(token, objectId));
 	}
@@ -89,16 +91,16 @@ private:
 	BitMatrix<N> _C;
 
 	unordered_set<BitVector<N> > docKeySet;
-	unordered_set<BitMatrix<2*N> > docAddressFunctionSet;
+	unordered_set<BitMatrix<N, 2*N> > docAddressFunctionSet;
 	unordered_map<UUID, BitVector<N> > docToKeyMap;
-	unordered_map<UUID, BitMatrix<2*N> > docToAddressFunctionMap;
+	unordered_map<UUID, BitMatrix<N, 2*N> > docToAddressFunctionMap;
 
 
 	/*
      * Function: generateK()
      * Returns a random client-specific n x 2n matrix K_\Omega
      * with 0 bottom left and top right blocks
-     * Assumes N is even
+     * Assumes N is even (also it should be a multiple of 128)
      */
 	const BitMatrix<N, 2*N> generateK() const{
 		const unsigned int half = N >> 1;
