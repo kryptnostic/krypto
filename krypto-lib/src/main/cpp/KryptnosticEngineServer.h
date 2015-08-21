@@ -2,12 +2,11 @@
 //  KryptnosticEngineServer.h
 //  krypto
 //
-//  Created by Peng Hui How and Robin Zhang on 8/13/15.
+//  Created by Robin Zhang on 8/21/15.
 //  Copyright (c) 2015 Kryptnostic. All rights reserved.
 //
-//  C++ implementation of the client-side Kryptnostic Engine
-//  Provides get functions for all of the cryptographic keys and functions
-//  necessary for Kryptnostic search functionality
+//  C++ implementation of the server-side Kryptnostic Engine
+//  Performs the metadata address computation
 //
 
 #ifndef krypto_KryptnosticEngineServer_h

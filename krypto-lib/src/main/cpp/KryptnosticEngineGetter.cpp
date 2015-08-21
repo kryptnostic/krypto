@@ -1,13 +1,12 @@
 //
-//  KryptnosticEngineClient.h
+//  KryptnosticEngineClientGetter.h
 //  krypto
 //
-//  Created by Peng Hui How and Robin Zhang on 8/19/15.
+//  Created by Robin Zhang on 8/19/15.
 //  Copyright (c) 2015 Kryptnostic. All rights reserved.
 //
-//  C++ implementation of the Kryptnostic Engine
-//  Provides get functions for all of the cryptographic keys and functions
-//  necessary for Kryptnostic search functionality
+//  Provides Embind bindings for all of the cryptographic keys and functions
+//  necessary for client-side Kryptnostic search functionality
 //
 
 #ifndef krypto_KryptnosticEngineClientGetter_cpp

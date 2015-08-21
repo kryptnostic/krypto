@@ -1,3 +1,15 @@
+//
+//  SearchPrivateKey.h
+//  krypto
+//
+//  Created by Peng Hui How and Robin Zhang on 8/13/15.
+//  Copyright (c) 2015 Kryptnostic. All rights reserved.
+//
+//  C++ implementation of the SearchPrivateKey
+//  which generates all of the necessary client-side parts
+//  for indexing and searching documents
+//
+
 #ifndef krypto_SearchPrivateKey_h
 #define krypto_SearchPrivateKey_h
 

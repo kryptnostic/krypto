@@ -2,7 +2,7 @@
 //  MultiQuadTuple.h
 //  krypto
 //
-//  Created by Matthew Tamayo-Rios on 8/14/15.
+//  Created by Peng Hui How and Robin Zhang on 7/29/15.
 //  Copyright (c) 2015 Kryptnostic. All rights reserved.
 //
 
