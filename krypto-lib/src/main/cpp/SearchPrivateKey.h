@@ -101,17 +101,17 @@ private:
      * Assumes N is even
      */
 	const BitMatrix<N, 2*N> generateK() const{
-		// const unsigned int half = N >> 1;
-		// BitMatrix<half> K11 = BitMatrix<half>::randomInvertibleMatrix();
-		// BitMatrix<half> K12 = BitMatrix<half>::randomInvertibleMatrix();
-		// BitMatrix<half> K23 = BitMatrix<half>::randomInvertibleMatrix();
-		// BitMatrix<half> K24 = BitMatrix<half>::randomInvertibleMatrix();
-		// BitMatrix<N> zero = BitMatrix<N>::zeroMatrix(N << 5);
+		const unsigned int half = N >> 1;
+		BitMatrix<half> K11 = BitMatrix<half>::randomInvertibleMatrix();
+		BitMatrix<half> K12 = BitMatrix<half>::randomInvertibleMatrix();
+		BitMatrix<half> K23 = BitMatrix<half>::randomInvertibleMatrix();
+		BitMatrix<half> K24 = BitMatrix<half>::randomInvertibleMatrix();
+		BitMatrix<half, N> zero = BitMatrix<half, N>::zeroMatrix();
 
-		// BitMatrix<2*N> top = BitMatrix<2*N>::augH(BitMatrix<N>::augH(K11, K12), zero);
-		// BitMatrix<2*N> bot = BitMatrix<2*N>::augH(zero, BitMatrix<N>::augH(K23, K24));
+		BitMatrix<half, 2*N> top = BitMatrix<half, 2*N>::augH(BitMatrix<half, N>::augH(K11, K12), zero);
+		BitMatrix<half, 2*N> bot = BitMatrix<half, 2*N>::augH(zero, BitMatrix<half, N>::augH(K23, K24));
 
-		return BitMatrix<N, 2*N>::zeroMatrix();//augV(top, bot);
+		return BitMatrix<N, 2*N>::augV(top, bot);
 	}
 
 	/*
@@ -120,18 +120,18 @@ private:
      * Applied to x concatenated with y
      */
 	const BitMatrix<N, 4*N> generateHashMatrix() const{
-		// BitMatrix<2*N> Mi = _pk.getM().inv();
-		// BitMatrix<2*N> Mi1 = Mi.splitV(0);
-		// BitMatrix<2*N> Mi2 = Mi.splitV(1);
+		BitMatrix<2*N> Mi = _pk.getM().inv();
+		BitMatrix<N, 2*N> Mi1 = Mi.splitV(0);
+		BitMatrix<N, 2*N> Mi2 = Mi.splitV(1);
 
-		// BitMatrix<2*N> left = _pk.getB().inv() * Mi1;
-		// BitMatrix<2*N> right = _pk.getA().inv() * Mi2;
-		// BitMatrix<2*N> decryptMatrix = left ^ right; //n x 2n
+		BitMatrix<N, 2*N> left = _pk.getB().inv() * Mi1;
+		BitMatrix<N, 2*N> right = _pk.getA().inv() * Mi2;
+		BitMatrix<N, 2*N> decryptMatrix = left ^ right;
 
-		// BitMatrix<2*N> zero = BitMatrix<2*N>::zeroMatrix(N << 6);
-		// BitMatrix<4*N> top = BitMatrix<2*N>::augH(decryptMatrix, zero);
-		// BitMatrix<4*N> bot = BitMatrix<2*N>::augH(zero, decryptMatrix);
-		return BitMatrix<N, 4*N>::zeroMatrix();//_K * (BitMatrix<2*N>::augV(top, bot));
+		BitMatrix<N, 2*N> zero = BitMatrix<N, 2*N>::zeroMatrix();
+		BitMatrix<N, 4*N> top = BitMatrix<2*N>::augH(decryptMatrix, zero);
+		BitMatrix<N, 4*N> bot = BitMatrix<2*N>::augH(zero, decryptMatrix);
+		return _K * (BitMatrix<2*N, 4*N>::augV(top, bot));
 	}
 
 	/*
@@ -153,8 +153,8 @@ private:
      */
 	const MultiQuadTuple<2*N, N> generateConcealedF1() const{
 		MultiQuadTuple<N, N> f1 = _pk.getf().get(0);
-		BitMatrix<2*N> Mi2 = _pk.getM().inv().splitV(1);
-		BitMatrix<2*N> inner = _pk.getA().inv() * Mi2;
+		BitMatrix<N, 2*N> Mi2 = _pk.getM().inv().splitV(1);
+		BitMatrix<N, 2*N> inner = _pk.getA().inv() * Mi2;
 		return (f1 * inner).rMult(_C.inv());
 	}
 
