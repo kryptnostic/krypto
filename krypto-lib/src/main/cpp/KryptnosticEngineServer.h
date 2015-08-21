@@ -13,7 +13,7 @@
 #ifndef krypto_KryptnosticEngineServer_h
 #define krypto_KryptnosticEngineServer_h
 
-#include <string>
+#include "ClientHashFunction.h"
 #include <emscripten/emscripten.h>
 #include <emscripten/bind.h>
 
@@ -31,7 +31,7 @@ public:
      * Constructor
      * Constructs a Kryptnostic Engine given private and public keys
      */
-	KryptnosticEngineServer(const unsigned char * cHashFunction, const BitVector<N> eDocSearchKey, const BitMatrix<N, N> docConversionMatrix) :
+	KryptnosticEngineServer(const ClientHashFunction cHashFunction, const BitVector<N> eDocSearchKey, const BitMatrix<N, N> docConversionMatrix) :
 	_cHashFunction(cHashFunction),
 	_eDocSearchKey(eDocSearchKey),
 	_docConversionMatrix(docConversionMatrix)
@@ -46,13 +46,14 @@ public:
 	 * Function: getMetadataAddress
 	 * Returns a serialized pair of (DocumentSearchKey, DocumentAddressFunction)
 	 */
-	const size_t getMetadataAddress(const BitVector<N> eSearchToken) const{
+	const BitVector<N> getMetadataAddress(const BitVector<N> eSearchToken) const{
+
 		return 0;
 	}
 
 
 private:
-	const unsigned char * _cHashFunction;
+	const ClientHashFunction _cHashFunction;
 	const BitVector<N> _eDocSearchKey;
 	const BitMatrix<N, N> _docConversionMatrix
 };
