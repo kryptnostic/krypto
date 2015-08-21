@@ -16,6 +16,8 @@
 #include <assert.h>
 #define _KBV_N_ (NUM_BITS>>6)
 
+using namespace std;
+
 //TODO: Wrap this in a class that can release the file handle and automatically select a good source of randomness on Windows.
 //file pointer urandom must be closed by any class importing BitVector
 static FILE * urandom = std::fopen("/dev/urandom", "rb" );
@@ -183,7 +185,7 @@ public:
      * not equal to the values of the rhs
      */
     template<unsigned int M>
-    const bool operator!=(const BitVector<M> & rhs) {
+    const bool operator!=(const BitVector<M> & rhs) const {
         if (NUM_BITS != M) return true;
         for (unsigned int i = 0; i < _KBV_N_; ++i) {
             if (_bits[i] != rhs._bits[i]) {

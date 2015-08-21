@@ -22,16 +22,19 @@ using namespace emscripten;
 EMSCRIPTEN_BINDINGS(crypto_module) {
 	class_< KryptnosticEngine >("KryptnosticEngine")
 		.constructor<>()
+		//.constructor<>(PrivateKey<N> pk, SearchPrivateKey<N> spk, SearchPublicKey spubk)
 		.function("getPrivateKey", &KryptnosticEngine::getPrivateKey)
-		.function("getPublicKey", &KryptnosticEngine::getPublicKey)
-		.function("getServerSearchFunction", &KryptnosticEngine::getServerSearchFunction)
-		.function("getXor", &KryptnosticEngine::getXor)
-		.function("getAnd", &KryptnosticEngine::getAnd)
-		.function("getLeftShift", &KryptnosticEngine::getLeftShift)
-		.function("getDocKey", &KryptnosticEngine::getDocKey)
-		.function("setDocKey", &KryptnosticEngine::setDocKey)
-		.function("getHashedToken", &KryptnosticEngine::getHashedToken)
-		.function("getEncryptedSearchTerm", &KryptnosticEngine::getEncryptedSearchTerm)
+		.function("getSearchPrivateKey", &KryptnosticEngine::getSearchPrivateKey)
+		.function("getSearchPublicKey", &KryptnosticEngine::getSearchPublicKey)
+		.function("getClientHashFunction", &KryptnosticEngine::getClientHashFunction)
+		.function("getDocumentAddressFunction", &KryptnosticEngine::getDocumentAddressFunction)
+		.function("getConversionMatrix", &KryptnosticEngine::getConversionMatrix)
+		.function("getDocumentIndexPair", &KryptnosticEngine::getDocumentIndexPair)
+		.function("getMetadataAddress", &KryptnosticEngine::getMetadataAddress)
+		.function("getEncryptedSearchToken", &KryptnosticEngine::getEncryptedSearchToken)
+		.function("getDocumentSharingPair", &KryptnosticEngine::getDocumentSharingPair)
+		.function("getDocumentSearchKey", &KryptnosticEngine::getDocumentSearchKey)
+		.function("setDocumentSearchKey", &KryptnosticEngine::setDocumentSearchKey)
 		;
 }
 #endif

@@ -18,6 +18,8 @@
 #include <emscripten/emscripten.h>
 #include <emscripten/bind.h>
 
+using namespace emscripten;
+
 #define N 128
 
 class KryptnosticEngine {
@@ -178,11 +180,11 @@ public:
 /* Setters */
 
 	/*
-	 * Function: setDocKey
-	 * Sets the document key of a given object to a given document key
+	 * Function: setDocumentSearchKey
+	 * Sets the DocumentSearchKey of a given object to a given document key
 	 * Returns whether the operation was valid and successful
 	 */
-	const bool setDocKey(const UUID & objectId, const BitVector<N> & docKey) {
+	const bool setDocumentSearchKey(const UUID & objectId, const BitVector<N> & docKey) {
 		return _spk.setDocKey(objectId, docKey);
 	}
 

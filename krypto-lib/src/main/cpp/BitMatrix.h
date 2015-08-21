@@ -119,7 +119,7 @@ public:
     }
 
 
-    const bool operator!=( const BitMatrix<ROWS,COLS> & rhs ) {
+    const bool operator!=( const BitMatrix<ROWS,COLS> & rhs ) const {
         for( int i = 0 ; i < ROWS ; ++i ) {
             if( _rows[ i ] != rhs._rows[ i ] ){
                 return true;
@@ -128,7 +128,7 @@ public:
         return false;
     }
 
-    const bool operator==( const BitMatrix<ROWS,COLS> & rhs ) {
+    const bool operator==( const BitMatrix<ROWS,COLS> & rhs ) const {
         for( int i = 0 ; i < ROWS ; ++i ) {
             if( _rows[ i ] != rhs._rows[ i ] ){
                 return false;
@@ -1018,7 +1018,7 @@ private:
  * Hashes a UUID by taking the sum of the standard hashes of its components
  */
 template<unsigned int N>
-struct hash< BitMatrix<N> >
+struct std::hash< BitMatrix<N> >
 {
     size_t operator()(BitMatrix<N> const& matrix) const
     {
