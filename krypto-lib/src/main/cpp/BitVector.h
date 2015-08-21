@@ -457,8 +457,8 @@ private:
 };
 
 /*
- * Function: hash<UUID>()(id)
- * Hashes a UUID by taking the sum of the standard hashes of its components
+ * Function: hash<BitVector<N> >()(vector)
+ * Hashes a BitVector by taking the sum of the standard hashes of its components
  */
 
 template<unsigned int N>

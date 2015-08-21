@@ -35,7 +35,6 @@ public:
 	KryptnosticEngine() :
 	_pk(),
 	_spk(_pk),
-	_spubk(_spk),
 	vector(BitVector<1>::randomVector())
 	{
 
@@ -48,7 +47,6 @@ public:
 	KryptnosticEngine(const PrivateKey<N> pk, const SearchPrivateKey<N> spk, const SearchPublicKey<N> spubk) :
 	_pk(pk),
 	_spk(spk),
-	_spubk(spubk),
 	vector(BitVector<1>::randomVector())
 	{
 
@@ -71,16 +69,6 @@ public:
 	 * Returns a serialized search private key
 	 */
 	const val getSearchPrivateKey() const{
-		unsigned char * pointer = (unsigned char *) &vector;
-		vector.print();
-		return val(memory_view<unsigned char>(sizeof(vector), pointer));
-	}
-
-	/*
-	 * Function: getSearchPublicKey
-	 * Returns a serialized search public key
-	 */
-	const val getSearchPublicKey() const{
 		unsigned char * pointer = (unsigned char *) &vector;
 		vector.print();
 		return val(memory_view<unsigned char>(sizeof(vector), pointer));
@@ -143,16 +131,6 @@ public:
 		return val(memory_view<unsigned char>(sizeof(vector), pointer));
 	}
 
-	/*
-	 * Function: getMetadataAddress
-	 * Returns the serialized address from a given token and documentSearchKey
-	 */
-	const val getMetadataAddress(const string & token, const BitVector<N> & docKey) const{
-		unsigned char * pointer = (unsigned char *) &vector;
-		vector.print();
-		return val(memory_view<unsigned char>(sizeof(vector), pointer));
-	}
-
 /* Searching */
 
 	/*
@@ -191,7 +169,6 @@ public:
 private:
 	const PrivateKey<N> _pk;
 	SearchPrivateKey<N> _spk;
-	SearchPublicKey<N> _spubk;
 	const BitVector<1> vector; //for testing purposes
 };
 #endif
