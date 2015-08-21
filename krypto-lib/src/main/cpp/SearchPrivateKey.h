@@ -115,7 +115,6 @@ private:
      * Assumes N is even (also it should be a multiple of 128)
      */
 	const BitMatrix<N, 2*N> generateK() const{
-		const unsigned int half = N >> 1;
 		BitMatrix<N> K1 = BitMatrix<N>::randomInvertibleMatrix();
 		BitMatrix<N> K2 = BitMatrix<N>::randomInvertibleMatrix();
 
