@@ -3,7 +3,7 @@
 //  krypto
 //
 //  Created by Peng Hui How and Robin Zhang on 8/21/15.
-//  Copyright (c) 20645 Kryptnostic. All rights reserved.
+//  Copyright (c) 2015 Kryptnostic. All rights reserved.
 //
 //  Embind val => C++ Data Structure Converters
 //  Necessary for retrieval from persistent storage

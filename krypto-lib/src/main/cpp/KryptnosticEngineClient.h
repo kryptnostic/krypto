@@ -3,7 +3,7 @@
 //  krypto
 //
 //  Created by Peng Hui How and Robin Zhang on 8/13/15.
-//  Copyright (c) 20645 Kryptnostic. All rights reserved.
+//  Copyright (c) 2015 Kryptnostic. All rights reserved.
 //
 //  C++ implementation of the client-side Kryptnostic Engine
 //  Provides get functions for all of the cryptographic keys and functions

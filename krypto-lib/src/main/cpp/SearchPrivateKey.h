@@ -18,7 +18,7 @@
 #include <unordered_map>
 #include <unordered_set>
 
-//N should be a multiple of 128, otherwise BitVector would create
+//N should be a multiple of 64, otherwise BitVector would create
 //the incorrect number of unsigned long longs
 template<unsigned int N>
 class SearchPrivateKey{
@@ -116,16 +116,10 @@ private:
      */
 	const BitMatrix<N, 2*N> generateK() const{
 		const unsigned int half = N >> 1;
-		BitMatrix<half> K11 = BitMatrix<half>::randomInvertibleMatrix();
-		BitMatrix<half> K12 = BitMatrix<half>::randomInvertibleMatrix();
-		BitMatrix<half> K23 = BitMatrix<half>::randomInvertibleMatrix();
-		BitMatrix<half> K24 = BitMatrix<half>::randomInvertibleMatrix();
-		BitMatrix<half, N> zero = BitMatrix<half, N>::zeroMatrix();
+		BitMatrix<N> K1 = BitMatrix<N>::randomInvertibleMatrix();
+		BitMatrix<N> K2 = BitMatrix<N>::randomInvertibleMatrix();
 
-		BitMatrix<half, 2*N> top = BitMatrix<half, 2*N>::augH(BitMatrix<half, N>::augH(K11, K12), zero);
-		BitMatrix<half, 2*N> bot = BitMatrix<half, 2*N>::augH(zero, BitMatrix<half, N>::augH(K23, K24));
-
-		return BitMatrix<N, 2*N>::augV(top, bot);
+		return BitMatrix<N, 2*N>::augH(K1, K2);
 	}
 
 	/*
