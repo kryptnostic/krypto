@@ -7,7 +7,7 @@
   CFLAGS  = -g -Wall --std=c++14 -O3 -fslp-vectorize-aggressive -march=native -I$(JAVA_HOME)/include/ -I$(JAVA_HOME)/include/darwin/ -I$(JAVA_HOME)/include/linux/
 
   DEPS1 = ../main/cpp/BitMatrix.h ../main/cpp/BitVector.h ../main/cpp/MultiQuadTuple.h ../main/cpp/MultiQuadTupleChain.h ../main/cpp/PrivateKey.h ../main/cpp/BridgeKey.h ../main/cpp/PublicKey.h
-  DEPS2 = ../main/cpp/SearchPrivateKey.h ../main/cpp/SearchPublicKey.h ../main/cpp/UUID.h ../main/cpp/KryptnosticEngine.h
+  DEPS2 = ../main/cpp/SearchPrivateKey.h ../main/cpp/UUID.h ../main/cpp/KryptnosticEngineClient.h
 
   # the build target executable:
   TARGET1 = test_speed
