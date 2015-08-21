@@ -158,7 +158,7 @@ private:
      * Returns the f1 C portion of the hash function
      * Applied to x and y separately
      */
-	const MultiQuadTuple<2*N, N> generateConcealedF1() const{
+	const MultiQuadTuple<N, 2*N> generateConcealedF1() const{
 		MultiQuadTuple<N, N> f1 = _pk.getf().get(0);
 		BitMatrix<N, 2*N> Mi2 = _pk.getM().inv().splitV(1);
 		BitMatrix<N, 2*N> inner = _pk.getA().inv() * Mi2;

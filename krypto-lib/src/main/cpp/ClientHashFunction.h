@@ -18,7 +18,7 @@ struct ClientHashFunction
 {
 	/* Data */
 	BitMatrix<N, 4*N> hashMatrix;
-	MultiQuadTuple<N, 2*N> augmentedF2;
+	MultiQuadTuple<2* N, N> augmentedF2;
 	MultiQuadTuple<2*N, N> concealedF1;
 
 };
