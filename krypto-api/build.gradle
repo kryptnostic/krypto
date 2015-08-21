@@ -26,5 +26,5 @@ dependencies {
 }
 
 task cleanKryptoLib(type: Delete) {
-  delete 'src/main/resources/com/kryptnostic/krypto/engine/libmain.dylib'
+  delete 'src/main/resources/libmain.dylib'
 }
