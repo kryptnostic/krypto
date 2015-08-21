@@ -78,7 +78,7 @@ TEST(BitMatrixTests, testSolve) {
 	BitVector<N> v = BitVector<N>::randomVector();
 	BitMatrix<N> M = BitMatrix<N>::randomInvertibleMatrix();
 	BitVector<N> x = M.solve(v);
-	BitVector<N> mx = M.template operator*<N>(x);
+	BitVector<N> mx = M * x;
 	ASSERT_TRUE(mx.equals(v));
 }
 

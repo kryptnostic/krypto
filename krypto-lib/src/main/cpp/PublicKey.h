@@ -39,23 +39,23 @@ public:
 		BitVector<2*N> t = _gu2(_gu1(x));
 		BitVector<4*N> inner = BitVector<4*N>::template vCat<2*N, 2*N>(x, t);
 
-		return Z.template operator*<2*N>(inner);
+		return Z * inner;
 	}
 
 	const BitVector<2*N> homomorphicXOR(const BitVector<2*N> &x, const BitVector<2*N> &y) const{
 		BitVector<3*N> t = binaryT(x, y);
-		return _Xx.template operator*<2*N>(x) ^ _Xy.template operator*<2*N>(y) ^ _Y.template operator*<2*N>(t);
+		return (_Xx * x) ^ (_Xy * y) ^ (_Y * t);
 	}
 
 	const BitVector<2*N> homomorphicAND(const BitVector<2*N> &x, const BitVector<2*N> &y) const{
 		BitVector<3*N> t = binaryT(x, y);
 		BitVector<7*N> coordinates = BitVector<7*N>::vCat(x, y, t);
 		cout << "It breaks here" << endl;
-		MultiQuadTuple<7*N, 2*N> _z(_bk.getANDz());
+		MultiQuadTuple<7*N, 2*N> _z = _bk.getANDz();
 		std::cout << "blah" << endl;
 		BitVector<2*N> left = _z(coordinates);
-		BitVector<2*N> mid = _Z1.template operator*<2*N>(x);
-		BitVector<2*N> right = _Z2.template operator*<2*N>(y);
+		BitVector<2*N> mid = _Z1 * x;
+		BitVector<2*N> right = _Z2 * y;
 
 		return left ^ mid ^ right;
 	}

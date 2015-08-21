@@ -29,7 +29,7 @@ TEST(MQTTests, testLeftCompose){
 
    // std::cout<<"size of CS: "<< sizeof( MultiQuadTuple<mid,mid> ) <<endl;
 
-    BitVector<sma> mv = m.template operator*<sma>(v);
+    BitVector<sma> mv = m * v;
 
     BitVector<sma> csm_v = csm(v);
     BitVector<sma> cs_mv = cs(mv);
@@ -42,7 +42,7 @@ TEST(MQTTests, testLeftComposeDiffDims){
     cs.randomize();
     MultiQuadTuple<mid,sma> csm = cs * m;
     BitVector<mid> v = BitVector<mid>::randomVector();
-    BitVector<sma> mv = m.template operator*<sma>(v);
+    BitVector<sma> mv = m * v;
     cout << "Left Compose with Different Dimensions" << endl;
 
     BitVector<sma> csm_v = csm(v);
@@ -65,7 +65,7 @@ TEST(MQTTests, testRightCompose){
     std::cout<<"Total time: "<< total <<" nanos"<<std::endl;
     std::cout<<"Mean time: "<< total/double(sma) <<" nanos"<<std::endl;
 
-    BitVector<sma> m_csv = m.template operator*<sma>(cs(v));
+    BitVector<sma> m_csv = m * cs(v);
     BitVector<sma> mcs_v = mcs(v);
     ASSERT_TRUE(m_csv.equals(mcs_v));
 }
@@ -90,7 +90,7 @@ TEST(MQTTests, testSetAsMatrix){
     MultiQuadTuple<sma,sma> cs;
     BitMatrix<sma,sma> m = BitMatrix<sma,sma>::randomMatrix();
     BitVector<sma> v = BitVector<sma>::randomVector();
-    BitVector<sma> mv = m.template operator*<sma>(v);
+    BitVector<sma> mv = m * v;
     cs.setAsMatrix(m);
     BitVector<sma> csv = cs(v);
     ASSERT_TRUE(mv.equals(csv));

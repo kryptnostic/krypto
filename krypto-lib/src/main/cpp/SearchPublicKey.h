@@ -19,14 +19,16 @@ public:
 	/*
 	 * Function: homomorphicHash
 	 * Returns H[h](E(t), E(d)), should be made a private function
+	 * COMMENTED OUT FOR NOW AS SOME THE CALL TO getTransposedContributionMatrix should be changed
 	 */
 	const BitVector<2*N> homomorphicHash(const BitVector<2*N> & t, const BitVector<2*N> & d) const{
+		/*
 		PublicKey<N> pub(_bk);
 		BitVector<2*N> result = _rk.getS();
 		unsigned int count = 0;
 		BitMatrix<N> C = _h.getTransposedContributionMatrix();
-		BitMatrix<N> Ai = BitMatrix<N>::squareZeroMatrix();
-		BitMatrix<N> Ji = BitMatrix<N>::squareZeroMatrix();
+		BitMatrix<N> Ai = BitMatrix<N>::zeroMatrix();
+		BitMatrix<N> Ji = BitMatrix<N>::zeroMatrix();
 		for(size_t i = 0; i < N; ++i){
 			Ai.zero();
 			Ji.zero();
@@ -55,6 +57,8 @@ public:
 		}
 		result = pub.homomorphicXOR(result, _rk.getV());
 		return result;
+		*/
+		return BitVector<2*N>::zeroVector();
 	}
 
 	/*

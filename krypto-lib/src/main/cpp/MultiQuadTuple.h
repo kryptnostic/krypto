@@ -185,7 +185,6 @@ struct MultiQuadTuple<NUM_INPUTS,NUM_OUTPUTS,0> {
     }
 
     void printConstants() const{
-        cout << "constants: " << endl;
         _constants.print();
     }
 
@@ -249,7 +248,7 @@ struct MultiQuadTuple<NUM_INPUTS,NUM_OUTPUTS,0> {
 
     template<unsigned int OLD_NUM_OUTPUTS>
     void multiplyAndSet( const MultiQuadTuple<NUM_INPUTS,OLD_NUM_OUTPUTS,0> & src, const BitMatrix<NUM_OUTPUTS,OLD_NUM_OUTPUTS> & m ,const BitMatrix<OLD_NUM_OUTPUTS, NUM_OUTPUTS> & mT ) {
-        _constants = m.template operator*<NUM_OUTPUTS>(src._constants);
+        _constants = m * src._constants;
     }
 
     void setAsMatrix(const BitMatrix<NUM_OUTPUTS, NUM_INPUTS> &m){

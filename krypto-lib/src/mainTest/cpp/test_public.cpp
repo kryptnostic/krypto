@@ -37,7 +37,7 @@ TEST(PublicKeyTest, testLMM){
 	end = clock();
 	std::cout << "Time used to compute encryptedLMM: " << double(end - begin) / CLOCKS_PER_SEC << " sec" << endl;
 	BitVector<N> unencryptedLMM = pk.decrypt(encryptedLMM);
-	BitVector<N> expectedLMM = K.template operator*<N>(x);
+	BitVector<N> expectedLMM = K * x;
 
 	ASSERT_TRUE(expectedLMM.equals(unencryptedLMM));
 }
