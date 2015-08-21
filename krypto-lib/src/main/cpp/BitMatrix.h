@@ -170,9 +170,8 @@ public:
      * Operator: *
      * Returns the result of matrix * vector multiplication
      */
-	template <unsigned int NEWCOLS>
-	BitVector<NEWCOLS> operator*(const BitVector<COLS> & v) const {
-		BitVector<NEWCOLS> result = BitVector<NEWCOLS>::zeroVector();
+	BitVector<ROWS> operator*(const BitVector<COLS> &v) const{
+		BitVector<ROWS> result = BitVector<ROWS>::zeroVector();
 		for (unsigned int i = 0; i < ROWS; ++i) {
 			BitVector<COLS> prod = _rows[i] & v;
 			if (prod.parity()) {
@@ -378,6 +377,18 @@ public:
 	}
 
     /*
+     * Function: setSubMatrix(M, startRowIndex, numRows)
+     * Set a matrix to the submatrix of a given matrix starting from a given row
+     */
+    template<unsigned int NEWROWS>
+	void setMatrix(const BitMatrix<NEWROWS,COLS> & M, unsigned int startRowIndex) {
+		//if (DEBUG) {} TODO
+		for (unsigned int i = 0; i < ROWS; ++i) {
+			_rows[i] = M.getRow(i + startRowIndex);
+		}
+	}
+
+    /*
      * Function: isIdentity()
      * Returns whether the current BitMatrix is an identity matrix
      */
@@ -429,8 +440,7 @@ public:
 
 	/*
 	 * Function: transpose()
-	 * Returns the transpose of a matrix. Number of columns in transpose must be a multiple of 64. Normally this is guaranted when
-	 * Usage: BitMatrix<K> Mt = M.template operator<K>(); //M is a matrix of dimension (K << 6) * (L * 6) for some K, L >= 0
+	 * Returns the transpose of a matrix.
 	 */
 	const BitMatrix<COLS,ROWS> transpose() const {
 		BitMatrix<COLS,ROWS> Mt = BitMatrix<COLS,ROWS>::zeroMatrix();
@@ -1017,6 +1027,7 @@ private:
  * Function: hash<UUID>()(id)
  * Hashes a UUID by taking the sum of the standard hashes of its components
  */
+
 template<unsigned int N>
 struct std::hash< BitMatrix<N> >
 {
@@ -1030,4 +1041,5 @@ struct std::hash< BitMatrix<N> >
         return sum;
     }
 };
+
 #endif

@@ -59,7 +59,8 @@ public:
 
 		MultiQuadTuple<2*N, N> top = f.get(0) * matTop;
 		MultiQuadTuple<2*N, N> bot = f.get(0) * matBot;
-		MultiQuadTuple<2*N, 2*N> aug = MultiQuadTuple<2*N, 2*N>::augV(top, bot);
+		MultiQuadTuple<2*N, 2*N> aug;// = MultiQuadTuple<2*N, 2*N>::augV(top, bot);
+		aug.augV(top, bot);
 		return aug.template rMult<2*N>(_Cu1);
 	}
 
@@ -75,7 +76,8 @@ public:
 
 		MultiQuadTuple<2*N, N> top = f.get(1) * matTop;
 		MultiQuadTuple<2*N, N> bot = f.get(1) * matBot;
-		MultiQuadTuple<2*N, 2*N> aug = MultiQuadTuple<2*N, 2*N>::augV(top, bot);
+		MultiQuadTuple<2*N, 2*N> aug;// = MultiQuadTuple<2*N, 2*N>::augV(top, bot);
+		aug.augV(top, bot);
 		return aug.template rMult<2*N>(_Cu2);
 	}
 
@@ -124,7 +126,8 @@ public:
 		MultiQuadTuple<4*N, N> top = f.get(0) * matTop;
 		MultiQuadTuple<4*N, N> mid = f.get(0) * matMid;
 		MultiQuadTuple<4*N, N> bot = f.get(0) * (matBotX ^ matBotY);
-		MultiQuadTuple<4*N, 3*N> aug = MultiQuadTuple<4*N, 3*N>::augV(top, mid, bot);
+		MultiQuadTuple<4*N, 3*N> aug;// = MultiQuadTuple<4*N, 3*N>::augV(top, mid, bot);
+		aug.augV(top, mid, bot);
 		return aug.template rMult<3*N>(_Cb1);
 	}
 
@@ -143,7 +146,8 @@ public:
 		MultiQuadTuple<3*N, N> top = f.get(1) * matTop;
 		MultiQuadTuple<3*N, N> mid = f.get(1) * matMid;
 		MultiQuadTuple<3*N, N> bot = f.get(1) * matBot;
-		MultiQuadTuple<3*N, 3*N> aug = MultiQuadTuple<3*N, 3*N>::augV(top, mid, bot);
+		MultiQuadTuple<3*N, 3*N> aug;// = MultiQuadTuple<3*N, 3*N>::augV(top, mid, bot);
+		aug.augV(top, mid, bot);
 		return aug.template rMult<3*N>(_Cb2);
 	}
 
@@ -199,14 +203,19 @@ public:
 		BitMatrix<N, 3*N> Y3 = _Cb2.inv().splitV3(2);
 		BitMatrix<N, 7*N> Y3t = BitMatrix<N, 7*N>::augH(BitMatrix<N, 4*N>::zeroMatrix(), Y3);
 		BitMatrix<(N*(12*N + 1) + N*(8*N + 1) + ((3*N*(3*N + 1)) >> 1)), N> contrib = BitMatrix<(N*(12*N + 1) + N*(8*N + 1) + ((3*N*(3*N + 1)) >> 1)), N>::augV(getANDP(X, Y2), getANDQ(X, Y1), getANDS(Y1, Y2));
-		MultiQuadTuple<7*N, N> zTop(contrib, BitVector<N>::zeroVector());
+		MultiQuadTuple<7*N, N> zTop;//(contrib, BitVector<N>::zeroVector());
+		zTop.setContributions(contrib, BitVector<N>::zeroVector());
 		//zTop = zTop.template rMult<N>(_pk.getB()); //(breaks)
 		//zTop = zTop2 ^ MultiQuadTuple<7*N, N>::getMultiQuadTuple(Y3t); (breaks)
-		MultiQuadTuple<7*N, N> zeroMQT = MultiQuadTuple<7*N, N>::zeroMultiQuadTuple();
-		MultiQuadTuple<7*N, 2*N> z = MultiQuadTuple<7*N, 2*N>::augV(zTop, zeroMQT);
+		MultiQuadTuple<7*N, N> zeroMQT;// = MultiQuadTuple<7*N, N>::zeroMultiQuadTuple();
+		zeroMQT.zero();
+		MultiQuadTuple<7*N, 2*N> z;// = MultiQuadTuple<7*N, 2*N>::augV(zTop, zeroMQT);
+		z.augV(zTop, zeroMQT);
 		//MultiQuadTuple<7*N, 2*N> zM = z.template rMult<2*N>(_M); (breaks)
 		//return zM;
-		return MultiQuadTuple<7*N, 2*N>::zeroMultiQuadTuple(); //DUMMY
+		MultiQuadTuple<7*N, 2*N> result;
+		result.zero();
+		return result; //dummy
 	}
 
 	/*

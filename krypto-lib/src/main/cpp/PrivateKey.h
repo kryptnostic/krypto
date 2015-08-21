@@ -44,9 +44,9 @@ public:
      */
 	const BitVector<2*N> encrypt(const BitVector<N> &m) const{//returns x = E(m, r) given a plaintext m
 		BitVector<N> r = BitVector<N>::randomVector();
-		BitVector<N> top = _B.template operator*<N>(m) ^ (r ^ _f(r));
-		BitVector<N> bottom = _A.template operator*<N>(r);
-		return _M.template operator*<2*N>(BitVector<N>::vCat(top, bottom));
+		BitVector<N> top = (_B * m) ^ (r ^ _f(r));
+		BitVector<N> bottom = _A * r;
+		return _M * BitVector<N>::vCat(top, bottom);
 	}
 
     /*

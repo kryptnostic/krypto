@@ -30,7 +30,9 @@ public:
     static const MultiQuadTupleChain<N, L> randomMultiQuadTupleChain() {
         MultiQuadTupleChain<N, L> result;
         for(unsigned int i = 0; i < L; ++i){
-        	result.addFunctionTuple(MultiQuadTuple<N,N>::randomMultiQuadTuple());
+        	MultiQuadTuple<N,N> mqt;
+        	mqt.randomize();
+        	result.addFunctionTuple(mqt);
         }
         return result;
     }

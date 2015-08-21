@@ -37,7 +37,7 @@ TEST(PublicKeyTest, testLMM){
 	end = clock();
 	std::cout << "Time used to compute encryptedLMM: " << double(end - begin) / CLOCKS_PER_SEC << " sec" << endl;
 	BitVector<N> unencryptedLMM = pk.decrypt(encryptedLMM);
-	BitVector<N> expectedLMM = K.template operator*<N>(x);
+	BitVector<N> expectedLMM = K * x;
 
 	ASSERT_TRUE(expectedLMM.equals(unencryptedLMM));
 }
@@ -63,7 +63,6 @@ TEST(PublicKeyTest, testXOR){
 	ASSERT_TRUE(expectedXOR.equals(unencryptedXOR));
 }
 
-/*
 TEST(PublicKeyTest, testAND){
 	PrivateKey<N> pk;
 	BridgeKey<N> bk(pk);
@@ -73,6 +72,7 @@ TEST(PublicKeyTest, testAND){
 	BitVector<N> y = BitVector<N>::randomVector();
 	BitVector<2*N> encryptedX = pk.encrypt(x);
 	BitVector<2*N> encryptedY = pk.encrypt(y);
+	/*
 	clock_t begin = clock();
 	BitVector<2*N> encryptedAND = pub.homomorphicAND(encryptedX, encryptedY);
 	clock_t end = clock();
@@ -81,4 +81,5 @@ TEST(PublicKeyTest, testAND){
 	BitVector<N> expectedAND = x & y;
 
 	ASSERT_TRUE(expectedAND.equals(unencryptedAND));
-}*/
+	*/
+}

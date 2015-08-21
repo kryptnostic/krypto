@@ -460,6 +460,7 @@ private:
  * Function: hash<UUID>()(id)
  * Hashes a UUID by taking the sum of the standard hashes of its components
  */
+
 template<unsigned int N>
 struct hash< BitVector<N> >
 {
@@ -473,4 +474,5 @@ struct hash< BitVector<N> >
         return sum;
     }
 };
+
 #endif
