@@ -9,7 +9,7 @@ task wrapper(type: Wrapper) {
 def osname = System.properties['os.name'].toLowerCase().toLowerCase()
 
 if ( !ext.has("emhome") ) {
-    throw new GradleScriptException()
+    throw new StopExecutionException()
 }
 ext.home=System.env.'JAVA_HOME'
 ext.includes='linux'
