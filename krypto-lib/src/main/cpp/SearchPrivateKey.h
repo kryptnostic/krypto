@@ -78,7 +78,7 @@ public:
 	 * Given a token and a document key, returns the address for the
 	 * associated metadatum
 	 */
-	const BitVector<N> getAddress(const BitVector<N> & token, const UUID & objectId) {
+	const BitVector<N> getAddress(const BitVector<N> & token, const UUID & objectId) const{
 		BitVector<N> docKey = docToKeyMap[objectId];
 		BitMatrix<N, 2*N> addressMatrix = docToAddressFunctionMap[objectId];
 
@@ -131,8 +131,8 @@ private:
 		BitMatrix<N, 2*N> decryptMatrix = left ^ right;
 
 		BitMatrix<N, 2*N> zero = BitMatrix<N, 2*N>::zeroMatrix();
-		BitMatrix<N, 4*N> top = BitMatrix<2*N>::augH(decryptMatrix, zero);
-		BitMatrix<N, 4*N> bot = BitMatrix<2*N>::augH(zero, decryptMatrix);
+		BitMatrix<N, 4*N> top = BitMatrix<N, 4*N>::augH(decryptMatrix, zero);
+		BitMatrix<N, 4*N> bot = BitMatrix<N, 4*N>::augH(zero, decryptMatrix);
 		return _K * (BitMatrix<2*N, 4*N>::augV(top, bot));
 	}
 
@@ -141,10 +141,10 @@ private:
      * Returns the K (f2 C || f2 C) portion of the hash function
      * Applied to concealedF1(x) concatenated with concealedF1(y)
      */
-	const MultiQuadTuple<2*N, N> generateAugmentedF2() const{
+	const MultiQuadTuple<N, 2*N> generateAugmentedF2() const{
 		MultiQuadTuple<N, N> f2 = _pk.getf().get(1);
 		MultiQuadTuple<N, N> topBot = (f2 * _C);
-		MultiQuadTuple<2*N, 2*N> augmentedDecrypt = MultiQuadTuple<2*N, 2*N>::augV(topBot, topBot);
+		MultiQuadTuple<N, 2*N> augmentedDecrypt = MultiQuadTuple<N, 2*N>::augV(topBot, topBot);
 		return augmentedDecrypt.rMult(_K);
 	}
 
