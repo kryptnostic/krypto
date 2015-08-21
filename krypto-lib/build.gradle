@@ -1,5 +1,6 @@
 apply plugin: "eclipse-cdt"
 apply plugin: "google-test"
+apply plugin: "cpp"
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.4'
@@ -17,18 +18,17 @@ model {
 	toolChains {
         clang(Clang) {
             eachPlatform {
-            	cppCompiler.withArguments { args ->
-                  args << "-g"
-                  args << "-Wall"
-                  args << "-O3"
-                  args << "-std=c++14"
-                  args << "-fslp-vectorize-aggressive"
-                  args << "-march=native"
-                  args << "-ftemplate-depth=600"
-                  args << "-I${home}/include/"
-                  args << "-I${home}/include/${includes}/"
-                  //args << "-I \"Downloads/emsdk_portable/emscripten/tag-1.34.4/system/include/\"" (whatever directory that contains <emscripten/bind.h>)
-            	}
+                cppCompiler.withArguments { args ->
+                    args << "-g"
+                    args << "-Wall"
+                    args << "-O3"
+                    args << "-std=c++14"
+                    args << "-fslp-vectorize-aggressive"
+                    args << "-march=native"
+                    args << "-ftemplate-depth=600"
+                    args << "-I${home}/include/"
+                    args << "-I${home}/include/${includes}/"
+                }
             }
         }
     }

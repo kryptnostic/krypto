@@ -42,6 +42,6 @@ public class KryptnosticEngine {
     private native long initKryptnosticEngine( byte[] clientHashFunction, byte[] conversionMatrix, byte[] docSearchKey );
 
     // search => call this
-    public native long getAddress( byte[] encSearchToken );
+    public native byte[] getAddress( byte[] encSearchToken );
 
 }

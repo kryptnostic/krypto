@@ -18,9 +18,9 @@ JNIEXPORT jlong JNICALL Java_com_kryptnostic_krypto_engine_KryptnosticEngine_ini
 /*
  * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
  * Method:    getAddress
- * Signature: ([B)J
+ * Signature: ([B)[B
  */
-JNIEXPORT jlong JNICALL Java_com_kryptnostic_krypto_engine_KryptnosticEngine_getAddress
+JNIEXPORT jbyteArray JNICALL Java_com_kryptnostic_krypto_engine_KryptnosticEngine_getAddress
   (JNIEnv *, jobject, jbyteArray);
 
 #ifdef __cplusplus
