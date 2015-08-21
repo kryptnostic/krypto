@@ -55,8 +55,8 @@ public:
 
 private:
 	const ClientHashFunction _cHashFunction;
-	const BitVector<N> _eDocSearchKey;
-	const BitMatrix<N, N> _docConversionMatrix
+	const BitVector<2*N> _eDocSearchKey;
+	const BitMatrix<N, N> _docConversionMatrix;
 };
 
 #endif
