@@ -10,6 +10,8 @@
 
 #include "MultiQuadTuple.h"
 
+#define N 128
+
 using namespace std;
 
 struct ClientHashFunction
