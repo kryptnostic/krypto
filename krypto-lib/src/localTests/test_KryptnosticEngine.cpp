@@ -1,4 +1,4 @@
-#include "../main/cpp/KryptnosticEngine.h"
+#include "../main/cpp/KryptnosticEngineClient.h"
 #include <iostream>
 #include <stdio.h>
 #include <string.h>
@@ -18,7 +18,7 @@ void testInstantiateKE() {
 	for (int run = 0; run < TESTRUNS; ++run) {
 		clock_t begin = clock();
 
-		KryptnosticEngine engine;
+		KryptnosticEngineClient engine;
 
 		// UUID objectId1;
 		// objectId1.randomize();
@@ -43,12 +43,12 @@ void testInstantiateKE() {
 		clock_t end = clock();
  		diff += (end - begin);
  	}
- 	cout << "Average time elapsed over " << OPRUNS * TESTRUNS << " instantiations of KryptnosticEngine: " << double(diff) / (CLOCKS_PER_SEC * OPRUNS * TESTRUNS) << " sec" << endl;
+ 	cout << "Average time elapsed over " << OPRUNS * TESTRUNS << " instantiations of KryptnosticEngineClient: " << double(diff) / (CLOCKS_PER_SEC * OPRUNS * TESTRUNS) << " sec" << endl;
 }
 
 
 int main(int argc, char **argv) {
-	cout << "KryptnosticEngine tests" << endl;
+	cout << "KryptnosticEngineClient tests" << endl;
 	testInstantiateKE();
 	return 0;
 }

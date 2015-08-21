@@ -1,19 +1,19 @@
 //
-//  KryptnosticEngine.h
+//  KryptnosticEngineClient.h
 //  krypto
 //
 //  Created by Peng Hui How and Robin Zhang on 8/13/15.
 //  Copyright (c) 2015 Kryptnostic. All rights reserved.
 //
-//  C++ implementation of the Kryptnostic Engine
+//  C++ implementation of the client-side Kryptnostic Engine
 //  Provides get functions for all of the cryptographic keys and functions
 //  necessary for Kryptnostic search functionality
 //
 
-#ifndef krypto_KryptnosticEngine_h
-#define krypto_KryptnosticEngine_h
+#ifndef krypto_KryptnosticEngineClient_h
+#define krypto_KryptnosticEngineClient_h
 
-#include "SearchPublicKey.h"
+#include "SearchPrivateKey.h"
 #include <string>
 #include <emscripten/emscripten.h>
 #include <emscripten/bind.h>
@@ -22,7 +22,7 @@ using namespace emscripten;
 
 #define N 128
 
-class KryptnosticEngine {
+class KryptnosticEngineClient {
 
 public:
 
@@ -32,7 +32,7 @@ public:
      * Constructor
      * Constructs a Kryptnostic Engine from scratch
      */
-	KryptnosticEngine() :
+	KryptnosticEngineClient() :
 	_pk(),
 	_spk(_pk),
 	vector(BitVector<1>::randomVector())
@@ -44,7 +44,7 @@ public:
      * Constructor
      * Constructs a Kryptnostic Engine given private and public keys
      */
-	KryptnosticEngine(const PrivateKey<N> pk, const SearchPrivateKey<N> spk, const SearchPublicKey<N> spubk) :
+	KryptnosticEngineClient(const PrivateKey<N> pk, const SearchPrivateKey<N> spk) :
 	_pk(pk),
 	_spk(spk),
 	vector(BitVector<1>::randomVector())
@@ -172,68 +172,3 @@ private:
 	const BitVector<1> vector; //for testing purposes
 };
 #endif
-
-	//const BridgeKey<N> _bk;
-	//const PublicKey<N> _pubk;
-	// const string _serialXor;
-	// const string _serialAnd;
-	// const string _serialLeftShift;
-
-
-	// /*
- //     * Constructor
- //     * Constructs a fresh Kryptnostic Engine given all keys
- //     */
-	// KryptnosticEngine(const PrivateKey<N> pk, const PublicKey<N> pubk, const string oldXor,
-	// 	const string oldAnd, const string oldLeftShift) :
-	// _pk(pk),
-	// _bk(_pk),
-	// _pubk(pubk),
-	// _spk(_pk),
-	// _serialXor(oldXor),
-	// _serialAnd(oldAnd),
-	// _serialLeftShift(oldLeftShift),
-	// vector(BitVector<1>::randomVector())
-	// {
-
-	// }
-
-	// /*
-	//  * Function: getPublicKey
-	//  * Returns a serialized public key
-	//  */
-	// const val getPublicKey() const{
-	// 	unsigned char * pointer = (unsigned char *) &vector;
-	// 	vector.print();
-	// 	return val(memory_view<unsigned char>(sizeof(vector), pointer));
-	// }
-
-	// /*
-	//  * Function: getXor
-	//  * Returns a serialized function that performs bitwise Xor operations
-	//  */
-	// const val getXor() const{
-	// 	unsigned char * pointer = (unsigned char *) &vector;
-	// 	vector.print();
-	// 	return val(memory_view<unsigned char>(sizeof(vector), pointer));
-	// }
-
-	// /*
-	//  * Function: getAnd
-	//  * Returns a serialized function that performs bitwise AND operations
-	//  */
-	// const val getAnd() const{
-	// 	unsigned char * pointer = (unsigned char *) &vector;
-	// 	vector.print();
-	// 	return val(memory_view<unsigned char>(sizeof(vector), pointer));
-	// }
-
-	// /*
-	//  * Function: getLeftShift
-	//  * Returns a serialized function that performs left shift operations
-	//  */
-	// const val getLeftShift() const{
-	// 	unsigned char * pointer = (unsigned char *) &vector;
-	// 	vector.print();
-	// 	return val(memory_view<unsigned char>(sizeof(vector), pointer));
-	// }
