@@ -332,7 +332,7 @@ public:
      * Sets the current BitMatrix to a zero matrix
      */
 	void zero() {
-		for (size_t i = 0; i < rowCount(); i++)
+		for (size_t i = 0; i < ROWS; ++i)
 			_rows[i].zero();
 	}
 
