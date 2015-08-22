@@ -642,7 +642,7 @@ public:
 			size_t rhsRow = startRow + (j - startCol);
 			for (size_t i = 0; i < ROWS; ++i) {
 				if (get(i, j)) {
-					result[i] ^= rhs[i];
+					result[i] ^= rhs[rhsRow];
 				}
 			}
 		}

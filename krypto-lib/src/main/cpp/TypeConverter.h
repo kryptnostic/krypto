@@ -27,8 +27,6 @@ public:
 
 	template<unsigned int N_KEY>
 	const PrivateKey<N_KEY> getPrivateKey(const val privateKeyVal) const{
-		memory_view<unsigned char> memoryView = getMemoryView(privateKeyVal); //figure this out
-		PrivateKey<N_KEY> dummy = (PrivateKey)(memoryView.data);
 		PrivateKey<N_KEY> dummy;
 		return dummy;
 	}
