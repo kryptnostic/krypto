@@ -271,7 +271,7 @@ public:
      * Function: setRow(rowIndex, v)
      * Sets a given row to a given BitVector
      */
-	void setRow(unsigned int rowIndex, BitVector<COLS> v) {
+	void setRow(unsigned int rowIndex, const BitVector<COLS> & v) {
 		if (DEBUG) assert(rowIndex >= 0 && rowIndex < ROWS);
 		_rows[rowIndex] = v;
 	}
