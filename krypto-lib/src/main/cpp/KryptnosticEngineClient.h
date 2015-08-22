@@ -35,7 +35,7 @@ public:
      */
 	KryptnosticEngineClient() :
 	_pk(),
-	_spk(_pk),
+	_spk(),
 	vector(BitVector<64>::randomVector())
 	{
 

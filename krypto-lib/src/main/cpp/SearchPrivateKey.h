@@ -23,8 +23,7 @@
 template<unsigned int N>
 class SearchPrivateKey{
 public:
-	SearchPrivateKey(const PrivateKey<N> & pk) :
-	_pk(pk),
+	SearchPrivateKey() :
 	_K(generateK()),
 	_C(BitMatrix<N>::randomInvertibleMatrix())
 	{ }
@@ -45,7 +44,7 @@ public:
 	 * and inserts the document key into a stored hash set
 	 * Returns existing key if object has an existing key
 	 */
-	const BitVector<N> getDocKey( const UUID & objectId) {
+	const BitVector<N> getDocKey( const UUID & objectId ) {
 		BitVector<N> docKey = generateDocKey(objectId);
 		if (!docKey.isZero()) { //objectId already used
 			while (docKeySet.count(docKey) == 1) docKey = generateDocKey(objectId); //generated new key
@@ -126,13 +125,13 @@ private:
      * Returns the matrix portion of the hash function
      * Applied to x concatenated with y
      */
-	const BitMatrix<N, 4*N> generateHashMatrix() const{
-		BitMatrix<2*N> Mi = _pk.getM().inv();
+	const BitMatrix<N, 4*N> generateHashMatrix(const PrivateKey<N> & pk) const{
+		BitMatrix<2*N> Mi = pk.getM().inv();
 		BitMatrix<N, 2*N> Mi1 = Mi.splitV(0);
 		BitMatrix<N, 2*N> Mi2 = Mi.splitV(1);
 
-		BitMatrix<N, 2*N> left = _pk.getB().inv() * Mi1;
-		BitMatrix<N, 2*N> right = _pk.getA().inv() * Mi2;
+		BitMatrix<N, 2*N> left = pk.getB().inv() * Mi1;
+		BitMatrix<N, 2*N> right = pk.getA().inv() * Mi2;
 		BitMatrix<N, 2*N> decryptMatrix = left ^ right;
 
 		BitMatrix<N, 2*N> zero = BitMatrix<N, 2*N>::zeroMatrix();
@@ -146,8 +145,8 @@ private:
      * Returns the K (f2 C || f2 C) portion of the hash function
      * Applied to concealedF1(x) concatenated with concealedF1(y)
      */
-	const MultiQuadTuple<N, 2*N> generateAugmentedF2() const{
-		MultiQuadTuple<N, N> f2 = _pk.getf().get(1);
+	const MultiQuadTuple<N, 2*N> generateAugmentedF2(const PrivateKey<N> & pk) const{
+		MultiQuadTuple<N, N> f2 = pk.getf().get(1);
 		MultiQuadTuple<N, N> topBot = (f2 * _C);
 		MultiQuadTuple<N, 2*N> augmentedDecrypt = MultiQuadTuple<N, 2*N>::augV(topBot, topBot);
 		return augmentedDecrypt.rMult(_K);
@@ -158,10 +157,10 @@ private:
      * Returns the f1 C portion of the hash function
      * Applied to x and y separately
      */
-	const MultiQuadTuple<N, 2*N> generateConcealedF1() const{
-		MultiQuadTuple<N, N> f1 = _pk.getf().get(0);
-		BitMatrix<N, 2*N> Mi2 = _pk.getM().inv().splitV(1);
-		BitMatrix<N, 2*N> inner = _pk.getA().inv() * Mi2;
+	const MultiQuadTuple<N, 2*N> generateConcealedF1(const PrivateKey<N> & pk) const{
+		MultiQuadTuple<N, N> f1 = pk.getf().get(0);
+		BitMatrix<N, 2*N> Mi2 = pk.getM().inv().splitV(1);
+		BitMatrix<N, 2*N> inner = pk.getA().inv() * Mi2;
 		return (f1 * inner).rMult(_C.inv());
 	}
 
