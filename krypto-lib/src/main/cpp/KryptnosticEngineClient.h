@@ -14,7 +14,7 @@
 #define krypto_KryptnosticEngineClient_h
 
 #include "SearchPrivateKey.h"
-#include "ClientHashFunction"
+#include "ClientHashFunction.h"
 #include <string>
 #include <emscripten/emscripten.h>
 #include <emscripten/bind.h>
@@ -79,7 +79,7 @@ public:
 	 * of the ClientHashFunction
 	 */
 	const val getClientHashFunction() {
-		ClientHashFunction chf = {_spk.generateHashMatrix(), _spk.generateAugmentedF2(), _spk.generateConcealedF1()};
+		//ClientHashFunction chf = {_spk.generateHashMatrix(), _spk.generateAugmentedF2(), _spk.generateConcealedF1()};
 		unsigned char * pointer = (unsigned char *) &vector;
 		vector.print();
 		return val(memory_view<unsigned char>(sizeof(vector), pointer));
@@ -167,6 +167,7 @@ public:
 	}
 
 private:
+	PrivateKey<N> _pk;
 	SearchPrivateKey<N> _spk;
 	const BitVector<64> vector; //for testing purposes
 };
