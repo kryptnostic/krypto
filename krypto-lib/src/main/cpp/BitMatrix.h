@@ -642,7 +642,7 @@ public:
 			size_t rhsRow = startRow + (j - startCol);
 			for (size_t i = 0; i < ROWS; ++i) {
 				if (get(i, j)) {
-					result.setRow(i, result.getRow(i) ^ rhs.getRow(rhsRow));
+					result[i] ^= rhs[i];
 				}
 			}
 		}
@@ -1036,7 +1036,7 @@ struct std::hash< BitMatrix<M, N> >
     	size_t sum = 0;
     	for (int i = 0; i < M; ++i) {
     		size_t const h ( hash<BitVector<N> >()(matrix.getRow(i)) );
-    		sum += h;
+    		sum ^= h;
     	}
         return sum;
     }
