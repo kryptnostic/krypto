@@ -469,7 +469,7 @@ struct hash< BitVector<N> >
         size_t sum = 0;
         for (int i = 0; i < N; ++i) {
             size_t const h ( hash<unsigned long long>()(vector.elements()[i]) );
-            sum += h;
+            sum ^= h;
         }
         return sum;
     }
