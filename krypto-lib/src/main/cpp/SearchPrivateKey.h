@@ -7,7 +7,7 @@
 //
 //  C++ implementation of the SearchPrivateKey
 //  which generates all of the necessary client-side parts
-//  for indexing and searching documents
+//  for indexing and searching objects
 //
 
 #ifndef krypto_SearchPrivateKey_h
@@ -39,59 +39,59 @@ public:
 	}
 
 	/*
-	 * Function: getDocKey
-	 * Returns a serialized random unused document key
-	 * and inserts the document key into a stored hash set
+	 * Function: getObjectSearchKey
+	 * Returns a serialized random unused object key
+	 * and inserts the object key into a stored hash set
 	 * Returns existing key if object has an existing key
 	 */
-	const BitVector<N> getDocKey( const UUID & objectId ) {
-		BitVector<N> docKey = generateDocKey(objectId);
-		if (!docKey.isZero()) { //objectId already used
-			while (docKeySet.count(docKey) == 1) docKey = generateDocKey(objectId); //generated new key
-			docToKeyMap[objectId] = docKey;
-			docKeySet.insert(docKey);
-		} else docKey = docToKeyMap[objectId];
-		return docKey;
+	const BitVector<N> getObjectSearchKey( const UUID & objectId ) {
+		BitVector<N> objectKey = generateObjectKey(objectId);
+		if (!objectKey.isZero()) { //objectId already used
+			while (objectKeySet.count(objectKey) == 1) objectKey = generateObjectKey(objectId); //generated new key
+			objectToKeyMap[objectId] = objectKey;
+			objectKeySet.insert(objectKey);
+		} else objectKey = objectToKeyMap[objectId];
+		return objectKey;
 	}
 
 	/*
-	 * Function: setDocKey
-	 * Sets the document key of a given object to a given document key
+	 * Function: setObjectSearchKey
+	 * Sets the object key of a given object to a given object key
 	 * Returns whether the operation was valid and successful
 	 */
-	const bool setDocKey(const UUID & objectId, const BitVector<N> & docKey) {
-		if (docToKeyMap.count(objectId) != 0) {
-			docToKeyMap[objectId] = docKey;
+	const bool setObjectSearchKey(const UUID & objectId, const BitVector<N> & objectKey) {
+		if (objectToKeyMap.count(objectId) != 0) {
+			objectToKeyMap[objectId] = objectKey;
 			return true;
 		}
 		return false;
 	}
 
 	/*
-	 * Function: getDocAddressFunction
-	 * Returns a serialized random unused document address function L
-	 * and inserts the document address function into a stored hash set
+	 * Function: getObjectAddressFunction
+	 * Returns a serialized random unused object address function L
+	 * and inserts the object address function into a stored hash set
 	 * Returns existing address function if object has an existing key
 	 */
-	const BitMatrix<N, 2*N> getDocAddressFunction(const UUID & objectId) {
+	const BitMatrix<N, 2*N> getObjectAddressFunction(const UUID & objectId) {
 		BitMatrix<N, 2*N> addressMatrix;
-		if (docKeySet.count(objectId) == 0) { //objectId already used
+		if (objectKeySet.count(objectId) == 0) { //objectId already used
 			addressMatrix = generateK();
-			while (addressMatrix.docAddressFunctionSet.count(addressMatrix) == 1) addressMatrix = generateK(); //generated new matrix
-			docToAddressFunctionMap[objectId] = addressMatrix;
-			docAddressFunctionSet.insert(addressMatrix);
-		} else addressMatrix = docToAddressFunctionMap[objectId];
+			while (addressMatrix.objectAddressFunctionSet.count(addressMatrix) == 1) addressMatrix = generateK(); //generated new matrix
+			objectToAddressFunctionMap[objectId] = addressMatrix;
+			objectAddressFunctionSet.insert(addressMatrix);
+		} else addressMatrix = objectToAddressFunctionMap[objectId];
 		return addressMatrix;
 	}
 
 	/*
 	 * Function: getAddress
-	 * Given a token and a document key, returns the address for the
+	 * Given a token and a object key, returns the address for the
 	 * associated metadatum
 	 */
 	const BitVector<N> getAddress(const BitVector<N> & token, const UUID & objectId) const{
-		BitVector<N> docKey = docToKeyMap[objectId];
-		BitMatrix<N, 2*N> addressMatrix = docToAddressFunctionMap[objectId];
+		BitVector<N> objectKey = objectToKeyMap[objectId];
+		BitMatrix<N, 2*N> addressMatrix = objectToAddressFunctionMap[objectId];
 
 		return addressMatrix * (BitVector<2*N>::vCat(token, objectId));
 	}
@@ -101,10 +101,10 @@ private:
 	BitMatrix<N, 2*N> _K;
 	BitMatrix<N> _C;
 
-	unordered_set<BitVector<N> > docKeySet;
-	unordered_set<BitMatrix<N, 2*N> > docAddressFunctionSet;
-	unordered_map<UUID, BitVector<N> > docToKeyMap;
-	unordered_map<UUID, BitMatrix<N, 2*N> > docToAddressFunctionMap;
+	unordered_set<BitVector<N> > objectKeySet;
+	unordered_set<BitMatrix<N, 2*N> > objectAddressFunctionSet;
+	unordered_map<UUID, BitVector<N> > objectToKeyMap;
+	unordered_map<UUID, BitMatrix<N, 2*N> > objectToAddressFunctionMap;
 
 
 	/*
@@ -166,16 +166,16 @@ private:
 
 
 	/*
-	 * Function: generateDocKey
-	 * Returns a serialized random unused document key
+	 * Function: generateObjectKey
+	 * Returns a serialized random unused object key
 	 * Returns 0 if object has an existing key
 	 */
-	const BitVector<N> generateDocKey(const UUID & objectId) const{
-		BitVector<N> docKey = BitVector<N>::randomVector();
-		if (docToKeyMap.count(objectId) == 0) {
-	        docKey = BitVector<N>::randomVector();
+	const BitVector<N> generateObjectSearchKey(const UUID & objectId) const{
+		BitVector<N> objectKey = BitVector<N>::randomVector();
+		if (objectToKeyMap.count(objectId) == 0) {
+	        objectKey = BitVector<N>::randomVector();
 		}
-		return docKey;
+		return objectKey;
 	}
 };
 

@@ -88,44 +88,44 @@ public:
 /* Indexing */
 
 	/*
-	 * Function: getDocumentSearchKey
+	 * Function: getObjectSearchKey
 	 * Returns a serialized random unused document key
 	 * and inserts the document key into a stored hash set
 	 * Returns existing key if object has an existing key
 	 */
-	const val getDocumentSearchKey(const UUID & objectId) {
+	const val getObjectSearchKey(const UUID & objectId) {
 		unsigned char * pointer = (unsigned char *) &vector;
 		vector.print();
 		return val(memory_view<unsigned char>(sizeof(vector), pointer));
 	}
 
 	/*
-	 * Function: getDocumentAddressFunction
+	 * Function: getObjectAddressFunction
 	 * Returns a serialized BitMatrix generated as the
-	 * DocumentAddressFunction L_i for a document
+	 * ObjectAddressFunction L_i for a document
 	 */
-	const val getDocumentAddressFunction(const UUID & objectId) {
+	const val getObjectAddressFunction(const UUID & objectId) {
 		unsigned char * pointer = (unsigned char *) &vector;
 		vector.print();
 		return val(memory_view<unsigned char>(sizeof(vector), pointer));
 	}
 
 	/*
-	 * Function: getDocumentConversionMatrix
+	 * Function: getObjectConversionMatrix
 	 * Returns a serialized BitMatrix generated as the
-	 * DocumentConversionMatrix L_i K_\Omega^\cross for a document
+	 * ObjectConversionMatrix L_i K_\Omega^\cross for a document
 	 */
-	const val getDocumentConversionMatrix(const UUID & objectId) {
+	const val getObjectConversionMatrix(const UUID & objectId) {
 		unsigned char * pointer = (unsigned char *) &vector;
 		vector.print();
 		return val(memory_view<unsigned char>(sizeof(vector), pointer));
 	}
 
 	/*
-	 * Function: getDocumentIndexPair
-	 * Returns a serialized pair of (FHE-encrypted DocumentSearchKey, DocumentConversionMatrix)
+	 * Function: getObjectIndexPair
+	 * Returns a serialized pair of (FHE-encrypted ObjectSearchKey, ObjectConversionMatrix)
 	 */
-	const val getDocumentIndexPair(const UUID & objectId) const{
+	const val getObjectIndexPair(const UUID & objectId) const{
 		unsigned char * pointer = (unsigned char *) &vector;
 		vector.print();
 		return val(memory_view<unsigned char>(sizeof(vector), pointer));
@@ -146,10 +146,10 @@ public:
 /* Sharing */
 
 	/*
-	 * Function: getDocumentSharingPair
-	 * Returns a serialized pair of (DocumentSearchKey, DocumentAddressFunction)
+	 * Function: getObjectSharingPair
+	 * Returns a serialized pair of (ObjectSearchKey, ObjectAddressFunction)
 	 */
-	const val getDocumentSharingPair(const UUID & objectId) const{
+	const val getObjectSharingPair(const UUID & objectId) const{
 		unsigned char * pointer = (unsigned char *) &vector;
 		vector.print();
 		return val(memory_view<unsigned char>(sizeof(vector), pointer));
@@ -158,12 +158,12 @@ public:
 /* Setters */
 
 	/*
-	 * Function: setDocumentSearchKey
-	 * Sets the DocumentSearchKey of a given object to a given document key
+	 * Function: setObjectSearchKey
+	 * Sets the ObjectSearchKey of a given object to a given document key
 	 * Returns whether the operation was valid and successful
 	 */
-	const bool setDocumentSearchKey(const UUID & objectId, const BitVector<N> & docKey) {
-		return _spk.setDocKey(objectId, docKey);
+	const bool setObjectSearchKey(const UUID & objectId, const BitVector<N> & docKey) {
+		return _spk.setObjectSearchKey(objectId, docKey);
 	}
 
 private:
