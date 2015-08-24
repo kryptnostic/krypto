@@ -1,16 +1,16 @@
 //
-//  KryptnosticEngineServer.h
+//  KryptnosticServer.h
 //  krypto
 //
 //  Created by Robin Zhang on 8/21/15.
 //  Copyright (c) 2015 Kryptnostic. All rights reserved.
 //
-//  C++ implementation of the server-side Kryptnostic Engine
+//  C++ implementation of the server-side Kryptnostic 
 //  Performs the metadata address computation
 //
 
-#ifndef krypto_KryptnosticEngineServer_h
-#define krypto_KryptnosticEngineServer_h
+#ifndef krypto_KryptnosticServer_h
+#define krypto_KryptnosticServer_h
 
 #include "ClientHashFunction.h"
 #include <emscripten/emscripten.h>
@@ -20,7 +20,7 @@ using namespace emscripten;
 
 #define N 128
 
-class KryptnosticEngineServer {
+class KryptnosticServer {
 
 public:
 
@@ -28,9 +28,9 @@ public:
 
 	/*
      * Constructor
-     * Constructs a Kryptnostic Engine given private and public keys
+     * Constructs a Kryptnostic  given private and public keys
      */
-	KryptnosticEngineServer(const ClientHashFunction cHashFunction, const BitVector<2*N> eDocSearchKey, const BitMatrix<N, N> docConversionMatrix) :
+	KryptnosticServer(const ClientHashFunction cHashFunction, const BitVector<2*N> eDocSearchKey, const BitMatrix<N, N> docConversionMatrix) :
 	_cHashFunction(cHashFunction),
 	_eDocSearchKey(eDocSearchKey),
 	_docConversionMatrix(docConversionMatrix)

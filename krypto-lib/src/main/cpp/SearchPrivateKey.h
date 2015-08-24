@@ -7,7 +7,7 @@
 //
 //  C++ implementation of the SearchPrivateKey
 //  which generates all of the necessary client-side parts
-//  for indexing and searching documents
+//  for indexing and searching objects
 //
 
 #ifndef krypto_SearchPrivateKey_h
@@ -31,29 +31,28 @@ public:
 /* Getters */
 
 	/*
-     * Function: generateK()
-     * Returns the random client-specific n x 2n matrix K_\Omega
+     * Function: getK()
+     * Returns the client-specific n x 2n matrix K_\Omega
      */
 	const BitMatrix<N, 2*N> getK() const{
 		return _K;
 	}
 
 	/*
-	 * Function: getDocKey
-	 * Returns a random document key to be serialized
+	 * Function: getObjectSearchKey
+	 * Returns a random object search key to be serialized
 	 * (checking if this is unused is done by JavaScript frontend)
 	 */
-	const BitVector<N> getDocKey() const{
+	const BitVector<N> getObjectSearchKey() const{
 		return BitVector<N>::randomVector();
 	}
 
 	/*
-	 * Function: getDocAddressFunction
-	 * Returns a random document address function L to be serialized
+	 * Function: getObjectAddressFunction
+	 * Returns a random object address function L to be serialized
 	 */
-	const BitMatrix<N, 2*N> getDocAddressFunction() const{
-		BitMatrix<N, 2*N> addressMatrix = BitMatrix<N>::randomHorizontalConcatInvertibleMatrix();
-		return addressMatrix;
+	const BitMatrix<N, 2*N> getObjectAddressFunction(const UUID & objectId) const{
+		return randomInvertibleMatrixDoubleH();
 	}
 
 	/*
@@ -68,11 +67,11 @@ public:
 
 	/*
 	 * Function: getAddress
-	 * Given a token and a document key, returns the address for the
+	 * Given a token and a object key, returns the address for the
 	 * associated metadatum
 	 */
-	const BitVector<N> getAddress(const BitMatrix<N, 2*N> &addressMatrix, const BitVector<N> &token, const UUID &objectId) const{
-		return addressMatrix * (BitVector<2*N>::vCat(token, objectId));
+	const BitVector<N> getAddress(const BitMatrix<N, 2*N> &addressMatrix, const BitVector<N> &token, const BitVector<N> & objectSearchKey) const{
+		return addressMatrix * (BitVector<2*N>::vCat(token, objectSearchKey));
 	}
 
 private:
@@ -88,7 +87,7 @@ private:
 			BitMatrix<N>::randomInvertibleMatrix(), BitMatrix<N>::randomInvertibleMatrix());
 	}
 
-/* Components for Hash */
+/* Components of Hash */
 
 	/*
      * Function: generateHashMatrix()
