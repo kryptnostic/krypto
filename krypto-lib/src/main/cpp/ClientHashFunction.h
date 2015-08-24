@@ -69,7 +69,7 @@ struct ClientHashFunction
         BitMatrix<N> I = BitMatrix<N>::identityMatrix();
         BitMatrix<N> O = BitMatrix<N>::zeroMatrix();
         BitMatrix<N, 2*N> P1 = BitMatrix<N, 2*N>::augH(I, O);
-        BitMatrix<N, 2*N> P2 = BitMatrix<N, 2*N>::augH(O, I));
+        BitMatrix<N, 2*N> P2 = BitMatrix<N, 2*N>::augH(O, I);
 
         MultiQuadTuple<2*N, 2*N> augmentedDecrypt;
         augmentedDecrypt.augV<N, N>(topBot * P1, topBot * P2);
