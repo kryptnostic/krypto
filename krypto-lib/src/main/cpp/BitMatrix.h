@@ -575,7 +575,7 @@ public:
 		}
 
 		BitMatrix<ROWS, COLS - ROWS> randomizer = BitMatrix<ROWS, COLS - ROWS>::randomMatrix();
-		BitMatrix<COLS, ROWS> nullspan = randomizer * BitMatrix<COLS - ROWS, COLS>::directFromRows(filtered);
+		BitMatrix<ROWS, COLS> nullspan = randomizer.template operator*<COLS>(BitMatrix<COLS - ROWS, COLS>::directFromRows(filtered));
 
 		return (nullspan ^ constantBasis).transpose();
 	}
