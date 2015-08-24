@@ -59,7 +59,7 @@ public:
 	 */
 	const BitMatrix<N> getDocConversionMatrix(const BitMatrix<N, 2*N> & docAddressFunction,
 		const BitMatrix<N, 2*N> & K) const{
-		return docAddressFunction * K.pseudoinverse();
+		return docAddressFunction * K.rightInverse();
 	}
 
 	/*

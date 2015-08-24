@@ -15,6 +15,7 @@
 #include <fstream>
 #include <unordered_set>
 #include "BitVector.h"
+#include <algorithm>
 
 #define DEBUG false
 
@@ -95,6 +96,19 @@ public:
 			result._rows[i].set(i);
 		}
 		return result;
+    }
+
+    /*
+     * Function: directFromRows(v)
+     * Return a matrix whose rows are the elements of the input BitVector vector
+     */
+    static const BitMatrix<ROWS, COLS>::directFromRows(const vector<BitVector<COLS> > & v){
+    	if(DEBUG) assert(v.size() == ROWS);
+    	BitMatrix<ROWS, COLS> result = BitMatrix<ROWS, COLS>::zeroMatrix();
+    	for(unsigned int i = 0; i < ROWS; ++i){
+    		result.setRow(i, v.get(i));
+    	}
+    	return result;
     }
 
 /* Operators */
@@ -409,22 +423,6 @@ public:
 		return true;
 	}
 
-    /*
-     * Function: rowCount()
-     * Returns the number of rows
-     */
-	const inline unsigned int rowCount() const {
-		return ROWS;
-	}
-
-    /*
-     * Function: colCount()
-     * Returns the number of columns
-     */
-	const inline unsigned int colCount() const {
-		return COLS;
-	}
-
 	/*
 	 * Function: det()
 	 * Returns the determinant of a given (square) matrix,
@@ -527,12 +525,71 @@ public:
 	}
 
 	/*
-	 * Function: pseudoinverse
-	 * Returns the pseudoinverse of a matrix of any dimension
+	 * Function: right inverse
+	 * Returns the inverse of a matrix of any dimension
+	 * Assume matrix is full rank
 	 */
-	const BitMatrix<COLS, ROWS> pseudoinverse() const{
-		return transpose(); //TODO: implement
+	const BitMatrix<COLS, ROWS> rightInverse() const{
+		BitMatrix<ROWS> inverse = BitMatrix<ROWS>::identityMatrix();
+		BitMatrix<ROWS, COLS> workingSet = rref(*this, inverse); //TODO
+		vector<bool> basisInitialized(COLS);
+		fill(basisInitialized.begin(), basisInitialized.end(), false);
+		BitVector<COLS> basis[COLS];
+		unsigned int firstNonZeroIndex[ROWS];
+		for(unsigned int i = 0; i < ROWS; ++i){
+			BitVector<COLS> v = workingSet[i];
+			int value = -1;
+			for(unsigned int j = 0; j < COLS; ++j){
+				if(v.get(j)){
+					if(value == -1){
+						value = j;
+						firstNonZeroIndex[i] = j;
+					} else {
+						if(!basisInitialized[j]){
+							basis[j] = BitVector<COLS>::zeroVector();
+							basis[j].set(j);
+							basisInitialized[j] = true;
+						}
+						basis[j].set(value);
+					}
+				}
+			}
+		}
+
+		vector<BitVector<COLS> > filtered;
+		for(unsigned int i = 0; i < COLS; ++i){
+			if(!basisInitialized[i]){
+				filtered.push_back(basis[i]);
+			}
+		}
+
+		if(filtered.size() != (COLS - ROWS)){
+			cerr << "Error: matrix has no generalized right inverse" << endl;
+			return NULL;
+		}
+
+		BitMatrix<ROWS> inverseColumnar = inverse.transpose();
+		BitVector<ROWS, COLS> constantBasis = BitVector<ROWS, COLS>::zeroMatrix();
+		for(unsigned int i = 0; i < ROWS; ++i){
+			constantBasis.setRow(i, map(firstNonZeroIndex, inverseColumnar[i]);
+		}
+
+		BitMatrix<ROWS, COLS - ROWS> randomizer = BitMatrix<ROWS, COLS - ROWS>::randomMatrix();
+		BitMatrix<COLS, ROWS> nullspan = randomizer * BitMatrix<COLS - ROWS, COLS>::directFromRows(filtered);
+
+		return (nullspan ^ constantBasis).transpose();
 	}
+
+	//helper function of rightInverse
+	BitVector<COLS> map(Integer[] firstNonZeroIndex, const BitVector<ROWS> & constant) const{
+        BitVector<COLS> result = BitVector<COLS>::zeroVector();
+        for ( int i = 0; i < ROWS; ++i ) {
+            if ( constant.get( i ) ) {
+                result.set( firstNonZeroIndex[ i ] );
+            }
+        }
+        return result;
+    }
 
 	/*
      * Function: rref()
@@ -556,6 +613,37 @@ public:
 				}
 				for (int i = l+1; i < ROWS; ++i) if (A.get(i, k)) {
 					A.setRow(i, A[i] ^ A[k]);
+				}
+				++l;
+			}
+		}
+		return A;
+	}
+
+	/*
+	 * Function: rref(rhs)
+	 * Returns the reduced row-echelon form of a given matrix by Gaussian elimination
+	 */
+	const BitMatrix<ROWS,COLS> rref(BitMatrix<ROWS> & rhs) const{
+		int l = 0;
+		BitMatrix<ROWS,COLS> A = *this;
+		for (int k = 0; k < COLS && l < ROWS; ++k) {
+			int pos = -1, i = l;
+			while(i < ROWS) {
+				if (A.get(i, k)) {
+					pos = i;
+					break;
+				}
+				++i;
+			}
+			if (pos != -1) {
+				if (pos != l) {
+					A.swapRows(pos, l);
+					rhs.swapRows(pos, l);
+				}
+				for (int i = l+1; i < ROWS; ++i) if (A.get(i, k)) {
+					A.setRow(i, A[i] ^ A[k]);
+					rhs.setRow(i, rhs[i] ^ rhs[k]);
 				}
 				++l;
 			}
@@ -757,7 +845,7 @@ public:
 	static const BitMatrix<ROWST+ROWSM + ROWSB, COLS> augV(const BitMatrix<ROWST,COLS> & top, const BitMatrix<ROWSM,COLS> & mid, const BitMatrix<ROWSB,COLS> & bot) { //TODO: optimize
         BitMatrix<ROWST+ROWSM + ROWSB, COLS> result;
 
-        unsigned int i = 0;
+        unsigned int i;
         unsigned int count = 0;
         //for( BitVector<COLS> v : top._rows ){
         for(i = 0; i < ROWST; ++i){
@@ -1028,6 +1116,16 @@ private:
 
 	static inline bool inColBound(unsigned int colIndex){
 		return (colIndex >= 0 && colIndex < COLS);
+	}
+
+    // Returns the number of rows
+	const inline unsigned int rowCount() const {
+		return ROWS;
+	}
+
+    // Returns the number of columns
+	const inline unsigned int colCount() const {
+		return COLS;
 	}
 };
 
