@@ -28,30 +28,31 @@ public:
 
 	/*
      * Constructor
-     * Constructs a Kryptnostic  given private and public keys
+     * Constructs a KryptnosticServer given a
+     * client's hash function and an FHE-encrypted search token
+     * Calculates the client's hash function evaluated
+     * on the search token without the encrypted ObjectSearchKey
      */
-	KryptnosticServer(const ClientHashFunction<N> & cHashFunction, const BitVector<2*N> & eDocSearchKey, const BitMatrix<N> & docConversionMatrix) :
-	_cHashFunction(cHashFunction),
-	_eDocSearchKey(eDocSearchKey),
-	_docConversionMatrix(docConversionMatrix)
-	{}
+	KryptnosticServer(const ClientHashFunction<N> & cHashFunction, const BitVector<2*N> & eSearchToken) {
+
+	}
+
 
 /* Registration */
 
 
 	/*
 	 * Function: getMetadataAddress
-	 * Returns a serialized pair of (DocumentSearchKey, DocumentAddressFunction)
+	 * Returns a serialized pair of (ObjectSearchKey, ObjectAddressFunction)
 	 */
-	const BitVector<N> getMetadataAddress(const BitVector<2*N> & eSearchToken) const{
-		return _cHashFunction(eSearchToken, _eDocSearchKey);
+	const BitVector<N> getMetadataAddress(const BitVector<2*N> eObjectSearchKey, const BitMatrix<N, N> objectConversionMatrix) const{
+		// return cHashFunction(eSearchToken,eObjSearchKey);
+		return objectConversionMatrix * _tokenAddressFunction(eObjectSearchKey);
 	}
 
 
 private:
-	const ClientHashFunction<N> _cHashFunction;
-	const BitVector<2*N> _eDocSearchKey;
-	const BitMatrix<N> _docConversionMatrix;
+	MultiQuadTuple<2*N, N> _tokenAddressFunction;
 };
 
 #endif
