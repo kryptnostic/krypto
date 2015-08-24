@@ -66,8 +66,8 @@ struct ClientHashFunction
 		MultiQuadTuple<N, N> f2 = pk.getf().get(1);
 		MultiQuadTuple<N, N> topBot = (f2 * _C);
 
-        BitMatrix<N> I = BitMatrix<NUM_INPUTS1>::identityMatrix();
-        BitMatrix<N> O = BitMatrix<NUM_INPUTS1>::zeroMatrix();
+        BitMatrix<N> I = BitMatrix<N>::identityMatrix();
+        BitMatrix<N> O = BitMatrix<N>::zeroMatrix();
         BitMatrix<N, 2*N> P1 = BitMatrix<N, 2*N>::augH(I, O);
         BitMatrix<N, 2*N> P2 = BitMatrix<N, 2*N>::augH(O, I));
 
