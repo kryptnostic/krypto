@@ -28,7 +28,10 @@ public:
 
 	/*
      * Constructor
-     * Constructs a Kryptnostic  given private and public keys
+     * Constructs a KryptnosticServer given a
+     * client's hash function and an FHE-encrypted search token
+     * Calculates the client's hash function evaluated
+     * on the search token without the encrypted ObjectSearchKey
      */
 	KryptnosticServer(const ClientHashFunction cHashFunction, const BitVector<2*N> eSearchToken) {
 
@@ -39,13 +42,13 @@ public:
 	
 	/*
 	 * Function: getMetadataAddress
-	 * Returns a serialized pair of (DocumentSearchKey, DocumentAddressFunction)
+	 * Returns a serialized pair of (ObjectSearchKey, ObjectAddressFunction)
 	 */
-	const BitVector<N> getMetadataAddress(const BitVector<2*N> eSearchToken) const{
-		BitVector<N> hashMatrixOutput = _cHashFunction.hashMatrix * BitVector<4*N>::vCat(eSearchToken, _eDocSearchKey);
-		BitVector<2*N> augmentedOutputF1 = BitVector<2*N>::vCat(_cHashFunction.concealedF1(eSearchToken), _cHashFunction.concealedF1(_eDocSearchKey));
-		BitVector<N> functionalOutput = _cHashFunction.augmentedF2(augmentedOutputF1);
-		return hashMatrixOutput ^ functionalOutput;
+	const BitVector<N> getMetadataAddress(const BitVector<2*N> eObjectSearchKey, const BitMatrix<N, N> objectConversionMatrix) const{
+		// BitVector<N> hashMatrixOutput = _cHashFunction.hashMatrix * BitVector<4*N>::vCat(eSearchToken, _eObjectSearchKey);
+		// BitVector<2*N> augmentedOutputF1 = BitVector<2*N>::vCat(_cHashFunction.concealedF1(eSearchToken), _cHashFunction.concealedF1(_eObjectSearchKey));
+		// BitVector<N> functionalOutput = _cHashFunction.augmentedF2(augmentedOutputF1);
+		return objectConversionMatrix * _tokenAddressFunction(eObjectSearchKey);
 	}
 
 
