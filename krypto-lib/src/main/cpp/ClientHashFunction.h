@@ -77,4 +77,17 @@ struct ClientHashFunction
 		BitMatrix<N, 2*N> inner = pk.getA().inv() * Mi2;
 		return (f1 * inner).rMult(_C.inv());
 	}
+
+/* Evaluation */
+
+	/*
+	 * Function: operator()
+	 * Returns the hashed value given 2 inputs in the encrypted space
+	 */
+	const BitMatrix<N> operator()(const BitVector<2*N> & eSearchToken, const BitVector<2*N> & eObjSearchKey) const{
+		BitVector<N> hashMatrixOutput = hashMatrix * BitVector<4*N>::vCat(eSearchToken, eObjSearchKey);
+		BitVector<2*N> augmentedOutputF1 = BitVector<2*N>::vCat(concealedF1(eSearchToken), concealedF1(eObjSearchKey));
+		BitVector<N> functionalOutput = augmentedF2(augmentedOutputF1);
+		return hashMatrixOutput ^ functionalOutput;
+	}
 };

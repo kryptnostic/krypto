@@ -5,7 +5,7 @@
 //  Created by Robin Zhang on 8/21/15.
 //  Copyright (c) 2015 Kryptnostic. All rights reserved.
 //
-//  C++ implementation of the server-side Kryptnostic 
+//  C++ implementation of the server-side Kryptnostic
 //  Performs the metadata address computation
 //
 
@@ -34,27 +34,22 @@ public:
 	_cHashFunction(cHashFunction),
 	_eDocSearchKey(eDocSearchKey),
 	_docConversionMatrix(docConversionMatrix)
-	{
-
-	}
+	{}
 
 /* Registration */
 
-	
+
 	/*
 	 * Function: getMetadataAddress
 	 * Returns a serialized pair of (DocumentSearchKey, DocumentAddressFunction)
 	 */
-	const BitVector<N> getMetadataAddress(const BitVector<2*N> eSearchToken) const{
-		BitVector<N> hashMatrixOutput = _cHashFunction.hashMatrix * BitVector<4*N>::vCat(eSearchToken, _eDocSearchKey);
-		BitVector<2*N> augmentedOutputF1 = BitVector<2*N>::vCat(_cHashFunction.concealedF1(eSearchToken), _cHashFunction.concealedF1(_eDocSearchKey));
-		BitVector<N> functionalOutput = _cHashFunction.augmentedF2(augmentedOutputF1);
-		return hashMatrixOutput ^ functionalOutput;
+	const BitVector<N> getMetadataAddress(const BitVector<2*N> & eSearchToken) const{
+		return _cHashFunction(eSearchToken, _eDocSearchKey);
 	}
 
 
 private:
-	const ClientHashFunction _cHashFunction;
+	const ClientHashFunction<N> _cHashFunction;
 	const BitVector<2*N> _eDocSearchKey;
 	const BitMatrix<N, N> _docConversionMatrix;
 };
