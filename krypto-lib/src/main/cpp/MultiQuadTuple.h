@@ -53,7 +53,7 @@ struct MultiQuadTuple {
 
     //Sets current MQT to represent the subMQT of super for only the last NUM_INPUTS variables
     template<unsigned int SUPER_INPUTS, unsigned int SUPER_LIMIT = SUPER_INPUTS>
-    void setToSubMQT(MultiQuadTuple<SUPER_INPUTS, NUM_OUTPUTS, SUPER_LIMIT> &super) const{
+    void setToSubMQT(MultiQuadTuple<SUPER_INPUTS, NUM_OUTPUTS, SUPER_LIMIT> &super) {
     	if (LIMIT >= 0) {
     		if (SUPER_LIMIT <= NUM_INPUTS) { //these checks can be optimized out in the future
     			_matrix = super._matrix;
@@ -73,8 +73,8 @@ struct MultiQuadTuple {
 
     //Returns the nth coefficient matrix of the MultiQuadTuple
     template<unsigned int N>
-    BitMatrix<NUM_INPUTS - N, NUM_OUTPUTS> getMatrixN(int n) const{
-    	if (LIMIT > NUM_INPUTS - N) return next.getMatrixN<N>(0);
+    BitMatrix<NUM_INPUTS - N, NUM_OUTPUTS> getMatrixN() const{
+    	if (LIMIT > NUM_INPUTS - N) return next.template getMatrixN<N>();
     	else return _matrix;
     }
 
@@ -85,7 +85,7 @@ struct MultiQuadTuple {
         if(input[NUM_INPUTS-LIMIT]){
             for( unsigned int i = 0; i < LIMIT; ++i ) {
                 if( input[ i + (NUM_INPUTS-LIMIT) ]) {
-                    result^=_matrix[ i ];
+                    result ^= _matrix[ i ];
                 }
             }
         }
@@ -100,19 +100,25 @@ struct MultiQuadTuple {
     	MultiQuadTuple<NUM_INPUTS - PARTIAL_INPUTS, NUM_OUTPUTS> result;
     	result.setToSubMQT<NUM_INPUTS>(*this); //sets result to have the last PARTIAL_INPUTS coefficient matrices of current MQT
 
-    	return result;
-    	//result.get
-
-        // BitVector<NUM_OUTPUTS> result = BitVector<NUM_OUTPUTS>::zeroVector();
-        // if(input[NUM_INPUTS-LIMIT]){
-        //     for( unsigned int i = 0; i < LIMIT; ++i ) {
-        //         if( input[ i + (NUM_INPUTS-LIMIT) ]) {
-        //             result^=_matrix[ i ];
-        //         }
-        //     }
-        // }
-        // result ^= next( input );
-        // return result;
+    	for (int i = 0; i < PARTIAL_INPUTS; ++i) { //iterating over first PARTIAL_INPUTS x_i's
+    		const unsigned int remaining = NUM_INPUTS - i;
+    		BitMatrix<remaining, NUM_OUTPUTS> coeffMatrix = getMatrixN<i>();
+	    	bool first = input[i]; //x_i
+	    	if (first) {
+	    		for (int j = 0; j < PARTIAL_INPUTS; ++j) { //iterating over first PARTIAL_INPUTS x_j's
+		    		bool second = input[j];
+		    		if (second) {
+		    			//add row of x_i x_j's to constant vector for i, j < PARTIAL_INPUTS
+		    			result.getConstants() ^= coeffMatrix[j];
+		    		}
+		    	}
+		    	for (int j = PARTIAL_INPUTS; j < NUM_INPUTS; ++j){ //iterating over remaining x_j's
+		    		//add row of x_i x_j's to first row of coeff matrix of secondCoeff
+		    		(result.template getMatrixN<j - PARTIAL_INPUTS>())[0] ^= coeffMatrix[j];
+		    	}
+		    }
+		}        
+        return result;
     }
 
 /* Composition */

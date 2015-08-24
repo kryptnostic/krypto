@@ -35,6 +35,13 @@ public:
      */
 	KryptnosticServer(const ClientHashFunction<N> & cHashFunction, const BitVector<2*N> & eSearchToken) {
 		//set _tokenAddressFunction to partial eval of cHashFunction on eSearchToken
+
+		//store right half of HashMatrix as a private variable
+		_concealedF1 = cHashFunction.concealedF1;
+		BitVector<N> inner = _concealedF1(eSearchToken);
+
+		BitVector<N> hashMatrixPartialEval = cHashFunction.hashMatrix.splitH2(0) * eSearchToken; //add to consts of _tokenAddressFunction
+		//_tokenAddressFunction = (cHashFunction.augmentedF2).partialEval<N>(inner);
 	}
 
 
@@ -47,12 +54,14 @@ public:
 	 */
 	const BitVector<N> getMetadataAddress(const BitVector<2*N> eObjectSearchKey, const BitMatrix<N, N> objectConversionMatrix) const{
 		// return cHashFunction(eSearchToken,eObjSearchKey);
-		return objectConversionMatrix * _tokenAddressFunction(eObjectSearchKey);
+		BitVector<N> inner = _concealedF1(eObjectSearchKey);
+		return objectConversionMatrix * _tokenAddressFunction(inner);
 	}
 
 
 private:
-	MultiQuadTuple<2*N, N> _tokenAddressFunction;
+	MultiQuadTuple<2*N, N> _concealedF1;
+	MultiQuadTuple<N, N> _tokenAddressFunction;
 };
 
 #endif
