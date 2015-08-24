@@ -571,7 +571,7 @@ public:
 		BitMatrix<ROWS> inverseColumnar = inverse.transpose();
 		BitVector<ROWS, COLS> constantBasis = BitVector<ROWS, COLS>::zeroMatrix();
 		for(unsigned int i = 0; i < ROWS; ++i){
-			constantBasis.setRow(i, map(firstNonZeroIndex, inverseColumnar[i]);
+			constantBasis.setRow(i, map(firstNonZeroIndex, inverseColumnar[i]));
 		}
 
 		BitMatrix<ROWS, COLS - ROWS> randomizer = BitMatrix<ROWS, COLS - ROWS>::randomMatrix();
