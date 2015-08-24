@@ -51,11 +51,31 @@ struct MultiQuadTuple {
         next.setAsConstants(v);
     }
 
+    //Sets current MQT to represent the subMQT of super for only the last NUM_INPUTS variables
+    template<unsigned int SUPER_INPUTS, unsigned int SUPER_LIMIT = SUPER_INPUTS>
+    void setToSubMQT(MultiQuadTuple<SUPER_INPUTS, NUM_OUTPUTS, SUPER_LIMIT> &super) const{
+    	if (LIMIT >= 0) {
+    		if (SUPER_LIMIT <= NUM_INPUTS) { //these checks can be optimized out in the future
+    			_matrix = super._matrix;
+    			next.setToSubMQT<SUPER_INPUTS, SUPER_LIMIT - 1>(super.next);
+    		} else {
+    			setToSubMQT<SUPER_INPUTS, SUPER_LIMIT - 1>(super.next);
+    		}
+    	}
+    }
+
 /* Getters */
 
     //Returns the constants component of the MultiQuadTuple
-    const BitVector<NUM_OUTPUTS> getConstants() const{
+    BitVector<NUM_OUTPUTS> getConstants() const{
         return next.getConstants();
+    }
+
+    //Returns the nth coefficient matrix of the MultiQuadTuple
+    template<unsigned int N>
+    BitMatrix<NUM_INPUTS - N, NUM_OUTPUTS> getMatrixN(int n) const{
+    	if (LIMIT > NUM_INPUTS - N) return next.getMatrixN<N>(0);
+    	else return _matrix;
     }
 
 /* Evaluation */
@@ -71,6 +91,28 @@ struct MultiQuadTuple {
         }
         result ^= next( input );
         return result;
+    }
+
+    // For current MQT f(x), returns MQT that results from evaluating f on subvector x' of x
+    // Assumes PARTIAL_INPUTS > 0 and PARTIAL_INPUTS <= NUM_INPUTS
+    template<unsigned int PARTIAL_INPUTS>
+    MultiQuadTuple<NUM_INPUTS - PARTIAL_INPUTS, NUM_OUTPUTS> partialEval ( const BitVector<PARTIAL_INPUTS> & input ) const {
+    	MultiQuadTuple<NUM_INPUTS - PARTIAL_INPUTS, NUM_OUTPUTS> result;
+    	result.setToSubMQT<NUM_INPUTS>(*this); //sets result to have the last PARTIAL_INPUTS coefficient matrices of current MQT
+
+    	return result;
+    	//result.get
+
+        // BitVector<NUM_OUTPUTS> result = BitVector<NUM_OUTPUTS>::zeroVector();
+        // if(input[NUM_INPUTS-LIMIT]){
+        //     for( unsigned int i = 0; i < LIMIT; ++i ) {
+        //         if( input[ i + (NUM_INPUTS-LIMIT) ]) {
+        //             result^=_matrix[ i ];
+        //         }
+        //     }
+        // }
+        // result ^= next( input );
+        // return result;
     }
 
 /* Composition */
@@ -254,7 +296,7 @@ struct MultiQuadTuple<NUM_INPUTS,NUM_OUTPUTS,0> {
     }
 
 /* Getters */
-    const BitVector<NUM_OUTPUTS> getConstants() const{
+    BitVector<NUM_OUTPUTS> getConstants() const{
         return _constants;
     }
 
