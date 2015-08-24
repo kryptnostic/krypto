@@ -58,7 +58,7 @@ public:
 	const BitMatrix<N, 2*N> getObjectAddressFunction(const UUID & objectId) {
 		return generateK();
 	}
-	
+
 	/*
 	 * Function: getAddress
 	 * Given a token and a object key, returns the address for the
@@ -66,7 +66,7 @@ public:
 	 */
 
 	const BitVector<N> getAddress(const BitMatrix<N, 2*N> &addressMatrix, const BitVector<N> &token, const BitVector<N> & objectSearchKey) const{
-		return addressMatrix * (BitVector<2*N>::vCat(token, objectId));
+		return addressMatrix * (BitVector<2*N>::vCat(token, objectSearchKey));
 	}
 
 private:

@@ -1,17 +1,17 @@
 //
-//  KryptnosticEngineClient.h
+//  KryptnosticClient.h
 //  krypto
 //
 //  Created by Peng Hui How and Robin Zhang on 8/13/15.
 //  Copyright (c) 2015 Kryptnostic. All rights reserved.
 //
-//  C++ implementation of the client-side Kryptnostic Engine
+//  C++ implementation of the client-side Kryptnostic 
 //  Provides get functions for all of the cryptographic keys and functions
 //  necessary for Kryptnostic search functionality
 //
 
-#ifndef krypto_KryptnosticEngineClient_h
-#define krypto_KryptnosticEngineClient_h
+#ifndef krypto_KryptnosticClient_h
+#define krypto_KryptnosticClient_h
 
 #include "SearchPrivateKey.h"
 #include "ClientHashFunction.h"
@@ -23,7 +23,7 @@ using namespace emscripten;
 
 #define N 128
 
-class KryptnosticEngineClient {
+class KryptnosticClient {
 
 public:
 
@@ -31,9 +31,9 @@ public:
 
 	/*
      * Constructor
-     * Constructs a Kryptnostic Engine from scratch
+     * Constructs a Kryptnostic  from scratch
      */
-	KryptnosticEngineClient() :
+	KryptnosticClient() :
 	_pk(),
 	_spk(),
 	vector(BitVector<64>::randomVector())
@@ -43,9 +43,9 @@ public:
 
 	/*
      * Constructor
-     * Constructs a Kryptnostic Engine given private and public keys
+     * Constructs a Kryptnostic  given private and public keys
      */
-	KryptnosticEngineClient(const PrivateKey<N> pk, const SearchPrivateKey<N> spk) :
+	KryptnosticClient(const PrivateKey<N> pk, const SearchPrivateKey<N> spk) :
 	_pk(pk),
 	_spk(spk),
 	vector(BitVector<64>::randomVector())
@@ -153,17 +153,6 @@ public:
 		unsigned char * pointer = (unsigned char *) &vector;
 		vector.print();
 		return val(memory_view<unsigned char>(sizeof(vector), pointer));
-	}
-
-/* Setters */
-
-	/*
-	 * Function: setObjectSearchKey
-	 * Sets the ObjectSearchKey of a given object to a given document key
-	 * Returns whether the operation was valid and successful
-	 */
-	const bool setObjectSearchKey(const UUID & objectId, const BitVector<N> & docKey) {
-		return _spk.setObjectSearchKey(objectId, docKey);
 	}
 
 private:
