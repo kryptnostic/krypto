@@ -67,7 +67,6 @@ struct ClientHashFunction
 		MultiQuadTuple<N, N> topBot = (f2 * _C);
 		MultiQuadTuple<N, 2*N> augmentedDecrypt = MultiQuadTuple<N, 2*N>::augV(topBot, topBot);
 		return augmentedF2; //TO FIX
-		//return augmentedDecrypt.rMult(K);
 	}
 
 	/*
