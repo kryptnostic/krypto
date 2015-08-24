@@ -8,39 +8,28 @@
 //  C++ struct concatenating the three components of the ClientHashFunction h_\Omega
 //
 
+#include "PrivateKey.h"
 #include "MultiQuadTuple.h"
-
-#define N 128
 
 using namespace std;
 
+template<unsigned int N>
 struct ClientHashFunction
 {
-	/* Data */
+/* Data */
+
 	BitMatrix<N, 4*N> hashMatrix;
 	MultiQuadTuple<N, 2*N> augmentedF2;
 	MultiQuadTuple<N, 2*N> concealedF1;
-	BitMatrix<N> _C;
+	BitMatrix<N> _C; //to conceal individual function pieces, not accessible by server
+
+/* Initialization */
 
 	void initialize(const BitMatrix<N, 2*N> & K, const PrivateKey<N> & pk){
 		_C = BitMatrix<N>::randomInvertibleMatrix();
 		hashMatrix = generateHashMatrix(K, pk);
 		augmentedF2 = generateAugmentedF2(K, pk);
 		concealedF1 = generateConcealedF1(pk);
-	}
-
-/* Getters */
-
-	const BitMatrix<N, 4*N> getHashMatrix() const{
-		return hashMatrix;
-	}
-
-	const MultiQuadTuple<N, 2*N> getAugmentedF2() const{
-		return augmentedF2;
-	}
-
-	const MultiQuadTuple<N, 2*N> getConcealedF1() const{
-		return concealedF1;
 	}
 
 /* Generation of individual components */
