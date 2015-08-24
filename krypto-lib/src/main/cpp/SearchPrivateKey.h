@@ -15,6 +15,7 @@
 
 #include "PrivateKey.h"
 #include "UUID.h"
+#include "ClientHashFunction.h"
 
 //N should be a multiple of 64, otherwise BitVector would create
 //the incorrect number of unsigned long longs
@@ -23,8 +24,7 @@ class SearchPrivateKey{
 public:
 	SearchPrivateKey() :
 	_K(BitMatrix<N>::randomInvertibleMatrixDoubleH()),
-	_C(BitMatrix<N>::randomInvertibleMatrix())
-	{ }
+	{}
 
 /* Getters */
 
@@ -71,9 +71,14 @@ public:
 		return addressMatrix * (BitVector<2*N>::vCat(token, objectSearchKey));
 	}
 
+	const ClientHashFunction<N> getClientHashFunction(const PrivateKey<N> & pk){
+		ClientHashFunction<N> h;
+		h.initialize(_K, pk);
+		return h;
+	}
+
 private:
 	BitMatrix<N, 2*N> _K; //user-specific K_\Omega
-	BitMatrix<N> _C; //to conceal individual function piece
 
 	/*
      * Function: randomInvertibleMatrixDoubleH()
@@ -82,52 +87,6 @@ private:
 	const BitMatrix<N, 2*N> randomInvertibleMatrixDoubleH() const{
 		return BitMatrix<N, 2*N>::augH(
 			BitMatrix<N>::randomInvertibleMatrix(), BitMatrix<N>::randomInvertibleMatrix());
-	}
-
-/* Components of Hash */
-
-	/*
-     * Function: generateHashMatrix()
-     * Returns the matrix portion of the hash function
-     * Applied to x concatenated with y
-     */
-	const BitMatrix<N, 4*N> generateHashMatrix(const PrivateKey<N> & pk) const{
-		BitMatrix<2*N> Mi = pk.getM().inv();
-		BitMatrix<N, 2*N> Mi1 = Mi.splitV(0);
-		BitMatrix<N, 2*N> Mi2 = Mi.splitV(1);
-
-		BitMatrix<N, 2*N> left = pk.getB().inv() * Mi1;
-		BitMatrix<N, 2*N> right = pk.getA().inv() * Mi2;
-		BitMatrix<N, 2*N> decryptMatrix = left ^ right;
-
-		BitMatrix<N, 2*N> zero = BitMatrix<N, 2*N>::zeroMatrix();
-		BitMatrix<N, 4*N> top = BitMatrix<N, 4*N>::augH(decryptMatrix, zero);
-		BitMatrix<N, 4*N> bot = BitMatrix<N, 4*N>::augH(zero, decryptMatrix);
-		return _K * (BitMatrix<2*N, 4*N>::augV(top, bot));
-	}
-
-	/*
-     * Function: generateAugmentedF2()
-     * Returns the K (f2 C || f2 C) portion of the hash function
-     * Applied to concealedF1(x) concatenated with concealedF1(y)
-     */
-	const MultiQuadTuple<N, 2*N> generateAugmentedF2(const PrivateKey<N> & pk) const{
-		MultiQuadTuple<N, N> f2 = pk.getf().get(1);
-		MultiQuadTuple<N, N> topBot = (f2 * _C);
-		MultiQuadTuple<N, 2*N> augmentedDecrypt = MultiQuadTuple<N, 2*N>::augV(topBot, topBot);
-		return augmentedDecrypt.rMult(_K);
-	}
-
-	/*
-     * Function: generateConcealedF1()
-     * Returns the f1 C portion of the hash function
-     * Applied to x and y separately
-     */
-	const MultiQuadTuple<N, 2*N> generateConcealedF1(const PrivateKey<N> & pk) const{
-		MultiQuadTuple<N, N> f1 = pk.getf().get(0);
-		BitMatrix<N, 2*N> Mi2 = pk.getM().inv().splitV(1);
-		BitMatrix<N, 2*N> inner = pk.getA().inv() * Mi2;
-		return (f1 * inner).rMult(_C.inv());
 	}
 };
 
