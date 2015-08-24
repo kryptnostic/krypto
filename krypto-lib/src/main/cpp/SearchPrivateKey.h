@@ -24,7 +24,7 @@ template<unsigned int N>
 class SearchPrivateKey{
 public:
 	SearchPrivateKey() :
-	_K(generateK()),
+	_K(BitMatrix<N>::randomInvertibleMatrixDoubleH()),
 	_C(BitMatrix<N>::randomInvertibleMatrix())
 	{ }
 
@@ -42,23 +42,28 @@ public:
 	 * Function: getDocKey
 	 * Returns a random document key to be serialized
 	 * (checking if this is unused is done by JavaScript frontend)
-	 * and inserts the document key into a stored hash set
-	 * Returns existing key if object has an existing key
 	 */
-	const BitVector<N> getDocKey( const UUID & objectId ) {
-		BitVector<N> docKey = generateDocKey();
-		return docKey;
+	const BitVector<N> getDocKey() const{
+		return BitVector<N>::randomVector();
 	}
 
 	/*
 	 * Function: getDocAddressFunction
-	 * Returns a serialized random unused document address function L
-	 * and inserts the document address function into a stored hash set
-	 * Returns existing address function if object has an existing key
+	 * Returns a random document address function L to be serialized
 	 */
-	const BitMatrix<N, 2*N> getDocAddressFunction(const UUID & objectId) {
-		BitMatrix<N, 2*N> addressMatrix = generateK();
+	const BitMatrix<N, 2*N> getDocAddressFunction() const{
+		BitMatrix<N, 2*N> addressMatrix = BitMatrix<N>::randomHorizontalConcatInvertibleMatrix();
 		return addressMatrix;
+	}
+
+	/*
+	 * Function: getDocConversionMatrix
+	 * Returns document conversion matrix given document address function and user-specific K
+	 */
+	const BitMatrix<N> getDocConversionMatrix(const BitMatrix<N, 2*N> & docAddressFunction,
+		const BitMatrix<N, 2*N> & userK) const{
+		BitMatrix<2*N, N> K_ginv = userK.transpose(); //TODO: implement generalized inverse
+		return docAddressFunction * K_ginv;
 	}
 
 	/*
@@ -75,17 +80,15 @@ private:
 	BitMatrix<N> _C; //to conceal individual function piece
 
 	/*
-     * Function: generateK()
-     * Returns a random client-specific n x 2n matrix K_\Omega
-     * by concatenating 2 n x n invertible matrices
-     * Assumes N is even (also it should be a multiple of 64)
+     * Function: randomInvertibleMatrixDoubleH()
+     * by concatenating N x 2N invertible matrices
      */
-	const BitMatrix<N, 2*N> generateK() const{
-		BitMatrix<N> K1 = BitMatrix<N>::randomInvertibleMatrix();
-		BitMatrix<N> K2 = BitMatrix<N>::randomInvertibleMatrix();
-
-		return BitMatrix<N, 2*N>::augH(K1, K2);
+	const BitMatrix<N, 2*N> randomInvertibleMatrixDoubleH() const{
+		return BitMatrix<N, 2*N>::augH(
+			BitMatrix<N>::randomInvertibleMatrix(), BitMatrix<N>::randomInvertibleMatrix());
 	}
+
+/* Components for Hash */
 
 	/*
      * Function: generateHashMatrix()
@@ -129,16 +132,6 @@ private:
 		BitMatrix<N, 2*N> Mi2 = pk.getM().inv().splitV(1);
 		BitMatrix<N, 2*N> inner = pk.getA().inv() * Mi2;
 		return (f1 * inner).rMult(_C.inv());
-	}
-
-
-	/*
-	 * Function: generateDocKey
-	 * Returns a random document key to be serialized
-	 * Checking if this is unused is done by JavaScript frontend
-	 */
-	const BitVector<N> generateDocKey() const{
-		return BitVector<N>::randomVector();
 	}
 };
 
