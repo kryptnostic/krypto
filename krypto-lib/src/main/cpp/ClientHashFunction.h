@@ -8,6 +8,9 @@
 //  C++ struct concatenating the three components of the ClientHashFunction h_\Omega
 //
 
+#ifndef ClientHashFunction_h
+#define ClientHashFunction_h
+
 #include "PrivateKey.h"
 #include "MultiQuadTuple.h"
 
@@ -19,8 +22,8 @@ struct ClientHashFunction
 /* Data */
 
 	BitMatrix<N, 4*N> hashMatrix;
-	MultiQuadTuple<N, 2*N> augmentedF2;
-	MultiQuadTuple<N, 2*N> concealedF1;
+	MultiQuadTuple<2*N, N> augmentedF2;
+	MultiQuadTuple<2*N, N> concealedF1;
 	BitMatrix<N> _C; //to conceal individual function pieces, not accessible by server
 
 /* Initialization */
@@ -59,11 +62,12 @@ struct ClientHashFunction
      * Returns the K (f2 C || f2 C) portion of the hash function
      * Applied to concealedF1(x) concatenated with concealedF1(y)
      */
-	const MultiQuadTuple<N, 2*N> generateAugmentedF2(const BitMatrix<N, 2*N> & K, const PrivateKey<N> & pk) const{
+	const MultiQuadTuple<2*N, N> generateAugmentedF2(const BitMatrix<N, 2*N> & K, const PrivateKey<N> & pk) const{
 		MultiQuadTuple<N, N> f2 = pk.getf().get(1);
 		MultiQuadTuple<N, N> topBot = (f2 * _C);
 		MultiQuadTuple<N, 2*N> augmentedDecrypt = MultiQuadTuple<N, 2*N>::augV(topBot, topBot);
-		return augmentedDecrypt.rMult(K);
+		return augmentedF2; //TO FIX
+		//return augmentedDecrypt.rMult(K);
 	}
 
 	/*
@@ -71,7 +75,7 @@ struct ClientHashFunction
      * Returns the f1 C portion of the hash function
      * Applied to x and y separately
      */
-	const MultiQuadTuple<N, 2*N> generateConcealedF1(const PrivateKey<N> & pk) const{
+	const MultiQuadTuple<2*N, N> generateConcealedF1(const PrivateKey<N> & pk) const{
 		MultiQuadTuple<N, N> f1 = pk.getf().get(0);
 		BitMatrix<N, 2*N> Mi2 = pk.getM().inv().splitV(1);
 		BitMatrix<N, 2*N> inner = pk.getA().inv() * Mi2;
@@ -84,10 +88,12 @@ struct ClientHashFunction
 	 * Function: operator()
 	 * Returns the hashed value given 2 inputs in the encrypted space
 	 */
-	const BitMatrix<N> operator()(const BitVector<2*N> & eSearchToken, const BitVector<2*N> & eObjSearchKey) const{
+	const BitVector<N> operator()(const BitVector<2*N> & eSearchToken, const BitVector<2*N> & eObjSearchKey) const{
 		BitVector<N> hashMatrixOutput = hashMatrix * BitVector<4*N>::vCat(eSearchToken, eObjSearchKey);
 		BitVector<2*N> augmentedOutputF1 = BitVector<2*N>::vCat(concealedF1(eSearchToken), concealedF1(eObjSearchKey));
 		BitVector<N> functionalOutput = augmentedF2(augmentedOutputF1);
 		return hashMatrixOutput ^ functionalOutput;
 	}
 };
+
+#endif

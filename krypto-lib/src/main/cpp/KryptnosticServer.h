@@ -30,7 +30,7 @@ public:
      * Constructor
      * Constructs a Kryptnostic  given private and public keys
      */
-	KryptnosticServer(const ClientHashFunction cHashFunction, const BitVector<2*N> eDocSearchKey, const BitMatrix<N, N> docConversionMatrix) :
+	KryptnosticServer(const ClientHashFunction<N> & cHashFunction, const BitVector<2*N> & eDocSearchKey, const BitMatrix<N> & docConversionMatrix) :
 	_cHashFunction(cHashFunction),
 	_eDocSearchKey(eDocSearchKey),
 	_docConversionMatrix(docConversionMatrix)
@@ -51,7 +51,7 @@ public:
 private:
 	const ClientHashFunction<N> _cHashFunction;
 	const BitVector<2*N> _eDocSearchKey;
-	const BitMatrix<N, N> _docConversionMatrix;
+	const BitMatrix<N> _docConversionMatrix;
 };
 
 #endif
