@@ -15,8 +15,6 @@
 
 #include "PrivateKey.h"
 #include "UUID.h"
-#include <unordered_map>
-#include <unordered_set>
 
 //N should be a multiple of 64, otherwise BitVector would create
 //the incorrect number of unsigned long longs
@@ -51,7 +49,7 @@ public:
 	 * Function: getObjectAddressFunction
 	 * Returns a random object address function L to be serialized
 	 */
-	const BitMatrix<N, 2*N> getObjectAddressFunction(const UUID & objectId) const{
+	const BitMatrix<N, 2*N> getObjectAddressFunction() const{
 		return randomInvertibleMatrixDoubleH();
 	}
 
@@ -60,9 +58,8 @@ public:
 	 * Returns document conversion matrix given document address function and user-specific K
 	 */
 	const BitMatrix<N> getDocConversionMatrix(const BitMatrix<N, 2*N> & docAddressFunction,
-		const BitMatrix<N, 2*N> & userK) const{
-		BitMatrix<2*N, N> K_ginv = userK.transpose(); //TODO: implement generalized inverse
-		return docAddressFunction * K_ginv;
+		const BitMatrix<N, 2*N> & K) const{
+		return docAddressFunction * K.pseudoinverse();
 	}
 
 	/*

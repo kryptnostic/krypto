@@ -527,6 +527,14 @@ public:
 	}
 
 	/*
+	 * Function: pseudoinverse
+	 * Returns the pseudoinverse of a matrix of any dimension
+	 */
+	const BitMatrix<COLS, ROWS> pseudoinverse() const{
+		return transpose(); //TODO: implement
+	}
+
+	/*
      * Function: rref()
      * Returns the reduced row-echelon form of a given matrix by Gaussian elimination
      */
