@@ -23,7 +23,7 @@ template<unsigned int N>
 class SearchPrivateKey{
 public:
 	SearchPrivateKey() :
-	_K(BitMatrix<N>::randomInvertibleMatrixDoubleH()),
+	_K(randomInvertibleMatrixDoubleH())
 	{}
 
 /* Getters */

@@ -8,39 +8,31 @@
 //  C++ struct concatenating the three components of the ClientHashFunction h_\Omega
 //
 
-#include "MultiQuadTuple.h"
+#ifndef ClientHashFunction_h
+#define ClientHashFunction_h
 
-#define N 128
+#include "PrivateKey.h"
+#include "MultiQuadTuple.h"
 
 using namespace std;
 
+template<unsigned int N>
 struct ClientHashFunction
 {
-	/* Data */
+/* Data */
+
 	BitMatrix<N, 4*N> hashMatrix;
 	MultiQuadTuple<2*N, N> augmentedF2;
 	MultiQuadTuple<2*N, N> concealedF1;
-	BitMatrix<N> _C;
+	BitMatrix<N> _C; //to conceal individual function pieces, not accessible by server
+
+/* Initialization */
 
 	void initialize(const BitMatrix<N, 2*N> & K, const PrivateKey<N> & pk){
 		_C = BitMatrix<N>::randomInvertibleMatrix();
 		hashMatrix = generateHashMatrix(K, pk);
 		augmentedF2 = generateAugmentedF2(K, pk);
 		concealedF1 = generateConcealedF1(pk);
-	}
-
-/* Getters */
-
-	const BitMatrix<N, 4*N> getHashMatrix() const{
-		return hashMatrix;
-	}
-
-	const MultiQuadTuple<2*N, N> getAugmentedF2() const{
-		return augmentedF2;
-	}
-
-	const MultiQuadTuple<2*N, N> getConcealedF1() const{
-		return concealedF1;
 	}
 
 /* Generation of individual components */
@@ -88,4 +80,19 @@ struct ClientHashFunction
 		BitMatrix<N, 2*N> inner = pk.getA().inv() * Mi2;
 		return (f1 * inner).rMult(_C.inv());
 	}
+
+/* Evaluation */
+
+	/*
+	 * Function: operator()
+	 * Returns the hashed value given 2 inputs in the encrypted space
+	 */
+	const BitVector<N> operator()(const BitVector<2*N> & eSearchToken, const BitVector<2*N> & eObjSearchKey) const{
+		BitVector<N> hashMatrixOutput = hashMatrix * BitVector<4*N>::vCat(eSearchToken, eObjSearchKey);
+		BitVector<2*N> augmentedOutputF1 = BitVector<2*N>::vCat(concealedF1(eSearchToken), concealedF1(eObjSearchKey));
+		BitVector<N> functionalOutput = augmentedF2(augmentedOutputF1);
+		return hashMatrixOutput ^ functionalOutput;
+	}
 };
+
+#endif
