@@ -33,9 +33,7 @@ public:
      * Calculates the client's hash function evaluated
      * on the search token without the encrypted ObjectSearchKey
      */
-	KryptnosticServer(const ClientHashFunction cHashFunction, const BitVector<2*N> eSearchToken) :
-	_tokenAddressFunction()
-	{
+	KryptnosticServer(const ClientHashFunction cHashFunction, const BitVector<2*N> eSearchToken) {
 
 	}
 
@@ -55,7 +53,7 @@ public:
 
 
 private:
-	const MultiQuadTuple<2*N, N> _tokenAddressFunction;
+	MultiQuadTuple<2*N, N> _tokenAddressFunction;
 };
 
 #endif
