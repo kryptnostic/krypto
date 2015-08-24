@@ -18,8 +18,8 @@ struct ClientHashFunction
 {
 	/* Data */
 	BitMatrix<N, 4*N> hashMatrix;
-	MultiQuadTuple<N, 2*N> augmentedF2;
-	MultiQuadTuple<N, 2*N> concealedF1;
+	MultiQuadTuple<2*N, N> augmentedF2;
+	MultiQuadTuple<2*N, N> concealedF1;
 	BitMatrix<N> _C;
 
 	void initialize(const BitMatrix<N, 2*N> & K, const PrivateKey<N> & pk){
@@ -35,11 +35,11 @@ struct ClientHashFunction
 		return hashMatrix;
 	}
 
-	const MultiQuadTuple<N, 2*N> getAugmentedF2() const{
+	const MultiQuadTuple<2*N, N> getAugmentedF2() const{
 		return augmentedF2;
 	}
 
-	const MultiQuadTuple<N, 2*N> getConcealedF1() const{
+	const MultiQuadTuple<2*N, N> getConcealedF1() const{
 		return concealedF1;
 	}
 
@@ -70,19 +70,19 @@ struct ClientHashFunction
      * Returns the K (f2 C || f2 C) portion of the hash function
      * Applied to concealedF1(x) concatenated with concealedF1(y)
      */
-	const MultiQuadTuple<N, 2*N> generateAugmentedF2(const BitMatrix<N, 2*N> & K, const PrivateKey<N> & pk) const{
+	const MultiQuadTuple<2*N, N> generateAugmentedF2(const BitMatrix<N, 2*N> & K, const PrivateKey<N> & pk) const{
 		MultiQuadTuple<N, N> f2 = pk.getf().get(1);
 		MultiQuadTuple<N, N> topBot = (f2 * _C);
-		MultiQuadTuple<N, 2*N> augmentedDecrypt = MultiQuadTuple<N, 2*N>::augV(topBot, topBot);
+		MultiQuadTuple<2*N, 2*N> augmentedDecrypt; //needs to be augmentation w/ diff inputs of topBot, topBot
 		return augmentedDecrypt.rMult(K);
 	}
 
 	/*
      * Function: generateConcealedF1()
-     * Returns the f1 C portion of the hash function
+     * Returns the C^{-1} f1 portion of the hash function
      * Applied to x and y separately
      */
-	const MultiQuadTuple<N, 2*N> generateConcealedF1(const PrivateKey<N> & pk) const{
+	const MultiQuadTuple<2*N, N> generateConcealedF1(const PrivateKey<N> & pk) const{
 		MultiQuadTuple<N, N> f1 = pk.getf().get(0);
 		BitMatrix<N, 2*N> Mi2 = pk.getM().inv().splitV(1);
 		BitMatrix<N, 2*N> inner = pk.getA().inv() * Mi2;
