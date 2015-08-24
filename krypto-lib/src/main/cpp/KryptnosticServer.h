@@ -34,7 +34,7 @@ public:
      * on the search token without the encrypted ObjectSearchKey
      */
 	KryptnosticServer(const ClientHashFunction<N> & cHashFunction, const BitVector<2*N> & eSearchToken) {
-
+		//set _tokenAddressFunction to partial eval of cHashFunction on eSearchToken
 	}
 
 

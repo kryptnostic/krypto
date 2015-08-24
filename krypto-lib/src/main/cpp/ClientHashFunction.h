@@ -65,13 +65,20 @@ struct ClientHashFunction
 	const MultiQuadTuple<2*N, N> generateAugmentedF2(const BitMatrix<N, 2*N> & K, const PrivateKey<N> & pk) const{
 		MultiQuadTuple<N, N> f2 = pk.getf().get(1);
 		MultiQuadTuple<N, N> topBot = (f2 * _C);
-		MultiQuadTuple<N, 2*N> augmentedDecrypt = MultiQuadTuple<N, 2*N>::augV(topBot, topBot);
-		return augmentedF2; //TO FIX
+
+        BitMatrix<N> I = BitMatrix<NUM_INPUTS1>::identityMatrix();
+        BitMatrix<N> O = BitMatrix<NUM_INPUTS1>::zeroMatrix();
+        BitMatrix<N, 2*N> P1 = BitMatrix<N, 2*N>::augH(I, O);
+        BitMatrix<N, 2*N> P2 = BitMatrix<N, 2*N>::augH(O, I));
+
+        MultiQuadTuple<2*N, 2*N> augmentedDecrypt;
+        augmentedDecrypt.augV<N, N>(topBot * P1, topBot * P2);
+		return augmentedDecrypt.rMult(K);
 	}
 
 	/*
      * Function: generateConcealedF1()
-     * Returns the f1 C portion of the hash function
+     * Returns the C^{-1} f1 portion of the hash function
      * Applied to x and y separately
      */
 	const MultiQuadTuple<2*N, N> generateConcealedF1(const PrivateKey<N> & pk) const{
