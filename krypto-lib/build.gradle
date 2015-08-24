@@ -25,7 +25,7 @@ model {
                     args << "-g"
                     args << "-Wall"
                     args << "-O3"
-                    args << "-std=c++14"
+                    args << "-std=c++11"
                     args << "-fslp-vectorize-aggressive"
                     args << "-march=native"
                     args << "-ftemplate-depth=600"
