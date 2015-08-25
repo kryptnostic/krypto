@@ -69,7 +69,7 @@ public:
 		return objectAddressFunction * (BitVector<2*N>::vCat(token, objectSearchKey));
 	}
 
-	const ClientHashFunction<N> getClientHashFunction(const PrivateKey<N> & pk){
+	const ClientHashFunction<N> getClientHashFunction(const PrivateKey<N> & pk) const{
 		ClientHashFunction<N> h;
 		h.initialize(_K, pk);
 		return h;

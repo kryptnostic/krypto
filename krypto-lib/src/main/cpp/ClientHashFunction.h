@@ -44,8 +44,8 @@ struct ClientHashFunction
      */
 	const BitMatrix<N, 4*N> generateHashMatrix(const BitMatrix<N, 2*N> & K, const PrivateKey<N> & pk){
 		BitMatrix<2*N> Mi = pk.getM().inv();
-		BitMatrix<N, 2*N> Mi1 = Mi.splitV(0);
-		BitMatrix<N, 2*N> Mi2 = Mi.splitV(1);
+		BitMatrix<N, 2*N> Mi1 = Mi.splitV2(0);
+		BitMatrix<N, 2*N> Mi2 = Mi.splitV2(1);
 
 		BitMatrix<N, 2*N> left = pk.getB().inv() * Mi1;
 		BitMatrix<N, 2*N> right = pk.getA().inv() * Mi2;
@@ -72,7 +72,7 @@ struct ClientHashFunction
         BitMatrix<N, 2*N> P2 = BitMatrix<N, 2*N>::augH(O, I);
 
         MultiQuadTuple<2*N, 2*N> augmentedDecrypt;
-        augmentedDecrypt.augV<N, N>(topBot * P1, topBot * P2);
+        augmentedDecrypt.template augV<N, N>(topBot * P1, topBot * P2);
 		return augmentedDecrypt.rMult(K);
 	}
 
@@ -83,7 +83,7 @@ struct ClientHashFunction
      */
 	const MultiQuadTuple<2*N, N> generateConcealedF1(const PrivateKey<N> & pk) const{
 		MultiQuadTuple<N, N> f1 = pk.getf().get(0);
-		BitMatrix<N, 2*N> Mi2 = pk.getM().inv().splitV(1);
+		BitMatrix<N, 2*N> Mi2 = pk.getM().inv().splitV2(1);
 		BitMatrix<N, 2*N> inner = pk.getA().inv() * Mi2;
 		return (f1 * inner).rMult(_C.inv());
 	}

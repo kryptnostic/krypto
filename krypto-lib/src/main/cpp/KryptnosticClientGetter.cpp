@@ -13,6 +13,8 @@
 #define krypto_KryptnosticClientGetter_cpp
 
 #include "KryptnosticClient.h"
+#include <string>
+#include <iostream>
 #include <emscripten/emscripten.h>
 #include <emscripten/bind.h>
 

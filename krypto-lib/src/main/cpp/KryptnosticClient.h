@@ -82,7 +82,7 @@ public:
 	 * of the ClientHashFunction
 	 */
 	const val getClientHashFunction() const{
-		ClientHashFunction<N> newClientHashFunction = _spk.getClientHashFuncion(_pk);
+		ClientHashFunction<N> newClientHashFunction = _spk.getClientHashFunction(_pk);
 		byte * pointer = (byte *) &newClientHashFunction;
 		return val(memory_view<byte>(sizeof(ClientHashFunction<N>), pointer));
 	}
@@ -99,8 +99,8 @@ public:
 		const BitVector<N> & token = *reinterpret_cast<const BitVector<N>*>(tokenStr.data());
 		const BitVector<N> & objectSearchKey = *reinterpret_cast<const BitVector<N>*>(objectSearchKeyStr.data());
 
-		BitVector<N> objectAddress = _spk.getObjectAddress(objectAddressFunction, token, objectSearchKey);
-		unsigned char * pointer = (unsigned char *) &objectAddress;
+		BitVector<N> metadatumAddress = _spk.getMetadatumAddress(objectAddressFunction, token, objectSearchKey);
+		unsigned char * pointer = (unsigned char *) &metadatumAddress;
 		return val(memory_view<unsigned char>(sizeof(BitVector<N>), pointer));
 	}
 
@@ -127,7 +127,7 @@ public:
 		std::pair <BitVector<2*N>,BitMatrix<N> > objectIndexPair;
 		objectIndexPair = std::make_pair(eObjectSearchKey, objectConversionMatrix);
 		byte * pointer = (byte *) &objectIndexPair;
-		return val(memory_view<byte>(sizeof(std::pair <BitVector<2*N>,BitMatrix<N> >), objectIndexPair));
+		return val(memory_view<byte>(sizeof(std::pair <BitVector<2*N>,BitMatrix<N> >), pointer));
 	}
 
 /* Searching */
@@ -159,7 +159,7 @@ public:
 		std::pair <BitVector<2*N>,BitMatrix<N> > objectSharingPair;
 		objectSharingPair = std::make_pair(eObjectSearchKey, objectConversionMatrix);
 		byte * pointer = (byte *) &objectSharingPair;
-		return val(memory_view<byte>(sizeof(std::pair <BitVector<2*N>,BitMatrix<N> >), objectSharingPair));
+		return val(memory_view<byte>(sizeof(std::pair <BitVector<2*N>,BitMatrix<N> >), pointer));
 	}
 
 private:
