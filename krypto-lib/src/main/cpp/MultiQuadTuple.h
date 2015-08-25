@@ -53,7 +53,7 @@ struct MultiQuadTuple {
 
     //Sets current MQT to represent the subMQT of super for only the last NUM_INPUTS variables
     template<unsigned int SUPER_INPUTS, unsigned int SUPER_LIMIT = SUPER_INPUTS>
-    void setToSubMQT(MultiQuadTuple<SUPER_INPUTS, NUM_OUTPUTS, SUPER_LIMIT> &super) {
+    void setToSubMQT(const MultiQuadTuple<SUPER_INPUTS, NUM_OUTPUTS, SUPER_LIMIT> &super) {
     	if (LIMIT >= 0) {
     		if (SUPER_LIMIT <= NUM_INPUTS) { //these checks can be optimized out in the future
     			_matrix = super._matrix;
