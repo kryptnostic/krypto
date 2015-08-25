@@ -100,6 +100,17 @@ public:
 	}
 
 	/*
+	 * Function: getObjectAddress
+	 * Returns the address of the metadatum corresponding to an
+	 * object and a token.
+	 */
+	const val getObjectAddress(const UUID & objectId, const string token) {
+		unsigned char * pointer = (unsigned char *) &vector;
+		vector.print();
+		return val(memory_view<unsigned char>(sizeof(vector), pointer));
+	}
+
+	/*
 	 * Function: getObjectAddressFunction
 	 * Returns a serialized BitMatrix generated as the
 	 * ObjectAddressFunction L_i for a document

@@ -25,6 +25,7 @@ EMSCRIPTEN_BINDINGS(crypto_module) {
 		.function("getPrivateKey", &KryptnosticClient::getPrivateKey)
 		.function("getSearchPrivateKey", &KryptnosticClient::getSearchPrivateKey)
 		.function("getClientHashFunction", &KryptnosticClient::getClientHashFunction)
+		.function("getObjectAddress", &KryptnosticClient::getObjectAddress)
 		.function("getObjectAddressFunction", &KryptnosticClient::getObjectAddressFunction)
 		.function("getObjectConversionMatrix", &KryptnosticClient::getObjectConversionMatrix)
 		.function("getObjectIndexPair", &KryptnosticClient::getObjectIndexPair)
