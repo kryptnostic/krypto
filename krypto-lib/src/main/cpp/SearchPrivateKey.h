@@ -14,7 +14,6 @@
 #define krypto_SearchPrivateKey_h
 
 #include "PrivateKey.h"
-#include "UUID.h"
 #include "ClientHashFunction.h"
 
 //N should be a multiple of 64, otherwise BitVector would create
@@ -62,11 +61,11 @@ public:
 	}
 
 	/*
-	 * Function: getObjectAddress
+	 * Function: getMetadatumAddress
 	 * Given a token and a object key, returns the address for the
 	 * associated metadatum
 	 */
-	const BitVector<N> getObjectAddress(const BitMatrix<N, 2*N> &objectAddressFunction, const BitVector<N> &token, const BitVector<N> & objectSearchKey) const{
+	const BitVector<N> getMetadatumAddress(const BitMatrix<N, 2*N> &objectAddressFunction, const BitVector<N> &token, const BitVector<N> & objectSearchKey) const{
 		return objectAddressFunction * (BitVector<2*N>::vCat(token, objectSearchKey));
 	}
 

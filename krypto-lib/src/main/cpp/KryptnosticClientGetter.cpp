@@ -25,12 +25,11 @@ EMSCRIPTEN_BINDINGS(crypto_module) {
 		.function("getPrivateKey", &KryptnosticClient::getPrivateKey)
 		.function("getSearchPrivateKey", &KryptnosticClient::getSearchPrivateKey)
 		.function("getClientHashFunction", &KryptnosticClient::getClientHashFunction)
-		.function("getObjectAddress", &KryptnosticClient::getObjectAddress)
+		.function("getMetadatumAddress", &KryptnosticClient::getMetadatumAddress)
 		.function("getObjectAddressFunction", &KryptnosticClient::getObjectAddressFunction)
 		.function("getObjectIndexPair", &KryptnosticClient::getObjectIndexPair)
 		.function("getEncryptedSearchToken", &KryptnosticClient::getEncryptedSearchToken)
 		.function("getObjectSharingPair", &KryptnosticClient::getObjectSharingPair)
-		.function("getObjectSearchKey", &KryptnosticClient::getObjectSearchKey)
 		;
 }
 #endif

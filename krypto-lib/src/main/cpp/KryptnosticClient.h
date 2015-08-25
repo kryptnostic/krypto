@@ -90,11 +90,11 @@ public:
 /* Indexing */
 
 	/*
-	 * Function: getObjectAddress
+	 * Function: getMetadatumAddress
 	 * Returns the address of the metadatum corresponding to an
 	 * object and a token.
 	 */
-	const val getObjectAddress(std::string objectAddressFunctionStr, std::string tokenStr, std::string objectSearchKeyStr) const{
+	const val getMetadatumAddress(std::string objectAddressFunctionStr, std::string tokenStr, std::string objectSearchKeyStr) const{
 		const BitMatrix<N, 2*N> & objectAddressFunction = *reinterpret_cast<const BitMatrix<N, 2*N>*>(objectAddressFunctionStr.data());
 		const BitVector<N> & token = *reinterpret_cast<const BitVector<N>*>(tokenStr.data());
 		const BitVector<N> & objectSearchKey = *reinterpret_cast<const BitVector<N>*>(objectSearchKeyStr.data());
@@ -123,7 +123,7 @@ public:
 		const BitMatrix<N, 2*N> & objectAddressFunction = *reinterpret_cast<const BitMatrix<N, 2*N>*>(objectAddressFunctionStr.data());
 		BitVector<N> objectSearchKey = _spk.getObjectSearchKey(); //new objectSearchKey
 		BitVector<2*N> eObjectSearchKey = _pk.encrypt(objectSearchKey); //FHE-encrypted object search key
-		BitMatrix<N> objectConversionMatrix = _spk.getObjectConversionMatrix(objectAddressFunction); //raw objet conversion matrix
+		BitMatrix<N> objectConversionMatrix = _spk.getObjectConversionMatrix(objectAddressFunction); //raw object conversion matrix
 		std::pair <BitVector<2*N>,BitMatrix<N> > objectIndexPair;
 		objectIndexPair = std::make_pair(eObjectSearchKey, objectConversionMatrix);
 		byte * pointer = (byte *) &objectIndexPair;
