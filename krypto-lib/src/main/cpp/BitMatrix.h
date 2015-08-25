@@ -106,7 +106,7 @@ public:
     	if(DEBUG) assert(v.size() == ROWS);
     	BitMatrix<ROWS, COLS> result = BitMatrix<ROWS, COLS>::zeroMatrix();
     	for(unsigned int i = 0; i < ROWS; ++i){
-    		result.setRow(i, v.get(i));
+    		result.setRow(i, v.at(i));
     	}
     	return result;
     }
@@ -341,6 +341,30 @@ public:
 		_rows[rowIndex] ^= row;
 	}
 
+/* Elementary row operations */
+
+	/*
+     * Function: addRow(dstIndex, srcIndex)
+     * Bitwise adds (XORs) the source row to the destination row
+     */
+	void addRow(unsigned int dstIndex, unsigned int srcIndex) {
+		if (DEBUG) {
+			assert(inRowBound(dstIndex) && inRowBound(srcIndex));
+		}
+		_rows[dstIndex] ^= _rows[srcIndex];
+	}
+
+	/*
+     * Function: swapRow(firstIndex, secondIndex)
+     * Swaps two specified rows
+     */
+	void swapRows(unsigned int firstIndex, unsigned int secondIndex) {
+		if (DEBUG) {
+			assert(inRowBound(firstIndex) && inRowBound(secondIndex));
+		}
+        swap(_rows[firstIndex] , _rows[secondIndex]);
+	}
+
     /*
      * Function: zero()
      * Sets the current BitMatrix to a zero matrix
@@ -508,7 +532,7 @@ public:
 	 */
 	const BitMatrix<COLS, ROWS> rightInverse() const{
 		BitMatrix<ROWS> inverse = BitMatrix<ROWS>::identityMatrix();
-		BitMatrix<ROWS, COLS> workingSet = rref(*this, inverse); //TODO
+		BitMatrix<ROWS, COLS> workingSet = rref(inverse);
 		vector<bool> basisInitialized(COLS);
 		fill(basisInitialized.begin(), basisInitialized.end(), false);
 		BitVector<COLS> basis[COLS];
@@ -542,7 +566,8 @@ public:
 
 		if(filtered.size() != (COLS - ROWS)){
 			cerr << "Error: matrix has no generalized right inverse" << endl;
-			return NULL;
+			//assert(filtered.size() == (COLS - ROWS));
+			return BitMatrix<COLS, ROWS>::zeroMatrix();
 		}
 
 		BitMatrix<ROWS> inverseColumnar = inverse.transpose();
@@ -585,7 +610,7 @@ public:
 	                if ( candidateIndex != row ) {
 	                    BitVector<COLS> candidateRow = A[candidateIndex];
 	                    if ( candidateRow.get( col ) ) {
-	                        A.setRow(candidateIndex, A.getRow(candidateIndex) ^ currentRow);
+	                    	A.xorRow(candidateIndex, currentRow);
 	                    }
 	                }
 				}
@@ -613,7 +638,7 @@ public:
 	                if ( candidateIndex != row ) {
 	                    BitVector<COLS> candidateRow = A[candidateIndex];
 	                    if ( candidateRow.get( col ) ) {
-	                        A.setRow(candidateIndex, A.getRow(candidateIndex) ^ currentRow);
+	                    	A.xorRow(candidateIndex, currentRow);
 	                        rhs.addRow( candidateIndex, row );
 	                    }
 	                }
@@ -1050,30 +1075,6 @@ private:
      */
 	bool getRightBottomCorner() const{
 		return get(ROWS-1, COLS-1);
-	}
-
-/* Elementary row operations */
-
-	/*
-     * Function: addRow(dstIndex, srcIndex)
-     * Bitwise adds (XORs) the source row to the destination row
-     */
-	void addRow(unsigned int dstIndex, unsigned int srcIndex) {
-		if (DEBUG) {
-			assert(inRowBound(dstIndex) && inRowBound(srcIndex));
-		}
-		_rows[dstIndex] ^= _rows[srcIndex];
-	}
-
-	/*
-     * Function: swapRow(firstIndex, secondIndex)
-     * Swaps two specified rows
-     */
-	void swapRows(unsigned int firstIndex, unsigned int secondIndex) {
-		if (DEBUG) {
-			assert(inRowBound(firstIndex) && inRowBound(secondIndex));
-		}
-        swap(_rows[firstIndex] , _rows[secondIndex]);
 	}
 
 	/*

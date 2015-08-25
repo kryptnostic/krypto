@@ -54,12 +54,11 @@ public:
 	}
 
 	/*
-	 * Function: getDocConversionMatrix
-	 * Returns document conversion matrix given document address function and user-specific K
+	 * Function: getObjectConversionMatrix
+	 * Returns object(document) conversion matrix given object address function
 	 */
-	const BitMatrix<N> getDocConversionMatrix(const BitMatrix<N, 2*N> & docAddressFunction,
-		const BitMatrix<N, 2*N> & K) const{
-		return docAddressFunction * K.rightInverse();
+	const BitMatrix<N> getObjectConversionMatrix(const BitMatrix<N, 2*N> & objectAddressFunction) const{
+		return objectAddressFunction * _K.rightInverse();
 	}
 
 	/*
