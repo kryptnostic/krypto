@@ -102,7 +102,7 @@ public:
      * Function: directFromRows(v)
      * Return a matrix whose rows are the elements of the input BitVector vector
      */
-    static const BitMatrix<ROWS, COLS>::directFromRows(const vector<BitVector<COLS> > & v){
+    static const BitMatrix<ROWS, COLS> directFromRows(const vector<BitVector<COLS> > & v){
     	if(DEBUG) assert(v.size() == ROWS);
     	BitMatrix<ROWS, COLS> result = BitMatrix<ROWS, COLS>::zeroMatrix();
     	for(unsigned int i = 0; i < ROWS; ++i){
@@ -569,7 +569,7 @@ public:
 		}
 
 		BitMatrix<ROWS> inverseColumnar = inverse.transpose();
-		BitVector<ROWS, COLS> constantBasis = BitVector<ROWS, COLS>::zeroMatrix();
+		BitMatrix<ROWS, COLS> constantBasis = BitMatrix<ROWS, COLS>::zeroMatrix();
 		for(unsigned int i = 0; i < ROWS; ++i){
 			constantBasis.setRow(i, map(firstNonZeroIndex, inverseColumnar[i]));
 		}
@@ -581,10 +581,10 @@ public:
 	}
 
 	//helper function of rightInverse
-	BitVector<COLS> map(Integer[] firstNonZeroIndex, const BitVector<ROWS> & constant) const{
+	BitVector<COLS> map(unsigned int firstNonZeroIndex[], const BitVector<ROWS> & bv) const{
         BitVector<COLS> result = BitVector<COLS>::zeroVector();
         for ( int i = 0; i < ROWS; ++i ) {
-            if ( constant.get( i ) ) {
+            if ( bv.get( i ) ) {
                 result.set( firstNonZeroIndex[ i ] );
             }
         }
@@ -1048,6 +1048,16 @@ public:
 		ofs.close();
 	}
 
+    // Returns the number of rows
+	const inline unsigned int rowCount() const {
+		return ROWS;
+	}
+
+    // Returns the number of columns
+	const inline unsigned int colCount() const {
+		return COLS;
+	}
+
 private:
 	BitVector<COLS> _rows[ROWS];
 
@@ -1116,16 +1126,6 @@ private:
 
 	static inline bool inColBound(unsigned int colIndex){
 		return (colIndex >= 0 && colIndex < COLS);
-	}
-
-    // Returns the number of rows
-	const inline unsigned int rowCount() const {
-		return ROWS;
-	}
-
-    // Returns the number of columns
-	const inline unsigned int colCount() const {
-		return COLS;
 	}
 };
 
