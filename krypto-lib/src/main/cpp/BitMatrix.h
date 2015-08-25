@@ -350,6 +350,15 @@ public:
 			_rows[i].zero();
 	}
 
+	/*
+     * Function: copyMatrix(m)
+     * Copies a given matrix to the current one
+     */
+	void copy(BitMatrix<ROWS, COLS> &m) {
+		for (size_t i = 0; i < ROWS; ++i)
+			(_rows[i]).copy(m.getRow(i));
+	}
+
     template<unsigned int ROWS0,unsigned int ROWS1>
     void setSubMatrix( const BitMatrix<ROWS0,COLS> & lower, const BitMatrix<ROWS1,COLS> & upper ) {
         if(DEBUG) {

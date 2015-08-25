@@ -314,6 +314,14 @@ public:
     }
 
     /*
+     * Function: copy(rhs)
+     * Copies a given vector into the current one
+     */
+    void copy(const BitVector<NUM_BITS> & v) const {
+        memcpy(this->elements(), v.elements(), sizeof(v));
+    }
+
+    /*
      * Function: swap(firstIndex, secondIndex)
      * Swaps the values at two given indices
      */
