@@ -1087,8 +1087,8 @@ private:
 };
 
 /*
- * Function: hash<UUID>()(id)
- * Hashes a UUID by taking the sum of the standard hashes of its components
+ * Function: hash<BitMatrix<M, N>>()(id)
+ * Hashes a BitMatrix by taking the sum of the standard hashes of its components
  */
 
 template<unsigned int N, unsigned int M>
