@@ -62,12 +62,12 @@ public:
 	}
 
 	/*
-	 * Function: getAddress
+	 * Function: getMetadataAddress
 	 * Given a token and a object key, returns the address for the
 	 * associated metadatum
 	 */
-	const BitVector<N> getAddress(const BitMatrix<N, 2*N> &addressMatrix, const BitVector<N> &token, const BitVector<N> & objectSearchKey) const{
-		return addressMatrix * (BitVector<2*N>::vCat(token, objectSearchKey));
+	const BitVector<N> getMetadataAddress(const BitMatrix<N, 2*N> &objectAddressFunction, const BitVector<N> &token, const BitVector<N> & objectSearchKey) const{
+		return objectAddressFunction * (BitVector<2*N>::vCat(token, objectSearchKey));
 	}
 
 	const ClientHashFunction<N> getClientHashFunction(const PrivateKey<N> & pk){
