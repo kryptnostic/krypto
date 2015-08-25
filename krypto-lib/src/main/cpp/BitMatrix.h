@@ -1077,33 +1077,6 @@ private:
 		return get(ROWS-1, COLS-1);
 	}
 
-	/*
-     * Function: rrefFastGauss()
-     * Returns the reduced row-echelon form of a given matrix by Gaussian elimination
-     * Uses the method from: https://www.cs.umd.edu/~gasarch/TOPICS/factoring/fastgauss.pdf
-     * Assumes the current matrix is square
-     */
-	BitMatrix<ROWS,COLS> rrefFastGauss() const{
-		BitMatrix<ROWS,COLS> A = *this;
-		if(DEBUG) assert(ROWS == COLS);
-		for (int j = 0; j < COLS; ++j) {
-			int i = -1;
-			while(i < COLS) {
-				if (A.get(i,j)) break;
-				++i;
-			}
-			if (i != -1) {
-				for (int k = 0; k < COLS; ++k) {
-					if (k != j) {
-						A.set(i, k);
-						A.addRow(k, j);
-					}
-				}
-			}
-		}
-		return A;
-	}
-
 	static inline bool inRowBound(unsigned int rowIndex){
 		return (rowIndex >= 0 && rowIndex < ROWS);
 	}
