@@ -375,10 +375,10 @@ public:
 	}
 
 	/*
-     * Function: copyMatrix(m)
+     * Function: copy(m)
      * Copies a given matrix to the current one
      */
-	void copy(BitMatrix<ROWS, COLS> &m) {
+	void copy(const BitMatrix<ROWS, COLS> &m) {
 		for (size_t i = 0; i < ROWS; ++i)
 			(_rows[i]).copy(m.getRow(i));
 	}

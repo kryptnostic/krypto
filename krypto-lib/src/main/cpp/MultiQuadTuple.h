@@ -11,12 +11,12 @@
 #include "BitVector.h"
 #include "BitMatrix.h"
 
-#define NUM_INPUT_MONOMIALS ((NUM_INPUTS * (NUM_INPUTS+1)) >> 1)
+#define NUM_INPUT_MONOMIALS ((NUM_INPUTS * (NUM_INPUTS + 1)) >> 1)
 
 template<unsigned int NUM_INPUTS,unsigned int NUM_OUTPUTS, unsigned int LIMIT=NUM_INPUTS>
 struct MultiQuadTuple {
-    MultiQuadTuple<NUM_INPUTS,NUM_OUTPUTS, LIMIT-1U> next;
-    BitMatrix<LIMIT,NUM_OUTPUTS> _matrix;
+    MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS, LIMIT - 1U> next;
+    BitMatrix<LIMIT, NUM_OUTPUTS> _matrix;
 
 /* Generation of MultiQuadTuple */
 
@@ -51,17 +51,17 @@ struct MultiQuadTuple {
         next.setAsConstants(v);
     }
 
-    //Sets current MQT to represent the subMQT of super for only the last NUM_INPUTS variables
-    template<unsigned int SUPER_INPUTS, unsigned int SUPER_LIMIT = SUPER_INPUTS>
-    void setToSubMQT(const MultiQuadTuple<SUPER_INPUTS, NUM_OUTPUTS, SUPER_LIMIT> &super) {
-    	if (LIMIT >= 0) {
-    		if (SUPER_LIMIT == LIMIT) { //these checks can be optimized out in the future
-    			_matrix.copy(super._matrix); //TODO: get some copy function and add const to arg
-    			next.template setToSubMQT<SUPER_INPUTS, SUPER_LIMIT - 1>(super.next);
-    		} else {
-    			setToSubMQT<SUPER_INPUTS, SUPER_LIMIT - 1>(super.next);
-    		}
-    	}
+    //Recursively calls next on super when limits are not equal
+    template<unsigned int SUPER_INPUTS, unsigned int SUPER_LIMIT>
+    void setToSubMQT( const MultiQuadTuple<SUPER_INPUTS, NUM_OUTPUTS, SUPER_LIMIT> & super ) {
+        setToSubMQT<SUPER_INPUTS>( super.next );
+    }
+
+    //Recursively sets current MQT to super when at the same limit
+    template<unsigned int SUPER_INPUTS>
+    void setToSubMQT( const MultiQuadTuple<SUPER_INPUTS, NUM_OUTPUTS, LIMIT> & super ) {
+        _matrix.copy( super._matrix );
+        next.template setToSubMQT<SUPER_INPUTS>( super.next );
     }
 
 /* Getters */
@@ -98,26 +98,26 @@ struct MultiQuadTuple {
     template<unsigned int PARTIAL_INPUTS>
     MultiQuadTuple<NUM_INPUTS - PARTIAL_INPUTS, NUM_OUTPUTS> partialEval ( const BitVector<PARTIAL_INPUTS> & input ) const {
     	MultiQuadTuple<NUM_INPUTS - PARTIAL_INPUTS, NUM_OUTPUTS> result;
-    	result.template setToSubMQT<NUM_INPUTS>(*this); //sets result to have the last PARTIAL_INPUTS coefficient matrices of current MQT
+    	result.template setToSubMQT<NUM_INPUTS, NUM_INPUTS>(*this); //sets result to have the last PARTIAL_INPUTS coefficient matrices of current MQT
 
-    	for (int i = 0; i < PARTIAL_INPUTS; ++i) { //iterating over first PARTIAL_INPUTS x_i's
-    		const unsigned int remaining = NUM_INPUTS - i;
-    		BitMatrix<remaining, NUM_OUTPUTS> coeffMatrix = getMatrixN<i>();
-	    	bool first = input[i]; //x_i
-	    	if (first) {
-	    		for (int j = 0; j < PARTIAL_INPUTS; ++j) { //iterating over first PARTIAL_INPUTS x_j's
-		    		bool second = input[j];
-		    		if (second) {
-		    			//add row of x_i x_j's to constant vector for i, j < PARTIAL_INPUTS
-		    			result.getConstants() ^= coeffMatrix[j];
-		    		}
-		    	}
-		    	for (int j = PARTIAL_INPUTS; j < NUM_INPUTS; ++j){ //iterating over remaining x_j's
-		    		//add row of x_i x_j's to first row of coeff matrix of secondCoeff
-		    		(result.template getMatrixN<j - PARTIAL_INPUTS>())[0] ^= coeffMatrix[j];
-		    	}
-		    }
-		}        
+  //   	for (int i = 0; i < PARTIAL_INPUTS; ++i) { //iterating over first PARTIAL_INPUTS x_i's
+  //   		const unsigned int remaining = NUM_INPUTS - i;
+  //   		BitMatrix<remaining, NUM_OUTPUTS> coeffMatrix = getMatrixN<i>();
+	 //    	bool first = input[i]; //x_i
+	 //    	if (first) {
+	 //    		for (int j = 0; j < PARTIAL_INPUTS; ++j) { //iterating over first PARTIAL_INPUTS x_j's
+		//     		bool second = input[j];
+		//     		if (second) {
+		//     			//add row of x_i x_j's to constant vector for i, j < PARTIAL_INPUTS
+		//     			result.getConstants() ^= coeffMatrix[j];
+		//     		}
+		//     	}
+		//     	for (int j = PARTIAL_INPUTS; j < NUM_INPUTS; ++j){ //iterating over remaining x_j's
+		//     		//add row of x_i x_j's to first row of coeff matrix of secondCoeff
+		//     		(result.template getMatrixN<j - PARTIAL_INPUTS>())[0] ^= coeffMatrix[j];
+		//     	}
+		//     }
+		// }
         return result;
     }
 
@@ -246,6 +246,9 @@ struct MultiQuadTuple {
     }
 };
 
+
+
+
 /* Base case of the recursive struct: the constants - cliets do not need to read this part */
 template<unsigned NUM_INPUTS,unsigned int NUM_OUTPUTS>
 struct MultiQuadTuple<NUM_INPUTS,NUM_OUTPUTS,0> {
@@ -277,12 +280,18 @@ struct MultiQuadTuple<NUM_INPUTS,NUM_OUTPUTS,0> {
 
 /* State modifiers */
 
-    void setConstants(const BitVector<NUM_OUTPUTS> &v) const{
+    void setConstants(const BitVector<NUM_OUTPUTS> &v) {
         _constants = v;
     }
     template<unsigned int MONOMIAL_INDEX>
     void setMatrix( const BitMatrix<MONOMIAL_INDEX, NUM_OUTPUTS> & m  ) {
         //NO-OP base case should be elided under optimization.
+    }
+
+    //Recursively sets current MQT to super when at the limit 0
+    template<unsigned int SUPER_INPUTS>
+    void setToSubMQT( const MultiQuadTuple<SUPER_INPUTS, NUM_OUTPUTS, 0> & super ) {
+        setConstants(super._constants);
     }
 
 /* Print */

@@ -34,7 +34,8 @@ public:
      * on the search token without the encrypted ObjectSearchKey
      */
 	KryptnosticServer(const ClientHashFunction<N> & cHashFunction, const BitVector<2*N> & eSearchToken) :
-	_concealedF1(cHashFunction.concealedF1)
+	_concealedF1(cHashFunction.concealedF1),
+	_hashMatrixR(cHashFunction.hashMatrix.splitH2(1))
 	{
 		//set _tokenAddressFunction to partial eval of cHashFunction on eSearchToken
 
@@ -42,7 +43,7 @@ public:
 		BitVector<N> inner = _concealedF1(eSearchToken);
 
 		BitVector<N> hashMatrixPartialEval = cHashFunction.hashMatrix.splitH2(0) * eSearchToken; //add to consts of _tokenAddressFunction
-		//_tokenAddressFunction = (cHashFunction.augmentedF2).partialEval<N>(inner);
+		_tokenAddressFunction = (cHashFunction.augmentedF2).partialEval<N>(inner);
 	}
 
 
@@ -61,6 +62,7 @@ public:
 
 
 private:
+	const BitMatrix<N, 2*N> _hashMatrixR;
 	const MultiQuadTuple<2*N, N> _concealedF1;
 	MultiQuadTuple<N, N> _tokenAddressFunction;
 };
