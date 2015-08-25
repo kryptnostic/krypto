@@ -487,41 +487,9 @@ public:
      */
 	const BitMatrix<ROWS> inv(bool & invertible) const{
 		if (DEBUG) assert(ROWS==COLS);
-		BitMatrix<ROWS> A = *this;
 		BitMatrix<ROWS> I = BitMatrix<ROWS>::identityMatrix();
-		for (int k = 0; k < ROWS; ++k) {
-			int pos = -1, i = k;
-			while(i < ROWS) {//find the first pos >= k when A[pos, k] == 1
-				if (A.get(i, k)) {
-					pos = i;
-					break;
-				}
-				++i;
-			}
-			if (pos != -1) {
-				if (pos != k) {
-					A.swapRows(pos, k);
-					I.swapRows(pos, k);
-				}
-				for (int i = k+1; i < ROWS; ++i) if (A.get(i, k)) {
-					A.setRow(i, A[i] ^ A[k]);
-					I.setRow(i, I[i] ^ I[k]);
-				}
-			} else {
-				cerr << "Error: inverting a singular matrix!" << endl;
-				invertible = false;
-				return BitMatrix<ROWS>::zeroMatrix();
-			}
-		}
-		BitVector<ROWS> x;
-		BitMatrix<ROWS> X = BitMatrix<ROWS>::zeroMatrix();
-		for (unsigned int j = 0; j < ROWS; ++j) {
-			x.zero();
-			for (int i = ROWS-1; i >= 0; --i) x.set(i, x.dot(A[i]) ^ I.get(i,j));
-			X.setCol(j, x);
-		}
-		invertible = true;
-		return X;
+		rref(I);
+		return I;
 	}
 
 	/*
@@ -596,59 +564,65 @@ public:
      * Returns the reduced row-echelon form of a given matrix by Gaussian elimination
      */
 	const BitMatrix<ROWS,COLS> rref() const{
-		int l = 0;
+		int row = 0;
 		BitMatrix<ROWS,COLS> A = *this;
-		for (int k = 0; k < COLS && l < ROWS; ++k) {
-			int pos = -1, i = l;
-			while(i < ROWS) {
-				if (A.get(i, k)) {
-					pos = i;
-					break;
+		int limit = min(ROWS, COLS);
+		for(int col = 0; col < COLS; ++col){
+			int suitableRow = getSuitableRow(A, col, row);
+			if(suitableRow >= 0){
+				A.swapRows(row, suitableRow);
+	            BitVector<COLS> currentRow = A[row];
+	            for ( int candidateIndex = 0; candidateIndex < limit; ++candidateIndex ) {
+	                if ( candidateIndex != row ) {
+	                    BitVector<COLS> candidateRow = A[candidateIndex];
+	                    if ( candidateRow.get( col ) ) {
+	                        A.setRow(candidateIndex, A.getRow(candidateIndex) ^ currentRow);
+	                    }
+	                }
 				}
-				++i;
-			}
-			if (pos != -1) {
-				if (pos != l) {
-					A.swapRows(pos, l);
-				}
-				for (int i = l+1; i < ROWS; ++i) if (A.get(i, k)) {
-					A.setRow(i, A[i] ^ A[k]);
-				}
-				++l;
+				++row;
 			}
 		}
 		return A;
 	}
 
 	/*
-	 * Function: rref(rhs)
-	 * Returns the reduced row-echelon form of a given matrix by Gaussian elimination
-	 */
-	const BitMatrix<ROWS,COLS> rref(BitMatrix<ROWS> & rhs) const{
-		int l = 0;
+     * Function: rref(rhs)
+     * Returns the reduced row-echelon form of a given matrix by Gaussian elimination
+     */
+	const BitMatrix<ROWS, COLS> rref(BitMatrix<ROWS> & rhs) const{
+		int row = 0;
 		BitMatrix<ROWS,COLS> A = *this;
-		for (int k = 0; k < COLS && l < ROWS; ++k) {
-			int pos = -1, i = l;
-			while(i < ROWS) {
-				if (A.get(i, k)) {
-					pos = i;
-					break;
+		int limit = min(ROWS, COLS);
+		for(int col = 0; col < COLS; ++col){
+			int suitableRow = getSuitableRow(A, col, row);
+			if(suitableRow >= 0){
+				A.swapRows(row, suitableRow);
+				rhs.swapRows(row, suitableRow);
+	            BitVector<COLS> currentRow = A[row];
+	            for ( int candidateIndex = 0; candidateIndex < limit; ++candidateIndex ) {
+	                if ( candidateIndex != row ) {
+	                    BitVector<COLS> candidateRow = A[candidateIndex];
+	                    if ( candidateRow.get( col ) ) {
+	                        A.setRow(candidateIndex, A.getRow(candidateIndex) ^ currentRow);
+	                        rhs.addRow( candidateIndex, row );
+	                    }
+	                }
 				}
-				++i;
-			}
-			if (pos != -1) {
-				if (pos != l) {
-					A.swapRows(pos, l);
-					rhs.swapRows(pos, l);
-				}
-				for (int i = l+1; i < ROWS; ++i) if (A.get(i, k)) {
-					A.setRow(i, A[i] ^ A[k]);
-					rhs.setRow(i, rhs[i] ^ rhs[k]);
-				}
-				++l;
+				++row;
 			}
 		}
 		return A;
+	}
+
+	//helper function for RREF
+	const int getSuitableRow(const BitMatrix<ROWS, COLS> & input, int col, int startRow) const{
+		for(int i = startRow; i < ROWS; ++i){
+			if(input[i][col]){
+				return i;
+			}
+		}
+		return -1;
 	}
 
 	/* Matrix-vector Operations */
