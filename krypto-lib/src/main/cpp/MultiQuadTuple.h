@@ -53,11 +53,11 @@ struct MultiQuadTuple {
 
     //Sets current MQT to represent the subMQT of super for only the last NUM_INPUTS variables
     template<unsigned int SUPER_INPUTS, unsigned int SUPER_LIMIT = SUPER_INPUTS>
-    void setToSubMQT(MultiQuadTuple<SUPER_INPUTS, NUM_OUTPUTS, SUPER_LIMIT> &super) {
+    void setToSubMQT(const MultiQuadTuple<SUPER_INPUTS, NUM_OUTPUTS, SUPER_LIMIT> &super) {
     	if (LIMIT >= 0) {
-    		if (SUPER_LIMIT <= NUM_INPUTS) { //these checks can be optimized out in the future
-    			_matrix = super._matrix;
-    			next.setToSubMQT<SUPER_INPUTS, SUPER_LIMIT - 1>(super.next);
+    		if (SUPER_LIMIT == LIMIT) { //these checks can be optimized out in the future
+    			_matrix.copy(super._matrix); //TODO: get some copy function and add const to arg
+    			next.template setToSubMQT<SUPER_INPUTS, SUPER_LIMIT - 1>(super.next);
     		} else {
     			setToSubMQT<SUPER_INPUTS, SUPER_LIMIT - 1>(super.next);
     		}
@@ -98,7 +98,7 @@ struct MultiQuadTuple {
     template<unsigned int PARTIAL_INPUTS>
     MultiQuadTuple<NUM_INPUTS - PARTIAL_INPUTS, NUM_OUTPUTS> partialEval ( const BitVector<PARTIAL_INPUTS> & input ) const {
     	MultiQuadTuple<NUM_INPUTS - PARTIAL_INPUTS, NUM_OUTPUTS> result;
-    	result.setToSubMQT<NUM_INPUTS>(*this); //sets result to have the last PARTIAL_INPUTS coefficient matrices of current MQT
+    	result.template setToSubMQT<NUM_INPUTS>(*this); //sets result to have the last PARTIAL_INPUTS coefficient matrices of current MQT
 
     	for (int i = 0; i < PARTIAL_INPUTS; ++i) { //iterating over first PARTIAL_INPUTS x_i's
     		const unsigned int remaining = NUM_INPUTS - i;
