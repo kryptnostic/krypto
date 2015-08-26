@@ -28,7 +28,7 @@ model {
                     args << "-std=c++11"
                     args << "-fslp-vectorize-aggressive"
                     args << "-march=native"
-                    args << "-ftemplate-depth=600"
+                    args << "-ftemplate-depth=8192"
                     // run ./gradlew buildFullJar -Pemhome=<pathToYourEmscriptenIncludeDir>
                     //ex: /Users/drew/Downloads/emsdk_portable/emscripten/tag-1.34.5/system/include/" //(whatever directory that contains <emscripten/bind.h>)
                     args << "-I${emhome}"  

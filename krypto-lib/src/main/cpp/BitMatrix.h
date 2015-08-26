@@ -1158,6 +1158,45 @@ private:
 	static inline bool inColBound(unsigned int colIndex){
 		return (colIndex >= 0 && colIndex < COLS);
 	}
+
+	// Rounds up input to nearest multiple of given power of 2
+	// does this by adding mult-1 to sz, then masking off the
+	// the bottom bits. Result is multiple of mult.
+	// NOTE: mult must be a power of 2
+	// Taken from Stanford Spring 2015 CS 107 Assignment 7
+	static inline unsigned int roundup_mult(unsigned int input, int mult) {
+	  return (input + mult-1) & ~(mult-1);
+	}
+};
+
+/*
+ * Special template for 0-sized BitMatrix that ensures that the
+ * size in memory is at least 1 byte
+ */
+template<unsigned int ROWS>
+class BitMatrix<ROWS, 0> {
+private:
+    unsigned char x;
+};
+
+/*
+ * Special template for 0-sized BitMatrix that ensures that the
+ * size in memory is at least 1 byte
+ */
+template<unsigned int COLS>
+class BitMatrix<0, COLS> {
+private:
+    unsigned char x;
+};
+
+/*
+ * Special template for 0-sized BitMatrix that ensures that the
+ * size in memory is at least 1 byte
+ */
+template<>
+class BitMatrix<0, 0> {
+private:
+    unsigned char x;
 };
 
 /*
