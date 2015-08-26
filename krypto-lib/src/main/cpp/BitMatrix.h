@@ -1087,6 +1087,15 @@ private:
 	static inline bool inColBound(unsigned int colIndex){
 		return (colIndex >= 0 && colIndex < COLS);
 	}
+
+	// Rounds up input to nearest multiple of given power of 2
+	// does this by adding mult-1 to sz, then masking off the
+	// the bottom bits. Result is multiple of mult.
+	// NOTE: mult must be a power of 2
+	// Taken from Stanford Spring 2015 CS 107 Assignment 7
+	static inline unsigned int roundup_mult(unsigned int input, int mult) {
+	  return (input + mult-1) & ~(mult-1);
+	}
 };
 
 /*
