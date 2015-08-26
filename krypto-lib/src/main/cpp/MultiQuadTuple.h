@@ -153,7 +153,7 @@ struct MultiQuadTuple {
             bool second = input[INDEX_J];
             if (second) {
                 //add row of x_i x_j's to constant vector for i, j < PARTIAL_INPUTS
-                getConstants() ^= coeffMatrix[INDEX_J - INDEX_I];
+                setConstants(getConstants() ^ coeffMatrix[INDEX_J - INDEX_I]);
             }
         }
         
@@ -170,7 +170,7 @@ struct MultiQuadTuple {
         bool first = input[INDEX_I]; //x_i
         if (first) {
             //add row of x_i's to constant vector for i, j < PARTIAL_INPUTS
-            getConstants() ^= coeffMatrix[0];
+            setConstants(getConstants() ^ coeffMatrix[0]);
         }
         
         updateCoefficientsAboveP(super, input, BitMatrix<INDEX_I - 1, SUPER_INPUTS - 1>()); //decrement i, reset j to max
@@ -186,7 +186,7 @@ struct MultiQuadTuple {
         bool first = input[0]; //x_i
         if (first) {
             //add row of x_0's to constant vector for i, j < PARTIAL_INPUTS
-            getConstants() ^= coeffMatrix[0];
+            setConstants(getConstants() ^= coeffMatrix[0]);
         }
     }
 
@@ -243,7 +243,7 @@ struct MultiQuadTuple {
 /* State modifiers */
 
     //Set the constant components of the MultiQuadTuple to given BitVector
-    void setConstants(const BitVector<NUM_OUTPUTS> &v) const{
+    void setConstants(const BitVector<NUM_OUTPUTS> &v) {
         next.setConstants(v);
     }
 
@@ -379,6 +379,7 @@ struct MultiQuadTuple<NUM_INPUTS,NUM_OUTPUTS,0> {
     void setConstants(const BitVector<NUM_OUTPUTS> &v) {
         _constants = v;
     }
+    
     template<unsigned int MONOMIAL_INDEX>
     void setMatrix( const BitMatrix<MONOMIAL_INDEX, NUM_OUTPUTS> & m  ) {
         //NO-OP base case should be elided under optimization.
