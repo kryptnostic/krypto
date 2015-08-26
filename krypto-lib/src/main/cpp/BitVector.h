@@ -317,7 +317,7 @@ public:
      * Function: copy(rhs)
      * Copies a given vector into the current one
      */
-    void copy(const BitVector<NUM_BITS> & v) const {
+    void copy(const BitVector<NUM_BITS> & v) {
         memcpy(this->elements(), v.elements(), sizeof(v));
     }
 
