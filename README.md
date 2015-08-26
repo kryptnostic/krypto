@@ -3,7 +3,9 @@ Krypto
 
 ## Getting Started
 
-Make sure everything is working correctly. 
+Make sure everything is working correctly.
+
+Make sure you install [emscripten](http://kripken.github.io/emscripten-site/)
 
 For mac:
 
