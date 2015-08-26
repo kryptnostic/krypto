@@ -243,12 +243,12 @@ struct MultiQuadTuple {
 /* State modifiers */
 
     //Set the constant components of the MultiQuadTuple to given BitVector
-    void setConstants(const BitVector<NUM_OUTPUTS> &v) const{
+    void setConstants(const BitVector<NUM_OUTPUTS> &v){
         next.setConstants(v);
     }
 
     //Xor the constant components of the MultiQuadTuple with given BitVector
-    void xorConstants(const BitVector<NUM_OUTPUTS> &v) const{
+    void xorConstants(const BitVector<NUM_OUTPUTS> &v){
         next.xorConstants(v);
     }
 
