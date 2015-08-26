@@ -24,15 +24,13 @@ struct ClientHashFunction
 	BitMatrix<N, 4*N> hashMatrix;
 	MultiQuadTuple<2*N, N> augmentedF2;
 	MultiQuadTuple<2*N, N> concealedF1;
-	BitMatrix<N> _C; //to conceal individual function pieces, not accessible by server
 
 /* Initialization */
 
-	void initialize(const BitMatrix<N, 2*N> & K, const PrivateKey<N> & pk){
-		_C = BitMatrix<N>::randomInvertibleMatrix();
+	void initialize(const BitMatrix<N> & C, const BitMatrix<N, 2*N> & K, const PrivateKey<N> & pk){
 		hashMatrix = generateHashMatrix(K, pk);
-		augmentedF2 = generateAugmentedF2(K, pk);
-		concealedF1 = generateConcealedF1(pk);
+		augmentedF2 = generateAugmentedF2(C, K, pk);
+		concealedF1 = generateConcealedF1(C, pk);
 	}
 
 /* Generation of individual components */
@@ -60,9 +58,9 @@ struct ClientHashFunction
      * Returns the K (f2 C || f2 C) portion of the hash function
      * Applied to concealedF1(x) concatenated with concealedF1(y)
      */
-	const MultiQuadTuple<2*N, N> generateAugmentedF2(const BitMatrix<N, 2*N> & K, const PrivateKey<N> & pk) const{
+	const MultiQuadTuple<2*N, N> generateAugmentedF2(const BitMatrix<N> & C, const BitMatrix<N, 2*N> & K, const PrivateKey<N> & pk) const{
 		MultiQuadTuple<N, N> f2 = pk.getf().get(1);
-		MultiQuadTuple<N, N> topBot = (f2 * _C).rMult(pk.getB().inv());
+		MultiQuadTuple<N, N> topBot = (f2 * C).rMult(pk.getB().inv());
 
         BitMatrix<N> I = BitMatrix<N>::identityMatrix();
         BitMatrix<N> O = BitMatrix<N>::zeroMatrix();
@@ -79,11 +77,11 @@ struct ClientHashFunction
      * Returns the C^{-1} f1 portion of the hash function
      * Applied to x and y separately
      */
-	const MultiQuadTuple<2*N, N> generateConcealedF1(const PrivateKey<N> & pk) const{
+	const MultiQuadTuple<2*N, N> generateConcealedF1(const BitMatrix<N> & C, const PrivateKey<N> & pk) const{
 		MultiQuadTuple<N, N> f1 = pk.getf().get(0);
 		BitMatrix<N, 2*N> Mi2 = pk.getM().inv().splitV2(1);
 		BitMatrix<N, 2*N> inner = pk.getA().inv() * Mi2;
-		return (f1 * inner).rMult(_C.inv());
+		return (f1 * inner).rMult(C.inv());
 	}
 
 /* Evaluation */

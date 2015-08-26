@@ -72,7 +72,7 @@ public:
 
 	const ClientHashFunction<N> getClientHashFunction(const PrivateKey<N> & pk) const{
 		ClientHashFunction<N> h;
-		h.initialize(_K, pk);
+		h.initialize(BitMatrix<N>::randomInvertibleMatrix(), _K, pk);
 		return h;
 	}
 
