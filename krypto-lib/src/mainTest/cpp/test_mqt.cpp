@@ -116,7 +116,7 @@ TEST(MQTTests, testPartialEval){
     //f(x || y)
     //g(y) = f(x || y)
     MultiQuadTuple<sma, sma> g = f.partialEval<sma>(x);
-    ASSERT_TRUE(g(y).equals(f(z)));
+    ASSERT_TRUE(g(y) == f(z));
 }
 
 /*
