@@ -525,12 +525,83 @@ public:
 		return I;
 	}
 
+	const BitMatrix<COLS, ROWS> leftInverse() const{
+		if(DEBUG)assert(ROWS >= COLS);
+
+		BitMatrix<COLS, ROWS> T = transpose();
+		BitMatrix<COLS> inverse = BitMatrix<COLS>::identityMatrix();
+		BitMatrix<COLS, ROWS> workingSet = T.rref(inverse);
+		vector<bool> basisInitialized(ROWS);
+		fill(basisInitialized.begin(), basisInitialized.end(), false);
+		BitVector<ROWS> basis[ROWS];
+		for(int i = 0; i < ROWS; ++i){
+			basis[i] = BitVector<ROWS>::zeroVector();
+		}
+		unsigned int firstNonZeroIndex[COLS] = {0};
+		for(unsigned int i = 0; i < COLS; ++i){
+			BitVector<ROWS> v = workingSet[i];
+			int value = -1;
+			for(unsigned int j = 0; j < ROWS; ++j){
+				if(v.get(j)){
+					if(value == -1){
+						value = j;
+						firstNonZeroIndex[i] = j;
+					} else {
+						if(!basisInitialized[j]){
+							basis[j] = BitVector<ROWS>::zeroVector();
+							basis[j].set(j);
+							basisInitialized[j] = true;
+						}
+						basis[j].set(value);
+					}
+				}
+			}
+		}
+
+		vector<BitVector<ROWS> > filtered;
+		for(unsigned int i = 0; i < ROWS; ++i){
+			if(basisInitialized[i]){
+				filtered.push_back(basis[i]);
+			}
+		}
+
+		if(filtered.size() != (ROWS - COLS)){
+			cerr << "Error: matrix has no generalized left inverse" << endl;
+			//assert(filtered.size() == (ROWS - COLS));
+			return BitMatrix<COLS, ROWS>::zeroMatrix();
+		}
+
+		BitMatrix<COLS> inverseColumnar = inverse.transpose();
+		BitMatrix<COLS, ROWS> constantBasis = BitMatrix<COLS, ROWS>::zeroMatrix();
+		for(unsigned int i = 0; i < COLS; ++i){
+			constantBasis.setRow(i, mapLeft(firstNonZeroIndex, inverseColumnar[i]));
+		}
+
+		BitMatrix<COLS, ROWS - COLS> randomizer = BitMatrix<COLS, ROWS - COLS>::randomMatrix();
+		BitMatrix<COLS, ROWS> nullspan = randomizer.template operator*<ROWS>(BitMatrix<ROWS - COLS, ROWS>::directFromRows(filtered));
+
+		return nullspan ^ constantBasis;
+	}
+
+	//helper function of leftInverse
+	BitVector<ROWS> mapLeft(unsigned int firstNonZeroIndex[], const BitVector<COLS> & bv) const{
+        BitVector<ROWS> result = BitVector<ROWS>::zeroVector();
+        for ( int i = 0; i < COLS; ++i ) {
+            if ( bv.get( i ) ) {
+                result.set( firstNonZeroIndex[ i ] );
+            }
+        }
+        return result;
+    }
+
 	/*
 	 * Function: right inverse
 	 * Returns the inverse of a matrix of any dimension
 	 * Assume matrix is full rank
 	 */
 	const BitMatrix<COLS, ROWS> rightInverse() const{
+		if(DEBUG)assert(COLS >= ROWS);
+
 		BitMatrix<ROWS> inverse = BitMatrix<ROWS>::identityMatrix();
 		BitMatrix<ROWS, COLS> workingSet = rref(inverse);
 		vector<bool> basisInitialized(COLS);
@@ -576,7 +647,7 @@ public:
 		BitMatrix<ROWS> inverseColumnar = inverse.transpose();
 		BitMatrix<ROWS, COLS> constantBasis = BitMatrix<ROWS, COLS>::zeroMatrix();
 		for(unsigned int i = 0; i < ROWS; ++i){
-			constantBasis.setRow(i, map(firstNonZeroIndex, inverseColumnar[i]));
+			constantBasis.setRow(i, mapRight(firstNonZeroIndex, inverseColumnar[i]));
 		}
 
 		BitMatrix<ROWS, COLS - ROWS> randomizer = BitMatrix<ROWS, COLS - ROWS>::randomMatrix();
@@ -586,7 +657,7 @@ public:
 	}
 
 	//helper function of rightInverse
-	BitVector<COLS> map(unsigned int firstNonZeroIndex[], const BitVector<ROWS> & bv) const{
+	BitVector<COLS> mapRight(unsigned int firstNonZeroIndex[], const BitVector<ROWS> & bv) const{
         BitVector<COLS> result = BitVector<COLS>::zeroVector();
         for ( int i = 0; i < ROWS; ++i ) {
             if ( bv.get( i ) ) {
