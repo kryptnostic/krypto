@@ -3,9 +3,9 @@
 
 #include <iostream>
 #include <utility>
-#include "../main/cpp/PrivateKey.h"
-#include "../main/cpp/SearchPrivateKey.h"
-#include "../main/cpp/MultiQuadTuple.h"
+#include "../cpp/PrivateKey.h"
+#include "../cpp/SearchPrivateKey.h"
+#include "../cpp/MultiQuadTuple.h"
 
 using namespace std;
 
