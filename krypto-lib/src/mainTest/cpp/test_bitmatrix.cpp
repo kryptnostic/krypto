@@ -92,6 +92,15 @@ TEST(BitMatrixTests, testInv) {
 	ASSERT_TRUE(Ir.isIdentity());
 }
 
+TEST(BitMatrixTests, testRightInv){
+	BitMatrix<N> M1 = BitMatrix<N>::randomInvertibleMatrix();
+	BitMatrix<N> M2 = BitMatrix<N>::randomInvertibleMatrix();
+	BitMatrix<N, 2*N> M = BitMatrix<N, 2*N>::augH(M1, M2);
+	BitMatrix<2*N, N> Mi = M.rightInverse();
+	BitMatrix<N> J = M * Mi;
+	ASSERT_TRUE(J.isIdentity());
+}
+
 TEST(BitMatrixTests, testSplit) {
 	BitMatrix<2*N> I = BitMatrix<2*N>::identityMatrix();
 	BitMatrix<2*N,N> I1 = I.splitH2(0);

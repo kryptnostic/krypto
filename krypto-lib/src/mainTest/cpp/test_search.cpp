@@ -27,5 +27,10 @@ TEST(SearhKeyTest, testClientHashFunction){
 	BitVector<2*N> eSearchToken = pk.encrypt(searchToken);
 	BitVector<N> objectSearchKey = sk.getObjectSearchKey();
 	BitVector<2*N> eObjectSearchKey = pk.encrypt(objectSearchKey);
-	BitVector<N> metadatumAddress = chf(eSearchToken, eObjectSearchKey);
+	BitMatrix<N, 2*N> objectAddressFunction = sk.getObjectAddressFunction();
+	BitMatrix<N> objectConversionMatrix = sk.getObjectConversionMatrix(objectAddressFunction);
+	BitVector<N> expectedMetadatumAddress = objectConversionMatrix * chf(eSearchToken, eObjectSearchKey);
+	BitVector<N> actualMetadatumAddress = sk.getMetadatumAddress(objectAddressFunction, searchToken, objectSearchKey);
+	expectedMetadatumAddress.print();
+	actualMetadatumAddress.print();
 }
