@@ -9,19 +9,19 @@ extern "C" {
 #endif
 /*
  * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
- * Method:    initKryptnosticEngine
- * Signature: ([B[B[B)J
+ * Method:    initKryptnosticService
+ * Signature: ([B[B)V
  */
-JNIEXPORT jlong JNICALL Java_com_kryptnostic_krypto_engine_KryptnosticEngine_initKryptnosticEngine
-  (JNIEnv *, jobject, jbyteArray, jbyteArray, jbyteArray);
+JNIEXPORT void JNICALL Java_com_kryptnostic_krypto_engine_KryptnosticEngine_initKryptnosticService
+  (JNIEnv *, jobject, jbyteArray, jbyteArray);
 
 /*
  * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
- * Method:    getAddress
- * Signature: ([B)[B
+ * Method:    calculateMetadataAddress
+ * Signature: ([B[B)[B
  */
-JNIEXPORT jbyteArray JNICALL Java_com_kryptnostic_krypto_engine_KryptnosticEngine_getAddress
-  (JNIEnv *, jobject, jbyteArray);
+JNIEXPORT jbyteArray JNICALL Java_com_kryptnostic_krypto_engine_KryptnosticEngine_calculateMetadataAddress
+  (JNIEnv *, jobject, jbyteArray, jbyteArray);
 
 #ifdef __cplusplus
 }

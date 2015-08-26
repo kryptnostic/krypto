@@ -1,5 +1,7 @@
 package com.kryptnostic.krypto.engine;
 
+import java.util.Random;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -21,7 +23,12 @@ public class KryptnosticEngineTest {
     public void tearDown() throws Exception {}
 
     @Test
-    public void testInitialization() throws Exception {
-        KryptnosticEngine eng = new KryptnosticEngine(new byte[0], new byte[0], new byte[0]);
+    public void smokeTest() throws Exception {
+        Random rand = new Random();
+        byte[] clientHashFunc = new byte[16];
+        byte[] encObjectSearchToken = new byte[16];
+        rand.nextBytes( clientHashFunc );
+        rand.nextBytes( encObjectSearchToken );
+        new KryptnosticEngine( clientHashFunc, encObjectSearchToken );
     }
 }

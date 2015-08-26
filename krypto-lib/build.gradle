@@ -65,12 +65,12 @@ model {
     }
     components {
         main(NativeLibrarySpec) {
-         	targetPlatform "x64"
+            targetPlatform "x64"
             sources {
                 cpp {
                     source {
                         srcDir "src/main/cpp/"
-                        include "**/*.h"
+                        include "*.h"
                     }
                 }
             }

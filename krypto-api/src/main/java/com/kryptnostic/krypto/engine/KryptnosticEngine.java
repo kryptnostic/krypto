@@ -28,20 +28,31 @@ public class KryptnosticEngine {
         System.load( outputPath.toAbsolutePath().toString() );
     }
 
-    private final long handle;
+    private long handle;
 
-    public KryptnosticEngine( byte[] clientHashFunction, byte[] conversionMatrix, byte[] docSearchKey ) {
-        handle = initKryptnosticEngine( clientHashFunction, conversionMatrix, docSearchKey );
+    /**
+     * VALIDATE HERE OR BEFORE PASSING IN
+     * @param clientHashFunction
+     * @param encObjectSearchToken
+     */
+    public KryptnosticEngine( byte[] clientHashFunction, byte[] encObjectSearchToken ) {
+        // Side effect, sets handle to a pointer to this object on the heap so we can clean it up
+        initKryptnosticService( clientHashFunction, encObjectSearchToken );
     }
 
-    //
-    //    Constructors
-    //
-    // ryan sends docSearchKey, convMatrix per document & clientHashFunc per session
-    // make a set of Pair<ConvMatrix, docSearchKey>
-    private native long initKryptnosticEngine( byte[] clientHashFunction, byte[] conversionMatrix, byte[] docSearchKey );
+    /**
+     * Constructor
+     * Constructs a KryptnosticServer given a
+     * client's hash function and an FHE-encrypted search token.
+     * Calculates the client's hash function evaluated
+     * on the search token without the encrypted ObjectSearchKey
+     **/
+    private native void initKryptnosticService( byte[] clientHashFunction, byte[] encObjectSearchToken );
 
-    // search => call this
-    public native byte[] getAddress( byte[] encSearchToken );
+    /**
+     * Function: getMetadataAddress
+     * Returns a serialized pair of (ObjectSearchKey, ObjectAddressFunction)
+     **/
+    public native byte[] calculateMetadataAddress( byte[] encObjectSearchKey, byte[] objectConversionMatrix );
 
 }
