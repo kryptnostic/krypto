@@ -47,9 +47,7 @@ struct ClientHashFunction
 		BitMatrix<N, 2*N> Mi1 = Mi.splitV2(0);
 		BitMatrix<N, 2*N> Mi2 = Mi.splitV2(1);
 
-		BitMatrix<N, 2*N> left = pk.getB().inv() * Mi1;
-		BitMatrix<N, 2*N> right = pk.getA().inv() * Mi2;
-		BitMatrix<N, 2*N> decryptMatrix = left ^ right;
+		BitMatrix<N, 2*N> decryptMatrix = pk.getB().inv() * (Mi1 ^ pk.getA().inv() * Mi2);
 
 		BitMatrix<N, 2*N> zero = BitMatrix<N, 2*N>::zeroMatrix();
 		BitMatrix<N, 4*N> top = BitMatrix<N, 4*N>::augH(decryptMatrix, zero);
@@ -64,7 +62,7 @@ struct ClientHashFunction
      */
 	const MultiQuadTuple<2*N, N> generateAugmentedF2(const BitMatrix<N, 2*N> & K, const PrivateKey<N> & pk) const{
 		MultiQuadTuple<N, N> f2 = pk.getf().get(1);
-		MultiQuadTuple<N, N> topBot = (f2 * _C);
+		MultiQuadTuple<N, N> topBot = (f2 * _C).rMult(pk.getB().inv());
 
         BitMatrix<N> I = BitMatrix<N>::identityMatrix();
         BitMatrix<N> O = BitMatrix<N>::zeroMatrix();
