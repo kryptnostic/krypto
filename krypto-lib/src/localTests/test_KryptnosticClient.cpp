@@ -1,4 +1,4 @@
-#include "../main/cpp/KryptnosticEngineClient.h"
+#include "../main/cpp/KryptnosticClient.h"
 #include <iostream>
 #include <stdio.h>
 #include <string.h>
@@ -18,21 +18,21 @@ void testInstantiateKE() {
 	for (int run = 0; run < TESTRUNS; ++run) {
 		clock_t begin = clock();
 
-		PrivateKey<128> pk;
-		SearchPrivateKey<128> spk(pk);
-		KryptnosticEngineClient engine;
+		//PrivateKey<128> pk;
+		//SearchPrivateKey<128> spk(pk);
+		KryptnosticClient engine;
 
-		cout << "size of spk is " << sizeof(spk) << endl;
+		//cout << "size of spk is " << sizeof(spk) << endl;
 
 		clock_t end = clock();
  		diff += (end - begin);
  	}
- 	cout << "Average time elapsed over " << OPRUNS * TESTRUNS << " instantiations of KryptnosticEngineClient: " << double(diff) / (CLOCKS_PER_SEC * OPRUNS * TESTRUNS) << " sec" << endl;
+ 	cout << "Average time elapsed over " << OPRUNS * TESTRUNS << " instantiations of KryptnosticClient: " << double(diff) / (CLOCKS_PER_SEC * OPRUNS * TESTRUNS) << " sec" << endl;
 }
 
 
 int main(int argc, char **argv) {
-	cout << "KryptnosticEngineClient tests" << endl;
+	cout << "KryptnosticClient tests" << endl;
 	testInstantiateKE();
 	return 0;
 }

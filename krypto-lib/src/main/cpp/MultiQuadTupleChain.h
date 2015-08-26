@@ -32,7 +32,7 @@ public:
         for(unsigned int i = 0; i < L; ++i){
         	MultiQuadTuple<N,N> mqt;
         	mqt.randomize();
-        	result.addFunctionTuple(mqt);
+        	result._tuple[i] = mqt;
         }
         return result;
     }
@@ -45,16 +45,12 @@ public:
 		return result;
 	}
 
-	void addFunctionTuple(const MultiQuadTuple<N,N> & f){
-		_tuple.push_back(f);
-	}
-
 	const MultiQuadTuple<N,N> get(const unsigned int index) const{
 		return _tuple[index];
 	}
 
 private:
-	vector<MultiQuadTuple<N,N> > _tuple;
+	MultiQuadTuple<N,N> _tuple[L];
 };
 
 #endif

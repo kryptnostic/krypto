@@ -81,25 +81,33 @@ protected:
 		return _f;
 	}
 
-	const vector<BitMatrix<2*N> > getUnaryObfChain() const{
-		return _Cu;
+	const BitMatrix<2*N> getUnaryObf1() const{
+		return _Cu[0];
 	}
 
-	const vector<BitMatrix<3*N> > getBinaryObfChain() const{
-		return _Cb;
+	const BitMatrix<2*N> getUnaryObf2() const{
+		return _Cu[1];
+	}
+
+	const BitMatrix<3*N> getBinaryObf1() const{
+		return _Cb[0];
+	}
+
+	const BitMatrix<3*N> getBinaryObf2() const{
+		return _Cb[1];
 	}
 
 private:
 	const BitMatrix<N> _A, _B; //SL_n(F_2)
 	const BitMatrix<2*N> _M; //SL_{2n}(F_2)
 	MultiQuadTupleChain<N,2> _f; //{f_1,...,f_L} random quadratic function tuples
-	vector<BitMatrix<2*N> > _Cu; //chain of obfuscation matrix for unary operations
-	vector<BitMatrix<3*N> > _Cb; //chain of obfuscation matrix for binary operations
+	BitMatrix<2*N> _Cu[2]; //chain of obfuscation matrix for unary operations
+	BitMatrix<3*N> _Cb[2]; //chain of obfuscation matrix for binary operations
 
 	void generateObfuscationMatrixChains(){ //generates C_{u1},...,C_{uL} and C_{b1},...,C_{bL}
 		for(unsigned int i = 0; i < 2; ++i){
-			_Cu.push_back(BitMatrix<(2*N)>::randomInvertibleMatrix());
-			_Cb.push_back(BitMatrix<(3*N)>::randomInvertibleMatrix());
+			_Cu[i] = BitMatrix<(2*N)>::randomInvertibleMatrix();
+			_Cb[i] = BitMatrix<(3*N)>::randomInvertibleMatrix();
 		}
 	}
 };
