@@ -106,6 +106,19 @@ TEST(MQTTests, testSetMQT){
     cs(x).print();
 }
 
+TEST(MQTTests, testPartialEval){
+    MultiQuadTuple<2*sma,sma> f;
+    f.randomize();
+    BitVector<sma> x = BitVector<sma>::randomVector();
+    BitVector<sma> y = BitVector<sma>::randomVector();
+    BitVector<2*sma> z = BitVector<2*sma>::vCat(x, y);
+
+    //f(x || y)
+    //g(y) = f(x || y)
+    MultiQuadTuple<sma, sma> g = f.partialEval<sma>(x);
+    ASSERT_TRUE(g(y).equals(f(z)));
+}
+
 /*
 TODO: implement this with the recursive struct
 TEST(MQTTests, testShifter){
