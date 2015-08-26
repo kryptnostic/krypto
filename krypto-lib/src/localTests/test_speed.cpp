@@ -147,6 +147,8 @@ int main(int argc, char **argv) {
 	// testPublicKeyRuns();
 	//testHash();
  	// fclose(urandom);
+ 	PrivateKey<128> pk;
+ 	cout << "size of PrivateKey = " << sizeof(pk) << endl;
  	cout << "hi" << endl;
 	return 0;
 }

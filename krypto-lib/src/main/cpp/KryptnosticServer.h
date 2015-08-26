@@ -18,7 +18,7 @@
 
 using namespace emscripten;
 
-#define N 128
+#define N 64
 
 class KryptnosticServer {
 
@@ -43,7 +43,7 @@ public:
 		BitVector<N> inner = _concealedF1(eSearchToken);
 
 		BitVector<N> hashMatrixPartialEval = cHashFunction.hashMatrix.splitH2(0) * eSearchToken; //add to consts of _tokenAddressFunction
-		//_tokenAddressFunction = (cHashFunction.augmentedF2).partialEval<N>(inner);
+		_tokenAddressFunction = (cHashFunction.augmentedF2).partialEval<N>(inner);
 	}
 
 
