@@ -170,7 +170,7 @@ struct MultiQuadTuple {
         bool first = input[INDEX_I]; //x_i
         if (first) {
             //add row of x_i's to constant vector for i, j < PARTIAL_INPUTS
-            getConstants() ^= coeffMatrix[0];
+            xorConstants(coeffMatrix[0]);
         }
 
         updateCoefficientsAboveP(super, input, BitMatrix<INDEX_I - 1, SUPER_INPUTS - 1>()); //decrement i, reset j to max
@@ -186,7 +186,7 @@ struct MultiQuadTuple {
         bool first = input[0]; //x_i
         if (first) {
             //add row of x_0's to constant vector for i, j < PARTIAL_INPUTS
-            getConstants() ^= coeffMatrix[0];
+            xorConstants(coeffMatrix[0]);
         }
     }
 
