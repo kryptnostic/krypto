@@ -28,14 +28,6 @@ public:
 /* Getters */
 
 	/*
-     * Function: getK()
-     * Returns the client-specific n x 2n matrix K_\Omega
-     */
-	const BitMatrix<N, 2*N> getK() const{
-		return _K;
-	}
-
-	/*
 	 * Function: getObjectSearchKey
 	 * Returns a random object search key to be serialized
 	 * (checking if this is unused is done by JavaScript frontend)

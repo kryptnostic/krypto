@@ -22,7 +22,9 @@ template<unsigned int N>
 class PrivateKey {
 
 template<unsigned int N1> friend class BridgeKey;
-//template<unsigned int N2> friend class ClientHashFunction;
+template<unsigned int N2> friend class ClientHashFunction;
+template<unsigned int N3> friend class SearchPrivateKey;
+template<unsigned int N4> friend class KryptnosticClient;
 
 public:
 
@@ -62,7 +64,7 @@ public:
 		return _B.solve(x1 ^ (Aix2 ^ fAix2));
 	}
 
-/*protected:*/
+protected:
 	const BitMatrix<N> getA() const{
 		return _A;
 	}

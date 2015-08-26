@@ -536,7 +536,10 @@ public:
 		vector<bool> basisInitialized(COLS);
 		fill(basisInitialized.begin(), basisInitialized.end(), false);
 		BitVector<COLS> basis[COLS];
-		unsigned int firstNonZeroIndex[ROWS];
+		for(int i = 0; i < COLS; ++i){
+			basis[i] = BitVector<COLS>::zeroVector();
+		}
+		unsigned int firstNonZeroIndex[ROWS] = {0};
 		for(unsigned int i = 0; i < ROWS; ++i){
 			BitVector<COLS> v = workingSet[i];
 			int value = -1;
@@ -559,7 +562,7 @@ public:
 
 		vector<BitVector<COLS> > filtered;
 		for(unsigned int i = 0; i < COLS; ++i){
-			if(!basisInitialized[i]){
+			if(basisInitialized[i]){
 				filtered.push_back(basis[i]);
 			}
 		}
@@ -1117,8 +1120,8 @@ private:
 };
 
 /*
- * Function: hash<UUID>()(id)
- * Hashes a UUID by taking the sum of the standard hashes of its components
+ * Function: hash<BitMatrix<M, N>>()(id)
+ * Hashes a BitMatrix by taking the sum of the standard hashes of its components
  */
 
 template<unsigned int N, unsigned int M>
