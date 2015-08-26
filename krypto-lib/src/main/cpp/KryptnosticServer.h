@@ -54,7 +54,10 @@ public:
 	 * Function: getMetadataAddress
 	 * Returns a serialized pair of (ObjectSearchKey, ObjectAddressFunction)
 	 */
-	const BitVector<N> getMetadataAddress(const BitVector<2*N> eObjectSearchKey, const BitMatrix<N, N> objectConversionMatrix) const{
+	const BitVector<N> getMetadataAddress(const std::pair <BitVector<2*N>,BitMatrix<N> > objectIndexPair) const{
+		BitVector<2*N> eObjectSearchKey; //get from pair
+		BitMatrix<N, N> objectConversionMatrix; //get from pair
+		
 		// return cHashFunction(eSearchToken,eObjSearchKey);
 		BitVector<N> inner = _concealedF1(eObjectSearchKey);
 		return objectConversionMatrix * _tokenAddressFunction(inner);
