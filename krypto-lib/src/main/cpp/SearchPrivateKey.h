@@ -22,10 +22,16 @@ template<unsigned int N>
 class SearchPrivateKey{
 public:
 	SearchPrivateKey() :
-	_K(randomInvertibleMatrixDoubleH())
+	_R(BitMatrix<N>::randomInvertibleMatrix()),
+	_K(getK())
+	//_K(randomInvertibleMatrixDoubleH())
 	{}
 
 /* Getters */
+
+	const BitMatrix<N, 2*N> getK() {
+		return BitMatrix<N, 2*N>::augH(BitMatrix<N>::identityMatrix(), _R);
+	}
 
 	/*
 	 * Function: getObjectSearchKey
@@ -41,7 +47,9 @@ public:
 	 * Returns a random object address function L to be serialized
 	 */
 	const BitMatrix<N, 2*N> getObjectAddressFunction() const{
-		return randomInvertibleMatrixDoubleH();
+		return BitMatrix<N, 2*N>::augH(
+			BitMatrix<N>::identityMatrix(), BitMatrix<N>::randomInvertibleMatrix());
+		//return randomInvertibleMatrixDoubleH();
 	}
 
 	/*
@@ -49,7 +57,8 @@ public:
 	 * Returns object(document) conversion matrix given object address function
 	 */
 	const BitMatrix<N> getObjectConversionMatrix(const BitMatrix<N, 2*N> & objectAddressFunction) const{
-		return objectAddressFunction * _K.rightInverse();
+		return objectAddressFunction.pMult(_R.inv(), N, 2*N-1, 0, N-1);
+		//return objectAddressFunction * _K.rightInverse();
 	}
 
 	/*
@@ -68,6 +77,7 @@ public:
 	}
 
 private:
+	BitMatrix<N> _R; //part of K
 	BitMatrix<N, 2*N> _K; //user-specific K_\Omega
 
 	/*
