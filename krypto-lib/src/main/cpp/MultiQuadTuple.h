@@ -121,7 +121,7 @@ struct MultiQuadTuple {
             //add row of x_i x_j's to first row of coeff matrix of x_j
             (getMatrixN(BitVector< SUPER_INPUTS - INDEX_J >()))[0] ^= coeffMatrix[INDEX_J - INDEX_I];
         }
-        
+
         updateCoefficientsAboveP(super, input, BitMatrix<INDEX_I, INDEX_J - 1>()); //decrement j
     }
 
@@ -137,7 +137,7 @@ struct MultiQuadTuple {
             //add row of x_i x_j's to first row of coeff matrix of x_j
             (getMatrixN(BitVector< SUPER_INPUTS - PARTIAL_INPUTS >()))[0] ^= coeffMatrix[PARTIAL_INPUTS - INDEX_I];
         }
-        
+
         updateCoefficientsBelowP(super, input, BitMatrix<INDEX_I, PARTIAL_INPUTS - 1>()); //decrement j below PARTIAL_INPUTS
     }
 
@@ -156,7 +156,7 @@ struct MultiQuadTuple {
                 getConstants() ^= coeffMatrix[INDEX_J - INDEX_I];
             }
         }
-        
+
         updateCoefficientsBelowP(super, input, BitMatrix<INDEX_I, INDEX_J - 1>()); //decrement j
     }
 
@@ -172,7 +172,7 @@ struct MultiQuadTuple {
             //add row of x_i's to constant vector for i, j < PARTIAL_INPUTS
             getConstants() ^= coeffMatrix[0];
         }
-        
+
         updateCoefficientsAboveP(super, input, BitMatrix<INDEX_I - 1, SUPER_INPUTS - 1>()); //decrement i, reset j to max
     }
 
@@ -245,6 +245,11 @@ struct MultiQuadTuple {
     //Set the constant components of the MultiQuadTuple to given BitVector
     void setConstants(const BitVector<NUM_OUTPUTS> &v) const{
         next.setConstants(v);
+    }
+
+    //Xor the constant components of the MultiQuadTuple with given BitVector
+    void xorConstants(const BitVector<NUM_OUTPUTS> &v) const{
+        next.xorConstants(v);
     }
 
     /*
@@ -379,6 +384,12 @@ struct MultiQuadTuple<NUM_INPUTS,NUM_OUTPUTS,0> {
     void setConstants(const BitVector<NUM_OUTPUTS> &v) {
         _constants = v;
     }
+
+    void xorConstants(const BitVector<NUM_OUTPUTS> &v) {
+        _constants ^= v;
+    }
+
+
     template<unsigned int MONOMIAL_INDEX>
     void setMatrix( const BitMatrix<MONOMIAL_INDEX, NUM_OUTPUTS> & m  ) {
         //NO-OP base case should be elided under optimization.
