@@ -1087,6 +1087,36 @@ private:
 };
 
 /*
+ * Special template for 0-sized BitMatrix that ensures that the
+ * size in memory is at least 1 byte
+ */
+template<unsigned int ROWS>
+class BitMatrix<ROWS, 0> {
+private:
+    unsigned char x;
+};
+
+/*
+ * Special template for 0-sized BitMatrix that ensures that the
+ * size in memory is at least 1 byte
+ */
+template<unsigned int COLS>
+class BitMatrix<0, COLS> {
+private:
+    unsigned char x;
+};
+
+/*
+ * Special template for 0-sized BitMatrix that ensures that the
+ * size in memory is at least 1 byte
+ */
+template<>
+class BitMatrix<0, 0> {
+private:
+    unsigned char x;
+};
+
+/*
  * Function: hash<UUID>()(id)
  * Hashes a UUID by taking the sum of the standard hashes of its components
  */

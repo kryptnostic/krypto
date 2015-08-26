@@ -71,10 +71,10 @@ struct MultiQuadTuple {
         return next.getConstants();
     }
 
-    //Returns the (NUM_INPUT - STOP_ROWS)th coefficient matrix of the MultiQuadTuple
+    //Returns the (NUM_INPUTS - STOP_ROWS)th coefficient matrix of the MultiQuadTuple
     template<unsigned int STOP_ROWS>
     BitMatrix<STOP_ROWS, NUM_OUTPUTS> getMatrixN( const BitVector<STOP_ROWS> & dummy) const{
-            return next.getMatrixN( dummy );
+        return next.getMatrixN( dummy );
     }
 
     //Returns the nth coefficient matrix of the MultiQuadTuple when LIMIT = STOP_ROWS
@@ -104,38 +104,118 @@ struct MultiQuadTuple {
     	MultiQuadTuple<NUM_INPUTS - PARTIAL_INPUTS, NUM_OUTPUTS> result;
     	result.template setToSubMQT<NUM_INPUTS, NUM_INPUTS>(*this); //sets result to have the last PARTIAL_INPUTS coefficient matrices of current MQT
 
-        result.template partialEvalUpdateCoefficients<NUM_INPUTS, PARTIAL_INPUTS, PARTIAL_INPUTS - 1, NUM_INPUTS - 1>(*this, input);
+        //result.template partialEvalUpdateCoefficients<NUM_INPUTS, PARTIAL_INPUTS, PARTIAL_INPUTS - 1, NUM_INPUTS - 1>(*this, input, BitMatrix<PARTIAL_INPUTS - 1, NUM_INPUTS - 1>());
+        result.template updateCoefficientsAboveP<NUM_INPUTS, PARTIAL_INPUTS, PARTIAL_INPUTS - 1, NUM_INPUTS - 1>(*this, input, BitMatrix<PARTIAL_INPUTS - 1, NUM_INPUTS - 1>());
         return result;
     }
 
-    //Used primarily for partialEval
-    //Unrolls double for-loop over each coefficient and updates coefficient matrices
-    template<unsigned int SUPER_INPUTS, unsigned PARTIAL_INPUTS, unsigned int COEFFICIENT_I, unsigned int COEFFICIENT_J>
-    void partialEvalUpdateCoefficients(const MultiQuadTuple<SUPER_INPUTS, NUM_OUTPUTS> & super, const BitVector<PARTIAL_INPUTS> & input) {
-        BitMatrix<SUPER_INPUTS - COEFFICIENT_I, NUM_OUTPUTS> coeffMatrix = super.template getMatrixN<SUPER_INPUTS - COEFFICIENT_I>(BitVector<SUPER_INPUTS - COEFFICIENT_I>());
+    // Used primarily for partialEval
+    // Unrolls double for-loop over each coefficient and updates coefficient matrices
+    // When 0 < i < PARTIAL_INPUTS < j
+    template<unsigned int SUPER_INPUTS, unsigned PARTIAL_INPUTS, unsigned int INDEX_I, unsigned int INDEX_J>
+    void updateCoefficientsAboveP(const MultiQuadTuple<SUPER_INPUTS, NUM_OUTPUTS> & super, const BitVector<PARTIAL_INPUTS> & input, const BitMatrix<INDEX_I, INDEX_J> & dummy) {
+        BitMatrix<SUPER_INPUTS - INDEX_I, NUM_OUTPUTS> coeffMatrix = super.getMatrixN(BitVector<SUPER_INPUTS - INDEX_I>());
 
-        bool first = input[COEFFICIENT_I]; //x_i
+        bool first = input[INDEX_I]; //x_i
         if (first) {
-            if (COEFFICIENT_J >= PARTIAL_INPUTS) {
-                //add row of x_i x_j's to first row of coeff matrix of secondCoeff
-                (getMatrixN< SUPER_INPUTS - COEFFICIENT_J >(BitVector< SUPER_INPUTS - COEFFICIENT_J >()))[0] ^= coeffMatrix[COEFFICIENT_J - COEFFICIENT_I];
-            } else {
-                bool second = input[COEFFICIENT_J];
-                if (second) {
-                    //add row of x_i x_j's to constant vector for i, j < PARTIAL_INPUTS
-                    getConstants() ^= coeffMatrix[COEFFICIENT_J - COEFFICIENT_I];
-                }
+            //add row of x_i x_j's to first row of coeff matrix of x_j
+            (getMatrixN(BitVector< SUPER_INPUTS - INDEX_J >()))[0] ^= coeffMatrix[INDEX_J - INDEX_I];
+        }
+        
+        updateCoefficientsAboveP(super, input, BitMatrix<INDEX_I, INDEX_J - 1>()); //decrement j
+    }
+
+    // Used primarily for partialEval
+    // Unrolls double for-loop over each coefficient and updates coefficient matrices
+    // When 0 < i < PARTIAL_INPUTS = j
+    template<unsigned int SUPER_INPUTS, unsigned PARTIAL_INPUTS, unsigned int INDEX_I>
+    void updateCoefficientsAboveP(const MultiQuadTuple<SUPER_INPUTS, NUM_OUTPUTS> & super, const BitVector<PARTIAL_INPUTS> & input, const BitMatrix<INDEX_I, PARTIAL_INPUTS> & dummy) {
+        BitMatrix<SUPER_INPUTS - INDEX_I, NUM_OUTPUTS> coeffMatrix = super.getMatrixN(BitVector<SUPER_INPUTS - INDEX_I>());
+
+        bool first = input[INDEX_I]; //x_i
+        if (first) {
+            //add row of x_i x_j's to first row of coeff matrix of x_j
+            (getMatrixN(BitVector< SUPER_INPUTS - PARTIAL_INPUTS >()))[0] ^= coeffMatrix[PARTIAL_INPUTS - INDEX_I];
+        }
+        
+        updateCoefficientsBelowP(super, input, BitMatrix<INDEX_I, PARTIAL_INPUTS - 1>()); //decrement j below PARTIAL_INPUTS
+    }
+
+    // Used primarily for partialEval
+    // Unrolls double for-loop over each coefficient and updates coefficient matrices
+    // When 0 < i < j < PARTIAL_INPUTS
+    template<unsigned int SUPER_INPUTS, unsigned PARTIAL_INPUTS, unsigned int INDEX_I, unsigned int INDEX_J>
+    void updateCoefficientsBelowP(const MultiQuadTuple<SUPER_INPUTS, NUM_OUTPUTS> & super, const BitVector<PARTIAL_INPUTS> & input, const BitMatrix<INDEX_I, INDEX_J> & dummy) {
+        BitMatrix<SUPER_INPUTS - INDEX_I, NUM_OUTPUTS> coeffMatrix = super.getMatrixN(BitVector<SUPER_INPUTS - INDEX_I>());
+
+        bool first = input[INDEX_I]; //x_i
+        if (first) {
+            bool second = input[INDEX_J];
+            if (second) {
+                //add row of x_i x_j's to constant vector for i, j < PARTIAL_INPUTS
+                getConstants() ^= coeffMatrix[INDEX_J - INDEX_I];
             }
         }
-        // if (COEFFICIENT_I > 0) {
-        //     if (COEFFICIENT_J > COEFFICIENT_I) { //iterate over x_j's (inner loop)
-        //         partialEvalUpdateCoefficients<SUPER_INPUTS, PARTIAL_INPUTS, COEFFICIENT_I, COEFFICIENT_J - 1>(super, input);
-        //     }
-        //     else { //iterate over x_i's (outer loop)
-        //         partialEvalUpdateCoefficients<SUPER_INPUTS, PARTIAL_INPUTS, COEFFICIENT_I - 1, SUPER_INPUTS - 1>(super, input);
-        //     }
-        // }
+        
+        updateCoefficientsBelowP(super, input, BitMatrix<INDEX_I, INDEX_J - 1>()); //decrement j
     }
+
+    // Used primarily for partialEval
+    // Unrolls double for-loop over each coefficient and updates coefficient matrices
+    // When 0 < i = j
+    template<unsigned int SUPER_INPUTS, unsigned PARTIAL_INPUTS, unsigned int INDEX_I>
+    void updateCoefficientsBelowP(const MultiQuadTuple<SUPER_INPUTS, NUM_OUTPUTS> & super, const BitVector<PARTIAL_INPUTS> & input, const BitMatrix<INDEX_I, INDEX_I> & dummy) {
+        BitMatrix<SUPER_INPUTS - INDEX_I, NUM_OUTPUTS> coeffMatrix = super.getMatrixN(BitVector<SUPER_INPUTS - INDEX_I>());
+
+        bool first = input[INDEX_I]; //x_i
+        if (first) {
+            //add row of x_i's to constant vector for i, j < PARTIAL_INPUTS
+            getConstants() ^= coeffMatrix[0];
+        }
+        
+        updateCoefficientsAboveP(super, input, BitMatrix<INDEX_I - 1, SUPER_INPUTS - 1>()); //decrement i, reset j to max
+    }
+
+    // Used primarily for partialEval
+    // Unrolls double for-loop over each coefficient and updates coefficient matrices
+    // When 0 = i = j
+    template<unsigned int SUPER_INPUTS, unsigned PARTIAL_INPUTS>
+    void updateCoefficientsBelowP(const MultiQuadTuple<SUPER_INPUTS, NUM_OUTPUTS> & super, const BitVector<PARTIAL_INPUTS> & input, const BitMatrix<0, 0> & dummy) {
+        BitMatrix<SUPER_INPUTS, NUM_OUTPUTS> coeffMatrix = super.getMatrixN(BitVector<SUPER_INPUTS>());
+
+        bool first = input[0]; //x_i
+        if (first) {
+            //add row of x_0's to constant vector for i, j < PARTIAL_INPUTS
+            getConstants() ^= coeffMatrix[0];
+        }
+    }
+
+    // //Used primarily for partialEval
+    // //Unrolls double for-loop over each coefficient and updates coefficient matrices
+    // template<unsigned int SUPER_INPUTS, unsigned PARTIAL_INPUTS, unsigned int INDEX_I, unsigned int INDEX_J>
+    // void partialEvalUpdateCoefficients(const MultiQuadTuple<SUPER_INPUTS, NUM_OUTPUTS> & super, const BitVector<PARTIAL_INPUTS> & input, const BitMatrix<INDEX_I, INDEX_J> & dummy) {
+    //     BitMatrix<SUPER_INPUTS - INDEX_I, NUM_OUTPUTS> coeffMatrix = super.template getMatrixN<SUPER_INPUTS - INDEX_I>(BitVector<SUPER_INPUTS - INDEX_I>());
+
+    //     bool first = input[INDEX_I]; //x_i
+    //     if (first) {
+    //         if (INDEX_J >= PARTIAL_INPUTS) {
+    //             //add row of x_i x_j's to first row of coeff matrix of secondCoeff
+    //             (getMatrixN< SUPER_INPUTS - INDEX_J >(BitVector< SUPER_INPUTS - INDEX_J >()))[0] ^= coeffMatrix[INDEX_J - INDEX_I];
+    //         } else {
+    //             bool second = input[INDEX_J];
+    //             if (second) {
+    //                 //add row of x_i x_j's to constant vector for i, j < PARTIAL_INPUTS
+    //                 getConstants() ^= coeffMatrix[INDEX_J - INDEX_I];
+    //             }
+    //         }
+    //     }
+    //     // if (INDEX_J > INDEX_I) { //iterate over x_j's (inner loop)
+    //     //     partialEvalUpdateCoefficients<SUPER_INPUTS, PARTIAL_INPUTS, INDEX_I, INDEX_J - 1>(super, input);
+    //     // }
+    //     // else if (INDEX_I > 0) { //iterate over x_i's (outer loop)
+    //     //     partialEvalUpdateCoefficients<SUPER_INPUTS, PARTIAL_INPUTS, INDEX_I - 1, SUPER_INPUTS - 1>(super, input);
+    //     // }
+    // }
 
 /* Composition */
 
