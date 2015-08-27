@@ -114,18 +114,8 @@ TEST(MQTTests, testPartialEval){
     BitVector<2*sma> z = BitVector<2*sma>::vCat(x, y);
 
     MultiQuadTuple<sma, sma> g = f.partialEval<sma>(x);
-<<<<<<< HEAD
 
-    cout << "g(y): " << endl;
-    g(y).print();
-
-    cout << "f(x, y): " << endl;
-    f(z).print();
-
-    //ASSERT_TRUE(g(y).equals(f(z)));
-=======
     ASSERT_TRUE(g(y) == f(z));
->>>>>>> 863fb87867359a728fe05c26f9de6cd61a36c06b
 }
 
 /*
