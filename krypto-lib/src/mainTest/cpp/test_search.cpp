@@ -15,22 +15,16 @@ using namespace testing;
 TEST(SearchKeyTest, testCallsWithoutPrivateKey){
 	SearchPrivateKey<N> sk;
 	BitVector<N> objectSearchKey = sk.getObjectSearchKey();
-	BitMatrix<N, 2*N> objectAddressFunction = sk.getObjectAddressFunction();
-	BitMatrix<N> objectConversionMatrix = sk.getObjectConversionMatrix(objectAddressFunction);
+	//BitMatrix<N, 2*N> objectAddressFunction = sk.getObjectAddressFunction();
+	//BitMatrix<N> objectConversionMatrix = sk.getObjectConversionMatrix(objectAddressFunction);
 }
 
-TEST(SearhKeyTest, testClientHashFunction){
+TEST(SearchKeyTest, testIndexing){
 	SearchPrivateKey<N> sk;
 	PrivateKey<N> pk;
-	ClientHashFunction<N> chf = sk.getClientHashFunction(pk);
-	BitVector<N> searchToken = BitVector<N>::randomVector();
-	BitVector<2*N> eSearchToken = pk.encrypt(searchToken);
+
+	BitVector<N> token = BitVector<N>::randomVector();
+
 	BitVector<N> objectSearchKey = sk.getObjectSearchKey();
-	BitVector<2*N> eObjectSearchKey = pk.encrypt(objectSearchKey);
-	BitMatrix<N, 2*N> objectAddressFunction = sk.getObjectAddressFunction();
-	BitMatrix<N> objectConversionMatrix = sk.getObjectConversionMatrix(objectAddressFunction);
-	BitVector<N> expectedMetadatumAddress = objectConversionMatrix * chf(eSearchToken, eObjectSearchKey);
-	BitVector<N> actualMetadatumAddress = sk.getMetadatumAddress(objectAddressFunction, searchToken, objectSearchKey);
-	expectedMetadatumAddress.print();
-	actualMetadatumAddress.print();
+	//std::pair<BitVector<2*N>, BitMatrix<N> > objectIndexPair = sk.getObjectIndexPair(pk);
 }
