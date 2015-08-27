@@ -186,6 +186,8 @@ struct MultiQuadTuple {
         }
     }
 
+
+
 /* Composition */
 
     //Left composition on a matrix
@@ -307,7 +309,7 @@ struct MultiQuadTuple {
         next.compose(root, innerTranspose);
     }
 
-    //Worker body for left compose function (not called by other classes)
+    //XORs a given vector into the row corresponding to coefficients of x_matrixIndex x_rowIndex
     void xorInMonomialContribution(unsigned int matrixIndex, unsigned int rowIndex, const BitVector<NUM_OUTPUTS> &v){
         if(matrixIndex == (NUM_INPUTS - LIMIT)){
             _matrix[rowIndex - matrixIndex] ^= v;
