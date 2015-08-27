@@ -142,6 +142,19 @@ public:
 		return val(memory_view<byte>(sizeof(BitVector<2*N>), pointer));
 	}
 
+	/*
+	 * Function: getMetadatumAddressFromPair
+	 * Given a token and a object key, returns the address for the
+	 * associated metadatum (everything seialized)
+	 */
+	const val getMetadatumAddressFromPair(std::string tokenStr, std::string objectIndexPairStr) const{
+		const BitVector<N> & token = *reinterpret_cast<const BitVector<N>*>(tokenStr.data());
+		const std::pair< BitVector<2*N>, BitMatrix<N> > objectIndexPair = *reinterpret_cast<const std::pair<BitVector<2*N>, BitMatrix<N> >* >(objectIndexPairStr.data());
+		BitVector<N> metadatumAddress = _spk.getMetadatumAddressFromPair(token, objectIndexPair, _pk);
+		byte *pointer = (byte *) &metadatumAddress;
+		return val(memory_view<byte>(sizeof(BitVector<N>), pointer));
+	}
+
 /* Sharing */
 
 	/*
@@ -164,7 +177,7 @@ public:
 	 * Assume the two inputs are RSA-decrypted before passing in to C++
 	 */
 	//const val getObjectSharingPair(std::string objectAddressFunctionStr, std::string objectSearchKeyStr) const{
-	const val getObjectUploadIndexPair(std::string objectSharingPairStr) const{
+	const val getObjectUploadPair(std::string objectSharingPairStr) const{
 		const std::pair< BitVector<N>, BitMatrix<N> > objectSharingPair = *reinterpret_cast<const std::pair<BitVector<N>, BitMatrix<N> >* >(objectSharingPairStr.data());
 		std::pair< BitVector<2*N>, BitMatrix<N> > objectUploadPair = _spk.getObjectUploadPair(objectSharingPair, _pk);
 		byte * pointer = (byte *) &objectUploadPair;
