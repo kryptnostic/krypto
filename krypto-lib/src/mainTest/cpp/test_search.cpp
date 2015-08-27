@@ -12,12 +12,6 @@ using namespace testing;
 
 #define N 64
 
-TEST(SearchKeyTest, testClientHashFunctionCall){
-	SearchPrivateKey<N> sk;
-	PrivateKey<N> pk;
-	ClientHashFunction<N> chf = sk.getClientHashFunction(pk);
-}
-
 TEST(SearchKeyTest, testIndexingAndSearch){
 	SearchPrivateKey<N> sk;
 	PrivateKey<N> pk;
@@ -39,12 +33,7 @@ TEST(SearchKeyTest, testIndexingAndSearch){
 
 	BitVector<N> calculatedAddress = objectConversionMatrix * chf(eToken, eObjectSearchKey);
 
-	//metadatumAddress.print();
-	//calculatedAddress.print();
-
 	ASSERT_TRUE(metadatumAddress.equals(calculatedAddress));
-
-	//TODO: assert
 }
 
 TEST(SearchKeyTest, testSharing){
@@ -53,5 +42,20 @@ TEST(SearchKeyTest, testSharing){
 	PrivateKey<N> pk_src;
 	PrivateKey<N> pk_dst;
 
-	//TODO: test sharing
+	//source client indexes a new document
+	BitVector<N> objectSearchKey = sk_src.getObjectSearchKey();
+	BitMatrix<N> objectAddressFunction = sk_src.getObjectAddressFunction();
+	std::pair<BitVector<2*N>, BitMatrix<N> > sourceObjectIndexPair = sk_src.getObjectIndexPair(objectSearchKey, objectAddressFunction, pk_src);
+
+	BitVector<N> token = BitVector<N>::randomVector();
+	BitVector<N> expectedAddress = sk_src.getMetadatumAddress(objectAddressFunction, token, objectSearchKey);
+
+	//source client prepares the sharing pair
+	std::pair<BitVector<N>, BitMatrix<N> > objectSharingPair = sk_src.getObjectSharingPair(sourceObjectIndexPair, pk_src);
+
+	//destination client receives the sharing pair and prepares the upload pair
+	std::pair<BitVector<2*N>, BitMatrix<N> > destinationObjectIndexPair = sk_dst.getObjectUploadPair(objectSharingPair, pk_dst);
+	BitVector<N> calculatedAddress = sk_dst.getMetadatumAddressFromPair(token, destinationObjectIndexPair, pk_dst);
+
+	ASSERT_TRUE(expectedAddress.equals(calculatedAddress));
 }

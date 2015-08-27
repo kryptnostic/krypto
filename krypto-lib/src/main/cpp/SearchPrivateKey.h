@@ -47,7 +47,7 @@ public:
 	/*
 	 * Function: getObjectConversionMatrix
 	 * Returns object(document) conversion matrix given object address function
-	 * C_user * C_doc^{-1}
+	 * K_doc * K_user^{-1}
 	 */
 	const BitMatrix<N> getObjectConversionMatrix(const BitMatrix<N> & objectAddressFunction) const{
 		return objectAddressFunction * _K.inv();
@@ -62,6 +62,20 @@ public:
 		return objectAddressFunction * (token ^ (_R * objectSearchKey));
 	}
 
+	/*
+	 * Function: getMetadatumAddressFromPair
+	 * Given a token and a object key, returns the address for the
+	 * associated metadatum
+	 */
+	const BitVector<N> getMetadatumAddressFromPair(const BitVector<N> &token, const std::pair<BitVector<2*N>, BitMatrix<N> > & objectIndexPair, const PrivateKey<N> & pk) const{
+		return objectIndexPair.second * _K * (token ^ (_R * pk.decrypt(objectIndexPair.first)));
+	}
+
+	/*
+	 * Function: getMetadatumAddress
+	 * Given a object index pair, returns the address for the
+	 * associated metadatum
+	 */
 	const ClientHashFunction<N> getClientHashFunction(const PrivateKey<N> & pk) const{
 		ClientHashFunction<N> h;
 		h.initialize(BitMatrix<N>::randomInvertibleMatrix(), _K * BitMatrix<N, 2*N>::augH(BitMatrix<N>::identityMatrix(), _R), pk);
