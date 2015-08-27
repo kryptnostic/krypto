@@ -39,8 +39,10 @@ TEST(SearchKeyTest, testIndexingAndSearch){
 
 	BitVector<N> calculatedAddress = objectConversionMatrix * chf(eToken, eObjectSearchKey);
 
-	metadatumAddress.print();
-	calculatedAddress.print();
+	//metadatumAddress.print();
+	//calculatedAddress.print();
+
+	ASSERT_TRUE(metadatumAddress.equals(calculatedAddress));
 
 	//TODO: assert
 }

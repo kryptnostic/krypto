@@ -50,7 +50,7 @@ public:
 	 * C_user * C_doc^{-1}
 	 */
 	const BitMatrix<N> getObjectConversionMatrix(const BitMatrix<N> & objectAddressFunction) const{
-		return _K * objectAddressFunction.inv();
+		return objectAddressFunction * _K.inv();
 	}
 
 	/*
