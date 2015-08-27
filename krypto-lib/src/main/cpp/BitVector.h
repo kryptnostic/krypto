@@ -199,6 +199,7 @@ public:
      * Function: equals(rhs)
      * Returns whether the current BitVector has values
      * equal to the values of an input BitVector
+     * WARNING: use == in general, this function doesn't work for google tests
      */
     bool equals(const BitVector<NUM_BITS> & rhs) const {
         for(unsigned int i = 0; i < _KBV_N_; ++i){
@@ -317,7 +318,7 @@ public:
      * Function: copy(rhs)
      * Copies a given vector into the current one
      */
-    void copy(const BitVector<NUM_BITS> & v) const {
+    void copy(const BitVector<NUM_BITS> & v) {
         memcpy(this->elements(), v.elements(), sizeof(v));
     }
 

@@ -13,13 +13,10 @@
 #define krypto_KryptnosticServer_h
 
 #include "ClientHashFunction.h"
-#include <emscripten/emscripten.h>
-#include <emscripten/bind.h>
 
 using namespace emscripten;
 
-#define N 64
-
+template<unsigned int N = 64>
 class KryptnosticServer {
 
 public:
@@ -37,27 +34,30 @@ public:
 	_concealedF1(cHashFunction.concealedF1),
 	_hashMatrixR(cHashFunction.hashMatrix.splitH2(1))
 	{
-		//set _tokenAddressFunction to partial eval of cHashFunction on eSearchToken
-
-		//store right half of HashMatrix as a private variable
 		BitVector<N> inner = _concealedF1(eSearchToken);
 
-		BitVector<N> hashMatrixPartialEval = cHashFunction.hashMatrix.splitH2(0) * eSearchToken; //add to consts of _tokenAddressFunction
+		//set _tokenAddressFunction to partial eval of cHashFunction on eSearchToken
 		_tokenAddressFunction = (cHashFunction.augmentedF2).partialEval<N>(inner);
+
+		//add hashMatrix partial evaluation to consts of _tokenAddressFunction
+		BitVector<N> hashMatrixPartialEval = cHashFunction.hashMatrix.splitH2(0) * eSearchToken;
+		_tokenAddressFunction.xorConstants(hashMatrixPartialEval);
 	}
 
-
 /* Registration */
-
 
 	/*
 	 * Function: getMetadataAddress
 	 * Returns a serialized pair of (ObjectSearchKey, ObjectAddressFunction)
 	 */
-	const BitVector<N> getMetadataAddress(const BitVector<2*N> eObjectSearchKey, const BitMatrix<N, N> objectConversionMatrix) const{
-		// return cHashFunction(eSearchToken,eObjSearchKey);
-		BitVector<N> inner = _concealedF1(eObjectSearchKey);
-		return objectConversionMatrix * _tokenAddressFunction(inner);
+	const BitVector<N> getMetadataAddress(const std::pair <BitVector<2*N>, BitMatrix<N> > objectIndexPair) const{
+		BitVector<2*N> eObscuredObjectSearchKey = objectIndexPair.first; //get from pair
+		BitMatrix<N, N> objectConversionMatrix = objectIndexPair.second; //get from pair
+
+		// return cHashFunction(eSearchToken, eObscuredObjectSearchKey);
+		BitVector<N> inner = _concealedF1(eObscuredObjectSearchKey);
+		BitVector<N> fullEval = _tokenAddressFunction(inner) ^ (_hashMatrixR * eObscuredObjectSearchKey);
+		return objectConversionMatrix * fullEval;
 	}
 
 

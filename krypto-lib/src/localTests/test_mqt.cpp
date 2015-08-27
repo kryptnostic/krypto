@@ -1,6 +1,7 @@
 #include "../main/cpp/MultiQuadTuple.h"
 #include <iostream>
 #include <time.h>
+#include <assert.h>
 
 using namespace std;
 
@@ -16,9 +17,15 @@ void testPartialEval() {
     //f(x || y)
     //g(y) = f(x || y)
     MultiQuadTuple<sma, sma> g = f.partialEval<sma>(x);
+    cout << "Partial Eval g(y) =   ";
     g(y).print();
+    cout << "Normal Eval f(x, y) = ";
     f(z).print();
-    //ASSERT_TRUE(g(y).equals(f(z)));	
+
+    assert(g(y) == f(z));
+    //ASSERT_TRUE(g(y).equals(f(z)));
+
+
 }
 
 int main(int argc, char **argv) {

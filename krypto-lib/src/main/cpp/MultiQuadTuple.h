@@ -119,7 +119,7 @@ struct MultiQuadTuple {
         bool first = input[INDEX_I]; //x_i
         if (first) {
             //add row of x_i x_j's to first row of coeff matrix of x_j
-            (getMatrixN(BitVector< SUPER_INPUTS - INDEX_J >()))[0] ^= coeffMatrix[INDEX_J - INDEX_I];
+            xorMatrixRowN(0, coeffMatrix[INDEX_J - INDEX_I], BitVector< SUPER_INPUTS - INDEX_J >());
         }
 
         updateCoefficientsAboveP(super, input, BitMatrix<INDEX_I, INDEX_J - 1>()); //decrement j
@@ -135,7 +135,7 @@ struct MultiQuadTuple {
         bool first = input[INDEX_I]; //x_i
         if (first) {
             //add row of x_i x_j's to first row of coeff matrix of x_j
-            (getMatrixN(BitVector< SUPER_INPUTS - PARTIAL_INPUTS >()))[0] ^= coeffMatrix[PARTIAL_INPUTS - INDEX_I];
+            xorMatrixRowN(0, coeffMatrix[PARTIAL_INPUTS - INDEX_I], BitVector< SUPER_INPUTS - PARTIAL_INPUTS >());
         }
 
         updateCoefficientsBelowP(super, input, BitMatrix<INDEX_I, PARTIAL_INPUTS - 1>()); //decrement j below PARTIAL_INPUTS
@@ -153,7 +153,7 @@ struct MultiQuadTuple {
             bool second = input[INDEX_J];
             if (second) {
                 //add row of x_i x_j's to constant vector for i, j < PARTIAL_INPUTS
-                setConstants(getConstants() ^ coeffMatrix[INDEX_J - INDEX_I]);
+                xorConstants(coeffMatrix[INDEX_J - INDEX_I]);
             }
         }
 
@@ -185,33 +185,6 @@ struct MultiQuadTuple {
             xorConstants(coeffMatrix[0]);
         }
     }
-
-    // //Used primarily for partialEval
-    // //Unrolls double for-loop over each coefficient and updates coefficient matrices
-    // template<unsigned int SUPER_INPUTS, unsigned PARTIAL_INPUTS, unsigned int INDEX_I, unsigned int INDEX_J>
-    // void partialEvalUpdateCoefficients(const MultiQuadTuple<SUPER_INPUTS, NUM_OUTPUTS> & super, const BitVector<PARTIAL_INPUTS> & input, const BitMatrix<INDEX_I, INDEX_J> & dummy) {
-    //     BitMatrix<SUPER_INPUTS - INDEX_I, NUM_OUTPUTS> coeffMatrix = super.template getMatrixN<SUPER_INPUTS - INDEX_I>(BitVector<SUPER_INPUTS - INDEX_I>());
-
-    //     bool first = input[INDEX_I]; //x_i
-    //     if (first) {
-    //         if (INDEX_J >= PARTIAL_INPUTS) {
-    //             //add row of x_i x_j's to first row of coeff matrix of secondCoeff
-    //             (getMatrixN< SUPER_INPUTS - INDEX_J >(BitVector< SUPER_INPUTS - INDEX_J >()))[0] ^= coeffMatrix[INDEX_J - INDEX_I];
-    //         } else {
-    //             bool second = input[INDEX_J];
-    //             if (second) {
-    //                 //add row of x_i x_j's to constant vector for i, j < PARTIAL_INPUTS
-    //                 getConstants() ^= coeffMatrix[INDEX_J - INDEX_I];
-    //             }
-    //         }
-    //     }
-    //     // if (INDEX_J > INDEX_I) { //iterate over x_j's (inner loop)
-    //     //     partialEvalUpdateCoefficients<SUPER_INPUTS, PARTIAL_INPUTS, INDEX_I, INDEX_J - 1>(super, input);
-    //     // }
-    //     // else if (INDEX_I > 0) { //iterate over x_i's (outer loop)
-    //     //     partialEvalUpdateCoefficients<SUPER_INPUTS, PARTIAL_INPUTS, INDEX_I - 1, SUPER_INPUTS - 1>(super, input);
-    //     // }
-    // }
 
 /* Composition */
 
@@ -260,6 +233,20 @@ struct MultiQuadTuple {
     template<unsigned int MONOMIAL_INDEX>
     void setMatrix( const BitMatrix<MONOMIAL_INDEX, NUM_OUTPUTS> & m ) {
         next.setMatrix( m );
+    }
+
+    //Returns the nth coefficient matrix of the MultiQuadTuple when LIMIT = STOP_ROWS
+    //Xors a given row of the matrix with a given input vector
+    template<unsigned int STOP_ROWS>
+    BitMatrix<STOP_ROWS, NUM_OUTPUTS> xorMatrixRowN( const unsigned int rowIndex, const BitVector<NUM_OUTPUTS> input, const BitVector<STOP_ROWS> & dummy) {
+        return next.xorMatrixRowN( rowIndex, input, dummy );
+    }
+
+    //Returns the nth coefficient matrix of the MultiQuadTuple when LIMIT = STOP_ROWS
+    //Xors a given row of the matrix with a given input vector
+    BitMatrix<LIMIT, NUM_OUTPUTS> xorMatrixRowN( const unsigned int rowIndex, const BitVector<NUM_OUTPUTS> input, const BitVector<LIMIT> & dummy) {
+        _matrix[rowIndex] ^= input;
+        return _matrix;
     }
 
 /* Concatenations */
