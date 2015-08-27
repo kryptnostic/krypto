@@ -23,36 +23,34 @@ public:
 	MultiQuadTupleChain(){
 	}
 
-	int length() const{
+	unsigned int length() const{
 		return L;
 	}
 
     static const MultiQuadTupleChain<N, L> randomMultiQuadTupleChain() {
         MultiQuadTupleChain<N, L> result;
-        for(int i = 0; i < L; ++i){
-        	result.addFunctionTuple(MultiQuadTuple<N,N>::randomMultiQuadTuple());
+        for(unsigned int i = 0; i < L; ++i){
+        	MultiQuadTuple<N,N> mqt;
+        	mqt.randomize();
+        	result._tuple[i] = mqt;
         }
         return result;
     }
 
 	const BitVector<N> operator()(const BitVector<N> m) const{
 		BitVector<N> result = m;
-		for(int i = 0; i < L; ++i){
+		for(unsigned int i = 0; i < L; ++i){
 			result = (_tuple[i])(result);
 		}
 		return result;
-	} 
-
-	void addFunctionTuple(const MultiQuadTuple<N,N> & f){
-		_tuple.push_back(f);
 	}
 
-	const MultiQuadTuple<N,N> get(const int index) const{
+	const MultiQuadTuple<N,N> get(const unsigned int index) const{
 		return _tuple[index];
 	}
 
 private:
-	vector<MultiQuadTuple<N,N> > _tuple;
+	MultiQuadTuple<N,N> _tuple[L];
 };
 
 #endif

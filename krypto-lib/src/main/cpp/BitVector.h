@@ -11,9 +11,10 @@
 #ifndef krypto_BitVector_h
 #define krypto_BitVector_h
 #include <iostream>
-#include <stdio.h>
-#include <string.h>
+#include <cstdio>
+#include <string>
 #include <assert.h>
+#define _KBV_N_ (NUM_BITS>>6)
 
 using namespace std;
 
@@ -26,39 +27,9 @@ static FILE * urandom = std::fopen("/dev/urandom", "rb" );
  * Bit values are stored in an array of N many 64-bit longs
  * in the array used to store the bits
  */
-template<unsigned int N>
+template<unsigned int NUM_BITS>
 class BitVector {
 public:
-
-/* Constructors */
-
-    /*
-     * Constructor
-     * Constructs a zero-initialized BitVector
-     */
-    BitVector() {
-        zero();
-    }
-    
-    /*
-     * Copy Constructor
-     * Constructs a copy of an input BitVector
-     */
-    BitVector( const BitVector<N> & v ) {
-        for (unsigned int i = 0; i < N; ++i) {
-            _bits[i] = v._bits[i];
-        }
-    }
-    
-    /*
-     * Move Constructor
-     * Constructs a copy of an input BitVector
-     */
-    BitVector( BitVector<N> && v ) {
-        for (unsigned int i = 0; i < N; ++i) {
-            _bits[i] = v._bits[i];
-        }
-    }
 
 /* Generation */
 
@@ -66,21 +37,20 @@ public:
      * Function: zeroVector()
      * Returns a zero-initialized BitVector
      */
-    static const BitVector<N> & zeroVector() {
-        static BitVector<N> v;
+    static const BitVector<NUM_BITS> & zeroVector() {
+        static BitVector<NUM_BITS> v;
         v.zero();
         return v;
     }
 
     /*
      * Function: randomVector()
-     * Returns a BitVector with random values
+     * Returns a nonzero BitVector with random values
      */
-    static const BitVector<N> randomVector() {
-        BitVector<N> result;
-        
+    static const BitVector<NUM_BITS> randomVector() {
+        BitVector<NUM_BITS> result = BitVector<NUM_BITS>::zeroVector();
         while( result.isZero() ) {
-            std::fread(&result._bits, sizeof( unsigned long long ), N, urandom );
+            std::fread(&result._bits, sizeof( unsigned long long ),_KBV_N_, urandom );
         }
         return result;
     }
@@ -89,9 +59,9 @@ public:
      * Function: randomVector()
      * Returns a BitVector with leading term zeroed
      */
-    static const BitVector<N> randomSmallVector(){
-        BitVector<N> result = BitVector<N>::randomVector();
-        result.clear(0); 
+    static const BitVector<NUM_BITS> randomSmallVector(){
+        BitVector<NUM_BITS> result = BitVector<NUM_BITS>::randomVector();
+        result.clear(0);
         return result;
     }
 
@@ -100,14 +70,10 @@ public:
      * Returns a BitVector with n leading zeroes followed by random values
      * Assumes n < numBits
      */
-    static const BitVector<N> randomVectorLeadingZeroes(unsigned int n) {
-        BitVector<N> result;
-        
-        while( result.isZero() ) {
-            std::fread(&result._bits, sizeof( unsigned long long ), N, urandom );
-        }
+    static const BitVector<NUM_BITS> randomVectorLeadingZeroes(unsigned int n) {
+        BitVector<NUM_BITS> result = BitVector<NUM_BITS>::randomVector();
 
-        for (int i = 0; i < n; ++i) {
+        for (unsigned int i = 0; i < n; ++i) {
             result.clear(i);
         }
         return result;
@@ -119,7 +85,7 @@ public:
      * Operator: []
      * Returns the value of the bit at a given index
      */
-    bool operator[](unsigned int n) const{
+    const bool operator[](unsigned int n) const{
         return get(n);
     }
 
@@ -127,9 +93,9 @@ public:
      * Operator: &
      * Returns a BitVector with values resulting from bitwise AND
      */
-    BitVector<N> operator&(const BitVector<N> & rhs) const {
-        BitVector<N> result;
-        for (unsigned int i = 0; i < N; ++i) {
+    BitVector<NUM_BITS> operator&(const BitVector<NUM_BITS> & rhs) const {
+        BitVector<NUM_BITS> result;
+        for (unsigned int i = 0; i < _KBV_N_; ++i) {
             result._bits[i] = _bits[i] & rhs._bits[i];
         }
         return result;
@@ -139,9 +105,9 @@ public:
      * Operator: |
      * Returns a BitVector with values resulting from bitwise OR
      */
-    BitVector<N> operator|(const BitVector<N> & rhs) {
-        BitVector<N> result;
-        for (unsigned int i = 0; i < N; ++i) {
+    BitVector<NUM_BITS> operator|(const BitVector<NUM_BITS> & rhs) {
+        BitVector<NUM_BITS> result;
+        for (unsigned int i = 0; i < _KBV_N_; ++i) {
             result._bits[i] = _bits[i] | rhs._bits[i];
         }
         return result;
@@ -151,9 +117,9 @@ public:
      * Operator: ^
      * Returns a BitVector with values resulting from bitwise XOR
      */
-    BitVector<N> operator^(const BitVector<N> & rhs) const {
-        BitVector<N> result;
-        for (unsigned int i = 0; i < N; ++i) {
+    BitVector<NUM_BITS> operator^(const BitVector<NUM_BITS> & rhs) const {
+        BitVector<NUM_BITS> result;
+        for (unsigned int i = 0; i < _KBV_N_; ++i) {
             result._bits[i] = _bits[i] ^ rhs._bits[i];
         }
         return result;
@@ -164,8 +130,8 @@ public:
      * Sets the current BitVector to have the same value as the rhs
      * Returns the current BitVector
      */
-    const BitVector<N> & operator=(const BitVector<N> & rhs) {
-        for (unsigned int i = 0; i < N; ++i) {
+    const BitVector<NUM_BITS> & operator=(const BitVector<NUM_BITS> & rhs) {
+        for (unsigned int i = 0; i <_KBV_N_; ++i) {
             _bits[i] = rhs._bits[i];
         }
         return *this;
@@ -176,8 +142,8 @@ public:
      * Sets the current BitVector to have values resulting from bitwise AND
      * Returns the current BitVector
      */
-    BitVector<N> & operator&=(const BitVector<N> & rhs) {
-        for (unsigned int i = 0; i < N; ++i) {
+    BitVector<NUM_BITS> & operator&=(const BitVector<NUM_BITS> & rhs) {
+        for (unsigned int i = 0; i < _KBV_N_; ++i) {
             _bits[i] &= rhs._bits[i];
         }
         return *this;
@@ -188,8 +154,8 @@ public:
      * Sets the current BitVector to have values resulting from bitwise XOR
      * Returns the current BitVector
      */
-    BitVector<N> & operator^=(const BitVector<N> & rhs) {
-        for (unsigned int i = 0; i < N; ++i) {
+    BitVector<NUM_BITS> & operator^=(const BitVector<NUM_BITS> & rhs) {
+        for (unsigned int i = 0; i < _KBV_N_; ++i) {
             _bits[i] ^= rhs._bits[i];
         }
         return *this;
@@ -202,10 +168,10 @@ public:
      */
     template<unsigned int M>
     const bool operator==(const BitVector<M> & rhs) const {
-        if (N != M) {
+        if (NUM_BITS != M) {
             return false;
         }
-        for (unsigned int i = 0; i < N; ++i) {
+        for (unsigned int i = 0; i < _KBV_N_; ++i) {
             if (_bits[i] != rhs._bits[i]) {
                 return false;
             }
@@ -219,9 +185,9 @@ public:
      * not equal to the values of the rhs
      */
     template<unsigned int M>
-    const bool operator!=(const BitVector<M> & rhs) {
-        if (N != M) return true;
-        for (unsigned int i = 0; i < N; ++i) {
+    const bool operator!=(const BitVector<M> & rhs) const {
+        if (NUM_BITS != M) return true;
+        for (unsigned int i = 0; i < _KBV_N_; ++i) {
             if (_bits[i] != rhs._bits[i]) {
                 return true;
             }
@@ -233,9 +199,10 @@ public:
      * Function: equals(rhs)
      * Returns whether the current BitVector has values
      * equal to the values of an input BitVector
+     * WARNING: use == in general, this function doesn't work for google tests
      */
-    bool equals(const BitVector<N> & rhs) const {
-        for(unsigned int i = 0; i < N; ++i){
+    bool equals(const BitVector<NUM_BITS> & rhs) const {
+        for(unsigned int i = 0; i < _KBV_N_; ++i){
             if(_bits[i] != rhs._bits[i]) return false;
         }
         return true;
@@ -248,16 +215,7 @@ public:
      * Returns the underlying array of bits
      */
     unsigned long long * elements() const {
-        //return _bits;
-        return startPtr;
-    }
-    
-    /*
-     * Function: length()
-     * Returns the number of bits
-     */
-    unsigned int length() const {
-        return N << 6;
+        return const_cast<unsigned long long *>(_bits);
     }
 
     /*
@@ -267,7 +225,7 @@ public:
      */
     const bool parity() const {
         unsigned long long accumulator = 0;
-        for (unsigned int i = 0; i < N; ++i) {
+        for (unsigned int i = 0; i < _KBV_N_; ++i) {
             accumulator ^= _bits[i];
         }
         return __builtin_parityll(accumulator)==1;
@@ -278,7 +236,7 @@ public:
      * Returns whether the current BitVector is a zero vector
      */
     const bool isZero() const {
-        for (unsigned int i = 0; i < N; ++i) {
+        for (unsigned int i = 0; i <_KBV_N_; ++i) {
             if (_bits[i] != 0) {
                 return false;
             }
@@ -291,7 +249,7 @@ public:
      * Sets the current BitVector to be a zero vector
      */
     void zero(){
-        for (unsigned int i = 0; i < N; ++i) {
+        for (unsigned int i = 0; i <_KBV_N_; ++i) {
             _bits[i] &= 0;
         }
     }
@@ -301,7 +259,7 @@ public:
      * Returns the value of the bit at a given index
      */
     bool get(unsigned int n) const {
-        return (_bits[n >> 6] & (1ull << (n & 63ull))) != 0;
+       return (_bits[n >> 6] & (1ull << (n & 63u))) != 0;
     }
 
     /*
@@ -310,8 +268,7 @@ public:
      * Returns -1 if all bits are 0
      */
     int getFirstOne() const {
-        int r = 0;
-        for (int i = 0; i < numBits; ++i) {
+        for (int i = 0; i < NUM_BITS; ++i) {
             if (get(i)) return i;
         }
         return -1;
@@ -322,7 +279,7 @@ public:
      * Sets the bit at a given index to 1
      */
     inline void set(unsigned int n) {
-        _bits[n >> 6] |= (1ull << (n & 63ull));
+        _bits[n >> 6] |= (1ull << (n & 63u));
     }
 
     /*
@@ -330,7 +287,7 @@ public:
      * Sets the bit at a given index to 0
      */
     inline void clear(unsigned int n) {
-        _bits[n >> 6] &= ~(1ull << (n & 63ull));
+        _bits[n >> 6] &= ~(1ull << (n & 63u));
     }
 
     /*
@@ -349,20 +306,27 @@ public:
      * Returns the dot product of the current BitVector with an
      * input BitVector
      */
-    bool dot(const BitVector<N> & rhs) const {
-        int n = length();
+    bool dot(const BitVector<NUM_BITS> & rhs) const {
         bool result = 0;
-        for(int i = 0; i < n; ++i){
+        for(int i = 0; i < NUM_BITS; ++i){
             result ^= (get(i) & rhs.get(i));
         }
         return result;
     }
 
     /*
+     * Function: copy(rhs)
+     * Copies a given vector into the current one
+     */
+    void copy(const BitVector<NUM_BITS> & v) {
+        memcpy(this->elements(), v.elements(), sizeof(v));
+    }
+
+    /*
      * Function: swap(firstIndex, secondIndex)
      * Swaps the values at two given indices
      */
-    void swap(int firstIndex, int secondIndex){
+    void swap(unsigned int firstIndex, unsigned int secondIndex){
         bool firstOld = get(firstIndex);
         bool secondOld = get(secondIndex);
         set(secondIndex, firstOld);
@@ -376,12 +340,14 @@ public:
      */
     template <unsigned int N1, unsigned int N2>
     static const BitVector<N1 + N2> vCat(const BitVector<N1> & v1, const BitVector<N2> & v2){
-        const int N_SUM = N1 + N2;
+        const unsigned int N_SUM = N1 + N2;
+        unsigned int K1 = N1 >> 6;
+        unsigned int K2 = N2 >> 6;
         BitVector<N_SUM> result;
         unsigned long long *b1 = v1.elements();
         unsigned long long *b2 = v2.elements();
-        memcpy(result.elements(), b1, N1*sizeof(unsigned long long));
-        memcpy(result.elements() + N1, b2, N2*sizeof(unsigned long long));
+        memcpy(result.elements(), b1, K1*sizeof(unsigned long long));
+        memcpy(result.elements() + K1, b2, K2*sizeof(unsigned long long));
         return result;
     }
 
@@ -392,14 +358,17 @@ public:
      */
     template <unsigned int N1, unsigned int N2, unsigned int N3>
     static const BitVector<N1 + N2 + N3> vCat(const BitVector<N1> & v1, const BitVector<N2> & v2, const BitVector<N3> & v3){
-        const int N_SUM = N1 + N2 + N3;
+        const unsigned int N_SUM = N1 + N2 + N3;
+        unsigned int K1 = N1 >> 6;
+        unsigned int K2 = N2 >> 6;
+        unsigned int K3 = N3 >> 6;
         BitVector<N_SUM> result;
         unsigned long long *b1 = v1.elements();
         unsigned long long *b2 = v2.elements();
         unsigned long long *b3 = v3.elements();
-        memcpy(result.elements(), b1, N1*sizeof(unsigned long long));
-        memcpy(result.elements() + N1, b2, N2*sizeof(unsigned long long));
-        memcpy(result.elements() + N1 + N2, b3, N3*sizeof(unsigned long long));
+        memcpy(result.elements(), b1, K1*sizeof(unsigned long long));
+        memcpy(result.elements() + K1, b2, K2*sizeof(unsigned long long));
+        memcpy(result.elements() + K1 + K2, b3, K3*sizeof(unsigned long long));
         return result;
     }
 
@@ -408,9 +377,10 @@ public:
      * Sets two input BitVectors of half the length of the current
      * BitVector to each contain half the values of the current BitVector
      * Assumes that the length of the current Bitvector is divisible by 2
+     * and greater than 128
      */
-    void proj(BitVector<(N>>1)> & v1, BitVector<(N>>1)> & v2) const{
-        unsigned int M = (N >> 1);
+    void proj(BitVector<(NUM_BITS>>1)> & v1, BitVector<(NUM_BITS>>1)> & v2) const{
+        unsigned int M = (_KBV_N_ >> 1);
         memcpy(v1.elements(), _bits, M*sizeof(unsigned long long));
         memcpy(v2.elements(), _bits+M, M*sizeof(unsigned long long));
     }
@@ -421,12 +391,12 @@ public:
      * BitVector to each contain one-third the values of the current BitVector
      * Assumes that the length of the current BitVector is divisible by 3
      */
-    void proj(BitVector<(N/3)> & v1, BitVector<(N/3)> & v2, BitVector<(N/3)> & v3) const{
-        unsigned int M = N/3;
+    void proj(BitVector<(NUM_BITS/3)> & v1, BitVector<(NUM_BITS/3)> & v2, BitVector<(NUM_BITS/3)> & v3) const{
+        unsigned int M = _KBV_N_/3;
         memcpy(v1.elements(), _bits, M*sizeof(unsigned long long));
         memcpy(v2.elements(), _bits+M, M*sizeof(unsigned long long));
         memcpy(v3.elements(), _bits+2*M, M*sizeof(unsigned long long));
-    }    
+    }
 
     /*
      * Function: proj2(part)
@@ -434,11 +404,11 @@ public:
      * containing a specified half of the values of the current BitVector
      * Assumes that the length of the current Bitvector is divisible by 2
      */
-    BitVector<(N >> 1)> proj2(int part) const{//part = 0 or 1
-        BitVector<(N>>1)> r;
-        unsigned int M = (N >> 1);
-        memcpy(r.elements(), _bits+(part*M), M*sizeof(unsigned long long));
-        return r;
+    BitVector<(NUM_BITS >> 1)> proj2(unsigned int part) const{//part = 0 or 1
+        BitVector<(NUM_BITS>>1)> result;
+        unsigned int M = (_KBV_N_ >> 1);
+        memcpy(result.elements(), _bits+(part*M), M*sizeof(unsigned long long));
+        return result;
     }
 
     /*
@@ -447,11 +417,11 @@ public:
      * containing a specified third of the values of the current BitVector
      * Assumes that the length of the current Bitvector is divisible by 2
      */
-    BitVector<(N/3)> proj3(int part) const{//part = 0, 1, or 2
-        BitVector<(N/3)> r;
-        unsigned int M = (N/3);
-        memcpy(r.elements(), _bits+(part*M), M*sizeof(unsigned long long));
-        return r;
+    BitVector<(NUM_BITS/3)> proj3(unsigned int part) const{//part = 0, 1, or 2
+        BitVector<(NUM_BITS/3)> result;
+        unsigned int M = (_KBV_N_/3);
+        memcpy(result.elements(), _bits+(part*M), M*sizeof(unsigned long long));
+        return result;
     }
 
     /*
@@ -459,10 +429,9 @@ public:
      * Returns a BitVector with the values of the current BitVector
      * shifted to the left by n and trailing zeroes
      */
-    const BitVector<N> leftShift(unsigned int n){
-        BitVector<N> result;
-        unsigned int numBits = length();
-        for(size_t i = 0; i < numBits - n; ++i)
+    const BitVector<NUM_BITS> leftShift(unsigned int n){
+        BitVector<NUM_BITS> result = BitVector<NUM_BITS>::zeroVector();
+        for(unsigned int i = 0; i < NUM_BITS - n; ++i)
             result.set(i, get(i + n));
         return result;
     }
@@ -476,16 +445,14 @@ public:
      */
     void print() const {
         std::cout << "[";
-        for (int i = 0; i < numBits - 1; ++i) {
+        for (int i = 0; i < NUM_BITS - 1; ++i) {
             std::cout << get(i) << ", ";
         }
-        std::cout << get(numBits - 1) << "]" << std::endl;
+        std::cout << get(NUM_BITS - 1) << "]" << std::endl;
     }
 
 private:
-    unsigned long long _bits[N]; //array of bit values
-    unsigned long long *startPtr = &_bits[0];
-    static const unsigned int numBits = N << 6; //number of bits in the array
+    unsigned long long _bits[_KBV_N_]; //array of bit values
 };
 
 /*
@@ -494,8 +461,27 @@ private:
  */
 template<>
 class BitVector<0> {
-private: 
+private:
     unsigned char x;
+};
+
+/*
+ * Function: hash<BitVector<N> >()(vector)
+ * Hashes a BitVector by taking the sum of the standard hashes of its components
+ */
+
+template<unsigned int N>
+struct hash< BitVector<N> >
+{
+    size_t operator()(BitVector<N> const& vector) const
+    {
+        size_t sum = 0;
+        for (int i = 0; i < N; ++i) {
+            size_t const h ( hash<unsigned long long>()(vector.elements()[i]) );
+            sum ^= h;
+        }
+        return sum;
+    }
 };
 
 #endif

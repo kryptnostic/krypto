@@ -1,73 +1,115 @@
+//
+//  SearchPrivateKey.h
+//  krypto
+//
+//  Created by Peng Hui How and Robin Zhang on 8/13/15.
+//  Copyright (c) 2015 Kryptnostic. All rights reserved.
+//
+//  C++ implementation of the SearchPrivateKey
+//  which generates all of the necessary client-side parts
+//  for indexing and searching objects
+//
+
 #ifndef krypto_SearchPrivateKey_h
 #define krypto_SearchPrivateKey_h
 
+#include <utility>
 #include "PrivateKey.h"
+#include "ClientHashFunction.h"
 
-template<unsigned int N, unsigned int L>
+//N should be a multiple of 64, otherwise BitVector would create
+//the incorrect number of unsigned long longs
+template<unsigned int N>
 class SearchPrivateKey{
 public:
-	SearchPrivateKey(const PrivateKey<N, L> & pk, const MultiQuadTuple<2*N,N> & h) : 
-	_pk(pk), _h(h), 
-	_s(pk.encrypt(BitVector<N>::zeroVector())), 
-	_v(pk.encrypt(h.getConstantTerms())),
-	_g(MultiQuadTuple<N,N>::randomMultiQuadTuple()),
-	_Cs1(BitMatrix<N>::randomInvertibleMatrix()),
-	_Cs2(BitMatrix<N>::randomInvertibleMatrix()),
-	_g0(_h.template rMult<N>(_Cs1)),
-	_g1((_pk.getf().get(0).template rMult<N>(_Cs2)) * _Cs1.inv()),
-	_g2((_pk.getf().get(1) ^ _g) * _Cs2.inv())
+	SearchPrivateKey() :
+	_K(BitMatrix<N>::randomInvertibleMatrix()),
+	_R(BitMatrix<N>::randomInvertibleMatrix())
 	{}
 
 /* Getters */
 
-	const MultiQuadTuple<2*N,N> getG0() const{
-		return _g0;
-	}
-
-	const MultiQuadTuple<N,N> getG1() const{
-		return _g1;
-	}
-
-	const MultiQuadTuple<N,N> getG2() const{
-		return _g2;
-	}
-
 	/*
-     * Returns the global hash function given by the server.
+	 * Function: getObjectSearchKey
+	 * Returns a random object search key to be serialized
+	 * R_o^{-1}R_id_i
 	 */
-	const MultiQuadTuple<2*N,N> getHash() const{
-		return _h;
+	const BitVector<N> getObjectSearchKey() const{
+		//return _R.solve(BitMatrix<N>::randomInvertibleMatrix() * BitVector<N>::randomVector());
+		return BitVector<N>::randomVector();
+	}
+
+	//documentC
+	const BitMatrix<N> getObjectAddressFunction() const{
+		return BitMatrix<N>::randomInvertibleMatrix();
 	}
 
 	/*
-	 * Returns the zero vector encrypted to obfuscate server during 
-	 * address calculation. 
-	 */	 
-	const BitVector<2*N> getS() const{
-		return _s;
-	}
-
-	/*
-	 * Returns the constants vector of the global hash function encrypted to obfuscate server during
-	 * address calculation.
+	 * Function: getObjectConversionMatrix
+	 * Returns object(document) conversion matrix given object address function
+	 * K_doc * K_user^{-1}
 	 */
-	const BitVector<2*N> getV() const{
-		return _v;
+	const BitMatrix<N> getObjectConversionMatrix(const BitMatrix<N> & objectAddressFunction) const{
+		return objectAddressFunction * _K.inv();
+	}
+
+	/*
+	 * Function: getMetadatumAddress
+	 * Given a token and a object key, returns the address for the
+	 * associated metadatum
+	 */
+	const BitVector<N> getMetadatumAddress(const BitMatrix<N> & objectAddressFunction, const BitVector<N> &token, const BitVector<N> & objectSearchKey) const{
+		return objectAddressFunction * (token ^ (_R * objectSearchKey));
+	}
+
+	/*
+	 * Function: getMetadatumAddressFromPair
+	 * Given a token and a object key, returns the address for the
+	 * associated metadatum
+	 */
+	const BitVector<N> getMetadatumAddressFromPair(const BitVector<N> &token, const std::pair<BitVector<2*N>, BitMatrix<N> > & objectIndexPair, const PrivateKey<N> & pk) const{
+		return objectIndexPair.second * _K * (token ^ (_R * pk.decrypt(objectIndexPair.first)));
+	}
+
+	/*
+	 * Function: getMetadatumAddress
+	 * Given a object index pair, returns the address for the
+	 * associated metadatum
+	 */
+	const ClientHashFunction<N> getClientHashFunction(const PrivateKey<N> & pk) const{
+		ClientHashFunction<N> h;
+		h.initialize(BitMatrix<N>::randomInvertibleMatrix(), _K * BitMatrix<N, 2*N>::augH(BitMatrix<N>::identityMatrix(), _R), pk);
+		return h;
+	}
+
+	//to upload to the server during indexing
+	//uploaded = {E(R_o^{-1}R_id_i), C_i * C_o^{-1}}
+	const std::pair<BitVector<2*N>, BitMatrix<N> > getObjectIndexPair(const BitVector<N> & objectSearchKey, const BitMatrix<N> & objectAddressFunction, const PrivateKey<N> & pk) const{
+		const BitVector<2*N> & eObjectSearchKey = pk.encrypt(objectSearchKey);
+		const BitMatrix<N> & objectConversionMatrix = objectAddressFunction * _K.inv();
+		std::pair< BitVector<2*N>, BitMatrix<N> > result;
+		result = std::make_pair(eObjectSearchKey, objectConversionMatrix);
+		return result;
+	}
+
+	//uploaded = {E(R_o^{-1}R_id_i), C_i * C_o^{-1}}
+	const std::pair<BitVector<N>, BitMatrix<N> > getObjectSharingPair(const std::pair<BitVector<2*N>, BitMatrix<N> > & uploaded, const PrivateKey<N> & pk) const{
+		std::pair< BitVector<N>, BitMatrix<N> > result;
+		result = std::make_pair(_R * pk.decrypt(uploaded.first), uploaded.second * _K);
+		return result;
+	}
+
+
+	//to be uploaded after getting the sharing pair
+	const std::pair<BitVector<2*N>, BitMatrix<N> > getObjectUploadPair(const std::pair<BitVector<N>, BitMatrix<N> > & shared, const PrivateKey<N> & pk) const{
+		std::pair< BitVector<2*N>, BitMatrix<N> > result;
+		result = std::make_pair(pk.encrypt(_R.solve(shared.first)), shared.second * _K.inv());
+		return result;
 	}
 
 private:
-	PrivateKey<N, L> _pk;
-	MultiQuadTuple<2*N,N> _h;
-	BitVector<2*N> _s; //obfuscation vector to use during search 
-	BitVector<2*N> _v; //obfuscation vector to use during search
-	MultiQuadTuple<N,N> _g; //random function generated for zero knowledge re-encryption
-	BitMatrix<N> _Cs1;
-	BitMatrix<N> _Cs2;
-	MultiQuadTuple<2*N,N> _g0;
-	MultiQuadTuple<N,N> _g1;
-	MultiQuadTuple<N,N> _g2;
-	static const unsigned int NN = N << 6;
-	static const unsigned int twoNN = NN << 1;
+	BitMatrix<N> _K; //front protection
+	BitMatrix<N> _R; //back protection
 };
 
 #endif/* defined(__krypto__SearchPrivateKey__) */

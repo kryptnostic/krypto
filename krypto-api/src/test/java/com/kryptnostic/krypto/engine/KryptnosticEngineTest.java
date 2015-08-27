@@ -22,6 +22,6 @@ public class KryptnosticEngineTest {
 
     @Test
     public void testInitialization() throws Exception {
-        KryptnosticEngine eng = new KryptnosticEngine();
+        KryptnosticEngine eng = new KryptnosticEngine(new byte[0], new byte[0], new byte[0]);
     }
 }

@@ -21,7 +21,7 @@ task buildGoogleTest(type: Exec) {
 
 task copyBinariesToApi(type: Copy, dependsOn: 'krypto-lib:build') {
     from 'krypto-lib/build/binaries/mainSharedLibrary/release/'
-    into 'krypto-api/src/main/resources/com/kryptnostic/krypto/engine/'
+    into 'krypto-api/src/main/resources/'
     include( '**/*.so', '**/*.dylib' )
 }
 

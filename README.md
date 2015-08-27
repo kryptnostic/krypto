@@ -15,7 +15,9 @@ For linux:
 
 To automagically build a jar for jni access to krypto, run:
 
-	> ./gradlew buildFullJar
+	> ./gradlew buildFullJar -Pemhome=<pathToYourEmscriptenIncludeFolder>
+
+We assume that you have a JAVA_HOME system variable that points at your java home directory
 
 Builds currently depend on clang3.7 for c++14 features. This is only tends to be an issue on older versions of linux.
 

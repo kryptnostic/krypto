@@ -2,64 +2,124 @@
 #include "../../main/cpp/MultiQuadTuple.h"
 #include <string>
 #include <ctime>
+#include <chrono>
 using namespace testing;
 
-#define L 1
-#define M 1 
-#define K 2 
-#define N 1 
-#define DEBUG false
+#define big 256
+#define mid 128
+#define sma 64
+#define mon ((sma*(sma + 1)) >> 1)
 
-TEST(MQTTests, testInit){//assert equality later, as there's obob now
-	//C: L->N, f: N->M, D: M->K
-	ASSERT_TRUE(1+1 == 2); 
-	MultiQuadTuple<N, M> f = MultiQuadTuple<N, M>::randomMultiQuadTuple();
-	BitVector<N> y = BitVector<N>::randomVector();
-	BitVector<M> fy = f(y);
-	ASSERT_TRUE(1+2 == 3);
+TEST(MQTTests, testLeftCompose){
+    BitVector<sma> v = BitVector<sma>::randomVector();
+    MultiQuadTuple<sma,sma> cs;
+    cs.randomize();
+
+    BitMatrix<sma> m = BitMatrix<sma>::randomMatrix();
+
+    std::cout<<"Starting left compose"<<endl;
+    auto start = std::chrono::high_resolution_clock::now();
+
+    MultiQuadTuple<sma, sma> csm = cs * m;//cs(m);
+
+    auto stop = std::chrono::high_resolution_clock::now();
+    auto total =std::chrono::duration_cast<std::chrono::nanoseconds>(stop-start).count();
+    std::cout<<"Total time: "<< total <<" nanos"<<std::endl;
+    std::cout<<"Mean time: "<< total/double(sma) <<" nanos"<<std::endl;
+
+   // std::cout<<"size of CS: "<< sizeof( MultiQuadTuple<mid,mid> ) <<endl;
+
+    BitVector<sma> mv = m * v;
+
+    BitVector<sma> csm_v = csm(v);
+    BitVector<sma> cs_mv = cs(mv);
+    ASSERT_TRUE(csm_v.equals(cs_mv));
 }
 
-TEST(MQTTests, testMatToMQT){
-	BitMatrix<N> X = BitMatrix<N>::randomMatrix(M << 6);
-	BitVector<N> x = BitVector<N>::randomVector();
-	BitVector<M> Xx = X.template operator*<M>(x);
-	MultiQuadTuple<N, M> f = MultiQuadTuple<N, M>::getMultiQuadTuple(X);
-	BitVector<M> fx = f(x);
-	ASSERT_TRUE(fx.equals(Xx));
+TEST(MQTTests, testLeftComposeDiffDims){
+    BitMatrix<sma,mid> m = BitMatrix<sma, mid>::randomMatrix();
+    MultiQuadTuple<sma,sma> cs;
+    cs.randomize();
+    MultiQuadTuple<mid,sma> csm = cs * m;
+    BitVector<mid> v = BitVector<mid>::randomVector();
+    BitVector<sma> mv = m * v;
+    cout << "Left Compose with Different Dimensions" << endl;
+
+    BitVector<sma> csm_v = csm(v);
+    BitVector<sma> cs_mv = cs(mv);
+    ASSERT_TRUE(csm_v.equals(cs_mv));
 }
 
-TEST(MQTTests, testLeftComp){
-	ASSERT_TRUE(2+3 == 5);
-	MultiQuadTuple<N, M> f = MultiQuadTuple<N, M>::randomMultiQuadTuple();
-	BitMatrix<L> C = BitMatrix<L>::randomMatrix(N << 6);
-	BitVector<L> x = BitVector<L>::randomVector();
-	MultiQuadTuple<L, M> fC = f*C;
-	BitVector<M> fC_x = fC(x);
-	BitVector<M> f_Cx = f(C.template operator*<N>(x));
-	ASSERT_TRUE(fC_x.equals(f_Cx));
-	ASSERT_TRUE(3+5 == 8);
-}
+TEST(MQTTests, testRightCompose){
+    BitVector<sma> v = BitVector<sma>::randomVector();
+    MultiQuadTuple<sma,sma> cs;
+    cs.randomize();
+    BitMatrix<sma> m = BitMatrix<sma>::randomMatrix();
+    std::cout<<"Starting right compose"<<endl;
+    auto start = std::chrono::high_resolution_clock::now();
 
-TEST(MQTTests, testRightComp){
-	ASSERT_TRUE(5+8 == 13);
-	MultiQuadTuple<N, M> f = MultiQuadTuple<N, M>::randomMultiQuadTuple();
-	BitMatrix<M> D = BitMatrix<M>::randomMatrix(K << 6); 
-	MultiQuadTuple<N, K> Df = f.rMult<K>(D); 
-	BitVector<N> x = BitVector<N>::randomVector();
-	BitVector<K> Df_x = Df(x);
-	BitVector<K> D_fx = D.template operator*<K>(f(x));
-	ASSERT_TRUE(Df_x.equals(D_fx));
-	ASSERT_TRUE(8+13 == 21);
+    MultiQuadTuple<sma, sma> mcs = cs.template rMult<sma>(m);//cs * m;
+
+    auto stop = std::chrono::high_resolution_clock::now();
+    auto total =std::chrono::duration_cast<std::chrono::nanoseconds>(stop-start).count();
+    std::cout<<"Total time: "<< total <<" nanos"<<std::endl;
+    std::cout<<"Mean time: "<< total/double(sma) <<" nanos"<<std::endl;
+
+    BitVector<sma> m_csv = m * cs(v);
+    BitVector<sma> mcs_v = mcs(v);
+    ASSERT_TRUE(m_csv.equals(mcs_v));
 }
 
 TEST(MQTTests, testAugV){
-	ASSERT_TRUE(13+21 == 34);
-	MultiQuadTuple<N, M> f1 = MultiQuadTuple<N, M>::randomMultiQuadTuple();
-	MultiQuadTuple<N, M> f2 = MultiQuadTuple<N, M>::randomMultiQuadTuple();
-	MultiQuadTuple<N, 2*M> f12 = MultiQuadTuple<N, 2*M>::augV(f1,f2);
-	ASSERT_TRUE(21+34 == 55);
+    BitVector<sma> v = BitVector<sma>::randomVector();
+    MultiQuadTuple<sma,sma> cs1;
+    cs1.randomize();
+    MultiQuadTuple<sma,sma> cs2;
+    cs2.randomize();
+    MultiQuadTuple<sma,sma> cs3;
+    cs3.randomize();
+    MultiQuadTuple<sma,3*sma> cs;
+    cs.augV(cs1, cs2, cs3);
+
+    BitVector<3*sma> cs_v = cs(v);
+    BitVector<3*sma> aug = BitVector<3*sma>::vCat(cs1(v), cs2(v), cs3(v));
+    ASSERT_TRUE(cs_v.equals(aug));
 }
 
+TEST(MQTTests, testSetAsMatrix){
+    MultiQuadTuple<sma,sma> cs;
+    BitMatrix<sma,sma> m = BitMatrix<sma,sma>::randomMatrix();
+    BitVector<sma> v = BitVector<sma>::randomVector();
+    BitVector<sma> mv = m * v;
+    cs.setAsMatrix(m);
+    BitVector<sma> csv = cs(v);
+    ASSERT_TRUE(mv.equals(csv));
+}
+
+TEST(MQTTests, testSetMQT){
+    MultiQuadTuple<sma,sma> cs;
+    BitMatrix<mon,sma> m = BitMatrix<mon,sma>::randomMatrix();
+    BitVector<sma> v = BitVector<sma>::randomVector();
+    cs.setContributions(m, v);
+    BitVector<sma> x = BitVector<sma>::randomVector();
+    cout << "Emulating constructor" << endl;
+    cs(x).print();
+}
+
+TEST(MQTTests, testPartialEval){
+    MultiQuadTuple<2*sma,sma> f;
+    f.randomize();
+    BitVector<sma> x = BitVector<sma>::randomVector();
+    BitVector<sma> y = BitVector<sma>::randomVector();
+    BitVector<2*sma> z = BitVector<2*sma>::vCat(x, y);
+
+    MultiQuadTuple<sma, sma> g = f.partialEval<sma>(x);
+
+    ASSERT_TRUE(g(y) == f(z));
+}
+
+/*
+TODO: implement this with the recursive struct
 TEST(MQTTests, testShifter){
 	ASSERT_TRUE(34+55 == 89);
 	MultiQuadTuple<N, M> f = MultiQuadTuple<N, M>::randomMultiQuadTuple();
@@ -71,3 +131,4 @@ TEST(MQTTests, testShifter){
 	ASSERT_TRUE(fv.equals(gw));
 	ASSERT_TRUE(55+89 == 144);
 }
+*/

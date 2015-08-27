@@ -18,11 +18,13 @@
  * Template for PrivateKey
  * Length of plaintext = N * 2^6, Length of obfuscation chain = L
  */
-template<unsigned int N, unsigned int L>
+template<unsigned int N>
 class PrivateKey {
 
-template<unsigned int N1, unsigned int L1> friend class BridgeKey;
-template<unsigned int N2, unsigned int L2> friend class SearchPrivateKey;
+template<unsigned int N1> friend class BridgeKey;
+template<unsigned int N2> friend class ClientHashFunction;
+template<unsigned int N3> friend class SearchPrivateKey;
+template<unsigned int N4> friend class KryptnosticClient;
 
 public:
 
@@ -34,7 +36,7 @@ public:
 		_A(BitMatrix<N>::randomInvertibleMatrix()),
 		_B(BitMatrix<N>::randomInvertibleMatrix()),
 		_M(BitMatrix<2*N>::randomInvertibleMatrix()),
-		_f(MultiQuadTupleChain<N,L>::randomMultiQuadTupleChain()){
+		_f(MultiQuadTupleChain<N,2>::randomMultiQuadTupleChain()){
 		generateObfuscationMatrixChains();
 	}
 
@@ -42,11 +44,11 @@ public:
      * Function: encrypt(m)
      * Returns the encrypted ciphertext (length 2N * 2^6) of the plaintext (length N * 2^6)
      */
-	const BitVector<2*N> encrypt(const BitVector<N> &m) const{//returns x = E(m, r) given a plaintext m 
+	const BitVector<2*N> encrypt(const BitVector<N> &m) const{//returns x = E(m, r) given a plaintext m
 		BitVector<N> r = BitVector<N>::randomVector();
-		BitVector<N> top = _B.template operator*<N>(m) ^ (r ^ _f(r));
-		BitVector<N> bottom = _A.template operator*<N>(r);
-		return _M.template operator*<2*N>(BitVector<N>::vCat(top, bottom));
+		BitVector<N> top = (_B * m) ^ (r ^ _f(r));
+		BitVector<N> bottom = _A * r;
+		return _M * BitVector<N>::vCat(top, bottom);
 	}
 
     /*
@@ -59,7 +61,7 @@ public:
 		mix.proj(x1, x2);
 		BitVector<N> Aix2 = _A.solve(x2);
 		BitVector<N> fAix2 = _f(Aix2);
-		return _B.solve(x1 ^ (Aix2 ^ fAix2)); 
+		return _B.solve(x1 ^ (Aix2 ^ fAix2));
 	}
 
 protected:
@@ -67,7 +69,7 @@ protected:
 		return _A;
 	}
 
-	const BitMatrix<N> getB() const{ 
+	const BitMatrix<N> getB() const{
 		return _B;
 	}
 
@@ -75,29 +77,37 @@ protected:
 		return _M;
 	}
 
-	const MultiQuadTupleChain<N,L> getf() const{
+	const MultiQuadTupleChain<N,2> getf() const{
 		return _f;
 	}
 
-	const vector<BitMatrix<2*N> > getUnaryObfChain() const{
-		return _Cu;
+	const BitMatrix<2*N> getUnaryObf1() const{
+		return _Cu[0];
 	}
-	
-	const vector<BitMatrix<3*N> > getBinaryObfChain() const{
-		return _Cb;
+
+	const BitMatrix<2*N> getUnaryObf2() const{
+		return _Cu[1];
+	}
+
+	const BitMatrix<3*N> getBinaryObf1() const{
+		return _Cb[0];
+	}
+
+	const BitMatrix<3*N> getBinaryObf2() const{
+		return _Cb[1];
 	}
 
 private:
 	const BitMatrix<N> _A, _B; //SL_n(F_2)
 	const BitMatrix<2*N> _M; //SL_{2n}(F_2)
-	MultiQuadTupleChain<N,L> _f; //{f_1,...,f_L} random quadratic function tuples
-	vector<BitMatrix<2*N> > _Cu; //chain of obfuscation matrix for unary operations
-	vector<BitMatrix<3*N> > _Cb; //chain of obfuscation matrix for binary operations
-	
+	MultiQuadTupleChain<N,2> _f; //{f_1,...,f_L} random quadratic function tuples
+	BitMatrix<2*N> _Cu[2]; //chain of obfuscation matrix for unary operations
+	BitMatrix<3*N> _Cb[2]; //chain of obfuscation matrix for binary operations
+
 	void generateObfuscationMatrixChains(){ //generates C_{u1},...,C_{uL} and C_{b1},...,C_{bL}
-		for(size_t i = 0; i < L; ++i){
-			_Cu.push_back(BitMatrix<(2*N)>::randomInvertibleMatrix());
-			_Cb.push_back(BitMatrix<(3*N)>::randomInvertibleMatrix());
+		for(unsigned int i = 0; i < 2; ++i){
+			_Cu[i] = BitMatrix<(2*N)>::randomInvertibleMatrix();
+			_Cb[i] = BitMatrix<(3*N)>::randomInvertibleMatrix();
 		}
 	}
 };

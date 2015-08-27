@@ -4,12 +4,12 @@
 #include <ctime>
 using namespace testing;
 
-#define N 1
+#define N 64
 
 TEST(PrivKeyTests, testEncryptionAndDecryption){
-	PrivateKey<1,2> pk;
-	BitVector<1> m = BitVector<1>::randomVector();
-	BitVector<2> c = pk.encrypt(m);
-	BitVector<1> mt = pk.decrypt(c);
+	PrivateKey<N> pk;
+	BitVector<N> m = BitVector<N>::randomVector();
+	BitVector<2*N> c = pk.encrypt(m);
+	BitVector<N> mt = pk.decrypt(c);
 	ASSERT_TRUE(m.equals(mt));
 }
