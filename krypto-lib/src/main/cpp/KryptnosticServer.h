@@ -14,7 +14,7 @@
 
 #include "ClientHashFunction.h"
 
-using namespace emscripten;
+using namespace std;
 
 template<unsigned int N = 64>
 class KryptnosticServer {
@@ -50,7 +50,7 @@ public:
 	 * Function: getMetadataAddress
 	 * Returns a serialized pair of (ObjectSearchKey, ObjectAddressFunction)
 	 */
-	const BitVector<N> getMetadataAddress(const std::pair <BitVector<2*N>, BitMatrix<N> > objectIndexPair) const{
+	const BitVector<N> getMetadataAddress(const pair <BitVector<2*N>, BitMatrix<N> > objectIndexPair) const{
 		BitVector<2*N> eObscuredObjectSearchKey = objectIndexPair.first; //get from pair
 		BitMatrix<N, N> objectConversionMatrix = objectIndexPair.second; //get from pair
 
