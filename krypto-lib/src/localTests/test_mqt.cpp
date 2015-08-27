@@ -5,18 +5,18 @@
 
 using namespace std;
 
-#define sma 64
+#define N 128
 
 void testPartialEval() {
-	MultiQuadTuple<2*sma,sma> f;
+	MultiQuadTuple<2*N,N> f;
     f.randomize();
-    BitVector<sma> x = BitVector<sma>::randomVector();
-    BitVector<sma> y = BitVector<sma>::randomVector();
-    BitVector<2*sma> z = BitVector<2*sma>::vCat(x, y);
+    BitVector<N> x = BitVector<N>::randomVector();
+    BitVector<N> y = BitVector<N>::randomVector();
+    BitVector<2*N> z = BitVector<2*N>::vCat(x, y);
 
     //f(x || y)
     //g(y) = f(x || y)
-    MultiQuadTuple<sma, sma> g = f.partialEval<sma>(x);
+    MultiQuadTuple<N, N> g = f.partialEval<N>(x);
     cout << "Partial Eval g(y) =   ";
     g(y).print();
     cout << "Normal Eval f(x, y) = ";

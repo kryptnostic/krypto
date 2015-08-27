@@ -16,7 +16,7 @@
 
 using namespace std;
 
-template<unsigned int N = 64>
+template<unsigned int N = 128>
 class KryptnosticServer {
 
 public:
