@@ -106,16 +106,106 @@ struct MultiQuadTuple {
 
         //result.template partialEvalUpdateCoefficients<NUM_INPUTS, PARTIAL_INPUTS, PARTIAL_INPUTS - 1, NUM_INPUTS - 1>(*this, input, BitMatrix<PARTIAL_INPUTS - 1, NUM_INPUTS - 1>());
         result.template updateCoefficientsAboveP<NUM_INPUTS, PARTIAL_INPUTS, PARTIAL_INPUTS - 1, NUM_INPUTS - 1>(*this, input, BitMatrix<PARTIAL_INPUTS - 1, NUM_INPUTS - 1>());
+
+        //result.template updateConstants(*this, input, BitVector<PARTIAL_INPUTS - 1>());
         return result;
     }
 
-    // template<unsigned int SUPER_INPUTS, unsigned int PARTIAL_INPUTS, unsigned int INDEX_I, unsigned int REMAINING_INDEX>
-    // void updateCoefficients(const MultiQuadTuple<SUPER_INPUTS, NUM_OUTPUTS> & super, const BitVector<PARTIAL_INPUTS> & input, const BitVector<REMAINING_INDEX> & dummy) {
-    //     xorInMonomialContribution(i, i, super.getMatrixN(BitVector<SUPER_INPUTS - INDEX_I>())); //XOR first row of coeff matrix by appropriate row from super
-    //      //write a templated function in INDEX_I that goes through the INDEX_I's and XOR's them in
+    // //In partial evaluation of super, updates the coefficients of result
+    // //Iterates through the coefficient matrices of the result
+    // //and XORs appropriate rows from first PARTIAL_INPUTS coefficient matrices of super
+    // template<unsigned int SUPER_INPUTS, unsigned int PARTIAL_INPUTS, unsigned int INDEX_J>
+    // void updateCoefficients(const MultiQuadTuple<SUPER_INPUTS, NUM_OUTPUTS> & super, const BitVector<PARTIAL_INPUTS> & input, const BitVector<INDEX_J> & dummy) {
     //      //change getMatrixN to return by reference and by const reference
-    //      //write a updateConstants
-    //     updateCoefficients(super, input, INDEX_I, BitVector<REMAINING_INDEX - 1>());
+
+    //     if (input[INDEX_J]) { //if x_j = 1
+    //         //iterate through x_i's and update x_j's coeff matrix
+    //         updateSingleCoefficient(super, input, BitVector<PARTIAL_INPUTS - 1>(), INDEX_J);
+    //     }
+    //     updateCoefficients(super, input, BitVector<INDEX_J - 1>()); //go to x_{j - 1}
+    // }
+
+    // //In partial evaluation of super, updates the coefficients of result
+    // //at j = PARTIAL_INPUTS + 1 in particular and then unrolls loop of updating coefficients
+    // //Triggered when INDEX_J reaches PARTIAL_INPUTS + 1
+    // template<unsigned int SUPER_INPUTS, unsigned int PARTIAL_INPUTS>
+    // void updateCoefficients(const MultiQuadTuple<SUPER_INPUTS, NUM_OUTPUTS> & super, const BitVector<PARTIAL_INPUTS> & input, const BitVector<PARTIAL_INPUTS + 1> & dummy) {
+    //     if (input[PARTIAL_INPUTS + 1]) { //if x_j = 1
+    //         //iterate through x_i's and update x_j's coeff matrix
+    //         updateSingleCoefficient(super, input, BitVector<PARTIAL_INPUTS - 1>(), PARTIAL_INPUTS + 1);
+    //     }
+    // }
+
+    // //In partial evaluation of super, updates a single coefficient matrix of result at x_j
+    // //Iterates through the x_i's and XORs in the appropriate row
+    // template<unsigned int SUPER_INPUTS, unsigned int PARTIAL_INPUTS, unsigned int INDEX_I>
+    // void updateSingleCoefficient(const MultiQuadTuple<SUPER_INPUTS, NUM_OUTPUTS> & super, const BitVector<PARTIAL_INPUTS> & input, const BitVector<INDEX_I> & dummy, const unsigned int index_j) {
+    //     if (input[INDEX_I) { //if x_i = 1
+    //         //XOR first row of coeff matrix by appropriate row from super
+    //         BitVector<NUM_OUTPUTS> superCoeffRowIJ = super.getMatrixN(BitVector<SUPER_INPUTS - INDEX_I>())[index_j];
+    //         xorInMonomialContribution(index_j - PARTIAL_INPUTS, index_j - PARTIAL_INPUTS, superCoeffRowIJ);
+    //     }
+
+    //     updateSingleCoefficient(super, input, BitVector<INDEX_I - 1>(), index_j); //go to x_{i - 1}
+    // }
+
+    // //In partial evaluation of super, updates a single coefficient matrix of result at x_j
+    // //at i = 0 in particular and then unrolls loop of updating x_j
+    // //Triggered when INDEX_I reaches 0
+    // template<unsigned int SUPER_INPUTS, unsigned int PARTIAL_INPUTS>
+    // void updateSingleCoefficient(const MultiQuadTuple<SUPER_INPUTS, NUM_OUTPUTS> & super, const BitVector<PARTIAL_INPUTS> & input, const BitVector<0> & dummy, const unsigned int index_j) {
+    //     if (input[INDEX_I) { //if x_i = 1
+    //         //XOR first row of coeff matrix by appropriate row from super
+    //         BitVector<NUM_OUTPUTS> superCoeffRowIJ = super.getMatrixN(BitVector<SUPER_INPUTS - INDEX_I>())[index_j];
+    //         xorInMonomialContribution(index_j - PARTIAL_INPUTS, index_j - PARTIAL_INPUTS, superCoeffRowIJ);
+    //     }
+    // }
+
+    // //In partial evaluation of super, updates constants of result
+    // //Iterates through x_i's and XORs in the first PARTIAL_INPUTS rows into constants
+    // template<unsigned int SUPER_INPUTS, unsigned int PARTIAL_INPUTS, unsigned int INDEX_I>
+    // void updateConstants(const MultiQuadTuple<SUPER_INPUTS, NUM_OUTPUTS> & super, const BitVector<PARTIAL_INPUTS> & input, const BitVector<INDEX_I> & dummy) {
+    //     if (input[INDEX_I]) { //if x_i = 1
+    //         //iterate through x_j's and update constants
+    //         updateSingleConstant(super, input, BitVector<PARTIAL_INPUTS - 1>(), INDEX_I);
+    //     }
+    //     updateConstants(super, input, BitVector<INDEX_I - 1>()); //go to x_{j - 1}
+    // }
+
+    // //In partial evaluation of super, updates constants of result
+    // //at i = 0 in particular and then unrolls loop of updating constants
+    // //Triggered when INDEX_I reaches 0
+    // template<unsigned int SUPER_INPUTS, unsigned int PARTIAL_INPUTS>
+    // void updateConstants(const MultiQuadTuple<SUPER_INPUTS, NUM_OUTPUTS> & super, const BitVector<PARTIAL_INPUTS> & input, const BitVector<0> & dummy) {
+    //     if (input[0]) { //if x_i = 1
+    //         //iterate through x_j's and update constants
+    //         updateSingleConstant(super, input, BitVector<PARTIAL_INPUTS - 1>(), 0);
+    //     }
+    // }
+
+    // //In partial evaluation of super, updates the constants of result from a single coefficient matrix of super at x_i
+    // //Iterates through the x_j's and XORs in the appropriate row
+    // template<unsigned int SUPER_INPUTS, unsigned int PARTIAL_INPUTS, unsigned int INDEX_J>
+    // void updateSingleConstant(const MultiQuadTuple<SUPER_INPUTS, NUM_OUTPUTS> & super, const BitVector<PARTIAL_INPUTS> & input, const BitVector<INDEX_J> & dummy, const unsigned int index_i) {
+    //     if (input[INDEX_J) { //if x_i = 1
+    //         //XOR constants by appropriate row from super
+    //         BitVector<NUM_OUTPUTS> superCoeffRowIJ = super.getMatrixN(BitVector<SUPER_INPUTS - INDEX_I>())[index_j];
+    //         xorConstants(superCoeffRowIJ);
+    //     }
+
+    //     updateSingleConstant(super, input, BitVector<INDEX_J - 1>(), index_i); //go to x_{j - 1}
+    // }
+
+    // //In partial evaluation of super, updates the constants of result from a single coefficient matrix of super at x_i
+    // //at j = 0 in particular and then unrolls loop of updating x_i
+    // //Triggered when INDEX_J reaches 0
+    // template<unsigned int SUPER_INPUTS, unsigned int PARTIAL_INPUTS>
+    // void updateSingleConstant(const MultiQuadTuple<SUPER_INPUTS, NUM_OUTPUTS> & super, const BitVector<PARTIAL_INPUTS> & input, const BitVector<0> & dummy, const unsigned int index_i) {
+    //     if (input[0]) { //if x_i = 1
+    //         //XOR constants by appropriate row from super
+    //         BitVector<NUM_OUTPUTS> superCoeffRowIJ = super.getMatrixN(BitVector<SUPER_INPUTS - INDEX_I>())[index_j];
+    //         xorConstants(superCoeffRowIJ);
+    //     }
     // }
 
     // Used primarily for partialEval
