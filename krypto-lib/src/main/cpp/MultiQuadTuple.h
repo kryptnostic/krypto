@@ -109,6 +109,15 @@ struct MultiQuadTuple {
         return result;
     }
 
+    // template<unsigned int SUPER_INPUTS, unsigned int PARTIAL_INPUTS, unsigned int INDEX_I, unsigned int REMAINING_INDEX>
+    // void updateCoefficients(const MultiQuadTuple<SUPER_INPUTS, NUM_OUTPUTS> & super, const BitVector<PARTIAL_INPUTS> & input, const BitVector<REMAINING_INDEX> & dummy) {
+    //     xorInMonomialContribution(i, i, super.getMatrixN(BitVector<SUPER_INPUTS - INDEX_I>())); //XOR first row of coeff matrix by appropriate row from super
+    //      //write a templated function in INDEX_I that goes through the INDEX_I's and XOR's them in
+    //      //change getMatrixN to return by reference and by const reference
+    //      //write a updateConstants
+    //     updateCoefficients(super, input, INDEX_I, BitVector<REMAINING_INDEX - 1>());
+    // }
+
     // Used primarily for partialEval
     // Unrolls double for-loop over each coefficient and updates coefficient matrices
     // When 0 < i < PARTIAL_INPUTS < j
