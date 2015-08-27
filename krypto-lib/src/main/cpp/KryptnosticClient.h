@@ -87,7 +87,31 @@ public:
 		return val(memory_view<byte>(sizeof(ClientHashFunction<N>), pointer));
 	}
 
-/* Indexing */
+/* Indexing (in order of execution) */
+
+	const val getObjectAddressFunction() const{
+		const BitMatrix<N> & objectAddressFunction = _spk.getObjectAddressFunction();
+		byte * pointer = (byte *) &objectAddressFunction;
+		return val(memory_view<byte>(sizeof(BitMatrix<N>), pointer));
+	}
+
+	const val getObjectSearchKey() const{
+		const BitVector<N> & objectSearchKey = _spk.getObjectSearchKey();
+		byte * pointer = (byte *) &objectSearchKey;
+		return val(memory_view<byte>(sizeof(BitVector<N>), pointer));
+	}
+
+	/*
+	 * Function: getObjectIndexPair
+	 * Returns a serialized pair of (FHE-encrypted convertedObjectSearchKey, ObjectConversionMatrix(C_o * C_i^{-1}))
+	 */
+	const val getObjectIndexPair(std::string objectAddressFunctionFrontStr, std::string objectSearchKeyStr, std::string pkStr) const{
+		const BitMatrix<N> & objectAddressFunctionFront = *reinterpret_cast<const BitMatrix<N>*>(objectAddressFunctionFrontStr.data());
+		const BitVector<N> & objectSearchKey = *reinterpret_cast<const BitVector<N>*>(objectSearchKeyStr.data());
+		std::pair<BitVector<2*N>, BitMatrix<N> > objectIndexPair = _spk.getObjectIndexPair(objectAddressFunctionFront, objectSearchKey, _pk);
+		byte * pointer = (byte *) &objectIndexPair;
+		return val(memory_view<byte>(sizeof(std::pair <BitVector<2*N>,BitMatrix<N> >), pointer));
+	}
 
 	/*
 	 * Function: getMetadatumAddress
@@ -95,39 +119,13 @@ public:
 	 * object and a token.
 	 */
 	const val getMetadatumAddress(std::string objectAddressFunctionStr, std::string tokenStr, std::string objectSearchKeyStr) const{
-		const BitMatrix<N, 2*N> & objectAddressFunction = *reinterpret_cast<const BitMatrix<N, 2*N>*>(objectAddressFunctionStr.data());
+		const BitMatrix<N> & objectAddressFunction = *reinterpret_cast<const BitMatrix<N>*>(objectAddressFunctionStr.data());
 		const BitVector<N> & token = *reinterpret_cast<const BitVector<N>*>(tokenStr.data());
 		const BitVector<N> & objectSearchKey = *reinterpret_cast<const BitVector<N>*>(objectSearchKeyStr.data());
 
 		BitVector<N> metadatumAddress = _spk.getMetadatumAddress(objectAddressFunction, token, objectSearchKey);
 		unsigned char * pointer = (unsigned char *) &metadatumAddress;
 		return val(memory_view<unsigned char>(sizeof(BitVector<N>), pointer));
-	}
-
-	/*
-	 * Function: getObjectAddressFunction
-	 * Returns a serialized BitMatrix generated as the
-	 * ObjectAddressFunction L_i for a document
-	 */
-	const val getObjectAddressFunction() const{
-		BitMatrix<N, 2*N> newObjectAddressFunction = _spk.getObjectAddressFunction();
-		byte * pointer = (byte *) &newObjectAddressFunction;
-		return val(memory_view<byte>(sizeof(BitMatrix<N, 2*N>), pointer));
-	}
-
-	/*
-	 * Function: getObjectIndexPair
-	 * Returns a serialized pair of (FHE-encrypted ObjectSearchKey, ObjectConversionMatrix(L_iK_\Omega^\dagger))
-	 */
-	const val getObjectIndexPair(std::string objectAddressFunctionStr) const{
-		const BitMatrix<N, 2*N> & objectAddressFunction = *reinterpret_cast<const BitMatrix<N, 2*N>*>(objectAddressFunctionStr.data());
-		BitVector<N> objectSearchKey = _spk.getObjectSearchKey(); //new objectSearchKey
-		BitVector<2*N> eObjectSearchKey = _pk.encrypt(objectSearchKey); //FHE-encrypted object search key
-		BitMatrix<N> objectConversionMatrix = _spk.getObjectConversionMatrix(objectAddressFunction); //raw object conversion matrix
-		std::pair <BitVector<2*N>,BitMatrix<N> > objectIndexPair;
-		objectIndexPair = std::make_pair(eObjectSearchKey, objectConversionMatrix);
-		byte * pointer = (byte *) &objectIndexPair;
-		return val(memory_view<byte>(sizeof(std::pair <BitVector<2*N>,BitMatrix<N> >), pointer));
 	}
 
 /* Searching */
@@ -148,22 +146,32 @@ public:
 	/*
 	 * Function: getObjectSharingPair
 	 * Returns a serialized pair of (FHE-encrypted ObjectSearchKey, ObjectConversionMatrix(L_iK_\Omega^\dagger))
-	 * This is done after the client receive a document shared by another client
-	 * Assume the two inputs are RSA-decrypted before passing in to C++
+	 * This is sent by a client to another to share a document
 	 */
-	const val getObjectSharingPair(std::string objectAddressFunctionStr, std::string objectSearchKeyStr) const{
-		const BitMatrix<N, 2*N> & objectAddressFunction = *reinterpret_cast<const BitMatrix<N, 2*N>*>(objectAddressFunctionStr.data());
-		const BitVector<N> & objectSearchKey = *reinterpret_cast<const BitVector<N>*>(objectSearchKeyStr.data());
-		BitVector<2*N> eObjectSearchKey = _pk.encrypt(objectSearchKey);
-		BitMatrix<N> objectConversionMatrix = _spk.getObjectConversionMatrix(objectAddressFunction);
-		std::pair <BitVector<2*N>,BitMatrix<N> > objectSharingPair;
-		objectSharingPair = std::make_pair(eObjectSearchKey, objectConversionMatrix);
+	//const val getObjectSharingPair(std::string objectAddressFunctionStr, std::string objectSearchKeyStr) const{
+	const val getObjectSharingPair(std::string objectIndexPairStr) const{
+		const std::pair< BitVector<2*N>, BitMatrix<N> > objectIndexPair = *reinterpret_cast<const std::pair<BitVector<2*N>, BitMatrix<N> >* >(objectIndexPairStr.data());
+		std::pair< BitVector<N>, BitMatrix<N> > objectSharingPair = _spk.getObjectSharingPair(objectIndexPair, _pk);
 		byte * pointer = (byte *) &objectSharingPair;
 		return val(memory_view<byte>(sizeof(std::pair <BitVector<2*N>,BitMatrix<N> >), pointer));
 	}
 
+	/*
+	 * Function: getObjectSharingPair
+	 * Returns a serialized pair of (FHE-encrypted ObjectSearchKey, ObjectConversionMatrix(L_iK_\Omega^\dagger))
+	 * This is done after the client receive a document shared by another client
+	 * Assume the two inputs are RSA-decrypted before passing in to C++
+	 */
+	//const val getObjectSharingPair(std::string objectAddressFunctionStr, std::string objectSearchKeyStr) const{
+	const val getUploadObjectIndexPair(std::string objectSharingPairStr) const{
+		const std::pair< BitVector<N>, BitMatrix<N> > objectSharingPair = *reinterpret_cast<const std::pair<BitVector<N>, BitMatrix<N> >* >(objectSharingPairStr.data());
+		std::pair< BitVector<2*N>, BitMatrix<N> > uploadObjectIndexPair = _spk.getUploadObjectIndexPair(objectSharingPair, _pk);
+		byte * pointer = (byte *) &uploadObjectIndexPair;
+		return val(memory_view<byte>(sizeof(std::pair <BitVector<2*N>,BitMatrix<N> >), pointer));
+	}
+
 private:
-	PrivateKey<N> _pk;
-	SearchPrivateKey<N> _spk;
+	const PrivateKey<N> _pk;
+	const SearchPrivateKey<N> _spk;
 };
 #endif

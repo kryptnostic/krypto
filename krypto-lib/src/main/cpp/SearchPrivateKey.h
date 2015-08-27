@@ -13,6 +13,7 @@
 #ifndef krypto_SearchPrivateKey_h
 #define krypto_SearchPrivateKey_h
 
+#include <utility>
 #include "PrivateKey.h"
 #include "ClientHashFunction.h"
 
@@ -22,43 +23,34 @@ template<unsigned int N>
 class SearchPrivateKey{
 public:
 	SearchPrivateKey() :
-	_R(BitMatrix<N>::randomInvertibleMatrix()),
-	_K(getK())
-	//_K(randomInvertibleMatrixDoubleH())
+	_K(BitMatrix<N>::randomInvertibleMatrix()),
+	_R(BitMatrix<N>::randomInvertibleMatrix())
 	{}
 
 /* Getters */
 
-	const BitMatrix<N, 2*N> getK() {
-		return BitMatrix<N, 2*N>::augH(BitMatrix<N>::identityMatrix(), _R);
-	}
-
 	/*
 	 * Function: getObjectSearchKey
 	 * Returns a random object search key to be serialized
-	 * (checking if this is unused is done by JavaScript frontend)
+	 * R_o^{-1}R_id_i
 	 */
 	const BitVector<N> getObjectSearchKey() const{
+		//return _R.solve(BitMatrix<N>::randomInvertibleMatrix() * BitVector<N>::randomVector());
 		return BitVector<N>::randomVector();
 	}
 
-	/*
-	 * Function: getObjectAddressFunction
-	 * Returns a random object address function L to be serialized
-	 */
-	const BitMatrix<N, 2*N> getObjectAddressFunction() const{
-		return BitMatrix<N, 2*N>::augH(
-			BitMatrix<N>::identityMatrix(), BitMatrix<N>::randomInvertibleMatrix());
-		//return randomInvertibleMatrixDoubleH();
+	//documentC
+	const BitMatrix<N> getObjectAddressFunction() const{
+		return BitMatrix<N>::randomInvertibleMatrix();
 	}
 
 	/*
 	 * Function: getObjectConversionMatrix
 	 * Returns object(document) conversion matrix given object address function
+	 * C_user * C_doc^{-1}
 	 */
-	const BitMatrix<N> getObjectConversionMatrix(const BitMatrix<N, 2*N> & objectAddressFunction) const{
-		return objectAddressFunction.pMult(_R.inv(), N, 2*N-1, 0, N-1);
-		//return objectAddressFunction * _K.rightInverse();
+	const BitMatrix<N> getObjectConversionMatrix(const BitMatrix<N> & objectAddressFunction) const{
+		return _K * objectAddressFunction.inv();
 	}
 
 	/*
@@ -66,28 +58,44 @@ public:
 	 * Given a token and a object key, returns the address for the
 	 * associated metadatum
 	 */
-	const BitVector<N> getMetadatumAddress(const BitMatrix<N, 2*N> &objectAddressFunction, const BitVector<N> &token, const BitVector<N> & objectSearchKey) const{
-		return objectAddressFunction * (BitVector<2*N>::vCat(token, objectSearchKey));
+	const BitVector<N> getMetadatumAddress(const BitMatrix<N> & objectAddressFunction, const BitVector<N> &token, const BitVector<N> & objectSearchKey) const{
+		return objectAddressFunction * (token ^ (_R * objectSearchKey));
 	}
 
 	const ClientHashFunction<N> getClientHashFunction(const PrivateKey<N> & pk) const{
 		ClientHashFunction<N> h;
-		h.initialize(BitMatrix<N>::randomInvertibleMatrix(), _K, pk);
+		h.initialize(BitMatrix<N>::randomInvertibleMatrix(), _K * BitMatrix<N, 2*N>::augH(BitMatrix<N>::identityMatrix(), _R), pk);
 		return h;
 	}
 
-private:
-	BitMatrix<N> _R; //part of K
-	BitMatrix<N, 2*N> _K; //user-specific K_\Omega
-
-	/*
-     * Function: randomInvertibleMatrixDoubleH()
-     * by concatenating N x 2N invertible matrices
-     */
-	const BitMatrix<N, 2*N> randomInvertibleMatrixDoubleH() const{
-		return BitMatrix<N, 2*N>::augH(
-			BitMatrix<N>::randomInvertibleMatrix(), BitMatrix<N>::randomInvertibleMatrix());
+	//to upload to the server during indexing
+	//uploaded = {E(R_o^{-1}R_id_i), C_i * C_o^{-1}}
+	const std::pair<BitVector<2*N>, BitMatrix<N> > getObjectIndexPair(const BitMatrix<N> & objectAddressFunction, const BitVector<N> & objectSearchKey, const PrivateKey<N> & pk) const{
+		const BitVector<2*N> & eObjectSearchKey = pk.encrypt(objectSearchKey);
+		const BitMatrix<N> & objectConversionMatrix = objectAddressFunction * _K.inv();
+		std::pair< BitVector<2*N>, BitMatrix<N> > result;
+		result = std::make_pair(eObjectSearchKey, objectConversionMatrix);
+		return result;
 	}
+
+	//uploaded = {E(R_o^{-1}R_id_i), C_i * C_o^{-1}}
+	const std::pair<BitVector<N>, BitMatrix<N> > getObjectSharingPair(const std::pair<BitVector<2*N>, BitMatrix<N> > & uploaded, const PrivateKey<N> & pk) const{
+		std::pair< BitVector<N>, BitMatrix<N> > result;
+		result = std::make_pair(_R * pk.decrypt(uploaded.first), uploaded.second * _K);
+		return result;
+	}
+
+
+	//to be uploaded after getting the sharing pair
+	const std::pair<BitVector<2*N>, BitMatrix<N> > getUploadObjectIndexPair(const std::pair<BitVector<N>, BitMatrix<N> > & shared, const PrivateKey<N> & pk) const{
+		std::pair< BitVector<2*N>, BitMatrix<N> > result;
+		result = std::make_pair(pk.encrypt(_R.solve(shared.first)), shared.second * _K.inv());
+		return result;
+	}
+
+private:
+	BitMatrix<N> _K; //front protection
+	BitMatrix<N> _R; //back protection
 };
 
 #endif/* defined(__krypto__SearchPrivateKey__) */

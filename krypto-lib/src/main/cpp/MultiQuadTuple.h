@@ -153,7 +153,7 @@ struct MultiQuadTuple {
             bool second = input[INDEX_J];
             if (second) {
                 //add row of x_i x_j's to constant vector for i, j < PARTIAL_INPUTS
-                getConstants() ^= coeffMatrix[INDEX_J - INDEX_I];
+                setConstants(getConstants() ^ coeffMatrix[INDEX_J - INDEX_I]);
             }
         }
 
@@ -166,9 +166,7 @@ struct MultiQuadTuple {
     template<unsigned int SUPER_INPUTS, unsigned PARTIAL_INPUTS, unsigned int INDEX_I>
     void updateCoefficientsBelowP(const MultiQuadTuple<SUPER_INPUTS, NUM_OUTPUTS> & super, const BitVector<PARTIAL_INPUTS> & input, const BitMatrix<INDEX_I, INDEX_I> & dummy) {
         BitMatrix<SUPER_INPUTS - INDEX_I, NUM_OUTPUTS> coeffMatrix = super.getMatrixN(BitVector<SUPER_INPUTS - INDEX_I>());
-
-        bool first = input[INDEX_I]; //x_i
-        if (first) {
+        if (input[INDEX_I]) { //x_i
             //add row of x_i's to constant vector for i, j < PARTIAL_INPUTS
             xorConstants(coeffMatrix[0]);
         }
@@ -182,9 +180,7 @@ struct MultiQuadTuple {
     template<unsigned int SUPER_INPUTS, unsigned PARTIAL_INPUTS>
     void updateCoefficientsBelowP(const MultiQuadTuple<SUPER_INPUTS, NUM_OUTPUTS> & super, const BitVector<PARTIAL_INPUTS> & input, const BitMatrix<0, 0> & dummy) {
         BitMatrix<SUPER_INPUTS, NUM_OUTPUTS> coeffMatrix = super.getMatrixN(BitVector<SUPER_INPUTS>());
-
-        bool first = input[0]; //x_i
-        if (first) {
+        if (input[0]) { //x_i
             //add row of x_0's to constant vector for i, j < PARTIAL_INPUTS
             xorConstants(coeffMatrix[0]);
         }
@@ -243,7 +239,7 @@ struct MultiQuadTuple {
 /* State modifiers */
 
     //Set the constant components of the MultiQuadTuple to given BitVector
-    void setConstants(const BitVector<NUM_OUTPUTS> &v){
+    void setConstants(const BitVector<NUM_OUTPUTS> &v) {
         next.setConstants(v);
     }
 
@@ -388,7 +384,6 @@ struct MultiQuadTuple<NUM_INPUTS,NUM_OUTPUTS,0> {
     void xorConstants(const BitVector<NUM_OUTPUTS> &v) {
         _constants ^= v;
     }
-
 
     template<unsigned int MONOMIAL_INDEX>
     void setMatrix( const BitMatrix<MONOMIAL_INDEX, NUM_OUTPUTS> & m  ) {
