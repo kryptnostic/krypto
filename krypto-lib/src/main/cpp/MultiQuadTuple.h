@@ -394,7 +394,7 @@ struct MultiQuadTuple {
     //Worker body for left compose function (not called by other classes)
     template<unsigned int NUM_INNER_INPUTS>
     void compose( MultiQuadTuple<NUM_INNER_INPUTS,NUM_OUTPUTS> & root, const BitMatrix<NUM_INNER_INPUTS,NUM_INPUTS> &innerTranspose ) const {
-        BitMatrix<NUM_INNER_INPUTS, NUM_OUTPUTS> composedCoefficientMatrix = innerTranspose .template pMult<LIMIT,NUM_OUTPUTS>(_matrix, NUM_INPUTS - LIMIT, NUM_INPUTS - 1, 0, LIMIT - 1);
+        BitMatrix<NUM_INNER_INPUTS, NUM_OUTPUTS> composedCoefficientMatrix = innerTranspose .template pMult<LIMIT,NUM_OUTPUTS>(_matrix, NUM_INPUTS - LIMIT, 0, LIMIT);
         for( unsigned int i = 0; i < NUM_INNER_INPUTS ; ++i ) {
             if( innerTranspose[ i ][ NUM_INPUTS - LIMIT ] ) {
                 for(unsigned int j = 0; j < i; ++j){

@@ -800,26 +800,24 @@ public:
 /* Multi-Matrix Functions */
 
 	/*
-     * Function: pMult(rhs, startCol, endCol, startRow, endRow)
+     * Function: pMult(rhs, startCol, startRow, range)
      * Returns the result of multiplication of a given matrix
      * by a submatrix of the current matrix as specified by
      * given rows and columns
      */
 	template<unsigned int RHS_ROWS, unsigned int RHS_COLS>
 	const BitMatrix<ROWS, RHS_COLS> pMult(const BitMatrix<RHS_ROWS, RHS_COLS> & rhs,
-		unsigned int startCol, unsigned int endCol, unsigned int startRow, unsigned int endRow) const{
+		int startCol, int startRow, int range) const{
 		if (DEBUG) {
-			assert(startCol >= 0 && endCol < COLS);
-			assert(endCol >= startCol);
-			assert(startRow >= 0 && endRow < RHS_ROWS);
-			assert(endRow >= startRow);
-			assert(startCol + endRow == startRow + endCol);
+			assert(startCol >= 0 && startCol + range <= COLS);
+			assert(startRow >= 0 && startRow + range <= RHS_ROWS);
 		}
 		BitMatrix<ROWS, RHS_COLS> result = BitMatrix<ROWS, RHS_COLS>::zeroMatrix();
-		for (size_t j = startCol; j <= endCol; ++j) {
-			size_t rhsRow = startRow + (j - startCol);
-			for (size_t i = 0; i < ROWS; ++i) {
-				if (get(i, j)) {
+
+		for (int j = 0; j < range; ++j) {
+			int rhsRow = startRow + j;
+			for (int i = 0; i < ROWS; ++i) {
+				if (get(i, startCol + j)) {
 					result[i] ^= rhs[rhsRow];
 				}
 			}
@@ -828,31 +826,29 @@ public:
 	}
 
 	template<unsigned int RHS_ROWS, unsigned int RHS_COLS>
-	const BitMatrix<ROWS, RHS_COLS> pMult(const BitMatrix<RHS_ROWS, RHS_COLS> & rhs,
-		unsigned int startRow, unsigned int endRow) const{
-		return pMult<RHS_ROWS, RHS_COLS>(rhs, 0, COLS-1, startRow, endRow);
+	const BitMatrix<ROWS, RHS_COLS> pMult(const BitMatrix<RHS_ROWS, RHS_COLS> & rhs, int startRow) const{
+		return pMult<RHS_ROWS, RHS_COLS>(rhs, 0, startRow, COLS);
 	}
 
 	/*
-     * Function: pMult(v, startCol, endCol, startRow, endRow)
+     * Function: pMult(v, startCol, startRow, range)
      * Returns the result of multiplication of a given vector
      * by a submatrix of the current matrix as specified by
      * given rows and columns
      */
-	const BitVector<ROWS> pMult(const BitVector<COLS> & v, unsigned int startCol,
-		unsigned int endCol, unsigned int startIndex, unsigned int endIndex) const{
+	//const BitVector<ROWS> pMult(const BitVector<COLS> & v, unsigned int startCol,
+	//	unsigned int endCol, unsigned int startIndex, unsigned int endIndex) const{
+	const BitVector<ROWS> pMult(const BitVector<COLS> & v, int startCol, int startIndex, int range) const{
 		if (DEBUG) {
-			assert(startCol >= 0 && endCol < COLS);
-			assert(endCol >= startCol);
-			assert(startIndex >= 0 && endIndex < COLS);
-			assert(endIndex >= startIndex);
-			assert(startCol + endIndex == startIndex + endCol);
+			assert(startCol >= 0 && startCol + range <= COLS);
+			assert(startIndex >= 0 && startIndex + range <= COLS);
 		}
 		BitVector<ROWS> result = BitVector<ROWS>::zeroVector();
-		for (size_t j = startCol; j <= endCol; ++j) {
-			size_t rhsIndex = startIndex + (j-startCol);
+
+		for (int j = 0; j < range; ++j) {
+			size_t rhsIndex = startIndex + j;
 			for (size_t i = 0; i < ROWS; ++i) {
-				if (get(i, j)) {
+				if (get(i, startCol + j)) {
 					result.set(i, result.get(i) ^ v.get(rhsIndex));
 				}
 			}
