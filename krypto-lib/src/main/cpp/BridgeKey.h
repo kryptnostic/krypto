@@ -198,9 +198,10 @@ public:
 	 */
 	const MultiQuadTuple<7*N, 2*N> getANDz() const{
 		BitMatrix<N, 2*N> X = getANDX();
-		BitMatrix<N, 3*N> Y1 = _Bi.pMult(_Cb2.inv(), 0, N);
-		BitMatrix<N, 3*N> Y2 = _Bi.pMult(_Cb2.inv(), N, N);
-		BitMatrix<N, 3*N> Y3 = _Cb2.inv().splitV3(2);
+		const BitMatrix<N> & Cb2i = _Cb2.inv();
+		BitMatrix<N, 3*N> Y1 = _Bi.pMult(Cb2i, 0);
+		BitMatrix<N, 3*N> Y2 = _Bi.pMult(Cb2i, N);
+		BitMatrix<N, 3*N> Y3 = Cb2i.splitV3(2);
 		BitMatrix<N, 7*N> Y3t = BitMatrix<N, 7*N>::augH(BitMatrix<N, 4*N>::zeroMatrix(), Y3);
 		BitMatrix<(N*(12*N + 1) + N*(8*N + 1) + ((3*N*(3*N + 1)) >> 1)), N> contrib = BitMatrix<(N*(12*N + 1) + N*(8*N + 1) + ((3*N*(3*N + 1)) >> 1)), N>::augV(getANDP(X, Y2), getANDQ(X, Y1), getANDS(Y1, Y2));
 		MultiQuadTuple<7*N, N> zTop;//(contrib, BitVector<N>::zeroVector());
