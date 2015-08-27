@@ -13,13 +13,10 @@
 #define krypto_KryptnosticServer_h
 
 #include "ClientHashFunction.h"
-#include <emscripten/emscripten.h>
-#include <emscripten/bind.h>
 
 using namespace emscripten;
 
-#define N 64
-
+template<unsigned int N = 64>
 class KryptnosticServer {
 
 public:
