@@ -26,5 +26,6 @@ TEST(SearchKeyTest, testIndexing){
 	BitVector<N> token = BitVector<N>::randomVector();
 
 	BitVector<N> objectSearchKey = sk.getObjectSearchKey();
+	BitMatrix<N> objectAddressFunction = sk.getObjectAddressFunction();
 	//std::pair<BitVector<2*N>, BitMatrix<N> > objectIndexPair = sk.getObjectIndexPair(pk);
 }

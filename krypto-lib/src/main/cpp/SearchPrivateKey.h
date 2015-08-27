@@ -70,7 +70,7 @@ public:
 
 	//to upload to the server during indexing
 	//uploaded = {E(R_o^{-1}R_id_i), C_i * C_o^{-1}}
-	const std::pair<BitVector<2*N>, BitMatrix<N> > getObjectIndexPair(const BitMatrix<N> & objectAddressFunction, const BitVector<N> & objectSearchKey, const PrivateKey<N> & pk) const{
+	const std::pair<BitVector<2*N>, BitMatrix<N> > getObjectIndexPair(const BitVector<N> & objectSearchKey, const BitMatrix<N> & objectAddressFunction, const PrivateKey<N> & pk) const{
 		const BitVector<2*N> & eObjectSearchKey = pk.encrypt(objectSearchKey);
 		const BitMatrix<N> & objectConversionMatrix = objectAddressFunction * _K.inv();
 		std::pair< BitVector<2*N>, BitMatrix<N> > result;
@@ -87,7 +87,7 @@ public:
 
 
 	//to be uploaded after getting the sharing pair
-	const std::pair<BitVector<2*N>, BitMatrix<N> > getUploadObjectIndexPair(const std::pair<BitVector<N>, BitMatrix<N> > & shared, const PrivateKey<N> & pk) const{
+	const std::pair<BitVector<2*N>, BitMatrix<N> > getObjectUploadPair(const std::pair<BitVector<N>, BitMatrix<N> > & shared, const PrivateKey<N> & pk) const{
 		std::pair< BitVector<2*N>, BitMatrix<N> > result;
 		result = std::make_pair(pk.encrypt(_R.solve(shared.first)), shared.second * _K.inv());
 		return result;
