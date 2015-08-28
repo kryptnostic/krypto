@@ -32,13 +32,11 @@ public:
 	_concealedF1(cHashFunction.concealedF1),
 	_hashMatrixR(cHashFunction.hashMatrix.splitH2(1))
 	{
-		BitVector<N> inner = _concealedF1(eSearchToken);
-
 		//set _tokenAddressFunction to partial eval of cHashFunction on eSearchToken
-		_tokenAddressFunction = (cHashFunction.augmentedF2).template partialEval<N>(inner);
+		_tokenAddressFunction = (cHashFunction.augmentedF2).template partialEval<N>(_concealedF1(eSearchToken));
 
 		//add hashMatrix partial evaluation to consts of _tokenAddressFunction
-		BitVector<N> hashMatrixPartialEval = cHashFunction.hashMatrix.splitH2(0) * eSearchToken;
+		const BitVector<N> & hashMatrixPartialEval = cHashFunction.hashMatrix.splitH2(0) * eSearchToken;
 		_tokenAddressFunction.xorConstants(hashMatrixPartialEval);
 	}
 
@@ -53,7 +51,7 @@ public:
 		const BitMatrix<N> & objectConversionMatrix = objectIndexPair.second; //get from pair
 
 		// return cHashFunction(eSearchToken, eObscuredObjectSearchKey);
-		BitVector<N> fullEval = _tokenAddressFunction(_concealedF1(eObjectSearchKey)) ^ (_hashMatrixR * eObjectSearchKey);
+		const BitVector<N> & fullEval = _tokenAddressFunction(_concealedF1(eObjectSearchKey)) ^ (_hashMatrixR * eObjectSearchKey);
 		return objectConversionMatrix * fullEval;
 	}
 

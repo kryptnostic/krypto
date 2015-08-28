@@ -45,9 +45,9 @@ public:
      * Returns the encrypted ciphertext (length 2N * 2^6) of the plaintext (length N * 2^6)
      */
 	const BitVector<2*N> encrypt(const BitVector<N> &m) const{//returns x = E(m, r) given a plaintext m
-		BitVector<N> r = BitVector<N>::randomVector();
-		BitVector<N> top = (_B * m) ^ (r ^ _f(r));
-		BitVector<N> bottom = _A * r;
+		const BitVector<N> & r = BitVector<N>::randomVector();
+		const BitVector<N> & top = (_B * m) ^ (r ^ _f(r));
+		const BitVector<N> & bottom = _A * r;
 		return _M * BitVector<N>::vCat(top, bottom);
 	}
 
@@ -56,11 +56,11 @@ public:
      * Returns the decrypted plaintext (length N * 2^6) from a ciphertext (length 2N * 2^6)
      */
 	const BitVector<N> decrypt(const BitVector<2*N> &x) const{//returns m = D(x) given a ciphertext x
-		BitVector<2*N> mix = _M.solve(x);
+		const BitVector<2*N> & mix = _M.solve(x);
 		BitVector<N> x1, x2;
 		mix.proj(x1, x2);
-		BitVector<N> Aix2 = _A.solve(x2);
-		BitVector<N> fAix2 = _f(Aix2);
+		const BitVector<N> & Aix2 = _A.solve(x2);
+		const BitVector<N> & fAix2 = _f(Aix2);
 		return _B.solve(x1 ^ (Aix2 ^ fAix2));
 	}
 
