@@ -25,7 +25,7 @@ using namespace std;
  * Template for BitMatrix
  * Bit values are stored in a vector of BitVectors<COLS>
  */
-template<unsigned int ROWS, unsigned int COLS = ROWS>
+template<unsigned int ROWS = 128, unsigned int COLS = ROWS>
 class BitMatrix {
 public:
 /* Generation */

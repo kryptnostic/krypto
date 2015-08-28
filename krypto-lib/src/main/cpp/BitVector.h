@@ -27,7 +27,7 @@ static FILE * urandom = std::fopen("/dev/urandom", "rb" );
  * Bit values are stored in an array of N many 64-bit longs
  * in the array used to store the bits
  */
-template<unsigned int NUM_BITS>
+template<unsigned int NUM_BITS = 128>
 class BitVector {
 public:
 

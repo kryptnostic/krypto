@@ -11,10 +11,23 @@
 
 using namespace testing;
 
+#define N 128
+
 TEST(KryptnosticServerTest, testInit){
-	SearchPrivateKey<> spk;
+	SearchPrivateKey<> sk;
 	PrivateKey<> pk;
-	ClientHashFunction<> chf = spk.getClientHashFunction(pk);
+
+	ClientHashFunction<> chf = sk.getClientHashFunction(pk);
+	BitVector<> objectSearchKey = sk.getObjectSearchKey();
+	BitMatrix<> objectAddressFunction = sk.getObjectAddressFunction();
+	std::pair<BitVector<2*N>, BitMatrix<N> > objectIndexPair = sk.getObjectIndexPair(objectSearchKey, objectAddressFunction, pk);
+
 	BitVector<> token = BitVector<>::randomVector();
-	KryptnosticServer<> ks(chf, pk.encrypt(token));
+	BitVector<> expectedAddress = sk.getMetadatumAddress(objectAddressFunction, token, objectSearchKey);
+
+	BitVector<2*N> eToken = pk.encrypt(token);
+	KryptnosticServer<> ks(chf, eToken);
+	BitVector<> actualAddress = ks.getMetadataAddress(objectIndexPair);
+
+	ASSERT_TRUE(expectedAddress.equals(actualAddress));
 }
