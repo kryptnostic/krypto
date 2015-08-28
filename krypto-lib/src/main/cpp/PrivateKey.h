@@ -18,7 +18,7 @@
  * Template for PrivateKey
  * Length of plaintext = N * 2^6, Length of obfuscation chain = L
  */
-template<unsigned int N>
+template<unsigned int N = 128>
 class PrivateKey {
 
 template<unsigned int N1> friend class BridgeKey;

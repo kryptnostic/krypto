@@ -37,7 +37,7 @@ public:
 		BitVector<N> inner = _concealedF1(eSearchToken);
 
 		//set _tokenAddressFunction to partial eval of cHashFunction on eSearchToken
-		_tokenAddressFunction = (cHashFunction.augmentedF2).partialEval<N>(inner);
+		_tokenAddressFunction = (cHashFunction.augmentedF2).template partialEval<N>(inner);
 
 		//add hashMatrix partial evaluation to consts of _tokenAddressFunction
 		BitVector<N> hashMatrixPartialEval = cHashFunction.hashMatrix.splitH2(0) * eSearchToken;

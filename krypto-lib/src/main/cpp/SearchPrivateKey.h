@@ -19,7 +19,7 @@
 
 //N should be a multiple of 64, otherwise BitVector would create
 //the incorrect number of unsigned long longs
-template<unsigned int N>
+template<unsigned int N = 128>
 class SearchPrivateKey{
 public:
 	SearchPrivateKey() :
@@ -35,7 +35,6 @@ public:
 	 * R_o^{-1}R_id_i
 	 */
 	const BitVector<N> getObjectSearchKey() const{
-		//return _R.solve(BitMatrix<N>::randomInvertibleMatrix() * BitVector<N>::randomVector());
 		return BitVector<N>::randomVector();
 	}
 
@@ -85,26 +84,18 @@ public:
 	//to upload to the server during indexing
 	//uploaded = {E(R_o^{-1}R_id_i), C_i * C_o^{-1}}
 	const std::pair<BitVector<2*N>, BitMatrix<N> > getObjectIndexPair(const BitVector<N> & objectSearchKey, const BitMatrix<N> & objectAddressFunction, const PrivateKey<N> & pk) const{
-		const BitVector<2*N> & eObjectSearchKey = pk.encrypt(objectSearchKey);
-		const BitMatrix<N> & objectConversionMatrix = objectAddressFunction * _K.inv();
-		std::pair< BitVector<2*N>, BitMatrix<N> > result;
-		result = std::make_pair(eObjectSearchKey, objectConversionMatrix);
-		return result;
+		return std::make_pair(pk.encrypt(objectSearchKey), getObjectConversionMatrix(objectAddressFunction));
 	}
 
 	//uploaded = {E(R_o^{-1}R_id_i), C_i * C_o^{-1}}
 	const std::pair<BitVector<N>, BitMatrix<N> > getObjectSharingPair(const std::pair<BitVector<2*N>, BitMatrix<N> > & uploaded, const PrivateKey<N> & pk) const{
-		std::pair< BitVector<N>, BitMatrix<N> > result;
-		result = std::make_pair(_R * pk.decrypt(uploaded.first), uploaded.second * _K);
-		return result;
+		return std::make_pair(_R * pk.decrypt(uploaded.first), uploaded.second * _K);
 	}
 
 
 	//to be uploaded after getting the sharing pair
 	const std::pair<BitVector<2*N>, BitMatrix<N> > getObjectUploadPair(const std::pair<BitVector<N>, BitMatrix<N> > & shared, const PrivateKey<N> & pk) const{
-		std::pair< BitVector<2*N>, BitMatrix<N> > result;
-		result = std::make_pair(pk.encrypt(_R.solve(shared.first)), shared.second * _K.inv());
-		return result;
+		return std::make_pair(pk.encrypt(_R.solve(shared.first)), getObjectConversionMatrix(shared.second));
 	}
 
 private:

@@ -28,10 +28,9 @@ TEST(SearchKeyTest, testIndexingAndSearch){
 	BitVector<2*N> eToken = pk.encrypt(token);
 	BitVector<2*N> eObjectSearchKey = pk.encrypt(objectSearchKey);
 
-	BitMatrix<N> objectConversionMatrix = sk.getObjectConversionMatrix(objectAddressFunction);
 	ClientHashFunction<N> chf = sk.getClientHashFunction(pk);
 
-	BitVector<N> calculatedAddress = objectConversionMatrix * chf(eToken, eObjectSearchKey);
+	BitVector<N> calculatedAddress = sk.getObjectConversionMatrix(objectAddressFunction) * chf(eToken, eObjectSearchKey);
 
 	ASSERT_TRUE(metadatumAddress.equals(calculatedAddress));
 }

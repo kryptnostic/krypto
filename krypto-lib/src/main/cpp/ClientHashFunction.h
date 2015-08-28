@@ -16,7 +16,7 @@
 
 using namespace std;
 
-template<unsigned int N>
+template<unsigned int N = 128>
 struct ClientHashFunction
 {
 /* Data */
