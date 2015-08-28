@@ -117,7 +117,7 @@ struct MultiQuadTuple {
 
         //TODO: change below to use next instead of INDEX_I, INDEX_J
         result.updateCoefficients(*this, input);
-        result.updateConstants(*this, input, BitVector<PARTIAL_INPUTS - 1>());
+        result.updateConstants(*this, input, BitVector<NUM_INPUTS - PARTIAL_INPUTS>());
 
         return result;
     }
@@ -160,23 +160,27 @@ struct MultiQuadTuple {
 
     //In partial evaluation of super, updates constants of result
     //Iterates through x_i's and XORs in the first PARTIAL_INPUTS rows into constants
-    template<unsigned int SUPER_INPUTS, unsigned int PARTIAL_INPUTS, unsigned int INDEX_I>
-    void updateConstants(const MultiQuadTuple<SUPER_INPUTS, NUM_OUTPUTS> & super, const BitVector<PARTIAL_INPUTS> & input, const BitVector<INDEX_I> & dummyI) {
-        if (input[INDEX_I]) { //if x_i = 1
+    template<unsigned int SUPER_INPUTS, unsigned int PARTIAL_INPUTS, unsigned int SUPER_LIMIT>
+    void updateConstants(const MultiQuadTuple<SUPER_INPUTS, NUM_OUTPUTS, SUPER_LIMIT> & super, const BitVector<PARTIAL_INPUTS> & input, const BitVector<SUPER_LIMIT - PARTIAL_INPUTS> & dummy) {
+        const unsigned int index_i = SUPER_INPUTS - SUPER_LIMIT;
+
+        if (input[index_i]) { //if x_i = 1
             //iterate through x_j's and update constants
-            updateSingleConstant(super, input, dummyI, BitVector<PARTIAL_INPUTS - 1>());
+            updateSingleConstant(super, input, BitVector<index_i>(), BitVector<PARTIAL_INPUTS - 1>());
         }
-        updateConstants(super, input, BitVector<INDEX_I - 1>()); //go to x_{j - 1}
+        updateConstants(super.next, input, BitVector<SUPER_LIMIT - PARTIAL_INPUTS - 1>()); //go to x_{j - 1}
     }
 
     //In partial evaluation of super, updates constants of result
     //at i = 0 in particular and then unrolls loop of updating constants
     //Triggered when INDEX_I reaches 0
-    template<unsigned int SUPER_INPUTS, unsigned int PARTIAL_INPUTS>
-    void updateConstants(const MultiQuadTuple<SUPER_INPUTS, NUM_OUTPUTS> & super, const BitVector<PARTIAL_INPUTS> & input, const BitVector<0> & dummyI) {
+    template<unsigned int SUPER_INPUTS, unsigned int PARTIAL_INPUTS, unsigned int SUPER_LIMIT>
+    void updateConstants(const MultiQuadTuple<SUPER_INPUTS, NUM_OUTPUTS, SUPER_LIMIT> & super, const BitVector<PARTIAL_INPUTS> & input, const BitVector<0> & dummyI) {
+        const unsigned int index_i = SUPER_INPUTS - SUPER_LIMIT;
+
         if (input[0]) { //if x_i = 1
             //iterate through x_j's and update constants
-            updateSingleConstant(super, input, dummyI, BitVector<PARTIAL_INPUTS - 1>());
+            updateSingleConstant(super, input, BitVector<index_i>(), BitVector<PARTIAL_INPUTS - 1>());
         }
     }
 
