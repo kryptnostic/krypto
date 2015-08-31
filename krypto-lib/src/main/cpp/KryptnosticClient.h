@@ -63,8 +63,7 @@ public:
 	 * Returns a serialized private key
 	 */
 	const val getPrivateKey() const{
-		byte * pointer = (byte *) &_pk;
-		return val(memory_view<byte>(sizeof(PrivateKey<N>), pointer));
+		return val(memory_view<byte>(sizeof(PrivateKey<N>), (byte *) &_pk));
 	}
 
 	/*
@@ -72,8 +71,7 @@ public:
 	 * Returns a serialized search private key
 	 */
 	const val getSearchPrivateKey() const{
-		byte * pointer = (byte *) &_spk;
-		return val(memory_view<byte>(sizeof(SearchPrivateKey<N>), pointer));
+		return val(memory_view<byte>(sizeof(SearchPrivateKey<N>), (byte *) &_spk));
 	}
 
 	/*
@@ -83,23 +81,20 @@ public:
 	 */
 	const val getClientHashFunction() const{
 		ClientHashFunction<N> newClientHashFunction = _spk.getClientHashFunction(_pk);
-		byte * pointer = (byte *) &newClientHashFunction;
-		return val(memory_view<byte>(sizeof(ClientHashFunction<N>), pointer));
+		return val(memory_view<byte>(sizeof(ClientHashFunction<N>), (byte *) &newClientHashFunction));
 	}
 
 /* Indexing */
 
 	const val getObjectSearchKey() const{
 		const BitVector<N> & objectSearchKey = _spk.getObjectSearchKey();
-		byte * pointer = (byte *) &objectSearchKey;
-		return val(memory_view<byte>(sizeof(BitVector<N>), pointer));
+		return val(memory_view<byte>(sizeof(BitVector<N>), (byte *) &objectSearchKey));
 	}
 
 
 	const val getObjectAddressFunction() const{
 		const BitMatrix<N> & objectAddressFunction = _spk.getObjectAddressFunction();
-		byte * pointer = (byte *) &objectAddressFunction;
-		return val(memory_view<byte>(sizeof(BitMatrix<N>), pointer));
+		return val(memory_view<byte>(sizeof(BitMatrix<N>), (byte *) &objectAddressFunction));
 	}
 
 	/*
@@ -110,8 +105,7 @@ public:
 		const BitVector<N> & objectSearchKey = *reinterpret_cast<const BitVector<N>*>(objectSearchKeyStr.data());
 		const BitMatrix<N> & objectAddressFunction = *reinterpret_cast<const BitMatrix<N>*>(objectAddressFunctionStr.data());
 		std::pair<BitVector<2*N>, BitMatrix<N> > objectIndexPair = _spk.getObjectIndexPair(objectSearchKey, objectAddressFunction, _pk);
-		byte * pointer = (byte *) &objectIndexPair;
-		return val(memory_view<byte>(sizeof(std::pair <BitVector<2*N>,BitMatrix<N> >), pointer));
+		return val(memory_view<byte>(sizeof(std::pair <BitVector<2*N>,BitMatrix<N> >), (byte *) &objectIndexPair));
 	}
 
 	/*
@@ -124,9 +118,8 @@ public:
 		const BitVector<N> & token = *reinterpret_cast<const BitVector<N>*>(tokenStr.data());
 		const BitVector<N> & objectSearchKey = *reinterpret_cast<const BitVector<N>*>(objectSearchKeyStr.data());
 
-		BitVector<N> metadatumAddress = _spk.getMetadatumAddress(objectAddressFunction, token, objectSearchKey);
-		unsigned char * pointer = (unsigned char *) &metadatumAddress;
-		return val(memory_view<unsigned char>(sizeof(BitVector<N>), pointer));
+		const BitVector<N> metadatumAddress = _spk.getMetadatumAddress(objectAddressFunction, token, objectSearchKey);
+		return val(memory_view<byte>(sizeof(BitVector<N>), (byte *) &metadatumAddress));
 	}
 
 /* Searching */
@@ -138,8 +131,7 @@ public:
 	const val getEncryptedSearchToken(std::string tokenStr) const{
 		const BitVector<N> & token = *reinterpret_cast<const BitVector<N>*>(tokenStr.data());
 		const BitVector<2*N> eToken = _pk.encrypt(token);
-		byte * pointer = (byte *) &eToken;
-		return val(memory_view<byte>(sizeof(BitVector<2*N>), pointer));
+		return val(memory_view<byte>(sizeof(BitVector<2*N>), (byte *) &eToken));
 	}
 
 	/*
@@ -150,9 +142,8 @@ public:
 	const val getMetadatumAddressFromPair(std::string tokenStr, std::string objectIndexPairStr) const{
 		const BitVector<N> & token = *reinterpret_cast<const BitVector<N>*>(tokenStr.data());
 		const std::pair< BitVector<2*N>, BitMatrix<N> > objectIndexPair = *reinterpret_cast<const std::pair<BitVector<2*N>, BitMatrix<N> >* >(objectIndexPairStr.data());
-		BitVector<N> metadatumAddress = _spk.getMetadatumAddressFromPair(token, objectIndexPair, _pk);
-		byte *pointer = (byte *) &metadatumAddress;
-		return val(memory_view<byte>(sizeof(BitVector<N>), pointer));
+		const BitVector<N> metadatumAddress = _spk.getMetadatumAddressFromPair(token, objectIndexPair, _pk);
+		return val(memory_view<byte>(sizeof(BitVector<N>), (byte *) &metadatumAddress));
 	}
 
 /* Sharing */
@@ -166,8 +157,7 @@ public:
 	const val getObjectSharingPair(std::string objectIndexPairStr) const{
 		const std::pair< BitVector<2*N>, BitMatrix<N> > objectIndexPair = *reinterpret_cast<const std::pair<BitVector<2*N>, BitMatrix<N> >* >(objectIndexPairStr.data());
 		std::pair< BitVector<N>, BitMatrix<N> > objectSharingPair = _spk.getObjectSharingPair(objectIndexPair, _pk);
-		byte * pointer = (byte *) &objectSharingPair;
-		return val(memory_view<byte>(sizeof(std::pair <BitVector<2*N>,BitMatrix<N> >), pointer));
+		return val(memory_view<byte>(sizeof(std::pair <BitVector<2*N>,BitMatrix<N> >), (byte *) &objectSharingPair));
 	}
 
 	/*
@@ -180,8 +170,7 @@ public:
 	const val getObjectUploadPair(std::string objectSharingPairStr) const{
 		const std::pair< BitVector<N>, BitMatrix<N> > objectSharingPair = *reinterpret_cast<const std::pair<BitVector<N>, BitMatrix<N> >* >(objectSharingPairStr.data());
 		std::pair< BitVector<2*N>, BitMatrix<N> > objectUploadPair = _spk.getObjectUploadPair(objectSharingPair, _pk);
-		byte * pointer = (byte *) &objectUploadPair;
-		return val(memory_view<byte>(sizeof(std::pair <BitVector<2*N>,BitMatrix<N> >), pointer));
+		return val(memory_view<byte>(sizeof(std::pair <BitVector<2*N>,BitMatrix<N> >), (byte *) &objectUploadPair));
 	}
 
 private:
