@@ -103,7 +103,7 @@ struct MultiQuadTuple {
 /* Getters */
 
     //Returns the constants component of the MultiQuadTuple
-    const BitVector<NUM_OUTPUTS> getConstants() const{
+    const BitVector<NUM_OUTPUTS> & getConstants() const{
         return next.getConstants();
     }
 
@@ -225,8 +225,7 @@ struct MultiQuadTuple {
     template<unsigned int NUM_INNER_INPUTS>
     const MultiQuadTuple<NUM_INNER_INPUTS,NUM_OUTPUTS> operator*(  const BitMatrix<NUM_INPUTS, NUM_INNER_INPUTS> & inner ) const{
         MultiQuadTuple<NUM_INNER_INPUTS,NUM_OUTPUTS> cs;
-        const BitVector<NUM_OUTPUTS> & v = getConstants();
-        cs.setAsConstants(v); //reset contribution matrix and force constants
+        cs.setAsConstants(getConstants()); //reset contribution matrix and force constants
         compose( cs, inner.transpose() );
         return cs;
     }
@@ -301,7 +300,7 @@ struct MultiQuadTuple {
 /* Inter-MultiQuadTuple Arithmetic Operations */
 
     //BitWise XOR
-    const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS> operator^(const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS> & rhs) const {
+    const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS> & operator^(const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS> & rhs) const {
         MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS> result;
         result._matrix = _matrix ^ rhs._matrix;
         result.next = next ^ rhs.next;
@@ -440,18 +439,8 @@ struct MultiQuadTuple<NUM_INPUTS,NUM_OUTPUTS,0> {
         _constants.print();
     }
 
-/* Base case of composition */
-
-    template<unsigned int NUM_INNER_INPUTS>
-    const MultiQuadTuple<NUM_INNER_INPUTS,NUM_OUTPUTS> operator()(const BitMatrix<NUM_INPUTS, NUM_INNER_INPUTS> & inner ) const {
-        MultiQuadTuple<NUM_INNER_INPUTS,NUM_OUTPUTS> result;
-        result.zero();
-        copyConstants(result);
-        return result;
-    }
-
 /* Getters */
-    const BitVector<NUM_OUTPUTS> getConstants() const{
+    const BitVector<NUM_OUTPUTS> & getConstants() const{
         return _constants;
     }
 
@@ -470,7 +459,7 @@ struct MultiQuadTuple<NUM_INPUTS,NUM_OUTPUTS,0> {
 /* Inter-MultiQuadTuple Arithmetic Operations */
 
     //BitWise XOR
-    const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS, 0> operator^(const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS, 0> & rhs) const {
+    const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS, 0> & operator^(const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS, 0> & rhs) const {
         MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS, 0> result;
         result._constants = _constants ^ rhs._constants;
         return result;
