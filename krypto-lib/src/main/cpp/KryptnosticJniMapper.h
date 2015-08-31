@@ -1,3 +1,8 @@
+//
+//  Created by Drew Bailey
+//  Copyright (c) 2015 Kryptnostic. All rights reserved.
+//
+
 #include "KryptnosticServer.h"
 #include <jni.h>
 #include "com_kryptnostic_krypto_engine_KryptnosticEngine.h"
@@ -50,7 +55,7 @@ void setKryptnosticServer( JNIEnv *env, jobject javaContainer, T *t) {
 void Java_com_kryptnostic_krypto_engine_KryptnosticEngine_initKryptnosticService( JNIEnv * environment, jobject javaContainer, jbyteArray hash, jbyteArray encSearchToken ) {
 	const BitVector<2*N> * eSearchToken = convertJByteArrayToBitVector( environment, encSearchToken );
 	const ClientHashFunction<N> * clientHashFunction = convertJByteArrayToClientHashFunction( environment, encSearchToken );
-	KryptnosticServer serv = KryptnosticServer::KryptnosticServer( *clientHashFunction, *eSearchToken );
+	KryptnosticServer<N> serv = KryptnosticServer<N>( *clientHashFunction, *eSearchToken );
 	// set the long in java
 	setKryptnosticServer( environment, javaContainer, &serv );
 }
@@ -58,8 +63,9 @@ void Java_com_kryptnostic_krypto_engine_KryptnosticEngine_initKryptnosticService
 jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_calculateMetadataAddress( JNIEnv * environment, jobject javaContainer, jbyteArray searchKey, jbyteArray conversionMatrix ) {
 	const BitMatrix<N, N> * objectConvMatrix = convertJByteArrayToBitMatrix( environment, conversionMatrix );
 	const BitVector<2*N> * encObjectSearchKey = convertJByteArrayToBitVector( environment, searchKey );
-	KryptnosticServer serv = *getKryptnosticServer<KryptnosticServer>( environment, javaContainer );
-	BitVector<N> metadataAddress = serv.getMetadataAddress( *encObjectSearchKey, *objectConvMatrix );
+	KryptnosticServer<N> serv = *getKryptnosticServer<KryptnosticServer<N>>( environment, javaContainer );
+	pair<BitVector<2*N>, BitMatrix<N, N>> searchPair = std::make_pair( *encObjectSearchKey, *objectConvMatrix );
+	BitVector<N> metadataAddress = serv.getMetadataAddress( searchPair );
 	jbyteArray finalRay = convertBitVectorToJByteArray( environment, metadataAddress );
 	return finalRay;
 }

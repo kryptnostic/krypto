@@ -6,7 +6,6 @@ task wrapper(type: Wrapper) {
     gradleVersion = '2.4'
 }
 
-
 task buildEmscripten(type: Exec) {
     commandLine './buildEmscripten.sh'
 }

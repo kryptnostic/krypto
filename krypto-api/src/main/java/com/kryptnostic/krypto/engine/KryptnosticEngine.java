@@ -30,6 +30,10 @@ public class KryptnosticEngine {
 
     private long handle;
 
+    protected long getHandle(){
+        return handle;
+    }
+
     /**
      * VALIDATE HERE OR BEFORE PASSING IN
      * @param clientHashFunction

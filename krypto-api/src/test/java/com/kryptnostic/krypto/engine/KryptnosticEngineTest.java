@@ -8,6 +8,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import static org.junit.Assert.assertNotNull;
+
 public class KryptnosticEngineTest {
 
     @BeforeClass
@@ -30,5 +32,9 @@ public class KryptnosticEngineTest {
         rand.nextBytes( clientHashFunc );
         rand.nextBytes( encObjectSearchToken );
         KryptnosticEngine kryptnosticEngine = new KryptnosticEngine( clientHashFunc, encObjectSearchToken );
+        assertNotNull( kryptnosticEngine.getHandle() );
+        byte[] encObjectSearchKey = new byte[16];
+        byte[] objectConversionMatrix = new byte[16];
+        kryptnosticEngine.calculateMetadataAddress( encObjectSearchKey, objectConversionMatrix );
     }
 }
