@@ -20,12 +20,12 @@
 #include <emscripten/bind.h>
 #include "SearchPrivateKey.h"
 #include "ClientHashFunction.h"
+#include "PrivateKey.h"
 
 using namespace emscripten;
 typedef unsigned char byte;
 
 #define N 128
-
 class KryptnosticClient {
 
 public:
@@ -155,7 +155,7 @@ public:
 	 */
 	//const val getObjectSharingPair(std::string objectAddressFunctionStr, std::string objectSearchKeyStr) const{
 	const val getObjectSharingPair(std::string objectIndexPairStr) const{
-		const std::pair< BitVector<2*N>, BitMatrix<N> > objectIndexPair = *reinterpret_cast<const std::pair<BitVector<2*N>, BitMatrix<N> >* >(objectIndexPairStr.data());
+		const std::pair< BitVector<2*N>, BitMatrix<N> > & objectIndexPair = *reinterpret_cast<const std::pair<BitVector<2*N>, BitMatrix<N> >* >(objectIndexPairStr.data());
 		std::pair< BitVector<N>, BitMatrix<N> > objectSharingPair = _spk.getObjectSharingPair(objectIndexPair, _pk);
 		return val(memory_view<byte>(sizeof(std::pair <BitVector<2*N>,BitMatrix<N> >), (byte *) &objectSharingPair));
 	}
