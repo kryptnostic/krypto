@@ -13,6 +13,12 @@
 
 #define NUM_INPUT_MONOMIALS ((NUM_INPUTS * (NUM_INPUTS + 1)) >> 1)
 
+/*
+ * Template for MultiQuadTuple
+ * Contains recursive struct definitions to next
+ * Each level (or limit) contains the coefficient matrix for one variable
+ * Contains constant vector at limit = 0
+ */
 template<unsigned int NUM_INPUTS,unsigned int NUM_OUTPUTS, unsigned int LIMIT=NUM_INPUTS>
 struct MultiQuadTuple {
     MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS, LIMIT - 1U> next;
@@ -20,44 +26,74 @@ struct MultiQuadTuple {
 
 /* Generation of MultiQuadTuple */
 
-    //Generates a random MultiQuadTuple
+    /*
+     * Function: randomize()
+     * Generates a random MultiQuadTuple
+     * Ends with a template specialization at limit = 0
+     */
     void randomize() {
         _matrix = BitMatrix<LIMIT,NUM_OUTPUTS>::randomMatrix();
         next.randomize();
     }
 
-    //Generates a zero MultiQuadTuple
+    /*
+     * Function: zero()
+     * Generates a zero MultiQuadTuple
+     * Ends with a template specialization at limit = 0
+     */
     void zero() {
         _matrix = BitMatrix<LIMIT,NUM_OUTPUTS>::zeroMatrix();
         next.zero();
     }
 
-    //Fill the MultiQuadTuple with the given components
+    /*
+     * Function: setContributions(m, v)
+     * Generates a MultiQuadTuple with coefficient matrices given by a large
+     * concatenated coefficient matrix and a constant vector
+     */
     void setContributions(const BitMatrix<NUM_INPUT_MONOMIALS, NUM_OUTPUTS> &m, const BitVector<NUM_OUTPUTS> &v){
         zero();
         setSubContributions(0, m, v);
     }
 
-    //Set the MultiQuadTuple to be one with only matrix(linear) component
+    /*
+     * Function: setAsMatrix(m)
+     * Generates a MultiQuadTuple equivalent to a given linear transformation
+     */
     void setAsMatrix(const BitMatrix<NUM_OUTPUTS, NUM_INPUTS> &m){
         _matrix.zero();
         _matrix[0] = m.transpose().getRow(NUM_INPUTS - LIMIT);
         next.setAsMatrix(m);
     }
 
-    //Set the MultiQuadTuple to be one with only constants component
+    /*
+     * Function: setAsConstants(v)
+     * Generates a MultiQuadTuple with coefficient matrices to a given constant vector
+     */
     void setAsConstants(const BitVector<NUM_OUTPUTS> &v){
         _matrix = BitMatrix<LIMIT,NUM_OUTPUTS>::zeroMatrix();
         next.setAsConstants(v);
     }
 
-    //Recursively calls next on super when limits are not equal
+    /*
+     * Function: setToSubMQT(super)
+     * Generates a MultiQuadTuple with the last NUM_INPUTS coefficient matrices
+     * of a given larger MultiQuadTuple in 3 functions
+     * Ends with a template specialization at limit = 0
+     * Unrolls template until the NUM_INPUT-th from last coefficient
+     */
     template<unsigned int SUPER_INPUTS, unsigned int SUPER_LIMIT>
     void setToSubMQT( const MultiQuadTuple<SUPER_INPUTS, NUM_OUTPUTS, SUPER_LIMIT> & super ) {
         setToSubMQT<SUPER_INPUTS>( super.next );
     }
 
-    //Recursively sets current MQT to super when at the same limit
+    /*
+     * Function: setToSubMQT(super)
+     * Generates a MultiQuadTuple with the last NUM_INPUTS coefficient matrices
+     * of a given larger MultiQuadTuple
+     * Ends with a template specialization at limit = 0
+     * Copies the last NUM_INPUT coefficient matrices
+     */
     template<unsigned int SUPER_INPUTS>
     void setToSubMQT( const MultiQuadTuple<SUPER_INPUTS, NUM_OUTPUTS, LIMIT> & super ) {
         _matrix.copy( super._matrix );
@@ -331,6 +367,11 @@ struct MultiQuadTuple {
 
 
 /* Base case of the recursive struct: the constants - clients do not need to read this part */
+/*
+ * Template specialization for MultiQuadTuple at limit = 0
+ * Contains constant vector
+ * Defines various base case functions for template unrolling
+ */
 template<unsigned NUM_INPUTS,unsigned int NUM_OUTPUTS>
 struct MultiQuadTuple<NUM_INPUTS,NUM_OUTPUTS,0> {
     BitVector<NUM_OUTPUTS> _constants;
@@ -374,7 +415,13 @@ struct MultiQuadTuple<NUM_INPUTS,NUM_OUTPUTS,0> {
         //NO-OP base case should be elided under optimization.
     }
 
-    //Recursively sets current MQT to super when at the limit 0
+    /*
+     * Function: setToSubMQT(super)
+     * Generates a MultiQuadTuple with the last NUM_INPUTS coefficient matrices
+     * of a given larger MultiQuadTuple
+     * Ends with a template specialization at limit = 0
+     * Sets the constants
+     */
     template<unsigned int SUPER_INPUTS>
     void setToSubMQT( const MultiQuadTuple<SUPER_INPUTS, NUM_OUTPUTS, 0> & super ) {
         setConstants(super._constants);
