@@ -530,7 +530,7 @@ public:
 
 		BitMatrix<COLS, ROWS> T = transpose();
 		BitMatrix<COLS> inverse = BitMatrix<COLS>::identityMatrix();
-		BitMatrix<COLS, ROWS> workingSet = T.rref(inverse);
+		const BitMatrix<COLS, ROWS> & workingSet = T.rref(inverse);
 		vector<bool> basisInitialized(ROWS);
 		fill(basisInitialized.begin(), basisInitialized.end(), false);
 		BitVector<ROWS> basis[ROWS];
@@ -539,7 +539,7 @@ public:
 		}
 		unsigned int firstNonZeroIndex[COLS] = {0};
 		for(unsigned int i = 0; i < COLS; ++i){
-			BitVector<ROWS> v = workingSet[i];
+			const BitVector<ROWS> & v = workingSet[i];
 			int value = -1;
 			for(unsigned int j = 0; j < ROWS; ++j){
 				if(v.get(j)){
@@ -571,20 +571,20 @@ public:
 			return BitMatrix<COLS, ROWS>::zeroMatrix();
 		}
 
-		BitMatrix<COLS> inverseColumnar = inverse.transpose();
+		const BitMatrix<COLS> & inverseColumnar = inverse.transpose();
 		BitMatrix<COLS, ROWS> constantBasis = BitMatrix<COLS, ROWS>::zeroMatrix();
 		for(unsigned int i = 0; i < COLS; ++i){
 			constantBasis.setRow(i, mapLeft(firstNonZeroIndex, inverseColumnar[i]));
 		}
 
-		BitMatrix<COLS, ROWS - COLS> randomizer = BitMatrix<COLS, ROWS - COLS>::randomMatrix();
-		BitMatrix<COLS, ROWS> nullspan = randomizer.template operator*<ROWS>(BitMatrix<ROWS - COLS, ROWS>::directFromRows(filtered));
+		const BitMatrix<COLS, ROWS - COLS> & randomizer = BitMatrix<COLS, ROWS - COLS>::randomMatrix();
+		const BitMatrix<COLS, ROWS> & nullspan = randomizer.template operator*<ROWS>(BitMatrix<ROWS - COLS, ROWS>::directFromRows(filtered));
 
 		return nullspan ^ constantBasis;
 	}
 
 	//helper function of leftInverse
-	BitVector<ROWS> mapLeft(unsigned int firstNonZeroIndex[], const BitVector<COLS> & bv) const{
+	const BitVector<ROWS> mapLeft(unsigned int firstNonZeroIndex[], const BitVector<COLS> & bv) const{
         BitVector<ROWS> result = BitVector<ROWS>::zeroVector();
         for ( int i = 0; i < COLS; ++i ) {
             if ( bv.get( i ) ) {
@@ -603,7 +603,7 @@ public:
 		if(DEBUG)assert(COLS >= ROWS);
 
 		BitMatrix<ROWS> inverse = BitMatrix<ROWS>::identityMatrix();
-		BitMatrix<ROWS, COLS> workingSet = rref(inverse);
+		const BitMatrix<ROWS, COLS> & workingSet = rref(inverse);
 		vector<bool> basisInitialized(COLS);
 		fill(basisInitialized.begin(), basisInitialized.end(), false);
 		BitVector<COLS> basis[COLS];
@@ -612,7 +612,7 @@ public:
 		}
 		unsigned int firstNonZeroIndex[ROWS] = {0};
 		for(unsigned int i = 0; i < ROWS; ++i){
-			BitVector<COLS> v = workingSet[i];
+			const BitVector<COLS> & v = workingSet[i];
 			int value = -1;
 			for(unsigned int j = 0; j < COLS; ++j){
 				if(v.get(j)){
@@ -644,14 +644,14 @@ public:
 			return BitMatrix<COLS, ROWS>::zeroMatrix();
 		}
 
-		BitMatrix<ROWS> inverseColumnar = inverse.transpose();
+		const BitMatrix<ROWS> & inverseColumnar = inverse.transpose();
 		BitMatrix<ROWS, COLS> constantBasis = BitMatrix<ROWS, COLS>::zeroMatrix();
 		for(unsigned int i = 0; i < ROWS; ++i){
 			constantBasis.setRow(i, mapRight(firstNonZeroIndex, inverseColumnar[i]));
 		}
 
-		BitMatrix<ROWS, COLS - ROWS> randomizer = BitMatrix<ROWS, COLS - ROWS>::randomMatrix();
-		BitMatrix<ROWS, COLS> nullspan = randomizer.template operator*<COLS>(BitMatrix<COLS - ROWS, COLS>::directFromRows(filtered));
+		const BitMatrix<ROWS, COLS - ROWS> & randomizer = BitMatrix<ROWS, COLS - ROWS>::randomMatrix();
+		const BitMatrix<ROWS, COLS> & nullspan = randomizer.template operator*<COLS>(BitMatrix<COLS - ROWS, COLS>::directFromRows(filtered));
 
 		return (nullspan ^ constantBasis).transpose();
 	}
@@ -679,7 +679,7 @@ public:
 			int suitableRow = getSuitableRow(A, col, row);
 			if(suitableRow >= 0){
 				A.swapRows(row, suitableRow);
-	            BitVector<COLS> currentRow = A[row];
+	            const BitVector<COLS> & currentRow = A[row];
 	            for ( int candidateIndex = 0; candidateIndex < limit; ++candidateIndex ) {
 	                if ( candidateIndex != row ) {
 	                    BitVector<COLS> candidateRow = A[candidateIndex];
@@ -707,7 +707,7 @@ public:
 			if(suitableRow >= 0){
 				A.swapRows(row, suitableRow);
 				rhs.swapRows(row, suitableRow);
-	            BitVector<COLS> currentRow = A[row];
+	            const BitVector<COLS> & currentRow = A[row];
 	            for ( int candidateIndex = 0; candidateIndex < limit; ++candidateIndex ) {
 	                if ( candidateIndex != row ) {
 	                    BitVector<COLS> candidateRow = A[candidateIndex];
@@ -865,8 +865,8 @@ public:
 	static const BitMatrix<ROWS,COLS1 + COLS2> augH (const BitMatrix<ROWS,COLS1> & lhs, const BitMatrix<ROWS,COLS2> & rhs) {
 		BitMatrix<ROWS, COLS1+COLS2> augmented;
         for (unsigned int i = 0; i < ROWS; ++i) {
-			BitVector<COLS1> lv = lhs.getRow(i);
-			BitVector<COLS2> rv = rhs.getRow(i);
+			const BitVector<COLS1> & lv = lhs.getRow(i);
+			const BitVector<COLS2> & rv = rhs.getRow(i);
             augmented.setRow(i, BitVector<COLS1+COLS2>::vCat(lv, rv));
 		}
         return augmented;
@@ -882,9 +882,9 @@ public:
 	static const BitMatrix<ROWS, COLS1 + COLS2 + COLS3> augH(const BitMatrix<ROWS, COLS1> & lhs, const BitMatrix<ROWS, COLS2> & mid, const BitMatrix<ROWS, COLS3> & rhs) {
         BitMatrix<ROWS, COLS1+COLS2+COLS3> augmented;
         for (unsigned int i = 0; i < ROWS ; ++i) {
-            BitVector<COLS1> lv = lhs.getRow(i);
-            BitVector<COLS2> mv = mid.getRow(i);
-            BitVector<COLS3> rv = rhs.getRow(i);
+            const BitVector<COLS1> & lv = lhs.getRow(i);
+            const BitVector<COLS2> & mv = mid.getRow(i);
+            const BitVector<COLS3> & rv = rhs.getRow(i);
             augmented.setRow(i, BitVector<COLS1+COLS2+COLS3>::vCat( lv, mv, rv ));
 		}
         return augmented;
@@ -970,10 +970,9 @@ public:
      */
 	const BitMatrix<ROWS,COLS/3> splitH3(int index) const{
 		if (DEBUG) assert(index >= 0 && index < 3); //index not OB
-		BitMatrix<ROWS,COLS/3> result = BitMatrix<ROWS,COLS/3>::zeroMatrix();//zeroMatrix();
+		BitMatrix<ROWS,COLS/3> result = BitMatrix<ROWS,COLS/3>::zeroMatrix();
 		for (int i = 0; i < ROWS; ++i) {
-			BitVector<COLS/3> sv = getRow(i).proj3(index);
-			result.setRow(i, sv);
+			result.setRow(i, getRow(i).proj3(index));
 		}
 		return result;
 	}
@@ -1143,7 +1142,7 @@ private:
      * Function: getRightBottomCorner()
      * Returns the value of the bottom right corner entry
      */
-	bool getRightBottomCorner() const{
+	inline bool getRightBottomCorner() const{
 		return get(ROWS-1, COLS-1);
 	}
 

@@ -33,15 +33,15 @@ public:
 	_Rx(BitMatrix<N>::randomInvertibleMatrix()),
 	_Ry(BitMatrix<N>::randomInvertibleMatrix()),
 	_M(pk.getM()),
-	_Ai(pk.getA().inv()),
-	_Bi(pk.getB().inv()),
 	_Cu1(pk.getUnaryObf1()),
 	_Cu2(pk.getUnaryObf2()),
 	_Cb1(pk.getBinaryObf1()),
 	_Cb2(pk.getBinaryObf2()),
-	_ARAi(pk.getA() * _R * pk.getA().inv()),
-	_ARxAi(pk.getA() * _Rx * pk.getA().inv()),
-	_ARyAi(pk.getA() * _Ry * pk.getA().inv()),
+	_Ai(pk.getA().inv()),
+	_Bi(pk.getB().inv()),
+	_ARAi(pk.getA() * _R * _Ai),
+	_ARxAi(pk.getA() * _Rx * _Ai),
+	_ARyAi(pk.getA() * _Ry * _Ai),
 	_AiM2(_Ai.template pMult<2*N, 2*N>(_M.inv(), N))
 	{}
 
@@ -52,13 +52,13 @@ public:
 	 * Returns the first function of the obfuscation chain for unary operations (e.g. left matrix multiplication)
 	 */
 	const MultiQuadTuple<2*N, 2*N> getUnaryG1() const{
-		MultiQuadTupleChain<N,2> f = _pk.getf();
+		const MultiQuadTupleChain<N,2> & f = _pk.getf();
 
-		BitMatrix<N, 2*N> matTop = _AiM2;
-		BitMatrix<N, 2*N> matBot = _R * matTop;
+		const BitMatrix<N, 2*N> & matTop = _AiM2;
+		const BitMatrix<N, 2*N> & matBot = _R * matTop;
 
-		MultiQuadTuple<2*N, N> top = f.get(0) * matTop;
-		MultiQuadTuple<2*N, N> bot = f.get(0) * matBot;
+		const MultiQuadTuple<2*N, N> & top = f.get(0) * matTop;
+		const MultiQuadTuple<2*N, N> & bot = f.get(0) * matBot;
 		MultiQuadTuple<2*N, 2*N> aug;// = MultiQuadTuple<2*N, 2*N>::augV(top, bot);
 		aug.augV(top, bot);
 		return aug.template rMult<2*N>(_Cu1);
@@ -69,13 +69,13 @@ public:
 	 * Returns the second function of the obfuscation chain for unary operations (e.g. left matrix multiplication)
 	 */
 	const MultiQuadTuple<2*N, 2*N> getUnaryG2() const{
-		MultiQuadTupleChain<N,2> f = _pk.getf();
+		const MultiQuadTupleChain<N,2> & f = _pk.getf();
 
-		BitMatrix<N, 2*N> matTop = _Cu1.inv().splitV2(0);
-		BitMatrix<N, 2*N> matBot = _Cu1.inv().splitV2(1);
+		const BitMatrix<N, 2*N> & matTop = _Cu1.inv().splitV2(0);
+		const BitMatrix<N, 2*N> & matBot = _Cu1.inv().splitV2(1);
 
-		MultiQuadTuple<2*N, N> top = f.get(1) * matTop;
-		MultiQuadTuple<2*N, N> bot = f.get(1) * matBot;
+		const MultiQuadTuple<2*N, N> & top = f.get(1) * matTop;
+		const MultiQuadTuple<2*N, N> & bot = f.get(1) * matBot;
 		MultiQuadTuple<2*N, 2*N> aug;// = MultiQuadTuple<2*N, 2*N>::augV(top, bot);
 		aug.augV(top, bot);
 		return aug.template rMult<2*N>(_Cu2);
@@ -89,19 +89,19 @@ public:
 	 * Dimension of Z: 2*(N * 2^6) by 4*(N * 2^6)
 	 */
 	const BitMatrix<2*N, 4*N> getLMMZ(const BitMatrix<N> & K) const{
-		BitMatrix<N> zeroN = BitMatrix<N>::zeroMatrix();
-		BitMatrix<N> RAi = _R * _Ai;
+		const BitMatrix<N> & zeroN = BitMatrix<N>::zeroMatrix();
+		const BitMatrix<N> & RAi = _R * _Ai;
 
-		BitMatrix<N> _BKBi = _pk.getB() * K * _Bi;
-		BitMatrix<N> _BKBiAi = _BKBi * _Ai;
+		const BitMatrix<N> & _BKBi = _pk.getB() * K * _Bi;
+		const BitMatrix<N> & _BKBiAi = _BKBi * _Ai;
 
-		BitMatrix<N, 2*N> XTop = BitMatrix<N, 2*N>::augH(_BKBi, _BKBiAi ^ RAi);
-		BitMatrix<N, 2*N> XBot = BitMatrix<N, 2*N>::augH(zeroN, _ARAi);
-		BitMatrix<2*N> X = _M * BitMatrix<2*N>::augV(XTop, XBot) * _M.inv();
+		const BitMatrix<N, 2*N> & XTop = BitMatrix<N, 2*N>::augH(_BKBi, _BKBiAi ^ RAi);
+		const BitMatrix<N, 2*N> & XBot = BitMatrix<N, 2*N>::augH(zeroN, _ARAi);
+		const BitMatrix<2*N> & X = _M * BitMatrix<2*N>::augV(XTop, XBot) * _M.inv();
 
-		BitMatrix<N, 2*N> YTop = BitMatrix<N, 2*N>::augH(_BKBi, BitMatrix<N>::identityMatrix());
-		BitMatrix<N, 2*N> YBot = BitMatrix<N, 2*N>::augH(zeroN, zeroN);
-		BitMatrix<2*N> Y = _M * BitMatrix<2*N>::augV(YTop, YBot) * _Cu2.inv();
+		const BitMatrix<N, 2*N> & YTop = BitMatrix<N, 2*N>::augH(_BKBi, BitMatrix<N>::identityMatrix());
+		const BitMatrix<N, 2*N> & YBot = BitMatrix<N, 2*N>::augH(zeroN, zeroN);
+		const BitMatrix<2*N> & Y = _M * BitMatrix<2*N>::augV(YTop, YBot) * _Cu2.inv();
 		return BitMatrix<2*N, 4*N>::augH(X, Y);
 	}
 
@@ -112,20 +112,20 @@ public:
 	 * Returns the first function of the obfuscation chain for binary operations (e.g. XOR, AND)
 	 */
 	const MultiQuadTuple<4*N, 3*N> getBinaryG1() const{
-		MultiQuadTupleChain<N,2> f = _pk.getf();
+		const MultiQuadTupleChain<N,2> & f = _pk.getf();
 
-		BitMatrix<N, 2*N> M2 = _M.inv().splitV2(1);
-		BitMatrix<N, 4*N> M2ProjX = BitMatrix<N, 4*N>::augH(M2, BitMatrix<N, 2*N>::zeroMatrix());
-		BitMatrix<N, 4*N> M2ProjY = BitMatrix<N, 4*N>::augH(BitMatrix<N, 2*N>::zeroMatrix(), M2);
+		const BitMatrix<N, 2*N> & M2 = _M.inv().splitV2(1);
+		const BitMatrix<N, 4*N> & M2ProjX = BitMatrix<N, 4*N>::augH(M2, BitMatrix<N, 2*N>::zeroMatrix());
+		const BitMatrix<N, 4*N> & M2ProjY = BitMatrix<N, 4*N>::augH(BitMatrix<N, 2*N>::zeroMatrix(), M2);
 
-		BitMatrix<N, 4*N> matTop = _Ai * M2ProjX;
-		BitMatrix<N, 4*N> matMid = _Ai * M2ProjY;
-		BitMatrix<N, 4*N> matBotX = _Rx * matTop;
-		BitMatrix<N, 4*N> matBotY = _Ry * matMid;
+		const BitMatrix<N, 4*N> & matTop = _Ai * M2ProjX;
+		const BitMatrix<N, 4*N> & matMid = _Ai * M2ProjY;
+		const BitMatrix<N, 4*N> & matBotX = _Rx * matTop;
+		const BitMatrix<N, 4*N> & matBotY = _Ry * matMid;
 
-		MultiQuadTuple<4*N, N> top = f.get(0) * matTop;
-		MultiQuadTuple<4*N, N> mid = f.get(0) * matMid;
-		MultiQuadTuple<4*N, N> bot = f.get(0) * (matBotX ^ matBotY);
+		const MultiQuadTuple<4*N, N> & top = f.get(0) * matTop;
+		const MultiQuadTuple<4*N, N> & mid = f.get(0) * matMid;
+		const MultiQuadTuple<4*N, N> & bot = f.get(0) * (matBotX ^ matBotY);
 		MultiQuadTuple<4*N, 3*N> aug;// = MultiQuadTuple<4*N, 3*N>::augV(top, mid, bot);
 		aug.augV(top, mid, bot);
 		return aug.template rMult<3*N>(_Cb1);
@@ -136,16 +136,16 @@ public:
 	 * Returns the second function (g2) of the obfuscation chain for binary operations (e.g. XOR, AND)
 	 */
 	const MultiQuadTuple<3*N, 3*N>getBinaryG2() const{
-		MultiQuadTupleChain<N,2> f = _pk.getf();
+		const MultiQuadTupleChain<N,2> & f = _pk.getf();
 
-		BitMatrix<3*N> Cb1Inv = _Cb1.inv();
-		BitMatrix<N, 3*N> matTop = Cb1Inv.splitV3(0);
-		BitMatrix<N, 3*N> matMid = Cb1Inv.splitV3(1);
-		BitMatrix<N, 3*N> matBot = Cb1Inv.splitV3(2);
+		const BitMatrix<3*N> & Cb1Inv = _Cb1.inv();
+		const BitMatrix<N, 3*N> & matTop = Cb1Inv.splitV3(0);
+		const BitMatrix<N, 3*N> & matMid = Cb1Inv.splitV3(1);
+		const BitMatrix<N, 3*N> & matBot = Cb1Inv.splitV3(2);
 
-		MultiQuadTuple<3*N, N> top = f.get(1) * matTop;
-		MultiQuadTuple<3*N, N> mid = f.get(1) * matMid;
-		MultiQuadTuple<3*N, N> bot = f.get(1) * matBot;
+		const MultiQuadTuple<3*N, N> & top = f.get(1) * matTop;
+		const MultiQuadTuple<3*N, N> & mid = f.get(1) * matMid;
+		const MultiQuadTuple<3*N, N> & bot = f.get(1) * matBot;
 		MultiQuadTuple<3*N, 3*N> aug;// = MultiQuadTuple<3*N, 3*N>::augV(top, mid, bot);
 		aug.augV(top, mid, bot);
 		return aug.template rMult<3*N>(_Cb2);
@@ -159,10 +159,10 @@ public:
 	 * Returns matrix Xx used for homomorphic XOR
 	 */
 	const BitMatrix<2*N> getXORXx() const{
-		BitMatrix<N> idN = BitMatrix<N>::identityMatrix();
+		const BitMatrix<N> & idN = BitMatrix<N>::identityMatrix();
 
-		BitMatrix<N, 2*N> XTop = BitMatrix<N, 2*N>::augH(idN, (idN ^ _Rx) * _Ai);
-		BitMatrix<N, 2*N> XBot = BitMatrix<N, 2*N>::augH(BitMatrix<N>::zeroMatrix(), _ARxAi);
+		const BitMatrix<N, 2*N> & XTop = BitMatrix<N, 2*N>::augH(idN, (idN ^ _Rx) * _Ai);
+		const BitMatrix<N, 2*N> & XBot = BitMatrix<N, 2*N>::augH(BitMatrix<N>::zeroMatrix(), _ARxAi);
 		return _M * BitMatrix<2*N>::augV(XTop, XBot) * _M.inv();
 	}
 
@@ -171,10 +171,10 @@ public:
 	 * Returns matrix Xy used for homomorphic XOR
 	 */
 	const BitMatrix<2*N> getXORXy() const{
-		BitMatrix<N> idN = BitMatrix<N>::identityMatrix();
+		const BitMatrix<N> idN = BitMatrix<N>::identityMatrix();
 
-		BitMatrix<N, 2*N> XTop = BitMatrix<N, 2*N>::augH(idN, (idN ^ _Ry) * _Ai);
-		BitMatrix<N, 2*N> XBot = BitMatrix<N, 2*N>::augH(BitMatrix<N>::zeroMatrix(), _ARyAi);
+		const BitMatrix<N, 2*N> XTop = BitMatrix<N, 2*N>::augH(idN, (idN ^ _Ry) * _Ai);
+		const BitMatrix<N, 2*N> XBot = BitMatrix<N, 2*N>::augH(BitMatrix<N>::zeroMatrix(), _ARyAi);
 		return _M * BitMatrix<2*N>::augV(XTop, XBot) * _M.inv();
 	}
 
@@ -183,11 +183,10 @@ public:
 	 * Returns matrix Y used for homomorphic XOR
 	 */
 	const BitMatrix<2*N, 3*N> getXORY() const{
-		BitMatrix<N> idN = BitMatrix<N>::identityMatrix();
+		const BitMatrix<N> & idN = BitMatrix<N>::identityMatrix();
 
-		BitMatrix<N, 3*N> YTop = BitMatrix<N, 3*N>::augH(idN, idN, idN);
-		BitMatrix<2*N, 3*N> result = _M * BitMatrix<2*N, 3*N>::augV(YTop, BitMatrix<N, 3*N>::zeroMatrix()) * _Cb2.inv();
-		return result;
+		const BitMatrix<N, 3*N> & YTop = BitMatrix<N, 3*N>::augH(idN, idN, idN);
+		return _M * BitMatrix<2*N, 3*N>::augV(YTop, BitMatrix<N, 3*N>::zeroMatrix()) * _Cb2.inv();
 	}
 
 /* AND */
@@ -198,20 +197,22 @@ public:
 	 */
 	const MultiQuadTuple<7*N, 2*N> getANDz() const{
 		BitMatrix<N, 2*N> X = getANDX();
-		const BitMatrix<N> & Cb2i = _Cb2.inv();
-		BitMatrix<N, 3*N> Y1 = _Bi.pMult(Cb2i, 0);
-		BitMatrix<N, 3*N> Y2 = _Bi.pMult(Cb2i, N);
-		BitMatrix<N, 3*N> Y3 = Cb2i.splitV3(2);
-		BitMatrix<N, 7*N> Y3t = BitMatrix<N, 7*N>::augH(BitMatrix<N, 4*N>::zeroMatrix(), Y3);
-		BitMatrix<(N*(12*N + 1) + N*(8*N + 1) + ((3*N*(3*N + 1)) >> 1)), N> contrib = BitMatrix<(N*(12*N + 1) + N*(8*N + 1) + ((3*N*(3*N + 1)) >> 1)), N>::augV(getANDP(X, Y2), getANDQ(X, Y1), getANDS(Y1, Y2));
-		MultiQuadTuple<7*N, N> zTop;//(contrib, BitVector<N>::zeroVector());
+		const BitMatrix<3*N> & Cb2i = _Cb2.inv();
+		const BitMatrix<N, 3*N> & Y1 = _Bi.pMult(Cb2i, 0);
+		const BitMatrix<N, 3*N> & Y2 = _Bi.pMult(Cb2i, N);
+		const BitMatrix<N, 3*N> & Y3 = Cb2i.splitV3(2);
+		const BitMatrix<N, 7*N> & Y3t = BitMatrix<N, 7*N>::augH(BitMatrix<N, 4*N>::zeroMatrix(), Y3);
+		const BitMatrix<(N*(12*N + 1) + N*(8*N + 1) + ((3*N*(3*N + 1)) >> 1)), N> & contrib = BitMatrix<(N*(12*N + 1) + N*(8*N + 1) + ((3*N*(3*N + 1)) >> 1)), N>::augV(getANDP(X, Y2), getANDQ(X, Y1), getANDS(Y1, Y2));
+		MultiQuadTuple<7*N, N> zTop;
 		zTop.setContributions(contrib, BitVector<N>::zeroVector());
 		//zTop = zTop.template rMult<N>(_pk.getB()); //(breaks)
-		//zTop = zTop2 ^ MultiQuadTuple<7*N, N>::getMultiQuadTuple(Y3t); (breaks)
+		MultiQuadTuple<7*N, N> Y3tM;
+		Y3tM.setAsMatrix(Y3t);
+		MultiQuadTuple<7*N, N> zTop2 = zTop ^ Y3tM; //(breaks)
 		MultiQuadTuple<7*N, N> zeroMQT;// = MultiQuadTuple<7*N, N>::zeroMultiQuadTuple();
 		zeroMQT.zero();
-		MultiQuadTuple<7*N, 2*N> z;// = MultiQuadTuple<7*N, 2*N>::augV(zTop, zeroMQT);
-		z.augV(zTop, zeroMQT);
+		//MultiQuadTuple<7*N, 2*N> z;// = MultiQuadTuple<7*N, 2*N>::augV(zTop, zeroMQT);
+		//z.augV(zTop, zeroMQT);
 		//MultiQuadTuple<7*N, 2*N> zM = z.template rMult<2*N>(_M); (breaks)
 		//return zM;
 		MultiQuadTuple<7*N, 2*N> result;
@@ -224,8 +225,8 @@ public:
 	 * Returns matrix Z1 used for homomorphic AND
 	 */
 	const BitMatrix<2*N> getANDZ1() const{
-		BitMatrix<N, 2*N> top = _Rx * _AiM2;
-		BitMatrix<N, 2*N> bottom = _pk.getA() * top;
+		const BitMatrix<N, 2*N> & top = _Rx * _AiM2;
+		const BitMatrix<N, 2*N> & bottom = _pk.getA() * top;
 		return _M * BitMatrix<2*N>::augV(top, bottom);
 	}
 
@@ -235,8 +236,8 @@ public:
 	 * Dimension of Z2: 2*(N * 2^6) by 2*(N * 2^6)
 	 */
 	const BitMatrix<2*N> getANDZ2() const{
-		BitMatrix<N, 2*N> top = _Ry * _AiM2;
-		BitMatrix<N, 2*N> bottom = _pk.getA() * top;
+		const BitMatrix<N, 2*N> & top = _Ry * _AiM2;
+		const BitMatrix<N, 2*N> & bottom = _pk.getA() * top;
 		return _M * BitMatrix<2*N>::augV(top, bottom);
 	}
 
@@ -251,12 +252,11 @@ private:
 	const BitMatrix<2*N> _Cu2;
 	const BitMatrix<3*N> _Cb1;
 	const BitMatrix<3*N> _Cb2;
+	const BitMatrix<N> _Ai;
+	const BitMatrix<N> _Bi;
 	const BitMatrix<N> _ARAi;
 	const BitMatrix<N> _ARxAi;
 	const BitMatrix<N> _ARyAi;
-
-	const BitMatrix<N> _Ai;
-	const BitMatrix<N> _Bi;
 	const BitMatrix<N, 2*N> _AiM2;
 	static const unsigned int twoN = N << 1;
 	static const unsigned int threeN = 3 * N;
@@ -268,7 +268,7 @@ private:
 	 * Returns matrix X used to compute z for homomorphic AND
 	 */
 	const BitMatrix<N, 2*N> getANDX() const{
-		BitMatrix<N, 2*N> inner = BitMatrix<N, 2*N>::augH(BitMatrix<N>::identityMatrix(), _Ai);
+		const BitMatrix<N, 2*N> & inner = BitMatrix<N, 2*N>::augH(BitMatrix<N>::identityMatrix(), _Ai);
 		return _Bi * inner * _M.inv();
 	}
 
@@ -279,7 +279,7 @@ private:
 	 */
 	template <unsigned int level>
 	const BitMatrix<7*N - level, N> getANDPk(const BitMatrix<N, 2*N> &X, const BitMatrix<N, 3*N> &Y2) const{
-		BitMatrix<twoN - level, N> top = BitMatrix<twoN - level, N>::zeroMatrix();
+		const BitMatrix<twoN - level, N> & top = BitMatrix<twoN - level, N>::zeroMatrix();
 
 		BitMatrix<twoN, N> mid = BitMatrix<twoN, N>::zeroMatrix();
 		for (unsigned int j = 0; j < N; ++j) { //col within middle block
@@ -308,7 +308,7 @@ private:
 	 */
 	template <unsigned int level>
 	const BitMatrix<5*N - level, N> getANDQk(const BitMatrix<N, 2*N>&X, const BitMatrix<N, 3*N> &Y1) const{
-		BitMatrix<twoN - level, N> top = BitMatrix<twoN - level, N>::zeroMatrix();
+		const BitMatrix<twoN - level, N> & top = BitMatrix<twoN - level, N>::zeroMatrix();
 		BitMatrix<threeN, N> bot = BitMatrix<threeN, N>::zeroMatrix();
 		for (unsigned int j = 0; j < N; ++j) { //col within bottom block
 			if(X.get(j, level)){

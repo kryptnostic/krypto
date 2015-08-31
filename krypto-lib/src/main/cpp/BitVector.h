@@ -473,11 +473,11 @@ private:
 template<unsigned int N>
 struct hash< BitVector<N> >
 {
-    size_t operator()(BitVector<N> const& vector) const
+    size_t operator()(BitVector<N> const& bv) const
     {
         size_t sum = 0;
         for (int i = 0; i < N; ++i) {
-            size_t const h ( hash<unsigned long long>()(vector.elements()[i]) );
+            size_t const h ( hash<unsigned long long>()(bv.elements()[i]) );
             sum ^= h;
         }
         return sum;
