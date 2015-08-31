@@ -14,7 +14,7 @@
 #include <cstdio>
 #include <string>
 #include <assert.h>
-#define _KBV_N_ (NUM_BITS>>6)
+#define _KBV_N_ ((NUM_BITS + 63) >> 6) //rounds up to nearest multiple of 64
 
 using namespace std;
 
