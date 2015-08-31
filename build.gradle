@@ -1,5 +1,22 @@
 apply plugin: "cpp"
 
+//Easy semantic version based off describe + tags
+def getVersionName = { ->
+  def stdout = new ByteArrayOutputStream()
+  exec {
+    commandLine 'git', 'describe', '--tags', '--dirty', '--long'
+    standardOutput = stdout
+  }
+  def tagVer = stdout.toString().trim()
+  def semVer = (tagVer =~ /v?([\d\.]+)/)[0][1]
+
+  if (tagVer.contains('dev')) {
+    semVer += "-SNAPSHOT"
+  }
+  return semVer
+}
+version = getVersionName()
+
 // The cpp plugin is required so tahat the assemble task can be set to depend on the OS appropriate google test build task
 
 task wrapper(type: Wrapper) {
