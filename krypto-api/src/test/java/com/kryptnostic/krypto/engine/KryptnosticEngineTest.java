@@ -29,6 +29,6 @@ public class KryptnosticEngineTest {
         byte[] encObjectSearchToken = new byte[16];
         rand.nextBytes( clientHashFunc );
         rand.nextBytes( encObjectSearchToken );
-        new KryptnosticEngine( clientHashFunc, encObjectSearchToken );
+        KryptnosticEngine kryptnosticEngine = new KryptnosticEngine( clientHashFunc, encObjectSearchToken );
     }
 }

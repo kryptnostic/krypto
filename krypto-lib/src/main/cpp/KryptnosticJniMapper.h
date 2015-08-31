@@ -6,6 +6,7 @@
 #define krypto_KryptnosticJniMapper_h
 
 #define N 128
+#define N_bytes 16
 
 const BitMatrix<N, N> * convertJByteArrayToBitMatrix( JNIEnv * env, jbyteArray convertMe ) {
 	jbyte* buffPtr = env->GetByteArrayElements( convertMe, NULL );
@@ -18,7 +19,9 @@ const BitVector<2*N> * convertJByteArrayToBitVector( JNIEnv * env, jbyteArray co
 }
 
 const jbyteArray convertBitVectorToJByteArray( JNIEnv * env, BitVector<N> bitVect ) {
-	return NULL;
+	jbyteArray result=env->NewByteArray( N_bytes );
+	env->SetByteArrayRegion( result, 0, N_bytes, reinterpret_cast<const signed char *>( bitVect.elements() ) );
+	return result;
 }
 
 const ClientHashFunction<N> * convertJByteArrayToClientHashFunction( JNIEnv * env, jbyteArray convertMe ) {
@@ -60,11 +63,5 @@ jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_calculateMetadat
 	jbyteArray finalRay = convertBitVectorToJByteArray( environment, metadataAddress );
 	return finalRay;
 }
-
-// destroy() {
-//      KryptnosticServer *serv = getKryptnosticServer( environment, javaContainer );
-//      setKryptnosticServer( environment, javaContainer, 0 );
-//      delete serv;
-//}
 
 #endif
