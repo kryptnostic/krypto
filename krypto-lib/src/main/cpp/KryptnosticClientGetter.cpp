@@ -32,7 +32,6 @@ EMSCRIPTEN_BINDINGS(crypto_module) {
 		.function("getObjectIndexPair", &KryptnosticClient::getObjectIndexPair)
 		.function("getMetadatumAddress", &KryptnosticClient::getMetadatumAddress)
 		.function("getEncryptedSearchToken", &KryptnosticClient::getEncryptedSearchToken)
-		.function("getMetadatumAddressFromPair", &KryptnosticClient::getMetadatumAddressFromPair)
 		.function("getObjectSharingPair", &KryptnosticClient::getObjectSharingPair)
 		.function("getObjectUploadPair", &KryptnosticClient::getObjectUploadPair)
 		;

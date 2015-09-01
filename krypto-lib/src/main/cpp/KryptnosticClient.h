@@ -134,18 +134,6 @@ public:
 		return val(memory_view<byte>(sizeof(BitVector<2*N>), (byte *) &eToken));
 	}
 
-	/*
-	 * Function: getMetadatumAddressFromPair
-	 * Given a token and a object key, returns the address for the
-	 * associated metadatum (everything seialized)
-	 */
-	const val getMetadatumAddressFromPair(std::string tokenStr, std::string objectIndexPairStr) const{
-		const BitVector<N> & token = *reinterpret_cast<const BitVector<N>*>(tokenStr.data());
-		const std::pair< BitVector<2*N>, BitMatrix<N> > objectIndexPair = *reinterpret_cast<const std::pair<BitVector<2*N>, BitMatrix<N> >* >(objectIndexPairStr.data());
-		const BitVector<N> metadatumAddress = _spk.getMetadatumAddressFromPair(token, objectIndexPair, _pk);
-		return val(memory_view<byte>(sizeof(BitVector<N>), (byte *) &metadatumAddress));
-	}
-
 /* Sharing */
 
 	/*
