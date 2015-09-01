@@ -56,10 +56,10 @@ public:
 	}
 
 	/*
-	 * Function: getMetadatumAddress(objectAddressMatrix, token, objectSearchKey)
+	 * Function: getMetadatumAddress(objectAddressMatrix, objectSearchKey, token)
 	 * Returns the address for metadatum given raw unencrypted data
 	 */
-	const BitVector<N> getMetadatumAddress(const BitMatrix<N> & objectAddressMatrix, const BitVector<N> &token, const BitVector<N> & objectSearchKey) const{
+	const BitVector<N> getMetadatumAddress(const BitMatrix<N> & objectAddressMatrix, const BitVector<N> & objectSearchKey, const BitVector<N> &token) const{
 		return objectAddressMatrix * (token ^ (_R * objectSearchKey));
 	}
 
