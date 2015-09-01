@@ -56,15 +56,15 @@ public:
 	}
 
 	/*
-	 * Function: getMetadatumAddress(objectAddressMatrix, token, objectSearchKey)
+	 * Function: getMetadatumAddress(objectAddressMatrix, objectSearchKey, token)
 	 * Returns the address for metadatum given raw unencrypted data
 	 */
-	const BitVector<N> getMetadatumAddress(const BitMatrix<N> & objectAddressMatrix, const BitVector<N> &token, const BitVector<N> & objectSearchKey) const{
+	const BitVector<N> getMetadatumAddress(const BitMatrix<N> & objectAddressMatrix, const BitVector<N> & objectSearchKey, const BitVector<N> &token) const{
 		return objectAddressMatrix * (token ^ (_R * objectSearchKey));
 	}
 
 	/*
-	 * Function: getMetadatumAddressFromPair
+	 * Function: getMetadatumAddressFromPair(token, objectIndexPair, privateKey)
 	 * Test function for computing metdataum address given server-side objects
 	 */
 	const BitVector<N> getMetadatumAddressFromPair(const BitVector<N> &token, const std::pair<BitVector<2*N>, BitMatrix<N> > & objectIndexPair, const PrivateKey<N> & pk) const{

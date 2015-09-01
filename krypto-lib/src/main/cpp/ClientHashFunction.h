@@ -27,6 +27,10 @@ struct ClientHashFunction
 
 /* Initialization */
 
+	/*
+     * Function: initialize(C, K, pk)
+     * Initializes a ClientHashFunction with given private matrices and privateKey
+     */
 	void initialize(const BitMatrix<N> & C, const BitMatrix<N, 2*N> & K, const PrivateKey<N> & pk){
 		generateHashMatrix(K, pk);
 		augmentedF2 = generateAugmentedF2(C, K, pk);
@@ -36,7 +40,7 @@ struct ClientHashFunction
 /* Generation of individual components */
 
 	/*
-     * Function: generateHashMatrix()
+     * Function: generateHashMatrix(C, pk)
      * Returns the matrix portion of the hash function
      * Applied to x concatenated with y
      */
@@ -54,7 +58,7 @@ struct ClientHashFunction
 	}
 
 	/*
-     * Function: generateAugmentedF2()
+     * Function: generateAugmentedF2(C, K, pk)
      * Returns the K (f2 C || f2 C) portion of the hash function
      * Applied to concealedF1(x) concatenated with concealedF1(y)
      */
@@ -73,7 +77,7 @@ struct ClientHashFunction
 	}
 
 	/*
-     * Function: generateConcealedF1()
+     * Function: generateConcealedF1(C, pk)
      * Returns the C^{-1} f1 portion of the hash function
      * Applied to x and y separately
      */
@@ -87,8 +91,8 @@ struct ClientHashFunction
 /* Evaluation */
 
 	/*
-	 * Function: operator()
-	 * Returns the hashed value given 2 inputs in the encrypted space
+	 * Function: operator(eSearchToken, eObjSearchKey)
+	 * Returns the address value given an encrypted search token and an encrypted objectSearchKey
 	 */
 	const BitVector<N> operator()(const BitVector<2*N> & eSearchToken, const BitVector<2*N> & eObjSearchKey) const{
 		const BitVector<N> & hashMatrixOutput = hashMatrix * BitVector<4*N>::vCat(eSearchToken, eObjSearchKey);
