@@ -23,7 +23,7 @@ TEST(SearchKeyTest, testIndexingAndSearch){
 
 	BitVector<N> token = BitVector<N>::randomVector();
 
-	BitVector<N> metadatumAddress = sk.getMetadatumAddress(objectAddressFunction, token, objectSearchKey);
+	BitVector<N> metadatumAddress = sk.getMetadatumAddress(objectAddressFunction, objectSearchKey, token);
 
 	BitVector<2*N> eToken = pk.encrypt(token);
 	BitVector<2*N> eObjectSearchKey = pk.encrypt(objectSearchKey);
@@ -47,7 +47,7 @@ TEST(SearchKeyTest, testSharing){
 	std::pair<BitVector<2*N>, BitMatrix<N> > sourceObjectIndexPair = sk_src.getObjectIndexPair(objectSearchKey, objectAddressFunction, pk_src);
 
 	BitVector<N> token = BitVector<N>::randomVector();
-	BitVector<N> expectedAddress = sk_src.getMetadatumAddress(objectAddressFunction, token, objectSearchKey);
+	BitVector<N> expectedAddress = sk_src.getMetadatumAddress(objectAddressFunction, objectSearchKey, token);
 
 	//source client prepares the sharing pair
 	std::pair<BitVector<N>, BitMatrix<N> > objectSharingPair = sk_src.getObjectSharingPair(sourceObjectIndexPair, pk_src);

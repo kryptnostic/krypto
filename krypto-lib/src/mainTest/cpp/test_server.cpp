@@ -23,7 +23,7 @@ TEST(KryptnosticServerTest, testInit){
 	std::pair<BitVector<2*N>, BitMatrix<N> > objectIndexPair = sk.getObjectIndexPair(objectSearchKey, objectAddressFunction, pk);
 
 	BitVector<> token = BitVector<>::randomVector();
-	BitVector<> expectedAddress = sk.getMetadatumAddress(objectAddressFunction, token, objectSearchKey);
+	BitVector<> expectedAddress = sk.getMetadatumAddress(objectAddressFunction, objectSearchKey, token);
 
 	BitVector<2*N> eToken = pk.encrypt(token);
 	KryptnosticServer<> ks(chf, eToken);
