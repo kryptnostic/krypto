@@ -33,28 +33,24 @@ public:
 /* Constructors */
 
 	/*
-     * Constructor
+     * Constructor: ()
      * Constructs a KryptnosticClient from scratch
-     * Used for first time registeration
+     * Used for first time registration
      */
 	KryptnosticClient() :
 	_pk(),
 	_spk()
-	{
-
-	}
+	{}
 
 	/*
-     * Constructor
+     * Constructor: (privateKey, searchPrivateKey)
      * Constructs a KryptnosticClient given private and public keys
      * Used for future logins (not registeration)
      */
 	KryptnosticClient(std::string pk, std::string spk) :
 	_pk(*reinterpret_cast<const PrivateKey<N>*>(pk.data())),
 	_spk(*reinterpret_cast<const SearchPrivateKey<N>*>(spk.data()))
-	{
-
-	}
+	{}
 
 /* Registration */
 
@@ -105,7 +101,7 @@ public:
 	}
 
 	/*
-	 * Function: getObjectIndexPair(ObjectSearchKey, ObjectAddressMatrix)
+	 * Function: getObjectIndexPair(objectSearchKey, objectAddressMatrix)
 	 * Returns a serialized pair of (FHE-encrypted ObjectSearchKey, ObjectAddressMatrix)
 	 */
 	const val getObjectIndexPair(std::string objectSearchKeyStr, std::string objectAddressMatrixStr) const{
@@ -116,7 +112,7 @@ public:
 	}
 
 	/*
-	 * Function: getMetadatumAddress(ObjectAddressMatrix, ObjectSearchKey, token)
+	 * Function: getMetadatumAddress(objectAddressMatrix, objectSearchKey, token)
 	 * Client-side address computation on raw object data and token
 	 * Returns the address of the metadatum corresponding to an object and a token
 	 */
@@ -144,11 +140,10 @@ public:
 /* Sharing */
 
 	/*
-	 * Function: getObjectSharingPair(ObjectIndexPair)
-	 * Returns a serialized pair of (FHE-encrypted ObjectSearchKey, ObjectConversionMatrix)
+	 * Function: getObjectSharingPair(objectIndexPair)
+	 * Returns a serialized pair of (FHE-encrypted objectSearchKey, objectConversionMatrix)
 	 * Sent by a client to another to share a document
 	 */
-	//const val getObjectSharingPair(std::string objectAddressMatrixStr, std::string objectSearchKeyStr) const{
 	const val getObjectSharingPair(std::string objectIndexPairStr) const{
 		const std::pair< BitVector<2*N>, BitMatrix<N> > & objectIndexPair = *reinterpret_cast<const std::pair<BitVector<2*N>, BitMatrix<N> >* >(objectIndexPairStr.data());
 		std::pair< BitVector<N>, BitMatrix<N> > objectSharingPair = _spk.getObjectSharingPair(objectIndexPair, _pk);
@@ -156,12 +151,11 @@ public:
 	}
 
 	/*
-	 * Function: getObjectSharingPair(ObjectSharingPair)
-	 * Returns a serialized pair of (FHE-encrypted ObjectSearchKey, ObjectConversionMatrix)
+	 * Function: getObjectSharingPair(objectSharingPair)
+	 * Returns a serialized pair of (FHE-encrypted objectSearchKey, objectConversionMatrix)
 	 * Performed after the client receives a SharingPair from another client
 	 * Assume the two inputs are RSA-decrypted before passing in to C++
 	 */
-	//const val getObjectSharingPair(std::string objectAddressMatrixStr, std::string objectSearchKeyStr) const{
 	const val getObjectIndexPairFromSharing(std::string objectSharingPairStr) const{
 		const std::pair< BitVector<N>, BitMatrix<N> > objectSharingPair = *reinterpret_cast<const std::pair<BitVector<N>, BitMatrix<N> >* >(objectSharingPairStr.data());
 		std::pair< BitVector<2*N>, BitMatrix<N> > objectUploadPair = _spk.getObjectIndexPairFromSharing(objectSharingPair, _pk);
