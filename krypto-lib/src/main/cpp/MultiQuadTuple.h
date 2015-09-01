@@ -42,7 +42,7 @@ struct MultiQuadTuple {
      * Ends with a template specialization at limit = 0
      */
     void zero() {
-        _matrix = BitMatrix<LIMIT,NUM_OUTPUTS>::zeroMatrix();
+        _matrix.zero();
         next.zero();
     }
 
@@ -62,8 +62,16 @@ struct MultiQuadTuple {
      */
     void setAsMatrix(const BitMatrix<NUM_OUTPUTS, NUM_INPUTS> &m){
         _matrix.zero();
-        _matrix[0] = m.transpose().getRow(NUM_INPUTS - LIMIT);
+        _matrix[0] = m.getCol(NUM_INPUTS - LIMIT);
+        //cout << "NUM_INPUTS: " << NUM_INPUTS << endl;
+        //cout << "LIMIT: " << LIMIT << endl;
         next.setAsMatrix(m);
+    }
+
+    void setAsMatrixTranspose(const BitMatrix<NUM_INPUTS, NUM_OUTPUTS> & m) {
+        _matrix.zero();
+        _matrix[0] = m.getRow(NUM_INPUTS - LIMIT);
+        next.setAsMatrixTranspose(m);
     }
 
     /*
@@ -71,7 +79,7 @@ struct MultiQuadTuple {
      * Generates a MultiQuadTuple with coefficient matrices to a given constant vector
      */
     void setAsConstants(const BitVector<NUM_OUTPUTS> &v){
-        _matrix = BitMatrix<LIMIT,NUM_OUTPUTS>::zeroMatrix();
+        _matrix.zero();
         next.setAsConstants(v);
     }
 
@@ -83,8 +91,8 @@ struct MultiQuadTuple {
      * Unrolls template until the NUM_INPUT-th from last coefficient
      */
     template<unsigned int SUPER_INPUTS, unsigned int SUPER_LIMIT>
-    void setToSubMQT( const MultiQuadTuple<SUPER_INPUTS, NUM_OUTPUTS, SUPER_LIMIT> & super ) {
-        setToSubMQT<SUPER_INPUTS>( super.next );
+    void setToSubMQT(const MultiQuadTuple<SUPER_INPUTS, NUM_OUTPUTS, SUPER_LIMIT> & super) {
+        setToSubMQT<SUPER_INPUTS>(super.next);
     }
 
     /*
@@ -95,9 +103,9 @@ struct MultiQuadTuple {
      * Copies the last NUM_INPUT coefficient matrices
      */
     template<unsigned int SUPER_INPUTS>
-    void setToSubMQT( const MultiQuadTuple<SUPER_INPUTS, NUM_OUTPUTS, LIMIT> & super ) {
-        _matrix.copy( super._matrix );
-        next.template setToSubMQT<SUPER_INPUTS>( super.next );
+    void setToSubMQT(const MultiQuadTuple<SUPER_INPUTS, NUM_OUTPUTS, LIMIT> & super) {
+        _matrix.copy(super._matrix);
+        next.template setToSubMQT<SUPER_INPUTS>(super.next);
     }
 
 /* Getters */
@@ -116,8 +124,8 @@ struct MultiQuadTuple {
      * Recursive call until LIMIT = STOP_ROWS
      */
     template<unsigned int STOP_ROWS>
-    const BitMatrix<STOP_ROWS, NUM_OUTPUTS> & getMatrix( const BitVector<STOP_ROWS> & dummy) const{
-        return next.getMatrix( dummy );
+    const BitMatrix<STOP_ROWS, NUM_OUTPUTS> & getMatrix(const BitVector<STOP_ROWS> & dummy) const{
+        return next.getMatrix(dummy);
     }
 
     /*
@@ -125,7 +133,7 @@ struct MultiQuadTuple {
      * Returns the (NUM_INPUTS - STOP_ROWS)th coefficient matrix
      * Stops when LIMIT = STOP_ROWS
      */
-    const BitMatrix<LIMIT, NUM_OUTPUTS> & getMatrix( const BitVector<LIMIT> & dummy) const {
+    const BitMatrix<LIMIT, NUM_OUTPUTS> & getMatrix(const BitVector<LIMIT> & dummy) const {
         return _matrix;
     }
 
@@ -135,8 +143,8 @@ struct MultiQuadTuple {
      * Recursive call until LIMIT = STOP_ROWS
      */
     template<unsigned int STOP_ROWS>
-    MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS, STOP_ROWS> & getMQT( const BitVector<STOP_ROWS> & dummy) const{
-        return next.getMQT( dummy );
+    MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS, STOP_ROWS> & getMQT(const BitVector<STOP_ROWS> & dummy) const{
+        return next.getMQT(dummy);
     }
 
     /*
@@ -144,7 +152,7 @@ struct MultiQuadTuple {
      * Returns the subMQT corresponding to the (NUM_INPUTS - STOP_ROWS)th variable
      * Stops when LIMIT = STOP_ROWS
      */
-    MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS, LIMIT> & getMQT( const BitVector<LIMIT> & dummy) const {
+    MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS, LIMIT> & getMQT(const BitVector<LIMIT> & dummy) const {
         return *this;
     }
 
@@ -154,16 +162,16 @@ struct MultiQuadTuple {
      * Operator: (input)
      * Evaluates the MultiQuadTuple on an input vector
      */
-    const BitVector<NUM_OUTPUTS> operator() ( const BitVector<NUM_INPUTS> & input ) const {
+    const BitVector<NUM_OUTPUTS> operator() (const BitVector<NUM_INPUTS> & input) const {
         BitVector<NUM_OUTPUTS> result = BitVector<NUM_OUTPUTS>::zeroVector();
         if(input[NUM_INPUTS-LIMIT]){
-            for( unsigned int i = 0; i < LIMIT; ++i ) {
-                if( input[ i + (NUM_INPUTS-LIMIT) ]) {
+            for(unsigned int i = 0; i < LIMIT; ++i) {
+                if(input[ i + (NUM_INPUTS-LIMIT) ]) {
                     result ^= _matrix[ i ];
                 }
             }
         }
-        result ^= next( input );
+        result ^= next(input);
         return result;
     }
 
@@ -275,10 +283,10 @@ struct MultiQuadTuple {
      * Evaluates the MultiQuadTuple composed with a given matrix (e.g. f \circ inner)
      */
     template<unsigned int NUM_INNER_INPUTS>
-    const MultiQuadTuple<NUM_INNER_INPUTS,NUM_OUTPUTS> operator*(  const BitMatrix<NUM_INPUTS, NUM_INNER_INPUTS> & inner ) const{
+    const MultiQuadTuple<NUM_INNER_INPUTS,NUM_OUTPUTS> operator*( const BitMatrix<NUM_INPUTS, NUM_INNER_INPUTS> & inner) const{
         MultiQuadTuple<NUM_INNER_INPUTS,NUM_OUTPUTS> cs;
         cs.setAsConstants(getConstants()); //reset contribution matrix and force constants
-        compose( cs, inner.transpose() );
+        compose(cs, inner.transpose());
         return cs;
     }
 
@@ -288,9 +296,9 @@ struct MultiQuadTuple {
      * TODO: rename
      */
     template<unsigned int NEW_NUM_OUTPUTS>
-    const MultiQuadTuple<NUM_INPUTS,NEW_NUM_OUTPUTS> rMult(const BitMatrix<NEW_NUM_OUTPUTS, NUM_OUTPUTS> &  rhs ) const {
+    const MultiQuadTuple<NUM_INPUTS,NEW_NUM_OUTPUTS> rMult(const BitMatrix<NEW_NUM_OUTPUTS, NUM_OUTPUTS> & rhs) const {
         MultiQuadTuple<NUM_INPUTS,NEW_NUM_OUTPUTS> cs;
-        cs.multiplyAndSet(*this, rhs, rhs.transpose() );
+        cs.multiplyAndSet(*this, rhs, rhs.transpose());
         return cs;
     }
 
@@ -320,8 +328,8 @@ struct MultiQuadTuple {
      * Calls on next until LIMIT = MONOMIAL_INDEX
      */
     template<unsigned int STOP_ROWS>
-    void setMatrix( const BitMatrix<STOP_ROWS, NUM_OUTPUTS> & m ) {
-        next.setMatrix( m );
+    void setMatrix(const BitMatrix<STOP_ROWS, NUM_OUTPUTS> & m) {
+        next.setMatrix(m);
     }
 
     /*
@@ -329,7 +337,7 @@ struct MultiQuadTuple {
      * Sets the NUM_INPUTS - STOP_ROWS matrix to a given matrix
      * Sets when LIMIT = MONOMIAL_INDEX
      */
-    void setMatrix( const BitMatrix<LIMIT, NUM_OUTPUTS> & m ) {
+    void setMatrix(const BitMatrix<LIMIT, NUM_OUTPUTS> & m) {
         _matrix =  m;
     }
 
@@ -339,8 +347,8 @@ struct MultiQuadTuple {
      * Calls on next until LIMIT = STOP_ROWS
      */
     template<unsigned int STOP_ROWS>
-    void xorMatrixRowN( const unsigned int rowIndex, const BitVector<NUM_OUTPUTS> & input, const BitVector<STOP_ROWS> & dummy) {
-        next.xorMatrixRowN( rowIndex, input, dummy );
+    void xorMatrixRowN(const unsigned int rowIndex, const BitVector<NUM_OUTPUTS> & input, const BitVector<STOP_ROWS> & dummy) {
+        next.xorMatrixRowN(rowIndex, input, dummy);
     }
 
     /*
@@ -348,7 +356,7 @@ struct MultiQuadTuple {
      * Xors the rowIndex row of the NUM_INPUTS - STOP_ROWS matrix with the given vector
      * Xors when LIMIT = STOP_ROWS
      */
-    void xorMatrixRowN( const unsigned int rowIndex, const BitVector<NUM_OUTPUTS> & input, const BitVector<LIMIT> & dummy) {
+    void xorMatrixRowN(const unsigned int rowIndex, const BitVector<NUM_OUTPUTS> & input, const BitVector<LIMIT> & dummy) {
         _matrix[rowIndex] ^= input;
     }
 
@@ -359,9 +367,9 @@ struct MultiQuadTuple {
      * Vertically concatenates two MultiQuadTuples on the same input (e.g. f(x) || g(x))
      */
     template<unsigned int NUM_OUTPUTS1, unsigned int NUM_OUTPUTS2>
-    void augV(const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS1,LIMIT> & lower, const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS2,LIMIT> & upper ) {
+    void augV(const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS1,LIMIT> & lower, const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS2,LIMIT> & upper) {
         _matrix = BitMatrix<LIMIT, NUM_OUTPUTS>::augH(lower._matrix, upper._matrix);
-        next.augV( lower.next, upper.next );
+        next.augV(lower.next, upper.next);
     }
 
     /*
@@ -369,9 +377,9 @@ struct MultiQuadTuple {
      * Vertically concatenates three MultiQuadTuples on the same input (e.g. f(x) || g(x) || h(x))
      */
     template<unsigned int NUM_OUTPUTS1, unsigned int NUM_OUTPUTS2, unsigned int NUM_OUTPUTS3>
-    void augV(const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS1,LIMIT> & lower, const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS2,LIMIT> & mid, const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS3,LIMIT> & upper ) {
+    void augV(const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS1,LIMIT> & lower, const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS2,LIMIT> & mid, const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS3,LIMIT> & upper) {
         _matrix = BitMatrix<LIMIT, NUM_OUTPUTS>::augH(lower._matrix, mid._matrix, upper._matrix);
-        next.augV( lower.next, mid.next, upper.next );
+        next.augV(lower.next, mid.next, upper.next);
     }
 
 /* Inter-MultiQuadTuple Arithmetic Operations */
@@ -381,8 +389,8 @@ struct MultiQuadTuple {
      * Xors the matrices and constants of two MultiQuadTuples
      * Calls through each coefficient matrix
      */
-    const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS> & operator^(const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS> & rhs) const {
-        MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS> result;
+    const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS, LIMIT> operator^(const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS, LIMIT> & rhs) const {
+        MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS, LIMIT> result;
         result._matrix = _matrix ^ rhs._matrix;
         result.next = next ^ rhs.next;
         return result;
@@ -417,10 +425,10 @@ struct MultiQuadTuple {
      * TODO: needs to be described
      */
     template<unsigned int NUM_INNER_INPUTS>
-    void compose( MultiQuadTuple<NUM_INNER_INPUTS,NUM_OUTPUTS> & root, const BitMatrix<NUM_INNER_INPUTS,NUM_INPUTS> &innerTranspose ) const {
+    void compose(MultiQuadTuple<NUM_INNER_INPUTS,NUM_OUTPUTS> & root, const BitMatrix<NUM_INNER_INPUTS,NUM_INPUTS> &innerTranspose) const {
         const BitMatrix<NUM_INNER_INPUTS, NUM_OUTPUTS> & composedCoefficientMatrix = innerTranspose .template pMult<LIMIT,NUM_OUTPUTS>(_matrix, NUM_INPUTS - LIMIT, 0, LIMIT);
-        for( unsigned int i = 0; i < NUM_INNER_INPUTS ; ++i ) {
-            if( innerTranspose[ i ][ NUM_INPUTS - LIMIT ] ) {
+        for(unsigned int i = 0; i < NUM_INNER_INPUTS ; ++i) {
+            if(innerTranspose[ i ][ NUM_INPUTS - LIMIT ]) {
                 for(unsigned int j = 0; j < i; ++j){
                     root.xorInMonomialContribution(j, i, composedCoefficientMatrix[j]);
                 }
@@ -450,9 +458,9 @@ struct MultiQuadTuple {
      * Set the corresponding matrix of the respective indices
      */
     template<unsigned int OLD_NUM_OUTPUTS>
-    void multiplyAndSet( const MultiQuadTuple<NUM_INPUTS,OLD_NUM_OUTPUTS,LIMIT> & src, const BitMatrix<NUM_OUTPUTS, OLD_NUM_OUTPUTS> & m, const BitMatrix<OLD_NUM_OUTPUTS, NUM_OUTPUTS> & mT ) {
+    void multiplyAndSet(const MultiQuadTuple<NUM_INPUTS, OLD_NUM_OUTPUTS, LIMIT> & src, const BitMatrix<NUM_OUTPUTS, OLD_NUM_OUTPUTS> & m, const BitMatrix<OLD_NUM_OUTPUTS, NUM_OUTPUTS> & mT) {
         _matrix = src._matrix * mT;
-        next.multiplyAndSet( src.next , m, mT );
+        next.multiplyAndSet(src.next, m, mT);
     }
 
     /*
@@ -504,8 +512,12 @@ struct MultiQuadTuple<NUM_INPUTS,NUM_OUTPUTS,0> {
         _constants = BitVector<NUM_OUTPUTS>::zeroVector();
     }
 
+    void setAsMatrixTranspose(const BitMatrix<NUM_INPUTS, NUM_OUTPUTS> &m){
+        _constants = BitVector<NUM_OUTPUTS>::zeroVector();
+    }
+
     /*
-     * Function: setAsMatrix(m)
+     * Function: setAsConstants(v)
      * Last step of generating a MultiQuadTuple equivalent to a constant
      * Sets constants to be a given vector
      */
@@ -520,7 +532,7 @@ struct MultiQuadTuple<NUM_INPUTS,NUM_OUTPUTS,0> {
      * Last step of evaluating on an input vector
      * Returns constants
      */
-    const BitVector<NUM_OUTPUTS> & operator() ( const BitVector<NUM_INPUTS> & input ) const {
+    const BitVector<NUM_OUTPUTS> & operator() (const BitVector<NUM_INPUTS> & input) const {
         return _constants;
     }
 
@@ -547,7 +559,7 @@ struct MultiQuadTuple<NUM_INPUTS,NUM_OUTPUTS,0> {
      * No-op when setting a non-existent coefficient matrix
      */
     template<unsigned int STOP_ROWS>
-    void setMatrix( const BitMatrix<STOP_ROWS, NUM_OUTPUTS> & m  ) {
+    void setMatrix(const BitMatrix<STOP_ROWS, NUM_OUTPUTS> & m ) {
         //NO-OP base case
     }
 
@@ -559,7 +571,7 @@ struct MultiQuadTuple<NUM_INPUTS,NUM_OUTPUTS,0> {
      * Sets the constants
      */
     template<unsigned int SUPER_INPUTS>
-    void setToSubMQT( const MultiQuadTuple<SUPER_INPUTS, NUM_OUTPUTS, 0> & super ) {
+    void setToSubMQT(const MultiQuadTuple<SUPER_INPUTS, NUM_OUTPUTS, 0> & super) {
         setConstants(super._constants);
     }
 
@@ -600,8 +612,8 @@ struct MultiQuadTuple<NUM_INPUTS,NUM_OUTPUTS,0> {
      * Vertically concatenates the constants of two MultiQuadTuples on the same input (e.g. f(x) || g(x))
      */
     template<unsigned int NUM_OUTPUTS1, unsigned int NUM_OUTPUTS2>
-    void augV(const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS1, 0> & lower, const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS2, 0> & upper ) {
-        _constants = BitVector<NUM_OUTPUTS>::vCat( lower._constants , upper._constants );
+    void augV(const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS1, 0> & lower, const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS2, 0> & upper) {
+        _constants = BitVector<NUM_OUTPUTS>::vCat(lower._constants , upper._constants);
     }
 
     /*
@@ -609,8 +621,8 @@ struct MultiQuadTuple<NUM_INPUTS,NUM_OUTPUTS,0> {
      * Vertically concatenates the constants of three MultiQuadTuples on the same input (e.g. f(x) || g(x) || h(x))
      */
     template<unsigned int NUM_OUTPUTS1, unsigned int NUM_OUTPUTS2, unsigned int NUM_OUTPUTS3>
-    void augV(const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS1, 0> & lower, const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS2, 0> & mid, const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS3, 0> & upper ) {
-        _constants = BitVector<NUM_OUTPUTS>::vCat( lower._constants , mid._constants, upper._constants );
+    void augV(const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS1, 0> & lower, const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS2, 0> & mid, const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS3, 0> & upper) {
+        _constants = BitVector<NUM_OUTPUTS>::vCat(lower._constants , mid._constants, upper._constants);
     }
 
 /* Inter-MultiQuadTuple Arithmetic Operations */
@@ -619,7 +631,7 @@ struct MultiQuadTuple<NUM_INPUTS,NUM_OUTPUTS,0> {
      * Operator: ^ rhs
      * Xors the constants of two MultiQuadTuples
      */
-    const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS, 0> & operator^(const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS, 0> & rhs) const {
+    const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS, 0> operator^(const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS, 0> & rhs) const {
         MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS, 0> result;
         result._constants = _constants ^ rhs._constants;
         return result;
@@ -652,7 +664,7 @@ struct MultiQuadTuple<NUM_INPUTS,NUM_OUTPUTS,0> {
      * NO-OP base case when LIMIT = 0
      */
     template<unsigned int NUM_INNER_INPUTS>
-    void compose( MultiQuadTuple<NUM_INNER_INPUTS,NUM_OUTPUTS> & root, const BitMatrix<NUM_INNER_INPUTS,NUM_INPUTS> & innerTranspose ) const {
+    void compose(MultiQuadTuple<NUM_INNER_INPUTS,NUM_OUTPUTS> & root, const BitMatrix<NUM_INNER_INPUTS,NUM_INPUTS> & innerTranspose) const {
         //NO-OP base case
     }
 
@@ -668,10 +680,10 @@ struct MultiQuadTuple<NUM_INPUTS,NUM_OUTPUTS,0> {
     /*
      * Operator: multiplyAndSet(src, m, v)
      * Helper function for multiplyAndSet (in rMult)
-     * NO-OP base case when LIMIT = 0
+     * Base case when LIMIT = 0
      */
     template<unsigned int OLD_NUM_OUTPUTS>
-    void multiplyAndSet( const MultiQuadTuple<NUM_INPUTS,OLD_NUM_OUTPUTS,0> & src, const BitMatrix<NUM_OUTPUTS,OLD_NUM_OUTPUTS> & m ,const BitMatrix<OLD_NUM_OUTPUTS, NUM_OUTPUTS> & mT ) {
+    void multiplyAndSet(const MultiQuadTuple<NUM_INPUTS,OLD_NUM_OUTPUTS,0> & src, const BitMatrix<NUM_OUTPUTS,OLD_NUM_OUTPUTS> & m ,const BitMatrix<OLD_NUM_OUTPUTS, NUM_OUTPUTS> & mT) {
         _constants = m * src._constants;
     }
 };
