@@ -42,7 +42,7 @@ struct MultiQuadTuple {
      * Ends with a template specialization at limit = 0
      */
     void zero() {
-        _matrix = BitMatrix<LIMIT,NUM_OUTPUTS>::zeroMatrix();
+        _matrix.zero();
         next.zero();
     }
 
@@ -79,7 +79,7 @@ struct MultiQuadTuple {
      * Generates a MultiQuadTuple with coefficient matrices to a given constant vector
      */
     void setAsConstants(const BitVector<NUM_OUTPUTS> &v){
-        _matrix = BitMatrix<LIMIT,NUM_OUTPUTS>::zeroMatrix();
+        _matrix.zero();
         next.setAsConstants(v);
     }
 
