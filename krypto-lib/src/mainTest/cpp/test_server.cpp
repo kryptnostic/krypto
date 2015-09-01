@@ -19,7 +19,7 @@ TEST(KryptnosticServerTest, testInit){
 
 	ClientHashFunction<> chf = sk.getClientHashFunction(pk);
 	BitVector<> objectSearchKey = sk.getObjectSearchKey();
-	BitMatrix<> objectAddressFunction = sk.getObjectAddressFunction();
+	BitMatrix<> objectAddressFunction = sk.getObjectAddressMatrix();
 	std::pair<BitVector<2*N>, BitMatrix<N> > objectIndexPair = sk.getObjectIndexPair(objectSearchKey, objectAddressFunction, pk);
 
 	BitVector<> token = BitVector<>::randomVector();
