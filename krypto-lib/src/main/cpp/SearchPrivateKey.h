@@ -110,7 +110,7 @@ public:
 	/*
 	 * Function: getObjectIndexPairFromSharing(shared, pk)
 	 * Generates the (encrypted object search key, object conversion matrix) pair to be stored on server during indexing from sharing
-	 * Equation: {R_{user_who_received_the_pair}^{-1} * R_{user_who_sent_the_pair}^{-1} * d_{doc}, L_{doc} * K_{user_who_received_the_pair}^{-1}}
+	 * Equation: {R_{recipient}^{-1} * R_{sender} * d_{doc}, L_{doc} * K_{recipient}^{-1}}
 	 */
 	const std::pair<BitVector<2*N>, BitMatrix<N> > getObjectIndexPairFromSharing(const std::pair<BitVector<N>, BitMatrix<N> > & shared, const PrivateKey<N> & pk) const{
 		return std::make_pair(pk.encrypt(_R.solve(shared.first)), getObjectConversionMatrix(shared.second));
