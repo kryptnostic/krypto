@@ -434,7 +434,7 @@ struct MultiQuadTuple {
 
     /*
      * Function: xorInMonomialContribution(matrixIndex, rowIndex, v)
-     * Xors a given vector into the row corresponding to x_matrixIndex x_rowIndex 
+     * Xors a given vector into the row corresponding to x_matrixIndex x_rowIndex
      */
     void xorInMonomialContribution(unsigned int matrixIndex, unsigned int rowIndex, const BitVector<NUM_OUTPUTS> &v){
         if(matrixIndex == (NUM_INPUTS - LIMIT)){
@@ -447,7 +447,7 @@ struct MultiQuadTuple {
     /*
      * Function: multiplyAndSet(src, m, mT)
      * Helper function for rMult
-     * TODO: needs to be described
+     * Set the corresponding matrix of the respective indices
      */
     template<unsigned int OLD_NUM_OUTPUTS>
     void multiplyAndSet( const MultiQuadTuple<NUM_INPUTS,OLD_NUM_OUTPUTS,LIMIT> & src, const BitMatrix<NUM_OUTPUTS, OLD_NUM_OUTPUTS> & m, const BitMatrix<OLD_NUM_OUTPUTS, NUM_OUTPUTS> & mT ) {
