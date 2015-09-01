@@ -50,7 +50,6 @@ public:
 	const BitVector<2*N> homomorphicAND(const BitVector<2*N> &x, const BitVector<2*N> &y) const{
 		const BitVector<3*N> & t = binaryT(x, y);
 		const BitVector<7*N> & coordinates = BitVector<7*N>::vCat(x, y, t);
-		cout << "It breaks in the following function" << endl;
 		const MultiQuadTuple<7*N, 2*N> & _z = _bk.getANDz();
 		const BitVector<2*N> & left = _z(coordinates);
 		const BitVector<2*N> & mid = _Z1 * x;
