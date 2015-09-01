@@ -44,7 +44,7 @@ public:
 
 	/*
 	 * Function: getMetadataAddress
-	 * Returns a serialized pair of (ObjectSearchKey, ObjectAddressFunction)
+	 * Returns a serialized pair of (ObjectSearchKey, ObjectAddressMatrix)
 	 */
 	const BitVector<N> getMetadataAddress(const std::pair <BitVector<2*N>, BitMatrix<N> > objectIndexPair) const{
 		const BitVector<2*N> & eObjectSearchKey = objectIndexPair.first; //get from pair

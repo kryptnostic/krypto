@@ -17,7 +17,7 @@ TEST(SearchKeyTest, testIndexingAndSearch){
 	PrivateKey<N> pk;
 
 	BitVector<N> objectSearchKey = sk.getObjectSearchKey();
-	BitMatrix<N> objectAddressFunction = sk.getObjectAddressFunction();
+	BitMatrix<N> objectAddressFunction = sk.getObjectAddressMatrix();
 
 	std::pair<BitVector<2*N>, BitMatrix<N> > objectIndexPair = sk.getObjectIndexPair(objectSearchKey, objectAddressFunction, pk);
 
@@ -43,7 +43,7 @@ TEST(SearchKeyTest, testSharing){
 
 	//source client indexes a new document
 	BitVector<N> objectSearchKey = sk_src.getObjectSearchKey();
-	BitMatrix<N> objectAddressFunction = sk_src.getObjectAddressFunction();
+	BitMatrix<N> objectAddressFunction = sk_src.getObjectAddressMatrix();
 	std::pair<BitVector<2*N>, BitMatrix<N> > sourceObjectIndexPair = sk_src.getObjectIndexPair(objectSearchKey, objectAddressFunction, pk_src);
 
 	BitVector<N> token = BitVector<N>::randomVector();
@@ -53,7 +53,7 @@ TEST(SearchKeyTest, testSharing){
 	std::pair<BitVector<N>, BitMatrix<N> > objectSharingPair = sk_src.getObjectSharingPair(sourceObjectIndexPair, pk_src);
 
 	//destination client receives the sharing pair and prepares the upload pair
-	std::pair<BitVector<2*N>, BitMatrix<N> > destinationObjectIndexPair = sk_dst.getObjectUploadPair(objectSharingPair, pk_dst);
+	std::pair<BitVector<2*N>, BitMatrix<N> > destinationObjectIndexPair = sk_dst.getObjectIndexPairFromSharing(objectSharingPair, pk_dst);
 	BitVector<N> calculatedAddress = sk_dst.getMetadatumAddressFromPair(token, destinationObjectIndexPair, pk_dst);
 
 	ASSERT_TRUE(expectedAddress.equals(calculatedAddress));
