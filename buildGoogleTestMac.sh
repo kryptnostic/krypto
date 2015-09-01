@@ -1,0 +1,1 @@
+cd gtest-1.7.0 && cmake . && make && cp libgtest.a ../krypto-lib/libs/googleTest/1.7.0/lib/osx/

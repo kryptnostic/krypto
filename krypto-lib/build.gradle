@@ -1,0 +1,119 @@
+apply plugin: "eclipse-cdt"
+apply plugin: "google-test"
+apply plugin: "cpp"
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.4'
+}
+
+def osname = System.properties['os.name'].toLowerCase().toLowerCase()
+
+if ( !ext.has("emhome") ) {
+    throw new GradleScriptException()
+}
+ext.home=System.env.'JAVA_HOME'
+ext.includes='linux'
+if (osname.contains('mac')) {
+    ext.includes='darwin'
+}
+
+model {
+	toolChains {
+        clang(Clang) {
+            eachPlatform {
+                cppCompiler.withArguments { args ->
+                    args << "-g"
+                    args << "-Wall"
+                    //args << "-O3"
+                    args << "-std=c++11"
+                    args << "-fslp-vectorize-aggressive"
+                    args << "-march=native"
+                    args << "-ftemplate-depth=8192"
+                    // run ./gradlew buildFullJar -Pemhome=<pathToYourEmscriptenIncludeDir>
+                    //ex: /Users/drew/Downloads/emsdk_portable/emscripten/tag-1.34.5/system/include/" //(whatever directory that contains <emscripten/bind.h>)
+                    args << "-I${emhome}"  
+                    args << "-I${home}/include/"
+                    args << "-I${home}/include/${includes}/"
+                }
+            }
+        }
+    }
+    flavors {
+        debug
+        release
+        failing
+    }
+    platforms {
+        x86 {
+            architecture "x86"
+        }
+        x64 {
+            architecture "x64"
+        }
+    }
+    repositories {
+        libs(PrebuiltLibraries) {
+            googleTest {
+                headers.srcDir "libs/googleTest/1.7.0/include"
+                binaries.withType(StaticLibraryBinary) {
+                    staticLibraryFile =
+                        file("libs/googleTest/1.7.0/lib/" +
+                             findGoogleTestCoreLibForPlatform(targetPlatform))
+                }
+            }
+        }
+    }
+    components {
+        main(NativeLibrarySpec) {
+         	targetPlatform "x64"
+            sources {
+                cpp {
+                    source {
+                        srcDir "src/main/cpp/"
+                        include "**/*.h"
+                    }
+                }
+            }
+            binaries.withType(SharedLibraryBinarySpec) {
+                // Define a preprocessor macro that only applies to shared libraries
+                cppCompiler.define "DLL_EXPORT"
+            }
+        }
+    }
+}
+
+tasks.withType(GenerateMetadataFileTask) {
+
+}
+
+binaries.withType(GoogleTestTestSuiteBinarySpec) {
+    lib library: "googleTest", linkage: "static"
+    lib library: "main", linkage: "static"
+
+    if (flavor == flavors.failing) {
+        cppCompiler.define "PLUS_BROKEN"
+    }
+}
+
+tasks.withType(RunTestExecutable) {
+    args "--gtest_output=xml:test_detail.xml"
+}
+
+def findGoogleTestCoreLibForPlatform(Platform platform) {
+    if (platform.operatingSystem.windows) {
+        return "vs2013/gtest.lib"
+//        return "vs2013/gtest-core.lib"
+//        return "cygwin/gtest-core.lib"
+//        return "mingw/gtest-core.lib"
+    } else if (platform.operatingSystem.macOsX) {
+        return "osx/libgtest.a"
+    } else {
+        return "linux/libgtest.a"
+    }
+}
+
+clean.dependsOn('cleanJniHeaders')
+
+task cleanJniHeaders(type: Delete) {
+    delete 'src/main/cpp/com_kryptnostic_krypto_engine_KryptnosticEngine.h'
+}

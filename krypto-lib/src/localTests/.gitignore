@@ -1,0 +1,10 @@
+# executable
+test_local
+test_speed
+test_UUID
+test_KryptnosticClient
+test_mqt
+test_public
+
+#debugging files
+*.dSYM

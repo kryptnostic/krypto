@@ -1,0 +1,55 @@
+apply plugin: "cpp"
+
+// The cpp plugin is required so tahat the assemble task can be set to depend on the OS appropriate google test build task
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.4'
+}
+
+
+task buildEmscripten(type: Exec) {
+    commandLine './buildEmscripten.sh'
+}
+
+task buildGoogleTestMac(type: Exec) {
+    commandLine './buildGoogleTestMac.sh'
+}
+
+task buildGoogleTest(type: Exec) {
+    commandLine './buildGoogleTest.sh'
+}
+
+task copyBinariesToApi(type: Copy, dependsOn: 'krypto-lib:build') {
+    from 'krypto-lib/build/binaries/mainSharedLibrary/release/'
+    into 'krypto-api/src/main/resources/'
+    include( '**/*.so', '**/*.dylib' )
+}
+
+task buildFullJar(dependsOn: [':krypto-api:GenerateJniHeaders', ':krypto-api:jar'] ) << {
+    // run build lib
+    tasks.getByPath(':krypto-lib:build').execute()
+    // move libs
+    tasks.getByPath('copyBinariesToApi').execute()
+    // run jar api
+    tasks.getByPath(':krypto-api:jar').execute()
+}
+
+//Determine OS 
+//TODO: Add Windows support.
+def osname = System.properties['os.name'].toLowerCase().toLowerCase()
+
+if (osname.contains('windows')) {
+    print "Too close for missiles switching to guns."
+} else if (osname.contains('mac') ) {
+    print "build for mac"
+    ext.includes="darwin"
+    assemble.dependsOn buildGoogleTestMac
+} else {
+    print "Building for linux."
+    ext.includes="linux"
+    assemble.dependsOn buildGoogleTest
+}
+
+assemble.finalizedBy {
+    buildEmscripten
+}
