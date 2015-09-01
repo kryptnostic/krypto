@@ -62,8 +62,16 @@ struct MultiQuadTuple {
      */
     void setAsMatrix(const BitMatrix<NUM_OUTPUTS, NUM_INPUTS> &m){
         _matrix.zero();
-        _matrix[0] = m.transpose().getRow(NUM_INPUTS - LIMIT);
+        _matrix[0] = m.getCol(NUM_INPUTS - LIMIT);
+        //cout << "NUM_INPUTS: " << NUM_INPUTS << endl;
+        //cout << "LIMIT: " << LIMIT << endl;
         next.setAsMatrix(m);
+    }
+
+    void setAsMatrixTranspose(const BitMatrix<NUM_INPUTS, NUM_OUTPUTS> & m) {
+        _matrix.zero();
+        _matrix[0] = m.getRow(NUM_INPUTS - LIMIT);
+        next.setAsMatrixTranspose(m);
     }
 
     /*
@@ -501,6 +509,10 @@ struct MultiQuadTuple<NUM_INPUTS,NUM_OUTPUTS,0> {
      * Sets constants to be a zero vector
      */
     void setAsMatrix(const BitMatrix<NUM_OUTPUTS, NUM_INPUTS> &m){
+        _constants = BitVector<NUM_OUTPUTS>::zeroVector();
+    }
+
+    void setAsMatrixTranspose(const BitMatrix<NUM_INPUTS, NUM_OUTPUTS> &m){
         _constants = BitVector<NUM_OUTPUTS>::zeroVector();
     }
 
