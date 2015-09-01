@@ -106,7 +106,7 @@ struct MultiQuadTuple {
      * Function: getConstants()
      * Returns the constants vector
      */
-    BitVector<NUM_OUTPUTS> getConstants() const{
+    const BitVector<NUM_OUTPUTS> & getConstants() const{
         return next.getConstants();
     }
 
@@ -154,7 +154,7 @@ struct MultiQuadTuple {
      * Operator: (input)
      * Evaluates the MultiQuadTuple on an input vector
      */
-    BitVector<NUM_OUTPUTS> operator() ( const BitVector<NUM_INPUTS> & input ) const {
+    const BitVector<NUM_OUTPUTS> operator() ( const BitVector<NUM_INPUTS> & input ) const {
         BitVector<NUM_OUTPUTS> result = BitVector<NUM_OUTPUTS>::zeroVector();
         if(input[NUM_INPUTS-LIMIT]){
             for( unsigned int i = 0; i < LIMIT; ++i ) {
@@ -174,7 +174,7 @@ struct MultiQuadTuple {
      * Assumes PARTIAL_INPUTS > 0 and PARTIAL_INPUTS <= NUM_INPUTS
      */
     template<unsigned int PARTIAL_INPUTS>
-    MultiQuadTuple<NUM_INPUTS - PARTIAL_INPUTS, NUM_OUTPUTS> partialEval(const BitVector<PARTIAL_INPUTS> & input) const {
+    const MultiQuadTuple<NUM_INPUTS - PARTIAL_INPUTS, NUM_OUTPUTS> partialEval(const BitVector<PARTIAL_INPUTS> & input) const {
     	MultiQuadTuple<NUM_INPUTS - PARTIAL_INPUTS, NUM_OUTPUTS> result;
     	result.template setToSubMQT<NUM_INPUTS, NUM_INPUTS>(*this); //sets result to have the last PARTIAL_INPUTS coefficient matrices of current MQT
 
@@ -213,7 +213,7 @@ struct MultiQuadTuple {
         if (input[index_i]) { //if x_i = 1
             //XOR first row of coeff matrix by appropriate row from super
             const unsigned int index_j = SUPER_INPUTS - LIMIT;
-            BitVector<NUM_OUTPUTS> superCoeffRowIJ = (super._matrix)[index_j - index_i];
+            const BitVector<NUM_OUTPUTS> & superCoeffRowIJ = (super._matrix)[index_j - index_i];
             xorInMonomialContribution(index_j - PARTIAL_INPUTS, index_j - PARTIAL_INPUTS, superCoeffRowIJ);
         }
         // alternate instead of xorInMon... = xorMatrixRowN(0, superCoeffRowIJ, BitVector< SUPER_INPUTS - INDEX_J >());
@@ -248,7 +248,7 @@ struct MultiQuadTuple {
             for (int index_j = index_i; index_j < PARTIAL_INPUTS; ++index_j) { //iterate through x_j's
                 if (input[index_j]) { //if x_j = 1
                     //XOR constants by appropriate row from super
-                    BitVector<NUM_OUTPUTS> superCoeffRowIJ = super._matrix[index_j - index_i];
+                    const BitVector<NUM_OUTPUTS> & superCoeffRowIJ = super._matrix[index_j - index_i];
                     xorConstants(superCoeffRowIJ);
                 }
             }
@@ -275,10 +275,9 @@ struct MultiQuadTuple {
      * Evaluates the MultiQuadTuple composed with a given matrix (e.g. f \circ inner)
      */
     template<unsigned int NUM_INNER_INPUTS>
-    MultiQuadTuple<NUM_INNER_INPUTS,NUM_OUTPUTS> operator*(  const BitMatrix<NUM_INPUTS, NUM_INNER_INPUTS> & inner ) const{
+    const MultiQuadTuple<NUM_INNER_INPUTS,NUM_OUTPUTS> operator*(  const BitMatrix<NUM_INPUTS, NUM_INNER_INPUTS> & inner ) const{
         MultiQuadTuple<NUM_INNER_INPUTS,NUM_OUTPUTS> cs;
-        BitVector<NUM_OUTPUTS> v = getConstants();
-        cs.setAsConstants(v); //reset contribution matrix and force constants
+        cs.setAsConstants(getConstants()); //reset contribution matrix and force constants
         compose( cs, inner.transpose() );
         return cs;
     }
@@ -289,7 +288,7 @@ struct MultiQuadTuple {
      * TODO: rename
      */
     template<unsigned int NEW_NUM_OUTPUTS>
-    MultiQuadTuple<NUM_INPUTS,NEW_NUM_OUTPUTS> rMult(const BitMatrix<NEW_NUM_OUTPUTS, NUM_OUTPUTS> &  rhs ) const {
+    const MultiQuadTuple<NUM_INPUTS,NEW_NUM_OUTPUTS> rMult(const BitMatrix<NEW_NUM_OUTPUTS, NUM_OUTPUTS> &  rhs ) const {
         MultiQuadTuple<NUM_INPUTS,NEW_NUM_OUTPUTS> cs;
         cs.multiplyAndSet(*this, rhs, rhs.transpose() );
         return cs;
@@ -382,7 +381,7 @@ struct MultiQuadTuple {
      * Xors the matrices and constants of two MultiQuadTuples
      * Calls through each coefficient matrix
      */
-    MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS> operator^(const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS> & rhs) const {
+    const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS> & operator^(const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS> & rhs) const {
         MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS> result;
         result._matrix = _matrix ^ rhs._matrix;
         result.next = next ^ rhs.next;
@@ -419,7 +418,7 @@ struct MultiQuadTuple {
      */
     template<unsigned int NUM_INNER_INPUTS>
     void compose( MultiQuadTuple<NUM_INNER_INPUTS,NUM_OUTPUTS> & root, const BitMatrix<NUM_INNER_INPUTS,NUM_INPUTS> &innerTranspose ) const {
-        BitMatrix<NUM_INNER_INPUTS, NUM_OUTPUTS> composedCoefficientMatrix = innerTranspose .template pMult<LIMIT,NUM_OUTPUTS>(_matrix, NUM_INPUTS - LIMIT, 0, LIMIT);
+        const BitMatrix<NUM_INNER_INPUTS, NUM_OUTPUTS> & composedCoefficientMatrix = innerTranspose .template pMult<LIMIT,NUM_OUTPUTS>(_matrix, NUM_INPUTS - LIMIT, 0, LIMIT);
         for( unsigned int i = 0; i < NUM_INNER_INPUTS ; ++i ) {
             if( innerTranspose[ i ][ NUM_INPUTS - LIMIT ] ) {
                 for(unsigned int j = 0; j < i; ++j){
@@ -521,7 +520,7 @@ struct MultiQuadTuple<NUM_INPUTS,NUM_OUTPUTS,0> {
      * Last step of evaluating on an input vector
      * Returns constants
      */
-    BitVector<NUM_OUTPUTS> operator() ( const BitVector<NUM_INPUTS> & input ) const {
+    const BitVector<NUM_OUTPUTS> & operator() ( const BitVector<NUM_INPUTS> & input ) const {
         return _constants;
     }
 
@@ -584,28 +583,13 @@ struct MultiQuadTuple<NUM_INPUTS,NUM_OUTPUTS,0> {
         _constants.print();
     }
 
-/* Base case of composition */
-
-    /*
-     * Operator : (inner)
-     * Final step of composing the MultiQuadTuple with a given BitMatrix
-     * TODO: delete? no general version of this function exists
-     */
-    template<unsigned int NUM_INNER_INPUTS>
-    MultiQuadTuple<NUM_INNER_INPUTS,NUM_OUTPUTS> operator()(const BitMatrix<NUM_INPUTS, NUM_INNER_INPUTS> & inner ) const {
-        MultiQuadTuple<NUM_INNER_INPUTS,NUM_OUTPUTS> result;
-        result.zero();
-        copyConstants(result);
-        return result;
-    }
-
 /* Getters */
 
     /*
      * Function: getConstants()
      * Returns the constants vector
      */
-    BitVector<NUM_OUTPUTS> getConstants() const{
+    const BitVector<NUM_OUTPUTS> & getConstants() const{
         return _constants;
     }
 
@@ -635,7 +619,7 @@ struct MultiQuadTuple<NUM_INPUTS,NUM_OUTPUTS,0> {
      * Operator: ^ rhs
      * Xors the constants of two MultiQuadTuples
      */
-    MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS, 0> operator^(const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS, 0> & rhs) const {
+    const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS, 0> & operator^(const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS, 0> & rhs) const {
         MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS, 0> result;
         result._constants = _constants ^ rhs._constants;
         return result;
