@@ -381,8 +381,8 @@ struct MultiQuadTuple {
      * Xors the matrices and constants of two MultiQuadTuples
      * Calls through each coefficient matrix
      */
-    const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS> & operator^(const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS> & rhs) const {
-        MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS> result;
+    const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS, LIMIT> operator^(const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS, LIMIT> & rhs) const {
+        MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS, LIMIT> result;
         result._matrix = _matrix ^ rhs._matrix;
         result.next = next ^ rhs.next;
         return result;
@@ -505,7 +505,7 @@ struct MultiQuadTuple<NUM_INPUTS,NUM_OUTPUTS,0> {
     }
 
     /*
-     * Function: setAsMatrix(m)
+     * Function: setAsConstants(v)
      * Last step of generating a MultiQuadTuple equivalent to a constant
      * Sets constants to be a given vector
      */
@@ -619,7 +619,7 @@ struct MultiQuadTuple<NUM_INPUTS,NUM_OUTPUTS,0> {
      * Operator: ^ rhs
      * Xors the constants of two MultiQuadTuples
      */
-    const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS, 0> & operator^(const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS, 0> & rhs) const {
+    const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS, 0> operator^(const MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS, 0> & rhs) const {
         MultiQuadTuple<NUM_INPUTS, NUM_OUTPUTS, 0> result;
         result._constants = _constants ^ rhs._constants;
         return result;
