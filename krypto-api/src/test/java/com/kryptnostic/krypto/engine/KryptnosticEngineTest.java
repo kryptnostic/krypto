@@ -26,12 +26,35 @@ public class KryptnosticEngineTest {
     public void tearDown() throws Exception {}
 
     @Test
-    public void testMatrixConversions() throws Exception {
+    public void testBitMatrixConversions() throws Exception {
         Random rand = new Random();
-        byte[] matrix = new byte[16];
+        byte[] matrix = new byte[256];
         rand.nextBytes( matrix );
         byte[] output = KryptnosticEngine.testBitMatrixConversion( matrix );
         assertArrayEquals( matrix, output);
+    }
+    
+    @Test
+    public void testBitVectorConversions() throws Exception {
+        Random rand = new Random();
+        byte[] vector = new byte[16];
+        rand.nextBytes( vector );
+        byte[] output = KryptnosticEngine.testBitVectorConversion( vector );
+        assertArrayEquals( vector, output);
+    }
+    
+    @Test
+    public void testClientHashFunctionConversions() throws Exception {
+        Random rand = new Random();
+        byte[] chf = new byte[1060896];
+        rand.nextBytes( chf );
+        byte[] output = KryptnosticEngine.testClientHashFunctionConversion( chf );
+        assertArrayEquals( chf, output);
+    }
+    
+    @Test
+    public void testMetadatumAddressCalculations() throws Exception {
+        
     }
 
     @Test

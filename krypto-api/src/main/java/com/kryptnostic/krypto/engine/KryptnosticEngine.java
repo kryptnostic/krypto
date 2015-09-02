@@ -60,5 +60,8 @@ public class KryptnosticEngine {
     public native byte[] calculateMetadataAddress( byte[] encObjectSearchKey, byte[] objectConversionMatrix );
 
     protected static native byte[] testBitMatrixConversion( byte[] m1 );
+    protected static native byte[] testBitVectorConversion( byte[] v1 );
+    protected static native byte[] testClientHashFunctionConversion( byte[] chf1 );
+    protected static native byte[] testMetadatumAddress( byte[] ma1 );
 
 }

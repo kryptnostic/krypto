@@ -31,6 +31,30 @@ JNIEXPORT jbyteArray JNICALL Java_com_kryptnostic_krypto_engine_KryptnosticEngin
 JNIEXPORT jbyteArray JNICALL Java_com_kryptnostic_krypto_engine_KryptnosticEngine_testBitMatrixConversion
   (JNIEnv *, jclass, jbyteArray);
 
+/*
+ * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
+ * Method:    testBitVectorConversion
+ * Signature: ([B)[B
+ */
+JNIEXPORT jbyteArray JNICALL Java_com_kryptnostic_krypto_engine_KryptnosticEngine_testBitVectorConversion
+  (JNIEnv *, jclass, jbyteArray);
+
+/*
+ * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
+ * Method:    testClientHashFunctionConversion
+ * Signature: ([B)[B
+ */
+JNIEXPORT jbyteArray JNICALL Java_com_kryptnostic_krypto_engine_KryptnosticEngine_testClientHashFunctionConversion
+  (JNIEnv *, jclass, jbyteArray);
+
+/*
+ * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
+ * Method:    testMetadatumAddress
+ * Signature: ([B)[B
+ */
+JNIEXPORT jbyteArray JNICALL Java_com_kryptnostic_krypto_engine_KryptnosticEngine_testMetadatumAddress
+  (JNIEnv *, jclass, jbyteArray);
+
 #ifdef __cplusplus
 }
 #endif

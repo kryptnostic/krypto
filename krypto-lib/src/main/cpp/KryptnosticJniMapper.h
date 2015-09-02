@@ -11,10 +11,11 @@
 #define krypto_KryptnosticJniMapper_h
 
 #define N 128
-#define N_bytes 16
+
+/* JByte Array to C++ Object */
 
 template <typename T>
-const T * convertJByteArrayToCPP( JNIEnv * env, jbyteArray convertMe ) {
+T * convertJByteArrayToCppObject( JNIEnv * env, jbyteArray convertMe ) {
 	jbyte* buffPtr = env->GetByteArrayElements( convertMe, NULL );
 	return reinterpret_cast<T *>( buffPtr );
 }
@@ -29,24 +30,39 @@ BitVector<N> * convertJByteArrayToBitVector( JNIEnv * env, jbyteArray convertMe 
 	return reinterpret_cast<BitVector<N>*>( buffPtr );
 }
 
-const ClientHashFunction<N> * convertJByteArrayToClientHashFunction( JNIEnv * env, jbyteArray convertMe ) {
+ClientHashFunction<N> * convertJByteArrayToClientHashFunction( JNIEnv * env, jbyteArray convertMe ) {
 	jbyte* buffPtr = env->GetByteArrayElements( convertMe, NULL );
 	return reinterpret_cast<ClientHashFunction<N>*>( buffPtr );
 }
 
-const jbyteArray convertBitVectorToJByteArray( JNIEnv * env, BitVector<N> * bitVect ) {
-	jbyteArray result = env->NewByteArray( N_bytes );
-	env->SetByteArrayRegion( result, 0, N_bytes, reinterpret_cast<const signed char *>( bitVect ) );
+/* C++ Object to JByte Array */
+
+template<typename T>
+jbyteArray convertCppObjectToJByteArray( JNIEnv * env, T * object ) {
+	jbyteArray result = env->NewByteArray( sizeof(T) );
+	env->SetByteArrayRegion( result, 0, sizeof(T), reinterpret_cast<const signed char *>( object ) );
 	return result;
 }
 
-const jbyteArray convertBitMatrixToJByteArray( JNIEnv * env, BitMatrix<N, N> * bitMatrix ) {
-	jbyteArray result = env->NewByteArray( N_bytes );
-	env->SetByteArrayRegion( result, 0, N_bytes, reinterpret_cast<const signed char *>( bitMatrix ) );
+jbyteArray convertBitMatrixToJByteArray( JNIEnv * env, BitMatrix<N, N> * m ) {
+	jbyteArray result = env->NewByteArray( sizeof(BitMatrix<N, N>) );
+	env->SetByteArrayRegion( result, 0, sizeof(BitMatrix<N, N>), reinterpret_cast<const signed char *>( m ) );
 	return result;
 }
 
-const jfieldID getServerHandleField( JNIEnv *env, jobject javaContainer ) {
+jbyteArray convertBitVectorToJByteArray( JNIEnv * env, BitVector<N> * v ) {
+	jbyteArray result = env->NewByteArray( sizeof(BitVector<N>) );
+	env->SetByteArrayRegion( result, 0, sizeof(BitVector<N>), reinterpret_cast<const signed char *>( v ) );
+	return result;
+}
+
+jbyteArray convertClientHashFunctionToJByteArray( JNIEnv * env, ClientHashFunction<N> * chf ) {
+	jbyteArray result = env->NewByteArray( sizeof(ClientHashFunction<N>) );
+	env->SetByteArrayRegion( result, 0, sizeof(ClientHashFunction<N>), reinterpret_cast<const signed char *>( chf ) );
+	return result;
+}
+
+jfieldID getServerHandleField( JNIEnv *env, jobject javaContainer ) {
 	jclass c = env->GetObjectClass( javaContainer );
 	jfieldID field = env->GetFieldID( c, "handle", "J" );
 	return field;
@@ -95,9 +111,40 @@ void setKryptnosticServer( JNIEnv *env, jobject javaContainer, T *t) {
  * Signature: ([B)[B
  */
 jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_testBitMatrixConversion(JNIEnv * env, jclass javaContainer, jbyteArray bytes) {
-	BitMatrix<N, N> * mtrx = convertJByteArrayToBitMatrix(env, bytes);
-	jbyteArray byte = convertBitMatrixToJByteArray(env, mtrx);
-	return byte;
+	BitMatrix<N, N> * matrix = convertJByteArrayToBitMatrix(env, bytes);
+	jbyteArray newBytes = convertBitMatrixToJByteArray(env, matrix);
+	return newBytes;
+}
+
+/*
+ * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
+ * Method:    testBitVectorConversion
+ * Signature: ([B)[B
+ */
+jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_testBitVectorConversion(JNIEnv * env, jclass javaContainer, jbyteArray bytes) {
+	BitVector<N> * vector = convertJByteArrayToBitVector(env, bytes);
+	jbyteArray newBytes = convertBitVectorToJByteArray(env, vector);
+	return newBytes;
+}
+
+/*
+ * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
+ * Method:    testClientHashFunctionConversion
+ * Signature: ([B)[B
+ */
+jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_testClientHashFunctionConversion(JNIEnv * env, jclass javaContainer, jbyteArray bytes) {
+	ClientHashFunction<N> * chf = convertJByteArrayToClientHashFunction(env, bytes);
+	jbyteArray newBytes = convertClientHashFunctionToJByteArray(env, chf);
+	return newBytes;
+}
+
+/*
+ * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
+ * Method:    testMetadatumAddress
+ * Signature: ([B)[B
+ */
+jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_testMetadatumAddress(JNIEnv * env, jclass javaContainer, jbyteArray bytes) {
+
 }
 
 #endif
