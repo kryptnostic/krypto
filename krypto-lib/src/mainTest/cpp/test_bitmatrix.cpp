@@ -36,7 +36,7 @@ TEST(BitMatrixTest, testIdentity){
 TEST(BitMatrixTests, testRandomMatrix) {
 	BitMatrix<N> m = BitMatrix<N>::randomMatrix(); //square random matrix
 
-	printf("Generated random matrix.");
+	printf("Generated random matrix.\n");
 	{
 		const char * unformatted_msg = "Row count is incorrect: %d";
 		size_t bufLen = strlen(unformatted_msg) + 32;

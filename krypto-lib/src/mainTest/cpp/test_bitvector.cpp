@@ -36,13 +36,6 @@ TEST(BitVectorTests, test_equals) {
 
     //Make sure the copy assignment makes a deep copy.
     ASSERT_TRUE( bv.elements() != bv1.elements() );
-
-
-    bv.print();
-    bv1.print();
-    bv2.print();
-
-
     ASSERT_TRUE(bv != bv2 );
     ASSERT_TRUE(bv1 != bv2 );
     ASSERT_TRUE(bv == bv1 );
@@ -92,9 +85,15 @@ TEST(BitVectorTests, test_parity) {
 }
 
 TEST(BitVectorTests, test_shift) {
-    //TODO: Actually implement this test.
     BitVector<64> v = BitVector<64>::randomSmallVector();
     BitVector<64> w = v.leftShift(1);
-    v.print();
-    w.print();
+    ASSERT_FALSE(w.get(63));
+    bool shift = true;
+    for(int i = 0; i < 63; ++i){
+        if(v.get(i+1) != w.get(i)){
+            shift = false;
+            break;
+        }
+    }
+    ASSERT_TRUE(shift);
 }
