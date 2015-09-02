@@ -20,22 +20,6 @@ T * convertJByteArrayToCppObject( JNIEnv * env, jbyteArray convertMe ) {
 	return reinterpret_cast<T *>( buffPtr );
 }
 
-BitMatrix<N, N> * convertJByteArrayToBitMatrix( JNIEnv * env, jbyteArray convertMe ) {
-	jbyte* buffPtr = env->GetByteArrayElements( convertMe, NULL );
-	return reinterpret_cast<BitMatrix<N, N>*>( buffPtr );
-}
-
-template <unsigned int SIZE>
-BitVector<SIZE> * convertJByteArrayToBitVector( JNIEnv * env, jbyteArray convertMe ) {
-	jbyte* buffPtr = env->GetByteArrayElements( convertMe, NULL );
-	return reinterpret_cast<BitVector<SIZE>*>( buffPtr );
-}
-
-ClientHashFunction<N> * convertJByteArrayToClientHashFunction( JNIEnv * env, jbyteArray convertMe ) {
-	jbyte* buffPtr = env->GetByteArrayElements( convertMe, NULL );
-	return reinterpret_cast<ClientHashFunction<N>*>( buffPtr );
-}
-
 /* C++ Object to JByte Array */
 
 template<typename T>
@@ -45,24 +29,7 @@ jbyteArray convertCppObjectToJByteArray( JNIEnv * env, T * object ) {
 	return result;
 }
 
-jbyteArray convertBitMatrixToJByteArray( JNIEnv * env, BitMatrix<N, N> * m ) {
-	jbyteArray result = env->NewByteArray( sizeof(BitMatrix<N, N>) );
-	env->SetByteArrayRegion( result, 0, sizeof(BitMatrix<N, N>), reinterpret_cast<const signed char *>( m ) );
-	return result;
-}
-
-template <unsigned int SIZE>
-jbyteArray convertBitVectorToJByteArray( JNIEnv * env, BitVector<SIZE> * v ) {
-	jbyteArray result = env->NewByteArray( sizeof(BitVector<SIZE>) );
-	env->SetByteArrayRegion( result, 0, sizeof(BitVector<SIZE>), reinterpret_cast<const signed char *>( v ) );
-	return result;
-}
-
-jbyteArray convertClientHashFunctionToJByteArray( JNIEnv * env, ClientHashFunction<N> * chf ) {
-	jbyteArray result = env->NewByteArray( sizeof(ClientHashFunction<N>) );
-	env->SetByteArrayRegion( result, 0, sizeof(ClientHashFunction<N>), reinterpret_cast<const signed char *>( chf ) );
-	return result;
-}
+/* Other */
 
 jfieldID getServerHandleField( JNIEnv *env, jobject javaContainer ) {
 	jclass c = env->GetObjectClass( javaContainer );
@@ -82,29 +49,27 @@ void setKryptnosticServer( JNIEnv *env, jobject javaContainer, T *t) {
 	env->SetLongField( javaContainer, getServerHandleField( env, javaContainer ), serverAddress );
 }
 
+/* JNI Functions */
+
 void Java_com_kryptnostic_krypto_engine_KryptnosticEngine_initKryptnosticService( JNIEnv * environment, jobject javaContainer, jbyteArray hash, jbyteArray encSearchToken ) {
-	BitVector<2*N> * eSearchToken = convertJByteArrayToBitVector<2*N>( environment, encSearchToken );
-	ClientHashFunction<N> * clientHashFunction = convertJByteArrayToClientHashFunction( environment, hash );
+	BitVector<2*N> * eSearchToken = convertJByteArrayToCppObject< BitVector<2*N> >( environment, encSearchToken );
+	ClientHashFunction<N> * clientHashFunction = convertJByteArrayToCppObject< ClientHashFunction<N> >( environment, hash );
 	KryptnosticServer<N> serv = KryptnosticServer<N>( *clientHashFunction, *eSearchToken );
 	// set the long in java
 	setKryptnosticServer( environment, javaContainer, &serv );
 }
 
 jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_calculateMetadataAddress( JNIEnv * environment, jobject javaContainer, jbyteArray searchKey, jbyteArray conversionMatrix ) {
-	BitMatrix<N, N> * objectConvMatrix = convertJByteArrayToBitMatrix( environment, conversionMatrix );
-	BitVector<2*N> * encObjectSearchKey = convertJByteArrayToBitVector<2*N>( environment, searchKey );
+	BitMatrix<N, N> * objectConvMatrix = convertJByteArrayToCppObject< BitMatrix<N, N> >( environment, conversionMatrix );
+	BitVector<2*N> * encObjectSearchKey = convertJByteArrayToCppObject< BitVector<2*N> >( environment, searchKey );
 	KryptnosticServer<N> serv = *getKryptnosticServer<KryptnosticServer<N>>( environment, javaContainer );
 	pair<BitVector<2*N>, BitMatrix<N, N>> searchPair = std::make_pair( *encObjectSearchKey, *objectConvMatrix );
 	BitVector<N> metadataAddress = serv.getMetadataAddress( searchPair );
-	jbyteArray finalRay = convertBitVectorToJByteArray<N>( environment, &metadataAddress );
+	jbyteArray finalRay = convertCppObjectToJByteArray< BitVector<N> >( environment, &metadataAddress );
 	return finalRay;
 }
 
-/**
- * 
- * TESTS
- * 
- */
+/* Tests */
 
 /*
  * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
@@ -112,8 +77,8 @@ jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_calculateMetadat
  * Signature: ([B)[B
  */
 jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_testBitVectorConversion(JNIEnv * env, jclass javaContainer, jbyteArray bytes) {
-	BitVector<N> * vector = convertJByteArrayToBitVector<N>(env, bytes);
-	jbyteArray newBytes = convertBitVectorToJByteArray<N>(env, vector);
+	BitVector<N> * vector = convertJByteArrayToCppObject< BitVector<N> >(env, bytes);
+	jbyteArray newBytes = convertCppObjectToJByteArray< BitVector<N> >(env, vector);
 	return newBytes;
 }
 
@@ -123,8 +88,8 @@ jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_testBitVectorCon
  * Signature: ([B)[B
  */
 jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_testBitMatrixConversion(JNIEnv * env, jclass javaContainer, jbyteArray bytes) {
-	BitMatrix<N, N> * matrix = convertJByteArrayToBitMatrix(env, bytes);
-	jbyteArray newBytes = convertBitMatrixToJByteArray(env, matrix);
+	BitMatrix<N, N> * matrix = convertJByteArrayToCppObject< BitMatrix<N, N> >(env, bytes);
+	jbyteArray newBytes = convertCppObjectToJByteArray< BitMatrix<N, N> >(env, matrix);
 	return newBytes;
 }
 
@@ -134,8 +99,8 @@ jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_testBitMatrixCon
  * Signature: ([B)[B
  */
 jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_testClientHashFunctionConversion(JNIEnv * env, jclass javaContainer, jbyteArray bytes) {
-	ClientHashFunction<N> * chf = convertJByteArrayToClientHashFunction(env, bytes);
-	jbyteArray newBytes = convertClientHashFunctionToJByteArray(env, chf);
+	ClientHashFunction<N> * chf = convertJByteArrayToCppObject< ClientHashFunction<N> >(env, bytes);
+	jbyteArray newBytes = convertCppObjectToJByteArray< ClientHashFunction<N> >(env, chf);
 	return newBytes;
 }
 
