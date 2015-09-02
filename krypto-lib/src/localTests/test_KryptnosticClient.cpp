@@ -1,4 +1,4 @@
-#include "../main/cpp/KryptnosticClient.h"
+#include "../main/cpp/client/KryptnosticClient.h"
 #include <iostream>
 #include <stdio.h>
 #include <string.h>
@@ -21,6 +21,7 @@ void testInstantiateKE() {
 		//PrivateKey<128> pk;
 		//SearchPrivateKey<128> spk(pk);
 		KryptnosticClient engine;
+		ClientHashFunction<N> chf;
 
 		//cout << "size of spk is " << sizeof(spk) << endl;
 

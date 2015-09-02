@@ -9,7 +9,7 @@ MultiQuadTuple<N,2*N>: 264224
 Registeration:
 getPrivateKey: 329760
 getSearchPrivateKey: 6144
-getClientHashFunction: 1062944
+getClientHashFunction: 1060896
 
 Indexing:
 getMetadatumAddress: 16
