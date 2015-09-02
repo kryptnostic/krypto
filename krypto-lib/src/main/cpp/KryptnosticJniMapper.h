@@ -25,9 +25,10 @@ BitMatrix<N, N> * convertJByteArrayToBitMatrix( JNIEnv * env, jbyteArray convert
 	return reinterpret_cast<BitMatrix<N, N>*>( buffPtr );
 }
 
-BitVector<N> * convertJByteArrayToBitVector( JNIEnv * env, jbyteArray convertMe ) {
+template <unsigned int SIZE>
+BitVector<SIZE> * convertJByteArrayToBitVector( JNIEnv * env, jbyteArray convertMe ) {
 	jbyte* buffPtr = env->GetByteArrayElements( convertMe, NULL );
-	return reinterpret_cast<BitVector<N>*>( buffPtr );
+	return reinterpret_cast<BitVector<SIZE>*>( buffPtr );
 }
 
 ClientHashFunction<N> * convertJByteArrayToClientHashFunction( JNIEnv * env, jbyteArray convertMe ) {
@@ -50,9 +51,10 @@ jbyteArray convertBitMatrixToJByteArray( JNIEnv * env, BitMatrix<N, N> * m ) {
 	return result;
 }
 
-jbyteArray convertBitVectorToJByteArray( JNIEnv * env, BitVector<N> * v ) {
-	jbyteArray result = env->NewByteArray( sizeof(BitVector<N>) );
-	env->SetByteArrayRegion( result, 0, sizeof(BitVector<N>), reinterpret_cast<const signed char *>( v ) );
+template <unsigned int SIZE>
+jbyteArray convertBitVectorToJByteArray( JNIEnv * env, BitVector<SIZE> * v ) {
+	jbyteArray result = env->NewByteArray( sizeof(BitVector<SIZE>) );
+	env->SetByteArrayRegion( result, 0, sizeof(BitVector<SIZE>), reinterpret_cast<const signed char *>( v ) );
 	return result;
 }
 
@@ -80,23 +82,23 @@ void setKryptnosticServer( JNIEnv *env, jobject javaContainer, T *t) {
 	env->SetLongField( javaContainer, getServerHandleField( env, javaContainer ), serverAddress );
 }
 
-// void Java_com_kryptnostic_krypto_engine_KryptnosticEngine_initKryptnosticService( JNIEnv * environment, jobject javaContainer, jbyteArray hash, jbyteArray encSearchToken ) {
-// 	const BitVector<2*N> * eSearchToken = convertJByteArrayToBitVector( environment, encSearchToken );
-// 	const ClientHashFunction<N> * clientHashFunction = convertJByteArrayToClientHashFunction( environment, hash );
-// 	KryptnosticServer<N> serv = KryptnosticServer<N>( *clientHashFunction, *eSearchToken );
-// 	// set the long in java
-// 	setKryptnosticServer( environment, javaContainer, &serv );
-// }
+void Java_com_kryptnostic_krypto_engine_KryptnosticEngine_initKryptnosticService( JNIEnv * environment, jobject javaContainer, jbyteArray hash, jbyteArray encSearchToken ) {
+	BitVector<2*N> * eSearchToken = convertJByteArrayToBitVector<2*N>( environment, encSearchToken );
+	ClientHashFunction<N> * clientHashFunction = convertJByteArrayToClientHashFunction( environment, hash );
+	KryptnosticServer<N> serv = KryptnosticServer<N>( *clientHashFunction, *eSearchToken );
+	// set the long in java
+	setKryptnosticServer( environment, javaContainer, &serv );
+}
 
-// jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_calculateMetadataAddress( JNIEnv * environment, jobject javaContainer, jbyteArray searchKey, jbyteArray conversionMatrix ) {
-// 	const BitMatrix<N, N> * objectConvMatrix = convertJByteArrayToBitMatrix( environment, conversionMatrix );
-// 	const BitVector<2*N> * encObjectSearchKey = convertJByteArrayToBitVector( environment, searchKey );
-// 	KryptnosticServer<N> serv = *getKryptnosticServer<KryptnosticServer<N>>( environment, javaContainer );
-// 	pair<BitVector<2*N>, BitMatrix<N, N>> searchPair = std::make_pair( *encObjectSearchKey, *objectConvMatrix );
-// 	BitVector<N> metadataAddress = serv.getMetadataAddress( searchPair );
-// 	jbyteArray finalRay = convertBitVectorToJByteArray( environment, metadataAddress );
-// 	return finalRay;
-// }
+jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_calculateMetadataAddress( JNIEnv * environment, jobject javaContainer, jbyteArray searchKey, jbyteArray conversionMatrix ) {
+	BitMatrix<N, N> * objectConvMatrix = convertJByteArrayToBitMatrix( environment, conversionMatrix );
+	BitVector<2*N> * encObjectSearchKey = convertJByteArrayToBitVector<2*N>( environment, searchKey );
+	KryptnosticServer<N> serv = *getKryptnosticServer<KryptnosticServer<N>>( environment, javaContainer );
+	pair<BitVector<2*N>, BitMatrix<N, N>> searchPair = std::make_pair( *encObjectSearchKey, *objectConvMatrix );
+	BitVector<N> metadataAddress = serv.getMetadataAddress( searchPair );
+	jbyteArray finalRay = convertBitVectorToJByteArray<N>( environment, &metadataAddress );
+	return finalRay;
+}
 
 /**
  * 
@@ -104,6 +106,16 @@ void setKryptnosticServer( JNIEnv *env, jobject javaContainer, T *t) {
  * 
  */
 
+/*
+ * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
+ * Method:    testBitVectorConversion
+ * Signature: ([B)[B
+ */
+jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_testBitVectorConversion(JNIEnv * env, jclass javaContainer, jbyteArray bytes) {
+	BitVector<N> * vector = convertJByteArrayToBitVector<N>(env, bytes);
+	jbyteArray newBytes = convertBitVectorToJByteArray<N>(env, vector);
+	return newBytes;
+}
 
  /*
  * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
@@ -113,17 +125,6 @@ void setKryptnosticServer( JNIEnv *env, jobject javaContainer, T *t) {
 jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_testBitMatrixConversion(JNIEnv * env, jclass javaContainer, jbyteArray bytes) {
 	BitMatrix<N, N> * matrix = convertJByteArrayToBitMatrix(env, bytes);
 	jbyteArray newBytes = convertBitMatrixToJByteArray(env, matrix);
-	return newBytes;
-}
-
-/*
- * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
- * Method:    testBitVectorConversion
- * Signature: ([B)[B
- */
-jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_testBitVectorConversion(JNIEnv * env, jclass javaContainer, jbyteArray bytes) {
-	BitVector<N> * vector = convertJByteArrayToBitVector(env, bytes);
-	jbyteArray newBytes = convertBitVectorToJByteArray(env, vector);
 	return newBytes;
 }
 

@@ -24,15 +24,6 @@ public class KryptnosticEngineTest {
 
     @After
     public void tearDown() throws Exception {}
-
-    @Test
-    public void testBitMatrixConversions() throws Exception {
-        Random rand = new Random();
-        byte[] matrix = new byte[256];
-        rand.nextBytes( matrix );
-        byte[] output = KryptnosticEngine.testBitMatrixConversion( matrix );
-        assertArrayEquals( matrix, output);
-    }
     
     @Test
     public void testBitVectorConversions() throws Exception {
@@ -41,6 +32,15 @@ public class KryptnosticEngineTest {
         rand.nextBytes( vector );
         byte[] output = KryptnosticEngine.testBitVectorConversion( vector );
         assertArrayEquals( vector, output);
+    }
+
+    @Test
+    public void testBitMatrixConversions() throws Exception {
+        Random rand = new Random();
+        byte[] matrix = new byte[2048];
+        rand.nextBytes( matrix );
+        byte[] output = KryptnosticEngine.testBitMatrixConversion( matrix );
+        assertArrayEquals( matrix, output);
     }
     
     @Test
