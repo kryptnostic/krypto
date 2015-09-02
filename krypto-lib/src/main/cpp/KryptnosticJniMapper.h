@@ -54,7 +54,7 @@ void setKryptnosticServer( JNIEnv *env, jobject javaContainer, T *t) {
 
 void Java_com_kryptnostic_krypto_engine_KryptnosticEngine_initKryptnosticService( JNIEnv * environment, jobject javaContainer, jbyteArray hash, jbyteArray encSearchToken ) {
 	const BitVector<2*N> * eSearchToken = convertJByteArrayToBitVector( environment, encSearchToken );
-	const ClientHashFunction<N> * clientHashFunction = convertJByteArrayToClientHashFunction( environment, encSearchToken );
+	const ClientHashFunction<N> * clientHashFunction = convertJByteArrayToClientHashFunction( environment, hash );
 	KryptnosticServer<N> serv = KryptnosticServer<N>( *clientHashFunction, *eSearchToken );
 	// set the long in java
 	setKryptnosticServer( environment, javaContainer, &serv );
