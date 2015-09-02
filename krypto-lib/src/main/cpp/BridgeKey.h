@@ -196,7 +196,9 @@ public:
 	 * Returns function tuple z used for homomorphic AND
 	 */
 	const MultiQuadTuple<7*N, 2*N> getANDz() const{
-		BitMatrix<N, 2*N> X = getANDX();
+		cout << "Just entered here" << endl;
+		const BitMatrix<N, 2*N> & X = getANDX();
+		cout << "L0" << endl;
 		const BitMatrix<3*N> & Cb2i = _Cb2.inv();
 		const BitMatrix<N, 3*N> & Y1 = _Bi.pMult(Cb2i, 0);
 		const BitMatrix<N, 3*N> & Y2 = _Bi.pMult(Cb2i, N);
@@ -204,13 +206,18 @@ public:
 		MultiQuadTuple<7*N, N> zTop;
 		zTop.setContributions(contrib, BitVector<N>::zeroVector());
 		const MultiQuadTuple<7*N, N> & zTop1 = zTop.template rMult<N>(_pk.getB());
+		cout << "L1" << endl;
 		MultiQuadTuple<7*N, N> Y3;
 		Y3.setAsMatrix(BitMatrix<N, 7*N>::augH(BitMatrix<N, 4*N>::zeroMatrix(), Cb2i.splitV3(2)));
+		cout << "L2" << endl;
 		const MultiQuadTuple<7*N, N> & zTop2 = zTop1 ^ Y3;
+		cout << "L3" << endl;
 		MultiQuadTuple<7*N, N> zeroMQT;
 		zeroMQT.zero();
+		cout << "L4" << endl;
 		MultiQuadTuple<7*N, 2*N> z;
 		z.augV(zTop2, zeroMQT);
+		cout << "L5" << endl;
 		return z.template rMult<2*N>(_M);
 	}
 
