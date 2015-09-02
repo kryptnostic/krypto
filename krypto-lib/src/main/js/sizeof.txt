@@ -1,23 +1,23 @@
 N: 128 #for JS client's reference
 
-PrivateKey<N>: 12360
-SearchPrivateKey<N>: 6144
+PrivateKey<N>: 329760
+SearchPrivateKey<N>: 4096
 MultiQuadTuple<N,N>: 132112
 MultiQuadTuple<2*N,N>: 526352
 MultiQuadTuple<N,2*N>: 264224
 
-Registeration:
+Registration: 
 getPrivateKey: 329760
-getSearchPrivateKey: 6144
+getSearchPrivateKey: 4096
 getClientHashFunction: 1060896
 
-Indexing:
+Indexing: 
 getMetadatumAddress: 16
 getObjectAddressFunction: 4096
 getObjectIndexPair: 2080
 
-Search:
+Search: 
 getEncryptedSearchToken: 32
 
-Sharing:
+Sharing: 
 getObjectSharingPair: 2080
