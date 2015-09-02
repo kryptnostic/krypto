@@ -8,9 +8,9 @@ task wrapper(type: Wrapper) {
 
 def osname = System.properties['os.name'].toLowerCase().toLowerCase()
 
-if ( !ext.has("emhome") ) {
-    throw new StopExecutionException()
-}
+// if ( !ext.has("emhome") ) {
+//     throw new StopExecutionException()
+// }
 ext.home=System.env.'JAVA_HOME'
 ext.includes='linux'
 if (osname.contains('mac')) {
@@ -31,7 +31,7 @@ model {
                     args << "-ftemplate-depth=8192"
                     // run ./gradlew buildFullJar -Pemhome=<pathToYourEmscriptenIncludeDir>
                     //ex: /Users/drew/Downloads/emsdk_portable/emscripten/tag-1.34.5/system/include/" //(whatever directory that contains <emscripten/bind.h>)
-                    args << "-I${emhome}"  
+                    // args << "-I${emhome}"
                     args << "-I${home}/include/"
                     args << "-I${home}/include/${includes}/"
                 }

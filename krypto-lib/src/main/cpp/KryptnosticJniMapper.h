@@ -19,12 +19,12 @@ const T * convertJByteArrayToCPP( JNIEnv * env, jbyteArray convertMe ) {
 	return reinterpret_cast<T *>( buffPtr );
 }
 
-const BitMatrix<N, N> * convertJByteArrayToBitMatrix( JNIEnv * env, jbyteArray convertMe ) {
+BitMatrix<N, N> * convertJByteArrayToBitMatrix( JNIEnv * env, jbyteArray convertMe ) {
 	jbyte* buffPtr = env->GetByteArrayElements( convertMe, NULL );
 	return reinterpret_cast<BitMatrix<N, N>*>( buffPtr );
 }
 
-const BitVector<N> * convertJByteArrayToBitVector( JNIEnv * env, jbyteArray convertMe ) {
+BitVector<N> * convertJByteArrayToBitVector( JNIEnv * env, jbyteArray convertMe ) {
 	jbyte* buffPtr = env->GetByteArrayElements( convertMe, NULL );
 	return reinterpret_cast<BitVector<N>*>( buffPtr );
 }
@@ -34,9 +34,15 @@ const ClientHashFunction<N> * convertJByteArrayToClientHashFunction( JNIEnv * en
 	return reinterpret_cast<ClientHashFunction<N>*>( buffPtr );
 }
 
-const jbyteArray convertBitVectorToJByteArray( JNIEnv * env, BitVector<N> bitVect ) {
+const jbyteArray convertBitVectorToJByteArray( JNIEnv * env, BitVector<N> * bitVect ) {
 	jbyteArray result = env->NewByteArray( N_bytes );
-	env->SetByteArrayRegion( result, 0, N_bytes, reinterpret_cast<const signed char *>( bitVect.elements() ) );
+	env->SetByteArrayRegion( result, 0, N_bytes, reinterpret_cast<const signed char *>( bitVect ) );
+	return result;
+}
+
+const jbyteArray convertBitMatrixToJByteArray( JNIEnv * env, BitMatrix<N, N> * bitMatrix ) {
+	jbyteArray result = env->NewByteArray( N_bytes );
+	env->SetByteArrayRegion( result, 0, N_bytes, reinterpret_cast<const signed char *>( bitMatrix ) );
 	return result;
 }
 
@@ -75,5 +81,23 @@ void setKryptnosticServer( JNIEnv *env, jobject javaContainer, T *t) {
 // 	jbyteArray finalRay = convertBitVectorToJByteArray( environment, metadataAddress );
 // 	return finalRay;
 // }
+
+/**
+ * 
+ * TESTS
+ * 
+ */
+
+
+ /*
+ * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
+ * Method:    testBitMatrixConversion
+ * Signature: ([B)[B
+ */
+jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_testBitMatrixConversion(JNIEnv * env, jclass javaContainer, jbyteArray bytes) {
+	BitMatrix<N, N> * mtrx = convertJByteArrayToBitMatrix(env, bytes);
+	jbyteArray byte = convertBitMatrixToJByteArray(env, mtrx);
+	return byte;
+}
 
 #endif

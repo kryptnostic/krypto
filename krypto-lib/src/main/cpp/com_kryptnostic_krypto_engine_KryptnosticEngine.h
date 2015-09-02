@@ -23,6 +23,14 @@ JNIEXPORT void JNICALL Java_com_kryptnostic_krypto_engine_KryptnosticEngine_init
 JNIEXPORT jbyteArray JNICALL Java_com_kryptnostic_krypto_engine_KryptnosticEngine_calculateMetadataAddress
   (JNIEnv *, jobject, jbyteArray, jbyteArray);
 
+/*
+ * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
+ * Method:    testBitMatrixConversion
+ * Signature: ([B)[B
+ */
+JNIEXPORT jbyteArray JNICALL Java_com_kryptnostic_krypto_engine_KryptnosticEngine_testBitMatrixConversion
+  (JNIEnv *, jclass, jbyteArray);
+
 #ifdef __cplusplus
 }
 #endif

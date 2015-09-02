@@ -9,6 +9,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertArrayEquals;
 
 public class KryptnosticEngineTest {
 
@@ -23,6 +24,15 @@ public class KryptnosticEngineTest {
 
     @After
     public void tearDown() throws Exception {}
+
+    @Test
+    public void testMatrixConversions() throws Exception {
+        Random rand = new Random();
+        byte[] matrix = new byte[16];
+        rand.nextBytes( matrix );
+        byte[] output = KryptnosticEngine.testBitMatrixConversion( matrix );
+        assertArrayEquals( matrix, output);
+    }
 
     @Test
     public void smokeTest() throws Exception {
