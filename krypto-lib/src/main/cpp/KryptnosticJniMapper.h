@@ -110,7 +110,7 @@ jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_testClientHashFu
  * Signature: ([B)[B
  */
 jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_testMetadatumAddress(JNIEnv * env, jclass javaContainer, jbyteArray bytes) {
-
+	return bytes;
 }
 
 #endif
