@@ -53,8 +53,23 @@ public class KryptnosticEngineTest {
     }
     
     @Test
-    public void testMetadatumAddressCalculations() throws Exception {
+    public void testMetadataAddressCalculations() throws Exception {
+    	byte[] pk = KryptnosticEngine.testPrivateKey();
+    	byte[] spk = KryptnosticEngine.testSearchPrivateKey();
+        byte[] osk = KryptnosticEngine.testObjectSearchKey(spk);
+        byte[] oam = KryptnosticEngine.testObjectAddressMatrix(spk);
+        byte[] ocm = KryptnosticEngine.testObjectConversionMatrix(spk, oam);
+        byte[] token = new byte[16];
+        byte[] clientCalculatedAddress = KryptnosticEngine.testClientMetadataAddress(spk, oam, osk, token);
         
+        byte[] etoken = KryptnosticEngine.testEncryptionFHE(pk, token);
+        byte[] eosk = KryptnosticEngine.testEncryptionFHE(pk, osk);
+        byte[] chf = KryptnosticEngine.testClientHashFunction(spk, pk);
+        
+        KryptnosticEngine ke = new KryptnosticEngine(chf, etoken);
+        byte[] serverCalculatedAddress = ke.calculateMetadataAddress(eosk, ocm);
+        
+        assertArrayEquals(clientCalculatedAddress, serverCalculatedAddress);
     }
 
     @Test

@@ -59,9 +59,17 @@ public class KryptnosticEngine {
      **/
     public native byte[] calculateMetadataAddress( byte[] encObjectSearchKey, byte[] objectConversionMatrix );
 
-    protected static native byte[] testBitMatrixConversion( byte[] m1 );
-    protected static native byte[] testBitVectorConversion( byte[] v1 );
-    protected static native byte[] testClientHashFunctionConversion( byte[] chf1 );
-    protected static native byte[] testMetadatumAddress( byte[] ma1 );
+    protected static native byte[] testBitMatrixConversion( byte[] bytes );
+    protected static native byte[] testBitVectorConversion( byte[] bytes );
+    protected static native byte[] testClientHashFunctionConversion( byte[] bytes );
+    
+    protected static native byte[] testPrivateKey();
+    protected static native byte[] testSearchPrivateKey();
+    protected static native byte[] testObjectSearchKey( byte[] spk );
+    protected static native byte[] testObjectAddressMatrix( byte[] spk );
+    protected static native byte[] testObjectConversionMatrix( byte[] spk, byte[] oam );
+    protected static native byte[] testClientMetadataAddress( byte[] spk, byte[] oam, byte[] osk, byte[] token );
+    protected static native byte[] testClientHashFunction( byte[] spk, byte[] pk );
+    protected static native byte[] testEncryptionFHE( byte[] pk, byte[] v );
 
 }
