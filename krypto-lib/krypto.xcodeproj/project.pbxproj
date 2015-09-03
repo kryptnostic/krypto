@@ -7,6 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3AC8383D1B8CF205003B6E2B /* ClientHashFunction.h in Headers */ = {isa = PBXBuildFile; fileRef = 3AC838361B8CF205003B6E2B /* ClientHashFunction.h */; };
+		3AC8383E1B8CF205003B6E2B /* com_kryptnostic_krypto_engine_KryptnosticEngine.h in Headers */ = {isa = PBXBuildFile; fileRef = 3AC838371B8CF205003B6E2B /* com_kryptnostic_krypto_engine_KryptnosticEngine.h */; };
+		3AC8383F1B8CF205003B6E2B /* KryptnosticClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 3AC838381B8CF205003B6E2B /* KryptnosticClient.h */; };
+		3AC838401B8CF205003B6E2B /* KryptnosticJniMapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 3AC838391B8CF205003B6E2B /* KryptnosticJniMapper.h */; };
+		3AC838411B8CF205003B6E2B /* KryptnosticServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 3AC8383A1B8CF205003B6E2B /* KryptnosticServer.h */; };
+		3AC838421B8CF205003B6E2B /* TypeConverter.h in Headers */ = {isa = PBXBuildFile; fileRef = 3AC8383B1B8CF205003B6E2B /* TypeConverter.h */; };
+		3AC838431B8CF205003B6E2B /* UUID.h in Headers */ = {isa = PBXBuildFile; fileRef = 3AC8383C1B8CF205003B6E2B /* UUID.h */; };
 		DB2E68691AB0F0E100CA2C07 /* gtest-all.cc in Sources */ = {isa = PBXBuildFile; fileRef = DB2E68671AB0F0E100CA2C07 /* gtest-all.cc */; };
 		DB2E686A1AB0F0E100CA2C07 /* gtest.h in Headers */ = {isa = PBXBuildFile; fileRef = DB2E68681AB0F0E100CA2C07 /* gtest.h */; };
 		DBCB8B551AB0F06E00772347 /* BitMatrix.h in Headers */ = {isa = PBXBuildFile; fileRef = DBCB8B4C1AB0F06E00772347 /* BitMatrix.h */; };
@@ -39,6 +46,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3AC838361B8CF205003B6E2B /* ClientHashFunction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClientHashFunction.h; sourceTree = "<group>"; };
+		3AC838371B8CF205003B6E2B /* com_kryptnostic_krypto_engine_KryptnosticEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = com_kryptnostic_krypto_engine_KryptnosticEngine.h; sourceTree = "<group>"; };
+		3AC838381B8CF205003B6E2B /* KryptnosticClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KryptnosticClient.h; sourceTree = "<group>"; };
+		3AC838391B8CF205003B6E2B /* KryptnosticJniMapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KryptnosticJniMapper.h; sourceTree = "<group>"; };
+		3AC8383A1B8CF205003B6E2B /* KryptnosticServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KryptnosticServer.h; sourceTree = "<group>"; };
+		3AC8383B1B8CF205003B6E2B /* TypeConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TypeConverter.h; sourceTree = "<group>"; };
+		3AC8383C1B8CF205003B6E2B /* UUID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UUID.h; sourceTree = "<group>"; };
 		DB2E68671AB0F0E100CA2C07 /* gtest-all.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "gtest-all.cc"; sourceTree = "<group>"; };
 		DB2E68681AB0F0E100CA2C07 /* gtest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gtest.h; sourceTree = "<group>"; };
 		DBAD36831A3A9EAE00E13DBD /* krypto-cli.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "krypto-cli.xcodeproj"; path = "../krypto-cli/krypto-cli.xcodeproj"; sourceTree = "<group>"; };
@@ -136,6 +150,13 @@
 		DBCB8B4B1AB0F06E00772347 /* cpp */ = {
 			isa = PBXGroup;
 			children = (
+				3AC838361B8CF205003B6E2B /* ClientHashFunction.h */,
+				3AC838371B8CF205003B6E2B /* com_kryptnostic_krypto_engine_KryptnosticEngine.h */,
+				3AC838381B8CF205003B6E2B /* KryptnosticClient.h */,
+				3AC838391B8CF205003B6E2B /* KryptnosticJniMapper.h */,
+				3AC8383A1B8CF205003B6E2B /* KryptnosticServer.h */,
+				3AC8383B1B8CF205003B6E2B /* TypeConverter.h */,
+				3AC8383C1B8CF205003B6E2B /* UUID.h */,
 				DBEE406C1B7E73670066EE7A /* SearchPrivateKey.h */,
 				DBEE406D1B7E73670066EE7A /* SearchPublicKey.h */,
 				DBEE40491B7E65A30066EE7A /* BridgeKey.h */,
@@ -179,16 +200,23 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3AC838401B8CF205003B6E2B /* KryptnosticJniMapper.h in Headers */,
 				DB2E686A1AB0F0E100CA2C07 /* gtest.h in Headers */,
+				3AC8383F1B8CF205003B6E2B /* KryptnosticClient.h in Headers */,
 				DBEE40551B7E65A30066EE7A /* PrivateKey.h in Headers */,
 				DBCB8B551AB0F06E00772347 /* BitMatrix.h in Headers */,
 				DBEE40531B7E65A30066EE7A /* MultiQuadTuple.h in Headers */,
 				DBEE406E1B7E73670066EE7A /* SearchPrivateKey.h in Headers */,
+				3AC838411B8CF205003B6E2B /* KryptnosticServer.h in Headers */,
 				DBCB8B561AB0F06E00772347 /* BitVector.h in Headers */,
 				DBEE40541B7E65A30066EE7A /* MultiQuadTupleChain.h in Headers */,
 				DBEE406F1B7E73670066EE7A /* SearchPublicKey.h in Headers */,
 				DBEE40501B7E65A30066EE7A /* BridgeKey.h in Headers */,
+				3AC8383D1B8CF205003B6E2B /* ClientHashFunction.h in Headers */,
 				DBEE40561B7E65A30066EE7A /* PublicKey.h in Headers */,
+				3AC838431B8CF205003B6E2B /* UUID.h in Headers */,
+				3AC8383E1B8CF205003B6E2B /* com_kryptnostic_krypto_engine_KryptnosticEngine.h in Headers */,
+				3AC838421B8CF205003B6E2B /* TypeConverter.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

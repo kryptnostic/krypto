@@ -10,6 +10,7 @@
 #include "../main/cpp/MultiQuadTuple.h"
 #include <chrono>
 
+#define hug 448
 #define big 256
 #define mid 128
 #define sma 64
@@ -101,6 +102,18 @@ void testSetAsMatrix(){
     csv.print();
 }
 
+void testSetAsMatrixHuge(){
+    MultiQuadTuple<hug,sma> cs;
+    BitMatrix<sma,hug> m = BitMatrix<sma,hug>::randomMatrix();
+    BitVector<hug> v = BitVector<hug>::randomVector();
+    BitVector<sma> mv = m * v;//m.template operator*<sma>(v);
+    cs.setAsMatrix(m);
+    BitVector<sma> csv = cs(v);
+    cout << "Huge Matrix => MQT" << endl;
+    mv.print();
+    csv.print();
+}
+
 void testSetMQT(){
     MultiQuadTuple<sma,sma> cs;
     BitMatrix<mon,sma> m = BitMatrix<mon,sma>::randomMatrix();
@@ -117,6 +130,7 @@ int main() {
     testRightCompose();
     testAugV();
     testSetAsMatrix();
+    testSetAsMatrixHuge();
     testSetMQT();
     return 0;
 }

@@ -22,10 +22,9 @@ public:
 /* Constructors */
 
 	/*
-     * Constructor
-     * Constructs a KryptnosticServer given a
-     * client's hash function and an FHE-encrypted search token
-     * Calculates the client's hash function evaluated
+     * Constructor: (ClientHashFunction, FHE-encrypted search token)
+     * Constructs a KryptnosticServer
+     * Calculates the client's hash function partially evaluated
      * on the search token without the encrypted ObjectSearchKey
      */
 	KryptnosticServer(const ClientHashFunction<N> & cHashFunction, const BitVector<2*N> & eSearchToken) :
@@ -43,8 +42,9 @@ public:
 /* Registration */
 
 	/*
-	 * Function: getMetadataAddress
-	 * Returns a serialized pair of (ObjectSearchKey, ObjectAddressFunction)
+	 * Function: getMetadataAddress(objectIndexPair)
+	 * Server-side address computation on encrypted ObjectSearchKey and ObjectConversionMatrix
+	 * Returns the address of metadatum corresponding to a token-object pair
 	 */
 	const BitVector<N> getMetadataAddress(const std::pair <BitVector<2*N>, BitMatrix<N> > objectIndexPair) const{
 		const BitVector<2*N> & eObjectSearchKey = objectIndexPair.first; //get from pair

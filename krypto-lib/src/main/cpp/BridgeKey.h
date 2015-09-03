@@ -201,23 +201,21 @@ public:
 		const BitMatrix<N, 3*N> & Y1 = _Bi.pMult(Cb2i, 0);
 		const BitMatrix<N, 3*N> & Y2 = _Bi.pMult(Cb2i, N);
 		const BitMatrix<N, 3*N> & Y3 = Cb2i.splitV3(2);
-		const BitMatrix<N, 7*N> & Y3t = BitMatrix<N, 7*N>::augH(BitMatrix<N, 4*N>::zeroMatrix(), Y3);
-		const BitMatrix<(N*(12*N + 1) + N*(8*N + 1) + ((3*N*(3*N + 1)) >> 1)), N> & contrib = BitMatrix<(N*(12*N + 1) + N*(8*N + 1) + ((3*N*(3*N + 1)) >> 1)), N>::augV(getANDP(X, Y2), getANDQ(X, Y1), getANDS(Y1, Y2));
+
+		const BitMatrix<((7*N * (7*N + 1)) >> 1), N> & contrib = BitMatrix<((7*N * (7*N + 1)) >> 1), N>::augV(getANDP(X, Y2), getANDQ(X, Y1), getANDS(Y1, Y2));
 		MultiQuadTuple<7*N, N> zTop;
 		zTop.setContributions(contrib, BitVector<N>::zeroVector());
-		//zTop = zTop.template rMult<N>(_pk.getB()); //(breaks)
-		MultiQuadTuple<7*N, N> Y3tM;
-		Y3tM.setAsMatrix(Y3t);
-		MultiQuadTuple<7*N, N> zTop2 = zTop ^ Y3tM; //(breaks)
-		MultiQuadTuple<7*N, N> zeroMQT;// = MultiQuadTuple<7*N, N>::zeroMultiQuadTuple();
-		zeroMQT.zero();
-		//MultiQuadTuple<7*N, 2*N> z;// = MultiQuadTuple<7*N, 2*N>::augV(zTop, zeroMQT);
+		zTop = zTop.template rMult<N>(_pk.getB());
+
+		MultiQuadTuple<7*N, N> Y3M;
+		Y3M.setAsMatrix(BitMatrix<N, 7*N>::augH(BitMatrix<N, 4*N>::zeroMatrix(), Y3));
+		//zTop = zTop ^ Y3M;
+
+		//MultiQuadTuple<7*N, N> zeroMQT;
+		//zeroMQT.zero();
+		MultiQuadTuple<7*N, 2*N> z;
 		//z.augV(zTop, zeroMQT);
-		//MultiQuadTuple<7*N, 2*N> zM = z.template rMult<2*N>(_M); (breaks)
-		//return zM;
-		MultiQuadTuple<7*N, 2*N> result;
-		result.zero();
-		return result; //dummy
+		return z;//.template rMult<2*N>(_M);
 	}
 
 	/*
