@@ -13,7 +13,7 @@
 
   # dependencies
   DEPS1 = ../main/cpp/BitMatrix.h ../main/cpp/BitVector.h ../main/cpp/MultiQuadTuple.h ../main/cpp/MultiQuadTupleChain.h ../main/cpp/PrivateKey.h ../main/cpp/BridgeKey.h ../main/cpp/PublicKey.h
-  DEPS2 = ../main/cpp/ClientHashFunction.h ../main/cpp/SearchPrivateKey.h ../main/cpp/KryptnosticClient.h ../main/cpp/KryptnosticServer.h
+  DEPS2 = ../main/cpp/ClientHashFunction.h ../main/cpp/SearchPrivateKey.h ../main/cpp/client/KryptnosticClient.h ../main/cpp/KryptnosticServer.h
 
   # the build target executables:
   TARGET1 = test_speed

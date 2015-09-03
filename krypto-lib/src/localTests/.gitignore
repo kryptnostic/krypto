@@ -5,6 +5,7 @@ test_UUID
 test_KryptnosticClient
 test_mqt
 test_public
+test_jni
 
 #debugging files
 *.dSYM
