@@ -10,7 +10,7 @@
 
 using namespace testing;
 
-#define N 64
+#define N 128
 
 TEST(SearchKeyTest, testIndexingAndSearch){
 	SearchPrivateKey<N> sk;

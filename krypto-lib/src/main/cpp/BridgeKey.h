@@ -59,7 +59,7 @@ public:
 
 		const MultiQuadTuple<2*N, N> & top = f.get(0) * matTop;
 		const MultiQuadTuple<2*N, N> & bot = f.get(0) * matBot;
-		MultiQuadTuple<2*N, 2*N> aug;// = MultiQuadTuple<2*N, 2*N>::augV(top, bot);
+		MultiQuadTuple<2*N, 2*N> aug;
 		aug.augV(top, bot);
 		return aug.template rMult<2*N>(_Cu1);
 	}
@@ -76,7 +76,7 @@ public:
 
 		const MultiQuadTuple<2*N, N> & top = f.get(1) * matTop;
 		const MultiQuadTuple<2*N, N> & bot = f.get(1) * matBot;
-		MultiQuadTuple<2*N, 2*N> aug;// = MultiQuadTuple<2*N, 2*N>::augV(top, bot);
+		MultiQuadTuple<2*N, 2*N> aug;
 		aug.augV(top, bot);
 		return aug.template rMult<2*N>(_Cu2);
 	}
@@ -200,11 +200,6 @@ public:
 		result.initialize(MB, MY3, getANDz(), getANDZ1(), getANDZ2());
 		return result;
 	}
-
-/* Helper functions for getAND */
-
-
-
 
 private:
 	const PrivateKey<N> _pk;
