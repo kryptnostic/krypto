@@ -55,7 +55,6 @@ if ( //(branch.equals("develop") || branch.equals("master") )
                     extension  = 'md'
                 }
 
-                artifact javadocJar
                 artifact sourcesJar
 
                 pom.withXml {
