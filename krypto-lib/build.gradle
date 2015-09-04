@@ -98,7 +98,6 @@ def findGoogleTestCoreLibForPlatform(Platform platform) {
 //        return "cygwin/gtest-core.lib"
 //        return "mingw/gtest-core.lib"
     } else {
-        logger.error(libName)
         return libName
     }
 }
