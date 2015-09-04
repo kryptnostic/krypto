@@ -184,7 +184,7 @@ jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_testClientHashFu
 	PrivateKey<N> pkActual = *convertJByteArrayToCppObject< PrivateKey<N> >(env, pk);
 	
 	ClientHashFunction<N> * chf = new ClientHashFunction<N>;
-	chf = spkActual.getClientHashFunction(pkActual); //takes forever here
+	*chf = spkActual.getClientHashFunction(pkActual); //takes forever here
 
 	// ClientHashFunction<N> chf = spkActual.getClientHashFunction(pkActual);
 
