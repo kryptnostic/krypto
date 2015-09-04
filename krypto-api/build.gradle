@@ -21,6 +21,7 @@ version = getVersionName()
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'maven'
+apply from: 'publish.gradle'
 
 task GenerateJniHeaders(description: 'Generate the JNI headers for kryptnostic engine', dependsOn: 'classes') << {
     ext.cp = sourceSets.main.output.classesDir
