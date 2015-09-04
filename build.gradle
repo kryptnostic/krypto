@@ -35,17 +35,20 @@ task buildFullJar(dependsOn: [':krypto-api:GenerateJniHeaders', ':krypto-api:jar
 
 //Determine OS 
 //TODO: Add Windows support.
-def osname = System.properties['os.name'].toLowerCase().toLowerCase()
+ext.osname = System.properties['os.name'].toLowerCase().toLowerCase()
+ext.staticLibName = 'libgtest.a'
 
 if (osname.contains('windows')) {
     print "Too close for missiles switching to guns."
 } else if (osname.contains('mac') ) {
-    print "build for mac"
-    ext.includes="darwin"
+    print 'build for mac'
+    ext.includes='darwin'
+    ext.libName='osx/' + staticLibName
     assemble.dependsOn buildGoogleTestMac
 } else {
-    print "Building for linux."
-    ext.includes="linux"
+    print 'Building for linux.'
+    ext.includes='linux'
+    ext.libName='linux/'+ staticLibName
     assemble.dependsOn buildGoogleTest
 }
 

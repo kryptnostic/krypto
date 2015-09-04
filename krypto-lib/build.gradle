@@ -6,16 +6,7 @@ task wrapper(type: Wrapper) {
     gradleVersion = '2.4'
 }
 
-def osname = System.properties['os.name'].toLowerCase().toLowerCase()
-
-// if ( !ext.has("emhome") ) {
-//     throw new StopExecutionException()
-// }
 ext.home=System.env.'JAVA_HOME'
-ext.includes='linux'
-if (osname.contains('mac')) {
-    ext.includes='darwin'
-}
 
 model {
 	toolChains {
@@ -105,10 +96,8 @@ def findGoogleTestCoreLibForPlatform(Platform platform) {
 //        return "vs2013/gtest-core.lib"
 //        return "cygwin/gtest-core.lib"
 //        return "mingw/gtest-core.lib"
-    } else if (platform.operatingSystem.macOsX) {
-        return "osx/libgtest.a"
     } else {
-        return "linux/libgtest.a"
+        return libName
     }
 }
 
