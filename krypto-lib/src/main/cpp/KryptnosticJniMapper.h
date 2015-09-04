@@ -4,6 +4,7 @@
 //
 
 #include "KryptnosticServer.h"
+#include "SearchPrivateKey.h"
 #include <jni.h>
 #include "com_kryptnostic_krypto_engine_KryptnosticEngine.h"
 
@@ -63,6 +64,7 @@ jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_calculateMetadat
 	BitMatrix<N, N> * objectConvMatrix = convertJByteArrayToCppObject< BitMatrix<N, N> >( environment, conversionMatrix );
 	BitVector<2*N> * encObjectSearchKey = convertJByteArrayToCppObject< BitVector<2*N> >( environment, searchKey );
 	KryptnosticServer<N> serv = *getKryptnosticServer<KryptnosticServer<N>>( environment, javaContainer );
+
 	pair<BitVector<2*N>, BitMatrix<N, N>> searchPair = std::make_pair( *encObjectSearchKey, *objectConvMatrix );
 	BitVector<N> metadataAddress = serv.getMetadataAddress( searchPair );
 	jbyteArray finalRay = convertCppObjectToJByteArray< BitVector<N> >( environment, &metadataAddress );
@@ -106,11 +108,102 @@ jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_testClientHashFu
 
 /*
  * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
- * Method:    testMetadatumAddress
+ * Method:    testPrivateKey
+ * Signature: ()[B
+ */
+jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_testPrivateKey(JNIEnv * env, jclass javaContainer) {
+	PrivateKey<N> pk;
+	return convertCppObjectToJByteArray< PrivateKey<N> >(env, &pk);
+}
+
+/*
+ * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
+ * Method:    testSearchPrivateKey
+ * Signature: ()[B
+ */
+jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_testSearchPrivateKey (JNIEnv * env, jclass javaContainer) {
+	SearchPrivateKey<N> spk;
+	return convertCppObjectToJByteArray< SearchPrivateKey<N> >(env, &spk);
+}
+
+/*
+ * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
+ * Method:    testObjectSearchKey
  * Signature: ([B)[B
  */
-jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_testMetadatumAddress(JNIEnv * env, jclass javaContainer, jbyteArray bytes) {
-	return bytes;
+jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_testObjectSearchKey(JNIEnv * env, jclass javaContainer, jbyteArray spk) {
+	SearchPrivateKey<N> spkActual = *convertJByteArrayToCppObject< SearchPrivateKey<N> >(env, spk);
+	BitVector<N> osk = spkActual.getObjectSearchKey();
+	return convertCppObjectToJByteArray< BitVector<N> >(env, &osk);
+}
+
+/*
+ * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
+ * Method:    testObjectAddressMatrix
+ * Signature: ([B)[B
+ */
+jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_testObjectAddressMatrix(JNIEnv * env, jclass javaContainer, jbyteArray spk) {
+	SearchPrivateKey<N> spkActual = *convertJByteArrayToCppObject< SearchPrivateKey<N> >(env, spk);
+	BitMatrix<N> oam = spkActual.getObjectAddressMatrix();
+	return convertCppObjectToJByteArray< BitMatrix<N> >(env, &oam);
+}
+
+/*
+ * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
+ * Method:    testObjectConversionMatrix
+ * Signature: ([B[B)[B
+ */
+jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_testObjectConversionMatrix(JNIEnv * env, jclass javaContainer, jbyteArray spk, jbyteArray oam) {
+	SearchPrivateKey<N> spkActual = *convertJByteArrayToCppObject< SearchPrivateKey<N> >(env, spk);
+	BitMatrix<N> oamActual = *convertJByteArrayToCppObject< BitMatrix<N> >(env, oam);
+	BitMatrix<N> ocm = spkActual.getObjectConversionMatrix(oamActual);
+	return convertCppObjectToJByteArray< BitMatrix<N> >(env, &ocm);
+}
+
+/*
+ * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
+ * Method:    testClientMetadataAddress
+ * Signature: ([B[B[B[B)[B
+ */
+jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_testClientMetadataAddress(JNIEnv * env, jclass javaContainer, jbyteArray spk, jbyteArray oam, jbyteArray osk, jbyteArray token) {
+	SearchPrivateKey<N> spkActual = *convertJByteArrayToCppObject< SearchPrivateKey<N> >(env, spk);
+	BitMatrix<N> oamActual = *convertJByteArrayToCppObject< BitMatrix<N> >(env, oam);
+	BitVector<N> oskActual = *convertJByteArrayToCppObject< BitVector<N> >(env, osk);
+	BitVector<N> tokenActual = *convertJByteArrayToCppObject< BitVector<N> >(env, token);
+	BitVector<N> address = spkActual.getMetadatumAddress(oamActual, oskActual, tokenActual);
+	return convertCppObjectToJByteArray< BitVector<N> >(env, &address);
+}
+
+/*
+ * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
+ * Method:    testClientHashFunction
+ * Signature: ([B[B)[B
+ */
+jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_testClientHashFunction(JNIEnv * env, jclass javaContainer, jbyteArray spk, jbyteArray pk) {
+	SearchPrivateKey<N> spkActual = *convertJByteArrayToCppObject< SearchPrivateKey<N> >(env, spk);
+	PrivateKey<N> pkActual = *convertJByteArrayToCppObject< PrivateKey<N> >(env, pk);
+	
+	ClientHashFunction<N> * chf = new ClientHashFunction<N>;
+	*chf = spkActual.getClientHashFunction(pkActual); //takes forever here
+
+	// ClientHashFunction<N> chf = spkActual.getClientHashFunction(pkActual);
+
+	// SearchPrivateKey<N> spk2;
+	// PrivateKey<N> pk2;
+	// *chf = spk2.getClientHashFunction(pk2);
+	return convertCppObjectToJByteArray< ClientHashFunction<N> >(env, chf);
+}
+
+/*
+ * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
+ * Method:    testEncryptionFHE
+ * Signature: ([B[B)[B
+ */
+jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_testEncryptionFHE(JNIEnv * env, jclass javaContainer, jbyteArray pk, jbyteArray v) {
+	PrivateKey<N> pkActual = *convertJByteArrayToCppObject< PrivateKey<N> >(env, pk);
+	BitVector<N> vActual = *convertJByteArrayToCppObject< BitVector<N> >(env, v);
+	BitVector<2*N> eVActual = pkActual.encrypt(vActual);
+	return convertCppObjectToJByteArray< BitVector<2*N> >(env, &eVActual);
 }
 
 #endif

@@ -1,23 +1,27 @@
 apply plugin: "cpp"
 
-//Easy semantic version based off describe + tags
-def getVersionName = { ->
-  def stdout = new ByteArrayOutputStream()
-  exec {
-    commandLine 'git', 'describe', '--tags', '--dirty', '--long'
-    standardOutput = stdout
-  }
-  def tagVer = stdout.toString().trim()
-  def semVer = (tagVer =~ /v?([\d\.]+)/)[0][1]
-
-  if (tagVer.contains('dev')) {
-    semVer += "-SNAPSHOT"
-  }
-  return semVer
-}
-version = getVersionName()
-
 // The cpp plugin is required so tahat the assemble task can be set to depend on the OS appropriate google test build task
+
+//Determine OS 
+//TODO: Add Windows support.
+ext.osname = System.properties['os.name'].toLowerCase().toLowerCase()
+ext.staticLibName = 'libgtest.a'
+
+if (osname.contains('windows')) {
+    print "Too close for missiles switching to guns."
+} else if (osname.contains('mac') ) {
+    print 'build for mac'
+    ext.includes='darwin'
+    ext.libName='osx/' + staticLibName
+    ext.gtestTask = 'buildGoogleTestMac'
+    // assemble.dependsOn buildGoogleTestMac
+} else {
+    print 'Building for linux.'
+    ext.includes='linux'
+    ext.libName='linux/'+ staticLibName
+    ext.gtestTask = 'buildGoogleTest'
+    // assemble.dependsOn buildGoogleTest
+}
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.4'
@@ -41,29 +45,13 @@ task copyBinariesToApi(type: Copy, dependsOn: 'krypto-lib:build') {
     include( '**/*.so', '**/*.dylib' )
 }
 
-task buildFullJar(dependsOn: [':krypto-api:GenerateJniHeaders', ':krypto-api:jar'] ) << {
+task buildFullJar(dependsOn: [':krypto-api:GenerateJniHeaders', "${gtestTask}" , ':krypto-api:jar'] ) << {
     // run build lib
     tasks.getByPath(':krypto-lib:build').execute()
     // move libs
     tasks.getByPath('copyBinariesToApi').execute()
     // run jar api
     tasks.getByPath(':krypto-api:jar').execute()
-}
-
-//Determine OS 
-//TODO: Add Windows support.
-def osname = System.properties['os.name'].toLowerCase().toLowerCase()
-
-if (osname.contains('windows')) {
-    print "Too close for missiles switching to guns."
-} else if (osname.contains('mac') ) {
-    print "build for mac"
-    ext.includes="darwin"
-    assemble.dependsOn buildGoogleTestMac
-} else {
-    print "Building for linux."
-    ext.includes="linux"
-    assemble.dependsOn buildGoogleTest
 }
 
 assemble.finalizedBy {
