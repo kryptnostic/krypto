@@ -23,7 +23,7 @@ using namespace emscripten;
 EMSCRIPTEN_BINDINGS(crypto_module) {
 	class_< KryptnosticClient >("KryptnosticClient")
 		.constructor<>()
-		.constructor<std::string, std::string>()
+		.constructor<byte *, byte *>()
 		.function("getPrivateKey", &KryptnosticClient::getPrivateKey)
 		.function("getSearchPrivateKey", &KryptnosticClient::getSearchPrivateKey)
 		.function("getClientHashFunction", &KryptnosticClient::getClientHashFunction)
