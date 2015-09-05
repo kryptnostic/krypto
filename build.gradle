@@ -54,6 +54,8 @@ task buildFullJar(dependsOn: [':krypto-api:GenerateJniHeaders', "${gtestTask}" ,
     tasks.getByPath(':krypto-api:jar').execute()
 }
 
+build.dependsOn buildFullJar
+
 assemble.finalizedBy {
     buildEmscripten
 }
