@@ -201,11 +201,6 @@ public:
 		return result;
 	}
 
-/* Helper functions for getAND */
-
-
-
-
 private:
 	const PrivateKey<N> _pk;
 	const BitMatrix<N> _R;
