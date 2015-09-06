@@ -18,9 +18,9 @@
 #include <string>
 #include <emscripten/emscripten.h>
 #include <emscripten/bind.h>
-#include "SearchPrivateKey.h"
-#include "ClientHashFunction.h"
-#include "PrivateKey.h"
+#include "../SearchPrivateKey.h"
+#include "../ClientHashFunction.h"
+#include "../PrivateKey.h"
 
 using namespace emscripten;
 typedef unsigned char byte;

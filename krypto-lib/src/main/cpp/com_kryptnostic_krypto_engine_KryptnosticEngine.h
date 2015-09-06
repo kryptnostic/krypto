@@ -9,19 +9,107 @@ extern "C" {
 #endif
 /*
  * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
- * Method:    initKryptnosticEngine
- * Signature: ([B[B[B)J
+ * Method:    initKryptnosticService
+ * Signature: ([B[B)V
  */
-JNIEXPORT jlong JNICALL Java_com_kryptnostic_krypto_engine_KryptnosticEngine_initKryptnosticEngine
-  (JNIEnv *, jobject, jbyteArray, jbyteArray, jbyteArray);
+JNIEXPORT void JNICALL Java_com_kryptnostic_krypto_engine_KryptnosticEngine_initKryptnosticService
+  (JNIEnv *, jobject, jbyteArray, jbyteArray);
 
 /*
  * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
- * Method:    getAddress
+ * Method:    calculateMetadataAddress
+ * Signature: ([B[B)[B
+ */
+JNIEXPORT jbyteArray JNICALL Java_com_kryptnostic_krypto_engine_KryptnosticEngine_calculateMetadataAddress
+  (JNIEnv *, jobject, jbyteArray, jbyteArray);
+
+/*
+ * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
+ * Method:    testBitMatrixConversion
  * Signature: ([B)[B
  */
-JNIEXPORT jbyteArray JNICALL Java_com_kryptnostic_krypto_engine_KryptnosticEngine_getAddress
-  (JNIEnv *, jobject, jbyteArray);
+JNIEXPORT jbyteArray JNICALL Java_com_kryptnostic_krypto_engine_KryptnosticEngine_testBitMatrixConversion
+  (JNIEnv *, jclass, jbyteArray);
+
+/*
+ * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
+ * Method:    testBitVectorConversion
+ * Signature: ([B)[B
+ */
+JNIEXPORT jbyteArray JNICALL Java_com_kryptnostic_krypto_engine_KryptnosticEngine_testBitVectorConversion
+  (JNIEnv *, jclass, jbyteArray);
+
+/*
+ * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
+ * Method:    testClientHashFunctionConversion
+ * Signature: ([B)[B
+ */
+JNIEXPORT jbyteArray JNICALL Java_com_kryptnostic_krypto_engine_KryptnosticEngine_testClientHashFunctionConversion
+  (JNIEnv *, jclass, jbyteArray);
+
+/*
+ * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
+ * Method:    testPrivateKey
+ * Signature: ()[B
+ */
+JNIEXPORT jbyteArray JNICALL Java_com_kryptnostic_krypto_engine_KryptnosticEngine_testPrivateKey
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
+ * Method:    testSearchPrivateKey
+ * Signature: ()[B
+ */
+JNIEXPORT jbyteArray JNICALL Java_com_kryptnostic_krypto_engine_KryptnosticEngine_testSearchPrivateKey
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
+ * Method:    testObjectSearchKey
+ * Signature: ([B)[B
+ */
+JNIEXPORT jbyteArray JNICALL Java_com_kryptnostic_krypto_engine_KryptnosticEngine_testObjectSearchKey
+  (JNIEnv *, jclass, jbyteArray);
+
+/*
+ * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
+ * Method:    testObjectAddressMatrix
+ * Signature: ([B)[B
+ */
+JNIEXPORT jbyteArray JNICALL Java_com_kryptnostic_krypto_engine_KryptnosticEngine_testObjectAddressMatrix
+  (JNIEnv *, jclass, jbyteArray);
+
+/*
+ * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
+ * Method:    testObjectConversionMatrix
+ * Signature: ([B[B)[B
+ */
+JNIEXPORT jbyteArray JNICALL Java_com_kryptnostic_krypto_engine_KryptnosticEngine_testObjectConversionMatrix
+  (JNIEnv *, jclass, jbyteArray, jbyteArray);
+
+/*
+ * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
+ * Method:    testClientMetadataAddress
+ * Signature: ([B[B[B[B)[B
+ */
+JNIEXPORT jbyteArray JNICALL Java_com_kryptnostic_krypto_engine_KryptnosticEngine_testClientMetadataAddress
+  (JNIEnv *, jclass, jbyteArray, jbyteArray, jbyteArray, jbyteArray);
+
+/*
+ * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
+ * Method:    testClientHashFunction
+ * Signature: ([B[B)[B
+ */
+JNIEXPORT jbyteArray JNICALL Java_com_kryptnostic_krypto_engine_KryptnosticEngine_testClientHashFunction
+  (JNIEnv *, jclass, jbyteArray, jbyteArray);
+
+/*
+ * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
+ * Method:    testEncryptionFHE
+ * Signature: ([B[B)[B
+ */
+JNIEXPORT jbyteArray JNICALL Java_com_kryptnostic_krypto_engine_KryptnosticEngine_testEncryptionFHE
+  (JNIEnv *, jclass, jbyteArray, jbyteArray);
 
 #ifdef __cplusplus
 }

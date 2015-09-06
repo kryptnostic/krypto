@@ -6,16 +6,7 @@ task wrapper(type: Wrapper) {
     gradleVersion = '2.4'
 }
 
-def osname = System.properties['os.name'].toLowerCase().toLowerCase()
-
-if ( !ext.has("emhome") ) {
-    throw new GradleScriptException()
-}
 ext.home=System.env.'JAVA_HOME'
-ext.includes='linux'
-if (osname.contains('mac')) {
-    ext.includes='darwin'
-}
 
 model {
 	toolChains {
@@ -31,7 +22,7 @@ model {
                     args << "-ftemplate-depth=8192"
                     // run ./gradlew buildFullJar -Pemhome=<pathToYourEmscriptenIncludeDir>
                     //ex: /Users/drew/Downloads/emsdk_portable/emscripten/tag-1.34.5/system/include/" //(whatever directory that contains <emscripten/bind.h>)
-                    args << "-I${emhome}"  
+                    // args << "-I${emhome}"
                     args << "-I${home}/include/"
                     args << "-I${home}/include/${includes}/"
                 }
@@ -65,12 +56,12 @@ model {
     }
     components {
         main(NativeLibrarySpec) {
-         	targetPlatform "x64"
+            targetPlatform "x64"
             sources {
                 cpp {
                     source {
                         srcDir "src/main/cpp/"
-                        include "**/*.h"
+                        include "*.h"
                     }
                 }
             }
@@ -100,15 +91,14 @@ tasks.withType(RunTestExecutable) {
 }
 
 def findGoogleTestCoreLibForPlatform(Platform platform) {
-    if (platform.operatingSystem.windows) {
-        return "vs2013/gtest.lib"
+    if (osname.contains('windows')) {
+        logger.error("seriously though, only guns")
+        //return "vs2013/gtest.lib"
 //        return "vs2013/gtest-core.lib"
 //        return "cygwin/gtest-core.lib"
 //        return "mingw/gtest-core.lib"
-    } else if (platform.operatingSystem.macOsX) {
-        return "osx/libgtest.a"
     } else {
-        return "linux/libgtest.a"
+        return libName
     }
 }
 

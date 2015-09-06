@@ -126,7 +126,7 @@ public:
 		const MultiQuadTuple<4*N, N> & top = f.get(0) * matTop;
 		const MultiQuadTuple<4*N, N> & mid = f.get(0) * matMid;
 		const MultiQuadTuple<4*N, N> & bot = f.get(0) * (matBotX ^ matBotY);
-		MultiQuadTuple<4*N, 3*N> aug;// = MultiQuadTuple<4*N, 3*N>::augV(top, mid, bot);
+		MultiQuadTuple<4*N, 3*N> aug;
 		aug.augV(top, mid, bot);
 		return aug.template rMult<3*N>(_Cb1);
 	}
@@ -146,13 +146,81 @@ public:
 		const MultiQuadTuple<3*N, N> & top = f.get(1) * matTop;
 		const MultiQuadTuple<3*N, N> & mid = f.get(1) * matMid;
 		const MultiQuadTuple<3*N, N> & bot = f.get(1) * matBot;
-		MultiQuadTuple<3*N, 3*N> aug;// = MultiQuadTuple<3*N, 3*N>::augV(top, mid, bot);
+		MultiQuadTuple<3*N, 3*N> aug;
 		aug.augV(top, mid, bot);
 		return aug.template rMult<3*N>(_Cb2);
 	}
 
 
 /* XOR */
+	struct H_XOR {
+		BitMatrix<2*N> _Xx, _Xy;
+		BitMatrix<2*N, 3*N> _Y;
+		void initialize(const BitMatrix<2*N> & Xx, const BitMatrix<2*N> & Xy, const BitMatrix<2*N, 3*N> & Y){
+			_Xx = Xx;
+			_Xy = Xy;
+			_Y = Y;
+		}
+		const BitVector<2*N> operator()(const BitVector<2*N> &x, const BitVector<2*N> &y, const BitVector<3*N> & t) const{
+			return (_Xx * x) ^ (_Xy * y) ^ (_Y * t);
+		}
+	};
+
+	const H_XOR getXOR() const{
+		H_XOR result;
+		result.initialize(getXORXx(), getXORXy(), getXORY());
+		return result;
+	}
+
+/* AND */
+	struct H_AND {
+		BitMatrix<2*N, N> _MB;
+		BitMatrix<2*N, 3*N> _MY3;
+		MultiQuadTuple<7*N, N> _z;
+		BitMatrix<2*N> _Z1, _Z2;
+		void initialize(const BitMatrix<2*N, N> & MB, const BitMatrix<2*N, 3*N> & MY3,
+			const MultiQuadTuple<7*N, N> & z,
+			const BitMatrix<2*N> & Z1, const BitMatrix<2*N> & Z2){
+			_MB = MB;
+			_MY3 = MY3;
+			_z = z;
+			_Z1 = Z1;
+			_Z2 = Z2;
+		}
+		const BitVector<2*N> operator()(const BitVector<2*N> &x, const BitVector<2*N> &y, const BitVector<3*N> & t) const{
+			const BitVector<7*N> & coordinates = BitVector<7*N>::vCat(x, y, t);
+			return (_MB * _z(coordinates)) ^ (_MY3 * t) ^ (_Z1 * x) ^ (_Z2 * y);
+		}
+	};
+
+	const H_AND getAND() const{
+		H_AND result;
+		const BitMatrix<2*N, N> & MB = _M.template pMult(_pk.getB(), 0, 0, N);
+		const BitMatrix<2*N, 3*N> & MY3 = _M * BitMatrix<2*N, 3*N>::augV(_Cb2.inv().splitV3(2), BitMatrix<N, 3*N>::zeroMatrix());
+		result.initialize(MB, MY3, getANDz(), getANDZ1(), getANDZ2());
+		return result;
+	}
+
+private:
+	const PrivateKey<N> _pk;
+	const BitMatrix<N> _R;
+	const BitMatrix<N> _Rx;
+	const BitMatrix<N> _Ry;
+	const BitMatrix<2*N> _M;
+	const BitMatrix<2*N> _Cu1;
+	const BitMatrix<2*N> _Cu2;
+	const BitMatrix<3*N> _Cb1;
+	const BitMatrix<3*N> _Cb2;
+	const BitMatrix<N> _Ai;
+	const BitMatrix<N> _Bi;
+	const BitMatrix<N> _ARAi;
+	const BitMatrix<N> _ARxAi;
+	const BitMatrix<N> _ARyAi;
+	const BitMatrix<N, 2*N> _AiM2;
+	static const unsigned int twoN = N << 1;
+	static const unsigned int threeN = 3 * N;
+
+/* Helper Functions for getXOR */
 
 	/*
 	 * Function: getXORXx
@@ -189,79 +257,7 @@ public:
 		return _M * BitMatrix<2*N, 3*N>::augV(YTop, BitMatrix<N, 3*N>::zeroMatrix()) * _Cb2.inv();
 	}
 
-/* AND */
-
-	/*
-	 * Function: getANDz
-	 * Returns function tuple z used for homomorphic AND
-	 */
-	const MultiQuadTuple<7*N, 2*N> getANDz() const{
-		cout << "Just entered here" << endl;
-		const BitMatrix<N, 2*N> & X = getANDX();
-		cout << "L0" << endl;
-		const BitMatrix<3*N> & Cb2i = _Cb2.inv();
-		const BitMatrix<N, 3*N> & Y1 = _Bi.pMult(Cb2i, 0);
-		const BitMatrix<N, 3*N> & Y2 = _Bi.pMult(Cb2i, N);
-		const BitMatrix<N, 3*N> & Y3 = Cb2i.splitV3(2);
-
-		const BitMatrix<((7*N * (7*N + 1)) >> 1), N> & contrib = BitMatrix<((7*N * (7*N + 1)) >> 1), N>::augV(getANDP(X, Y2), getANDQ(X, Y1), getANDS(Y1, Y2));
-		MultiQuadTuple<7*N, N> zTop;
-		zTop.setContributions(contrib, BitVector<N>::zeroVector());
-		zTop = zTop.template rMult<N>(_pk.getB());
-
-		MultiQuadTuple<7*N, N> Y3M;
-		Y3M.setAsMatrix(BitMatrix<N, 7*N>::augH(BitMatrix<N, 4*N>::zeroMatrix(), Y3));
-		//zTop = zTop ^ Y3M;
-
-		//MultiQuadTuple<7*N, N> zeroMQT;
-		//zeroMQT.zero();
-		MultiQuadTuple<7*N, 2*N> z;
-		//z.augV(zTop, zeroMQT);
-		return z;//.template rMult<2*N>(_M);
-	}
-
-	/*
-	 * Function: getANDZ1
-	 * Returns matrix Z1 used for homomorphic AND
-	 */
-	const BitMatrix<2*N> getANDZ1() const{
-		const BitMatrix<N, 2*N> & top = _Rx * _AiM2;
-		const BitMatrix<N, 2*N> & bottom = _pk.getA() * top;
-		return _M * BitMatrix<2*N>::augV(top, bottom);
-	}
-
-	/*
-	 * Function: getANDZ2
-	 * Returns matrix Z2 used for homomorphic AND
-	 * Dimension of Z2: 2*(N * 2^6) by 2*(N * 2^6)
-	 */
-	const BitMatrix<2*N> getANDZ2() const{
-		const BitMatrix<N, 2*N> & top = _Ry * _AiM2;
-		const BitMatrix<N, 2*N> & bottom = _pk.getA() * top;
-		return _M * BitMatrix<2*N>::augV(top, bottom);
-	}
-
-
-private:
-	const PrivateKey<N> _pk;
-	const BitMatrix<N> _R;
-	const BitMatrix<N> _Rx;
-	const BitMatrix<N> _Ry;
-	const BitMatrix<2*N> _M;
-	const BitMatrix<2*N> _Cu1;
-	const BitMatrix<2*N> _Cu2;
-	const BitMatrix<3*N> _Cb1;
-	const BitMatrix<3*N> _Cb2;
-	const BitMatrix<N> _Ai;
-	const BitMatrix<N> _Bi;
-	const BitMatrix<N> _ARAi;
-	const BitMatrix<N> _ARxAi;
-	const BitMatrix<N> _ARyAi;
-	const BitMatrix<N, 2*N> _AiM2;
-	static const unsigned int twoN = N << 1;
-	static const unsigned int threeN = 3 * N;
-
-/*Helper functions for getANDz*/
+/* Helper functions for getAND */
 
 	/*
 	 * Function: getANDX
@@ -449,6 +445,44 @@ private:
 		}
 		return contrib;
 	}
+
+	/*
+	 * Function: getANDz
+	 * Returns function tuple z used for homomorphic AND
+	 */
+	const MultiQuadTuple<7*N, N> getANDz() const{
+		const BitMatrix<N, 2*N> & X = getANDX();
+		const BitMatrix<3*N> & Cb2i = _Cb2.inv();
+		const BitMatrix<N, 3*N> & Y1 = _Bi.pMult(Cb2i, 0);
+		const BitMatrix<N, 3*N> & Y2 = _Bi.pMult(Cb2i, N);
+		const BitMatrix<N, 3*N> & Y3 = Cb2i.splitV3(2);
+		const BitMatrix<((7*N * (7*N + 1)) >> 1), N> & contrib = BitMatrix<((7*N * (7*N + 1)) >> 1), N>::augV(getANDP(X, Y2), getANDQ(X, Y1), getANDS(Y1, Y2));
+		MultiQuadTuple<7*N, N> z;
+		z.setContributions(contrib, BitVector<N>::zeroVector());
+		return z;
+	}
+
+	/*
+	 * Function: getANDZ1
+	 * Returns matrix Z1 used for homomorphic AND
+	 */
+	const BitMatrix<2*N> getANDZ1() const{
+		const BitMatrix<N, 2*N> & top = _Rx * _AiM2;
+		const BitMatrix<N, 2*N> & bottom = _pk.getA() * top;
+		return _M * BitMatrix<2*N>::augV(top, bottom);
+	}
+
+	/*
+	 * Function: getANDZ2
+	 * Returns matrix Z2 used for homomorphic AND
+	 * Dimension of Z2: 2*(N * 2^6) by 2*(N * 2^6)
+	 */
+	const BitMatrix<2*N> getANDZ2() const{
+		const BitMatrix<N, 2*N> & top = _Ry * _AiM2;
+		const BitMatrix<N, 2*N> & bottom = _pk.getA() * top;
+		return _M * BitMatrix<2*N>::augV(top, bottom);
+	}
+
 };
 
 #endif
