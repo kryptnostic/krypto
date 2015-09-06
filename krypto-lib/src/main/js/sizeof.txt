@@ -1,6 +1,36 @@
+N: 64 #for JS client's reference
+
+PrivateKey<N>: 49680
+BridgeKey<N>: 70160
+PublicKey<N>: 2318424
+SearchPrivateKey<N>: 1024
+MultiQuadTuple<N,N>: 16648
+MultiQuadTuple<2*N,N>: 66056
+MultiQuadTuple<N,2*N>: 33296
+
+Registration: 
+getPrivateKey: 49680
+getSearchPrivateKey: 1024
+getClientHashFunction: 134160
+
+Indexing: 
+getMetadatumAddress: 8
+getObjectAddressFunction: 1024
+getObjectIndexPair: 528
+
+Search: 
+getEncryptedSearchToken: 16
+
+Sharing: 
+getObjectSharingPair: 528
+
+/////////////////////////////////////
+
 N: 128 #for JS client's reference
 
 PrivateKey<N>: 329760
+BridgeKey<N>: 411680
+PublicKey<N>: 18448560
 SearchPrivateKey<N>: 4096
 MultiQuadTuple<N,N>: 132112
 MultiQuadTuple<2*N,N>: 526352
