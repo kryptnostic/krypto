@@ -9,7 +9,7 @@
   #  -march=native                enables GCC optimization for local CPU instruction sets
   #  -ftemplate-depth=8192        increases the maximum instantiation depth for template classes from 900 to 8192
   #  -I$                          includes libraries
-  CFLAGS  = -g -Wall --std=c++11 -fslp-vectorize-aggressive -march=native -ftemplate-depth=8192 -I$(JAVA_HOME)/include/ -I$(JAVA_HOME)/include/darwin/ -I$(JAVA_HOME)/include/linux/
+  CFLAGS  = -g -Wall --std=c++11 -O3 -fslp-vectorize-aggressive -march=native -ftemplate-depth=8192 -I$(JAVA_HOME)/include/ -I$(JAVA_HOME)/include/darwin/ -I$(JAVA_HOME)/include/linux/
 
   # dependencies
   DEPS1 = ../main/cpp/BitMatrix.h ../main/cpp/BitVector.h ../main/cpp/MultiQuadTuple.h ../main/cpp/MultiQuadTupleChain.h ../main/cpp/PrivateKey.h ../main/cpp/BridgeKey.h ../main/cpp/PublicKey.h
