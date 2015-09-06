@@ -77,14 +77,22 @@ public class KryptnosticEngineTest {
 		KryptnosticEngine ke = new KryptnosticEngine(chf, etoken);
 		byte[] serverCalculatedAddress = ke.calculateMetadataAddress(eosk, ocm);
 
-		System.out.print("[");
+		System.out.print("Client-calculated = [");
+		for( byte b : clientCalculatedAddress ){
+			System.out.print( (int) b );
+			System.out.print(",");
+		}
+		System.out.println("]");
+		
+		System.out.print("Server-calculated = [");
 		for( byte b : serverCalculatedAddress ){
 			System.out.print( (int) b );
 			System.out.print(",");
 		}
-		System.out.print("]");
+		System.out.println("]");
+		
 		assertArrayEquals(clientCalculatedAddress, serverCalculatedAddress);
-		// assertArrayEquals(token, token);
+		//assertArrayEquals(token, token);
 	}
 
 	@Test

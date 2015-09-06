@@ -182,16 +182,9 @@ jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_testClientMetada
 jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_testClientHashFunction(JNIEnv * env, jclass javaContainer, jbyteArray spk, jbyteArray pk) {
 	SearchPrivateKey<N> spkActual = *convertJByteArrayToCppObject< SearchPrivateKey<N> >(env, spk);
 	PrivateKey<N> pkActual = *convertJByteArrayToCppObject< PrivateKey<N> >(env, pk);
-	
-	ClientHashFunction<N> * chf = new ClientHashFunction<N>;
-	*chf = spkActual.getClientHashFunction(pkActual); //takes forever here
 
-	// ClientHashFunction<N> chf = spkActual.getClientHashFunction(pkActual);
-
-	// SearchPrivateKey<N> spk2;
-	// PrivateKey<N> pk2;
-	// *chf = spk2.getClientHashFunction(pk2);
-	return convertCppObjectToJByteArray< ClientHashFunction<N> >(env, chf);
+	ClientHashFunction<N> chf = spkActual.getClientHashFunction(pkActual);
+	return convertCppObjectToJByteArray< ClientHashFunction<N> >(env, &chf);
 }
 
 /*
