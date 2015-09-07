@@ -33,7 +33,7 @@ task GenerateJniHeaders(description: 'Generate the JNI headers for kryptnostic e
     }
 }
 
-jar.dependsOn(':copyBinariesToApi')
+jar.dependsOn(':krypto:copyBinariesToApi')
 clean.dependsOn('cleanKryptoLib')
 
 repositories {
