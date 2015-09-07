@@ -145,6 +145,20 @@ jbyteArray  Java_com_kryptnostic_krypto_engine_KryptnosticEngine_getPrivateKey( 
 
 /*
  * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
+ * Method:    getEncryptedSearchToken
+ * Signature: ([B)[B
+ */
+jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_getEncryptedSearchToken( JNIEnv * env, jobject javaContainer, jbyteArray tok ) {
+	BitVector<N> * token = convertJByteArrayToCppObject< BitVector<N> >( env, tok );
+	KryptnosticClient<N> * client = getKryptnosticClient<KryptnosticClient<N>>( env, javaContainer );
+
+	BitVector<2*N> encryptedToken = client->getEncryptedSearchToken( *token );
+	jbyteArray finalRay = convertCppObjectToJByteArray< BitVector<2*N> >( env, &encryptedToken );
+	return finalRay;
+}
+
+/*
+ * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
  * Method:    clientGetMetadatumAddress
  * Signature: ([B[B[B)[B
  */

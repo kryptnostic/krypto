@@ -57,6 +57,14 @@ JNIEXPORT jbyteArray JNICALL Java_com_kryptnostic_krypto_engine_KryptnosticEngin
 
 /*
  * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
+ * Method:    getEncryptedSearchToken
+ * Signature: ([B)[B
+ */
+JNIEXPORT jbyteArray JNICALL Java_com_kryptnostic_krypto_engine_KryptnosticEngine_getEncryptedSearchToken
+  (JNIEnv *, jobject, jbyteArray);
+
+/*
+ * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
  * Method:    clientGetMetadatumAddress
  * Signature: ([B[B[B)[B
  */

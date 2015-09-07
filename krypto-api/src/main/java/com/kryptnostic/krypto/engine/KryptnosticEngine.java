@@ -92,6 +92,11 @@ public class KryptnosticEngine {
 
     /**
      * NEVER CALL THIS FROM THE SERVER
+     **/
+    public native byte[] getEncryptedSearchToken( byte[] token );
+
+    /**
+     * NEVER CALL THIS FROM THE SERVER
      * Function: Client.getMetadatumAddress
      **/
     public native byte[] clientGetMetadatumAddress( byte[] objectAddressMatrix, byte[] objectSearchKey, byte[] token );
