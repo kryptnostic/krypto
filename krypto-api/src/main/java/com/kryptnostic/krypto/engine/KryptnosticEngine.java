@@ -28,11 +28,13 @@ public class KryptnosticEngine {
         System.load( outputPath.toAbsolutePath().toString() );
     }
 
-    private long handle;
+    private long kryptnosticServerPointer;
 
-    protected long getHandle(){
-        return handle;
+    protected long getKryptServer(){
+        return kryptnosticServerPointer;
     }
+
+    private long kryptnosticClientPointer;
 
     /**
      * VALIDATE HERE OR BEFORE PASSING IN
@@ -59,10 +61,22 @@ public class KryptnosticEngine {
      **/
     public native byte[] calculateMetadataAddress( byte[] encObjectSearchKey, byte[] objectConversionMatrix );
 
+    /**
+     * NEVER CALL THIS FROM THE SERVER
+     * Function: Client.getMetadatumAddress
+     **/
+    public native byte[] initClient();
+
+    /**
+     * NEVER CALL THIS FROM THE SERVER
+     * Function: Client.getMetadatumAddress
+     **/
+    public native byte[] clientGetMetadatumAddress( byte[] objectAddressMatrix, byte[] objectSearchKey, byte[] token );
+
     protected static native byte[] testBitMatrixConversion( byte[] bytes );
     protected static native byte[] testBitVectorConversion( byte[] bytes );
     protected static native byte[] testClientHashFunctionConversion( byte[] bytes );
-    
+
     protected static native byte[] testPrivateKey();
     protected static native byte[] testSearchPrivateKey();
     protected static native byte[] testObjectSearchKey( byte[] spk );
