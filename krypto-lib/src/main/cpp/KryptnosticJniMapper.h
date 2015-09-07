@@ -46,6 +46,7 @@ jfieldID getServerHandleField( JNIEnv *env, jobject javaContainer ) {
 jfieldID getClientHandleField( JNIEnv *env, jobject javaContainer ) {
 	jclass c = env->GetObjectClass( javaContainer );
 	jfieldID field = env->GetFieldID( c, clientField, longType );
+
 	return field;
 }
 
@@ -79,7 +80,6 @@ void Java_com_kryptnostic_krypto_engine_KryptnosticEngine_initKryptnosticService
 	BitVector<2*N> * eSearchToken = convertJByteArrayToCppObject< BitVector<2*N> >( environment, encSearchToken );
 	ClientHashFunction<N> * clientHashFunction = convertJByteArrayToCppObject< ClientHashFunction<N> >( environment, hash );
 	KryptnosticServer<N> * serv = new KryptnosticServer<N>(*clientHashFunction, *eSearchToken);
-	//*serv = KryptnosticServer<N>( *clientHashFunction, *eSearchToken );
 	// set the long in java
 	setKryptnosticServer( environment, javaContainer, serv );
 }
@@ -87,10 +87,11 @@ void Java_com_kryptnostic_krypto_engine_KryptnosticEngine_initKryptnosticService
 jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_calculateMetadataAddress( JNIEnv * environment, jobject javaContainer, jbyteArray searchKey, jbyteArray conversionMatrix ) {
 	BitMatrix<N, N> * objectConvMatrix = convertJByteArrayToCppObject< BitMatrix<N, N> >( environment, conversionMatrix );
 	BitVector<2*N> * encObjectSearchKey = convertJByteArrayToCppObject< BitVector<2*N> >( environment, searchKey );
-	KryptnosticServer<N> serv = *getKryptnosticServer<KryptnosticServer<N>>( environment, javaContainer );
+	KryptnosticServer<N> *serv = *getKryptnosticServer<KryptnosticServer<N>>( environment, javaContainer );
 
 	pair<BitVector<2*N>, BitMatrix<N, N>> searchPair = std::make_pair( *encObjectSearchKey, *objectConvMatrix );
-	BitVector<N> metadataAddress = serv.getMetadataAddress( searchPair );
+	BitVector<N> metadataAddress = serv->getMetadataAddress( searchPair );
+
 	jbyteArray finalRay = convertCppObjectToJByteArray< BitVector<N> >( environment, &metadataAddress );
 	return finalRay;
 }
@@ -115,9 +116,9 @@ jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_clientGetMetadat
 	BitVector<N> * objSearchKey = convertJByteArrayToCppObject< BitVector<N> >( env, objectSearchKey );
 	BitVector<N> * token = convertJByteArrayToCppObject< BitVector<N> >( env, tok );
 
-	KryptnosticClient<N> client = *getKryptnosticClient<KryptnosticClient<N>>( env, javaContainer );
+	KryptnosticClient<N> * client = *getKryptnosticClient<KryptnosticClient<N>>( env, javaContainer );
 
-	BitVector<N> address = client.getMetadatumAddress( *objAddrMatrix, *objSearchKey, *token );
+	BitVector<N> address = client->getMetadatumAddress( *objAddrMatrix, *objSearchKey, *token );
 	jbyteArray finalRay = convertCppObjectToJByteArray< BitVector<N> >( env, &address );
 	return finalRay;
 }
