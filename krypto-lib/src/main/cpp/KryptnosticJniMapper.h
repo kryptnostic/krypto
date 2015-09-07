@@ -101,7 +101,7 @@ jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_calculateMetadat
  * Method:    initClient
  * Signature: ()[B
  */
-jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_initClient( JNIEnv * env, jobject javaContainer ) {
+void Java_com_kryptnostic_krypto_engine_KryptnosticEngine_initClient( JNIEnv * env, jobject javaContainer ) {
 	KryptnosticClient<N> * client = new KryptnosticClient<N>();
 	setKryptnosticClient( env, javaContainer, client );
 }
@@ -111,7 +111,7 @@ jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_initClient( JNIE
  * Method:    initClient
  * Signature: ([B[B)[B
  */
-jbyteArray  Java_com_kryptnostic_krypto_engine_KryptnosticEngine_initClient___3B_3B( JNIEnv * env, jobject javaContainer, jbyteArray pKey, jbyteArray searchPKey ){
+void Java_com_kryptnostic_krypto_engine_KryptnosticEngine_initClient___3B_3B( JNIEnv * env, jobject javaContainer, jbyteArray pKey, jbyteArray searchPKey ){
 	PrivateKey<N> * pk = convertJByteArrayToCppObject< PrivateKey<N> >( env, pKey );
 	SearchPrivateKey<N> * spk = convertJByteArrayToCppObject< SearchPrivateKey<N> >( env, searchPKey );
 

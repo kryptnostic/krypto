@@ -47,6 +47,12 @@ public class KryptnosticEngine {
     }
 
     /**
+     * NEVER DO THIS
+     */
+    public KryptnosticEngine() {
+    }
+
+    /**
      * Constructor
      * Constructs a KryptnosticServer given a
      * client's hash function and an FHE-encrypted search token.
@@ -65,14 +71,14 @@ public class KryptnosticEngine {
      * NEVER CALL THIS FROM THE SERVER
      * Function: Client.getMetadatumAddress
      **/
-    public native byte[] initClient();
+    public native void initClient();
 
     /**
      * NEVER CALL THIS FROM THE SERVER
      * DONT CALL THIS AND INITCLIENT() IN THE SAME JVM
      * Function: Client.getMetadatumAddress
      **/
-    public native byte[] initClient( byte[] privateKey, byte[] searchPrivateKey );
+    public native void initClient( byte[] privateKey, byte[] searchPrivateKey );
 
     /**
      * NEVER CALL THIS FROM THE SERVER
