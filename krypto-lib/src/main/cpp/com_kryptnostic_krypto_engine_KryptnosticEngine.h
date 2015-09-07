@@ -28,7 +28,31 @@ JNIEXPORT jbyteArray JNICALL Java_com_kryptnostic_krypto_engine_KryptnosticEngin
  * Method:    initClient
  * Signature: ()[B
  */
-JNIEXPORT jbyteArray JNICALL Java_com_kryptnostic_krypto_engine_KryptnosticEngine_initClient
+JNIEXPORT jbyteArray JNICALL Java_com_kryptnostic_krypto_engine_KryptnosticEngine_initClient__
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
+ * Method:    initClient
+ * Signature: ([B[B)[B
+ */
+JNIEXPORT jbyteArray JNICALL Java_com_kryptnostic_krypto_engine_KryptnosticEngine_initClient___3B_3B
+  (JNIEnv *, jobject, jbyteArray, jbyteArray);
+
+/*
+ * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
+ * Method:    getSearchPrivateKey
+ * Signature: ()[B
+ */
+JNIEXPORT jbyteArray JNICALL Java_com_kryptnostic_krypto_engine_KryptnosticEngine_getSearchPrivateKey
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
+ * Method:    getPrivateKey
+ * Signature: ()[B
+ */
+JNIEXPORT jbyteArray JNICALL Java_com_kryptnostic_krypto_engine_KryptnosticEngine_getPrivateKey
   (JNIEnv *, jobject);
 
 /*

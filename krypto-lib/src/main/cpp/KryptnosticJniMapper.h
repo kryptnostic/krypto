@@ -108,6 +108,43 @@ jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_initClient( JNIE
 
 /*
  * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
+ * Method:    initClient
+ * Signature: ([B[B)[B
+ */
+jbyteArray  Java_com_kryptnostic_krypto_engine_KryptnosticEngine_initClient___3B_3B( JNIEnv * env, jobject javaContainer, jbyteArray pKey, jbyteArray searchPKey ){
+	PrivateKey<N> * pk = convertJByteArrayToCppObject< PrivateKey<N> >( env, pKey );
+	SearchPrivateKey<N> * spk = convertJByteArrayToCppObject< SearchPrivateKey<N> >( env, searchPKey );
+
+	KryptnosticClient<N> * client = new KryptnosticClient<N>( *pk, *spk );
+	setKryptnosticClient( env, javaContainer, client );
+}
+
+/*
+ * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
+ * Method:    getSearchPrivateKey
+ * Signature: ()[B
+ */
+jbyteArray  Java_com_kryptnostic_krypto_engine_KryptnosticEngine_getSearchPrivateKey( JNIEnv * env, jobject javaContainer ){
+	KryptnosticClient<N> * client = getKryptnosticClient<KryptnosticClient<N>>( env, javaContainer );
+	SearchPrivateKey<N> searchpkey = client->getSearchPrivateKey();
+	jbyteArray finalRay = convertCppObjectToJByteArray< SearchPrivateKey<N> >( env, &searchpkey );
+	return finalRay;
+}
+
+/*
+ * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
+ * Method:    getPrivateKey
+ * Signature: ()[B
+ */
+jbyteArray  Java_com_kryptnostic_krypto_engine_KryptnosticEngine_getPrivateKey( JNIEnv * env, jobject javaContainer ){
+	KryptnosticClient<N> * client = getKryptnosticClient<KryptnosticClient<N>>( env, javaContainer );
+	PrivateKey<N> pkey = client->getPrivateKey();
+	jbyteArray finalRay = convertCppObjectToJByteArray< PrivateKey<N> >( env, &pkey );
+	return finalRay;
+}
+
+/*
+ * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
  * Method:    clientGetMetadatumAddress
  * Signature: ([B[B[B)[B
  */
