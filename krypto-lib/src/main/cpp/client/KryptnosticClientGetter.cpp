@@ -19,6 +19,7 @@
 #include <emscripten/bind.h>
 
 using namespace emscripten;
+typedef unsigned char byte;
 
 EMSCRIPTEN_BINDINGS(crypto_module) {
 	class_< KryptnosticClient >("KryptnosticClient")

@@ -47,9 +47,9 @@ public:
      * Constructs a KryptnosticClient given private and public keys
      * Used for future logins (not registeration)
      */
-	KryptnosticClient(byte * pk, byte * spk) :
-	_pk(*reinterpret_cast<const PrivateKey<N>*>(pk.data())),
-	_spk(*reinterpret_cast<const SearchPrivateKey<N>*>(spk.data()))
+	KryptnosticClient(byte *pk, byte *spk) :
+	_pk(*reinterpret_cast<const PrivateKey<N>*>(pk)),
+	_spk(*reinterpret_cast<const SearchPrivateKey<N>*>(spk))	
 	{}
 
 /* Registration */
@@ -104,7 +104,7 @@ public:
 	 * Function: getObjectIndexPair(objectSearchKey, objectAddressMatrix)
 	 * Returns a serialized pair of (FHE-encrypted ObjectSearchKey, ObjectAddressMatrix)
 	 */
-	const val getObjectIndexPair(byte * objectSearchKeyStr, byte * objectAddressMatrixStr) const{
+	const val getObjectIndexPair(std::string objectSearchKeyStr, std::string objectAddressMatrixStr) const{
 		const BitVector<N> & objectSearchKey = *reinterpret_cast<const BitVector<N>*>(objectSearchKeyStr.data());
 		const BitMatrix<N> & objectAddressMatrix = *reinterpret_cast<const BitMatrix<N>*>(objectAddressMatrixStr.data());
 		std::pair<BitVector<2*N>, BitMatrix<N> > objectIndexPair = _spk.getObjectIndexPair(objectSearchKey, objectAddressMatrix, _pk);
@@ -116,7 +116,7 @@ public:
 	 * Client-side address computation on raw object data and token
 	 * Returns the address of the metadatum corresponding to an object and a token
 	 */
-	const val getMetadatumAddress(byte * objectAddressMatrixStr, byte * objectSearchKeyStr, byte * tokenStr) const{
+	const val getMetadatumAddress(std::string objectAddressMatrixStr, std::string objectSearchKeyStr, std::string tokenStr) const{
 		const BitMatrix<N> & objectAddressMatrix = *reinterpret_cast<const BitMatrix<N>*>(objectAddressMatrixStr.data());
 		const BitVector<N> & token = *reinterpret_cast<const BitVector<N>*>(tokenStr.data());
 		const BitVector<N> & objectSearchKey = *reinterpret_cast<const BitVector<N>*>(objectSearchKeyStr.data());
@@ -131,7 +131,7 @@ public:
 	 * Function: getEncryptedSearchToken(search token)
 	 * Returns a serialized FHE-encrypted search token
 	 */
-	const val getEncryptedSearchToken(byte * tokenStr) const{
+	const val getEncryptedSearchToken(std::string tokenStr) const{
 		const BitVector<N> & token = *reinterpret_cast<const BitVector<N>*>(tokenStr.data());
 		const BitVector<2*N> eToken = _pk.encrypt(token);
 		return val(memory_view<byte>(sizeof(BitVector<2*N>), (byte *) &eToken));
@@ -144,7 +144,7 @@ public:
 	 * Returns a serialized pair of (FHE-encrypted objectSearchKey, objectConversionMatrix)
 	 * Sent by a client to another to share a document
 	 */
-	const val getObjectSharingPair(byte * objectIndexPairStr) const{
+	const val getObjectSharingPair(std::string objectIndexPairStr) const{
 		const std::pair< BitVector<2*N>, BitMatrix<N> > & objectIndexPair = *reinterpret_cast<const std::pair<BitVector<2*N>, BitMatrix<N> >* >(objectIndexPairStr.data());
 		std::pair< BitVector<N>, BitMatrix<N> > objectSharingPair = _spk.getObjectSharingPair(objectIndexPair, _pk);
 		return val(memory_view<byte>(sizeof(std::pair <BitVector<2*N>,BitMatrix<N> >), (byte *) &objectSharingPair));
@@ -156,7 +156,7 @@ public:
 	 * Performed after the client receives a SharingPair from another client
 	 * Assume the two inputs are RSA-decrypted before passing in to C++
 	 */
-	const val getObjectIndexPairFromSharing(byte * objectSharingPairStr) const{
+	const val getObjectIndexPairFromSharing(std::string objectSharingPairStr) const{
 		const std::pair< BitVector<N>, BitMatrix<N> > objectSharingPair = *reinterpret_cast<const std::pair<BitVector<N>, BitMatrix<N> >* >(objectSharingPairStr.data());
 		std::pair< BitVector<2*N>, BitMatrix<N> > objectUploadPair = _spk.getObjectIndexPairFromSharing(objectSharingPair, _pk);
 		return val(memory_view<byte>(sizeof(std::pair <BitVector<2*N>,BitMatrix<N> >), (byte *) &objectUploadPair));
