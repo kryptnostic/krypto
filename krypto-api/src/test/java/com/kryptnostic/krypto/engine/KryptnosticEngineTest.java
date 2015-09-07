@@ -1,9 +1,6 @@
 package com.kryptnostic.krypto.engine;
 
-import java.util.Arrays;
 import java.util.Random;
-import java.util.stream.Collectors;
-
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -103,7 +100,7 @@ public class KryptnosticEngineTest {
 		rand.nextBytes(clientHashFunc);
 		rand.nextBytes(encObjectSearchToken);
 		KryptnosticEngine kryptnosticEngine = new KryptnosticEngine(clientHashFunc, encObjectSearchToken);
-		assertNotNull(kryptnosticEngine.getHandle());
+		assertNotNull(kryptnosticEngine.getKryptServer());
 		byte[] encObjectSearchKey = new byte[16];
 		byte[] objectConversionMatrix = new byte[16];
 		kryptnosticEngine.calculateMetadataAddress(encObjectSearchKey, objectConversionMatrix);
