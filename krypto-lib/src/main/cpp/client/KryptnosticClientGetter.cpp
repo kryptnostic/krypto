@@ -72,7 +72,7 @@ public:
 	 * of the ClientHashFunction
 	 */
 	const val getClientHashFunction() const{
-		ClientHashFunction<N> newClientHashFunction = _kc.getClientHashFunction(_pk);
+		ClientHashFunction<N> newClientHashFunction = _kc.getClientHashFunction();
 		return val(memory_view<byte>(sizeof(ClientHashFunction<N>), (byte *) &newClientHashFunction));
 	}
 
@@ -159,7 +159,7 @@ public:
 	}
 
 private:
-	const KryptnosticClient _kc;
+	const KryptnosticClient<N> _kc;
 };
 
 EMSCRIPTEN_BINDINGS(crypto_module) {

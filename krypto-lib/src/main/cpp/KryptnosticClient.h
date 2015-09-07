@@ -96,7 +96,7 @@ public:
 	 * Function: getObjectIndexPair(objectSearchKey, objectAddressMatrix)
 	 * Returns a serialized pair of (FHE-encrypted ObjectSearchKey, ObjectAddressMatrix)
 	 */
-	const std::pair <BitVector<2*N>,BitMatrix<N> > getObjectIndexPair(BitVector<N> objectSearchKey, BitMatrix<N> objectAddressMatrixStr) const{
+	const std::pair <BitVector<2*N>,BitMatrix<N> > getObjectIndexPair(BitVector<N> objectSearchKey, BitMatrix<N> objectAddressMatrix) const{
 		return _spk.getObjectIndexPair(objectSearchKey, objectAddressMatrix, _pk);
 	}
 
@@ -115,7 +115,7 @@ public:
 	 * Function: getEncryptedSearchToken(search token)
 	 * Returns a serialized FHE-encrypted search token
 	 */
-	const BitVector<2*N> getEncryptedSearchToken(BitVector<N> tokenStr) const{
+	const BitVector<2*N> getEncryptedSearchToken(BitVector<N> token) const{
 		return _pk.encrypt(token);
 	}
 
@@ -126,7 +126,7 @@ public:
 	 * Returns a serialized pair of (FHE-encrypted objectSearchKey, objectConversionMatrix)
 	 * Sent by a client to another to share a document
 	 */
-	const std::pair< BitVector<N>, BitMatrix<N> > getObjectSharingPair(std::pair< BitVector<2*N>, BitMatrix<N> > objectIndexPairStr) const{
+	const std::pair< BitVector<N>, BitMatrix<N> > getObjectSharingPair(std::pair< BitVector<2*N>, BitMatrix<N> > objectIndexPair) const{
 		return _spk.getObjectSharingPair(objectIndexPair, _pk);
 	}
 
@@ -136,7 +136,7 @@ public:
 	 * Performed after the client receives a SharingPair from another client
 	 * Assume the two inputs are RSA-decrypted before passing in to C++
 	 */
-	const std::pair< BitVector<2*N>, BitMatrix<N> > getObjectIndexPairFromSharing(std::pair< BitVector<N>, BitMatrix<N> > objectSharingPairStr) const{
+	const std::pair< BitVector<2*N>, BitMatrix<N> > getObjectIndexPairFromSharing(std::pair< BitVector<N>, BitMatrix<N> > objectSharingPair) const{
 		return _spk.getObjectIndexPairFromSharing(objectSharingPair, _pk);
 	}
 
