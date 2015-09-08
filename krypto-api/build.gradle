@@ -36,7 +36,11 @@ task GenerateJniHeaders(description: 'Generate the JNI headers for kryptnostic e
     }
 }
 
-jar.dependsOn(':copyBinariesToApi')
+if ( project.hasProperty('developmentMode') && project.developmentMode ) {
+  jar.dependsOn(':krypto:copyBinariesToApi')
+} else {
+  jar.dependsOn(':copyBinariesToApi')
+}
 clean.dependsOn('cleanKryptoLib')
 
 repositories {
