@@ -1,13 +1,14 @@
 package com.kryptnostic.krypto.engine;
 
+import java.nio.ByteBuffer;
 import java.util.Random;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertArrayEquals;
 
 public class KryptnosticEngineTest {
@@ -70,39 +71,25 @@ public class KryptnosticEngineTest {
 		byte[] etoken = KryptnosticEngine.testEncryptionFHE(pk, token);
 		byte[] eosk = KryptnosticEngine.testEncryptionFHE(pk, osk);
 		byte[] chf = KryptnosticEngine.testClientHashFunction(spk, pk);
+		byte[] objectIndexPair = ByteBuffer.allocate( eosk.length + ocm.length ).put( eosk ).put( ocm ).array();
 
 		KryptnosticEngine ke = new KryptnosticEngine(chf, etoken);
-		byte[] serverCalculatedAddress = ke.calculateMetadataAddress(eosk, ocm);
+		byte[] serverCalculatedAddress = ke.calculateMetadataAddress( objectIndexPair );
 
-		System.out.print("Client-calculated = [");
-		for( byte b : clientCalculatedAddress ){
-			System.out.print( (int) b );
-			System.out.print(",");
-		}
-		System.out.println("]");
-		
-		System.out.print("Server-calculated = [");
-		for( byte b : serverCalculatedAddress ){
-			System.out.print( (int) b );
-			System.out.print(",");
-		}
-		System.out.println("]");
-		
+//		System.out.print("Client-calculated = [");
+//		for( byte b : clientCalculatedAddress ){
+//			System.out.print( (int) b );
+//			System.out.print(",");
+//		}
+//		System.out.println("]");
+//
+//		System.out.print("Server-calculated = [");
+//		for( byte b : serverCalculatedAddress ){
+//			System.out.print( (int) b );
+//			System.out.print(",");
+//		}
+//		System.out.println("]");
+
 		assertArrayEquals(clientCalculatedAddress, serverCalculatedAddress);
-		//assertArrayEquals(token, token);
-	}
-
-	@Test
-	public void smokeTest() throws Exception {
-		Random rand = new Random();
-		byte[] clientHashFunc = new byte[16];
-		byte[] encObjectSearchToken = new byte[16];
-		rand.nextBytes(clientHashFunc);
-		rand.nextBytes(encObjectSearchToken);
-		KryptnosticEngine kryptnosticEngine = new KryptnosticEngine(clientHashFunc, encObjectSearchToken);
-		assertNotNull(kryptnosticEngine.getKryptServer());
-		byte[] encObjectSearchKey = new byte[16];
-		byte[] objectConversionMatrix = new byte[16];
-		kryptnosticEngine.calculateMetadataAddress(encObjectSearchKey, objectConversionMatrix);
 	}
 }

@@ -23,6 +23,9 @@ apply plugin: 'eclipse'
 apply plugin: 'maven'
 apply from: 'publish.gradle'
 
+sourceCompatibility=JavaVersion.VERSION_1_7
+targetCompatibility=JavaVersion.VERSION_1_7
+
 task GenerateJniHeaders(description: 'Generate the JNI headers for kryptnostic engine', dependsOn: 'classes') << {
     ext.cp = sourceSets.main.output.classesDir
     ext.resourcesOut = "../krypto-lib/src/main/cpp/"
@@ -33,7 +36,11 @@ task GenerateJniHeaders(description: 'Generate the JNI headers for kryptnostic e
     }
 }
 
-jar.dependsOn(':krypto:copyBinariesToApi')
+if ( project.hasProperty('developmentMode') && project.developmentMode ) {
+  jar.dependsOn(':krypto:copyBinariesToApi')
+} else {
+  jar.dependsOn(':copyBinariesToApi')
+}
 clean.dependsOn('cleanKryptoLib')
 
 repositories {

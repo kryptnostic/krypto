@@ -79,6 +79,7 @@ public:
 	/*
 	 * Function: getObjectSearchKey()
 	 * Returns a serialized ObjectSearchKey
+	 * 2.2(2)
 	 */
 	const BitVector<N> getObjectSearchKey() const{
 		return _spk.getObjectSearchKey();
@@ -87,6 +88,7 @@ public:
 	/*
 	 * Function: getObjectAddressMatrix()
 	 * Returns a serialized ObjectAddressMatrix
+	 * 2.2(3)
 	 */
 	const BitMatrix<N> getObjectAddressMatrix() const{
 		return _spk.getObjectAddressMatrix();
@@ -94,7 +96,9 @@ public:
 
 	/*
 	 * Function: getObjectIndexPair(objectSearchKey, objectAddressMatrix)
-	 * Returns a serialized pair of (FHE-encrypted ObjectSearchKey, ObjectAddressMatrix)
+	 * Returns a serialized pair of (FHE-encrypted ObjectSearchKey, ObjectConversionMatrix)
+	 * This returns the stuff that you upload to the server to be able to search your own content
+	 * 2.2(5)
 	 */
 	const std::pair <BitVector<2*N>,BitMatrix<N> > getObjectIndexPair(BitVector<N> objectSearchKey, BitMatrix<N> objectAddressMatrix) const{
 		return _spk.getObjectIndexPair(objectSearchKey, objectAddressMatrix, _pk);
@@ -123,8 +127,8 @@ public:
 
 	/*
 	 * Function: getObjectSharingPair(objectIndexPair)
-	 * Returns a serialized pair of (FHE-encrypted objectSearchKey, objectConversionMatrix)
-	 * Sent by a client to another to share a document
+	 * Returns a serialized pair of (objectSearchKey, objectConversionMatrix)
+	 * Sent by a client to share their stuff with others
 	 */
 	const std::pair< BitVector<N>, BitMatrix<N> > getObjectSharingPair(std::pair< BitVector<2*N>, BitMatrix<N> > objectIndexPair) const{
 		return _spk.getObjectSharingPair(objectIndexPair, _pk);
@@ -135,6 +139,7 @@ public:
 	 * Returns a serialized pair of (FHE-encrypted objectSearchKey, objectConversionMatrix)
 	 * Performed after the client receives a SharingPair from another client
 	 * Assume the two inputs are RSA-decrypted before passing in to C++
+	 * 2.4(3)
 	 */
 	const std::pair< BitVector<2*N>, BitMatrix<N> > getObjectIndexPairFromSharing(std::pair< BitVector<N>, BitMatrix<N> > objectSharingPair) const{
 		return _spk.getObjectIndexPairFromSharing(objectSharingPair, _pk);

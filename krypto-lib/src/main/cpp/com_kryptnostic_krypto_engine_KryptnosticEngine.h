@@ -18,18 +18,98 @@ JNIEXPORT void JNICALL Java_com_kryptnostic_krypto_engine_KryptnosticEngine_init
 /*
  * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
  * Method:    calculateMetadataAddress
- * Signature: ([B[B)[B
+ * Signature: ([B)[B
  */
 JNIEXPORT jbyteArray JNICALL Java_com_kryptnostic_krypto_engine_KryptnosticEngine_calculateMetadataAddress
-  (JNIEnv *, jobject, jbyteArray, jbyteArray);
+  (JNIEnv *, jobject, jbyteArray);
 
 /*
  * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
  * Method:    initClient
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_com_kryptnostic_krypto_engine_KryptnosticEngine_initClient__
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
+ * Method:    initClient
+ * Signature: ([B[B)V
+ */
+JNIEXPORT void JNICALL Java_com_kryptnostic_krypto_engine_KryptnosticEngine_initClient___3B_3B
+  (JNIEnv *, jobject, jbyteArray, jbyteArray);
+
+/*
+ * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
+ * Method:    getSearchPrivateKey
  * Signature: ()[B
  */
-JNIEXPORT jbyteArray JNICALL Java_com_kryptnostic_krypto_engine_KryptnosticEngine_initClient
+JNIEXPORT jbyteArray JNICALL Java_com_kryptnostic_krypto_engine_KryptnosticEngine_getSearchPrivateKey
   (JNIEnv *, jobject);
+
+/*
+ * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
+ * Method:    getPrivateKey
+ * Signature: ()[B
+ */
+JNIEXPORT jbyteArray JNICALL Java_com_kryptnostic_krypto_engine_KryptnosticEngine_getPrivateKey
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
+ * Method:    getClientHashFunction
+ * Signature: ()[B
+ */
+JNIEXPORT jbyteArray JNICALL Java_com_kryptnostic_krypto_engine_KryptnosticEngine_getClientHashFunction
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
+ * Method:    getObjectSearchKey
+ * Signature: ()[B
+ */
+JNIEXPORT jbyteArray JNICALL Java_com_kryptnostic_krypto_engine_KryptnosticEngine_getObjectSearchKey
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
+ * Method:    getObjectAddressMatrix
+ * Signature: ()[B
+ */
+JNIEXPORT jbyteArray JNICALL Java_com_kryptnostic_krypto_engine_KryptnosticEngine_getObjectAddressMatrix
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
+ * Method:    getObjectIndexPair
+ * Signature: ([B[B)[B
+ */
+JNIEXPORT jbyteArray JNICALL Java_com_kryptnostic_krypto_engine_KryptnosticEngine_getObjectIndexPair
+  (JNIEnv *, jobject, jbyteArray, jbyteArray);
+
+/*
+ * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
+ * Method:    getObjectSharingPair
+ * Signature: ([B)[B
+ */
+JNIEXPORT jbyteArray JNICALL Java_com_kryptnostic_krypto_engine_KryptnosticEngine_getObjectSharingPair
+  (JNIEnv *, jobject, jbyteArray);
+
+/*
+ * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
+ * Method:    getObjectIndexPairFromSharing
+ * Signature: ([B)[B
+ */
+JNIEXPORT jbyteArray JNICALL Java_com_kryptnostic_krypto_engine_KryptnosticEngine_getObjectIndexPairFromSharing
+  (JNIEnv *, jobject, jbyteArray);
+
+/*
+ * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
+ * Method:    getEncryptedSearchToken
+ * Signature: ([B)[B
+ */
+JNIEXPORT jbyteArray JNICALL Java_com_kryptnostic_krypto_engine_KryptnosticEngine_getEncryptedSearchToken
+  (JNIEnv *, jobject, jbyteArray);
 
 /*
  * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine

@@ -13,16 +13,17 @@
 
   # dependencies
   DEPS1 = ../main/cpp/BitMatrix.h ../main/cpp/BitVector.h ../main/cpp/MultiQuadTuple.h ../main/cpp/MultiQuadTupleChain.h ../main/cpp/PrivateKey.h ../main/cpp/BridgeKey.h ../main/cpp/PublicKey.h
-  DEPS2 = ../main/cpp/ClientHashFunction.h ../main/cpp/SearchPrivateKey.h ../main/cpp/client/KryptnosticClient.h ../main/cpp/KryptnosticServer.h
+  DEPS2 = ../main/cpp/ClientHashFunction.h ../main/cpp/SearchPrivateKey.h ../main/cpp/KryptnosticClient.h ../main/cpp/KryptnosticServer.h
 
   # the build target executables:
   TARGET1 = test_speed
   TARGET2 = test_local
   TARGET3 = test_KryptnosticClient
   TARGET4 = test_mqt
-  TARGET5 = test_server
+  #TARGET5 = test_server
+  TARGET6 = test_search
 
-  all: $(TARGET1) $(TARGET2) $(TARGET3) $(TARGET4)
+  all: $(TARGET1) $(TARGET2) $(TARGET3) $(TARGET4) $(TARGET6)
 
   $(TARGET1): $(TARGET1).cpp $(DEPS1)
 	$(CC) $(CFLAGS) -o $(TARGET1) $(TARGET1).cpp
@@ -36,8 +37,11 @@
   $(TARGET4): $(TARGET4).cpp $(DEPS1) $(DEPS2)
 	$(CC) $(CFLAGS) -o $(TARGET4) $(TARGET4).cpp
 
-  $(TARGET5): $(TARGET5).cpp $(DEPS1) $(DEPS2)
-	$(CC) $(CFLAGS) -o $(TARGET5) $(TARGET5).cpp
+  #$(TARGET5): $(TARGET5).cpp $(DEPS1) $(DEPS2)
+	#$(CC) $(CFLAGS) -o $(TARGET5) $(TARGET5).cpp
+
+  $(TARGET6): $(TARGET6).cpp $(DEPS1) $(DEPS2)
+	$(CC) $(CFLAGS) -o $(TARGET6) $(TARGET6).cpp
 
   clean:
-	$(RM) $(TARGET1) $(TARGET2) $(TARGET3) $(TARGET4) $(TARGET5)
+	$(RM) $(TARGET1) $(TARGET2) $(TARGET3) $(TARGET4) $(TARGET5) $(TARGET6)

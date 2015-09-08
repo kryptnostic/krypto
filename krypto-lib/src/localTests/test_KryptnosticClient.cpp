@@ -1,4 +1,4 @@
-#include "../main/cpp/client/KryptnosticClient.h"
+#include "../main/cpp/KryptnosticClient.h"
 #include <iostream>
 #include <stdio.h>
 #include <string.h>
@@ -11,6 +11,7 @@ using namespace std;
 #define DEBUG false
 #define OPRUNS 1
 #define TESTRUNS 1
+#define N 128
 
 void testInstantiateKE() {
 	clock_t diff = 0;
@@ -20,7 +21,7 @@ void testInstantiateKE() {
 
 		//PrivateKey<128> pk;
 		//SearchPrivateKey<128> spk(pk);
-		KryptnosticClient engine;
+		KryptnosticClient<N> engine;
 		ClientHashFunction<N> chf;
 
 		//cout << "size of spk is " << sizeof(spk) << endl;
