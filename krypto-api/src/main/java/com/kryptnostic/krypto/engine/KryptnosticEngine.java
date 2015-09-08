@@ -67,7 +67,7 @@ public class KryptnosticEngine {
      * Function: getMetadataAddress
      * Returns a serialized pair of (ObjectSearchKey, ObjectAddressFunction)
      **/
-    public native byte[] calculateMetadataAddress( byte[] encObjectSearchKey, byte[] objectConversionMatrix );
+    public native byte[] calculateMetadataAddress( byte[] objectIndexPair );
 
     /**
      * NEVER CALL THIS FROM THE SERVER

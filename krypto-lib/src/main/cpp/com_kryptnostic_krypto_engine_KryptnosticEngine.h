@@ -18,10 +18,10 @@ JNIEXPORT void JNICALL Java_com_kryptnostic_krypto_engine_KryptnosticEngine_init
 /*
  * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
  * Method:    calculateMetadataAddress
- * Signature: ([B[B)[B
+ * Signature: ([B)[B
  */
 JNIEXPORT jbyteArray JNICALL Java_com_kryptnostic_krypto_engine_KryptnosticEngine_calculateMetadataAddress
-  (JNIEnv *, jobject, jbyteArray, jbyteArray);
+  (JNIEnv *, jobject, jbyteArray);
 
 /*
  * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
