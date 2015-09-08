@@ -95,6 +95,64 @@ public class KryptnosticEngine {
     /**
      * NEVER CALL THIS FROM THE SERVER
      **/
+    /*
+     * Function: getClientHashFunction()
+     * Returns a serialized concatenation of the three components
+     * of the ClientHashFunction
+     */
+    public native byte[] getClientHashFunction();
+
+    /**
+     * NEVER CALL THIS FROM THE SERVER
+     **/
+    /*
+     * Function: getObjectSearchKey()
+     * Returns a serialized ObjectSearchKey
+     */
+    public native byte[] getObjectSearchKey();
+
+    /**
+     * NEVER CALL THIS FROM THE SERVER
+     **/
+    /*
+     * Function: getObjectAddressMatrix()
+     * Returns a serialized ObjectAddressMatrix
+     */
+    public native byte[] getObjectAddressMatrix();
+
+    /**
+     * NEVER CALL THIS FROM THE SERVER
+     **/
+    /*
+     * Function: getObjectIndexPair(objectSearchKey, objectAddressMatrix)
+     * Returns a serialized pair of (FHE-encrypted ObjectSearchKey, ObjectAddressMatrix)
+     */
+    public native byte[] getObjectIndexPair(byte[] objectSearchKey, byte[] objectAddressMatrix);
+
+    /**
+     * NEVER CALL THIS FROM THE SERVER
+     **/
+    /*
+     * Function: getObjectSharingPair(objectIndexPair)
+     * Returns a serialized pair of (FHE-encrypted objectSearchKey, objectConversionMatrix)
+     * Sent by a client to another to share a document
+     */
+    public native byte[] getObjectSharingPair(byte[] objectIndexPair);
+
+    /**
+     * NEVER CALL THIS FROM THE SERVER
+     **/
+    /*
+     * Function: getObjectSharingPair(objectSharingPair)
+     * Returns a serialized pair of (FHE-encrypted objectSearchKey, objectConversionMatrix)
+     * Performed after the client receives a SharingPair from another client
+     * Assume the two inputs are RSA-decrypted before passing in to C++
+     */
+    public native byte[] getObjectIndexPairFromSharing(byte[] objectSharingPair);
+
+    /**
+     * NEVER CALL THIS FROM THE SERVER
+     **/
     public native byte[] getEncryptedSearchToken( byte[] token );
 
     /**
@@ -115,5 +173,6 @@ public class KryptnosticEngine {
     protected static native byte[] testClientMetadataAddress( byte[] spk, byte[] oam, byte[] osk, byte[] token );
     protected static native byte[] testClientHashFunction( byte[] spk, byte[] pk );
     protected static native byte[] testEncryptionFHE( byte[] pk, byte[] v );
+
 
 }
