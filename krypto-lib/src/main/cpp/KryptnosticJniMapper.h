@@ -102,13 +102,13 @@ jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_calculateMetadat
 /*
  * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
  * Method:    initClient
- * Signature: ()[B
+ * Signature: ()V
  */
-void Java_com_kryptnostic_krypto_engine_KryptnosticEngine_initClient( JNIEnv * env, jobject javaContainer ) {
+void Java_com_kryptnostic_krypto_engine_KryptnosticEngine_initClient__( JNIEnv * env, jobject javaContainer ) {
 	KryptnosticClient<N> * client = new KryptnosticClient<N>();
 	setKryptnosticClient( env, javaContainer, client );
 }
-
+  
 /*
  * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
  * Method:    initClient
