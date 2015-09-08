@@ -2,7 +2,7 @@
 #SRC="~/Downloads/emsdk_portable/emscripten/tag-1.34.4"
 SRC="~/Desktop/emscripten/tag-1.34.4"
 EMPP="/em++"
-FLAGS_POST="--bind -std=c++14 --memory-init-file 0 -s TOTAL_MEMORY=1000000000 -s TOTAL_STACK=1000000000 -s DEMANGLE_SUPPORT=1 -ftemplate-depth=8192"
+FLAGS_POST="--bind -std=c++14 --memory-init-file 0 -s TOTAL_STACK=10000000 -s DEMANGLE_SUPPORT=1 -ftemplate-depth=8192"
 CPP_FILE="client/KryptnosticClientGetter.cpp"
 FLAGS_PRE="-o"
 JS_FILE="../../../../../krypto-js/KryptnosticClient.js"
