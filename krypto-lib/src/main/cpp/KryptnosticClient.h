@@ -126,22 +126,22 @@ public:
 /* Sharing */
 
 	/*
-	 * Function: getObjectSharingPair(objectIndexPair)
+	 * Function: getObjectSharingPairFromObjectIndexPair(objectIndexPair)
 	 * Returns a serialized pair of (objectSearchKey, objectConversionMatrix)
 	 * Sent by a client to share their stuff with others
 	 */
-	const std::pair< BitVector<N>, BitMatrix<N> > getObjectSharingPair(std::pair< BitVector<2*N>, BitMatrix<N> > objectIndexPair) const{
+	const std::pair< BitVector<N>, BitMatrix<N> > getObjectSharingPairFromObjectIndexPair(std::pair< BitVector<2*N>, BitMatrix<N> > objectIndexPair) const{
 		return _spk.getObjectSharingPair(objectIndexPair, _pk);
 	}
 
 	/*
-	 * Function: getObjectSharingPair(objectSharingPair)
+	 * Function: getObjectIndexPairFromObjectSharingPair(objectSharingPair)
 	 * Returns a serialized pair of (FHE-encrypted objectSearchKey, objectConversionMatrix)
 	 * Performed after the client receives a SharingPair from another client
 	 * Assume the two inputs are RSA-decrypted before passing in to C++
 	 * 2.4(3)
 	 */
-	const std::pair< BitVector<2*N>, BitMatrix<N> > getObjectIndexPairFromSharing(std::pair< BitVector<N>, BitMatrix<N> > objectSharingPair) const{
+	const std::pair< BitVector<2*N>, BitMatrix<N> > getObjectIndexPairFromObjectSharingPair(std::pair< BitVector<N>, BitMatrix<N> > objectSharingPair) const{
 		return _spk.getObjectIndexPairFromSharing(objectSharingPair, _pk);
 	}
 

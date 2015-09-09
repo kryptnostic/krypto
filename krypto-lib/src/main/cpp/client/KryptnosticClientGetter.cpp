@@ -136,25 +136,25 @@ public:
 /* Sharing */
 
 	/*
-	 * Function: getObjectSharingPair(objectIndexPair)
+	 * Function: getObjectSharingPairFromObjectIndexPair(objectIndexPair)
 	 * Returns a serialized pair of (FHE-encrypted objectSearchKey, objectConversionMatrix)
 	 * Sent by a client to another to share a document
 	 */
-	const val getObjectSharingPair(std::string objectIndexPairStr) const{
+	const val getObjectSharingPairFromObjectIndexPair(std::string objectIndexPairStr) const{
 		const std::pair< BitVector<2*N>, BitMatrix<N> > & objectIndexPair = *reinterpret_cast<const std::pair<BitVector<2*N>, BitMatrix<N> >* >(objectIndexPairStr.data());
-		std::pair< BitVector<N>, BitMatrix<N> > objectSharingPair = _kc.getObjectSharingPair(objectIndexPair);
+		std::pair< BitVector<N>, BitMatrix<N> > objectSharingPair = _kc.getObjectSharingPairFromObjectIndexPair(objectIndexPair);
 		return val(memory_view<byte>(sizeof(std::pair <BitVector<2*N>,BitMatrix<N> >), (byte *) &objectSharingPair));
 	}
 
 	/*
-	 * Function: getObjectSharingPair(objectSharingPair)
+	 * Function: getObjectIndexPairFromObjectSharingPair(objectSharingPair)
 	 * Returns a serialized pair of (FHE-encrypted objectSearchKey, objectConversionMatrix)
 	 * Performed after the client receives a SharingPair from another client
 	 * Assume the two inputs are RSA-decrypted before passing in to C++
 	 */
-	const val getObjectIndexPairFromSharing(std::string objectSharingPairStr) const{
+	const val getObjectIndexPairFromObjectSharingPair(std::string objectSharingPairStr) const{
 		const std::pair< BitVector<N>, BitMatrix<N> > objectSharingPair = *reinterpret_cast<const std::pair<BitVector<N>, BitMatrix<N> >* >(objectSharingPairStr.data());
-		std::pair< BitVector<2*N>, BitMatrix<N> > objectUploadPair = _kc.getObjectIndexPairFromSharing(objectSharingPair);
+		std::pair< BitVector<2*N>, BitMatrix<N> > objectUploadPair = _kc.getObjectIndexPairFromObjectSharingPair(objectSharingPair);
 		return val(memory_view<byte>(sizeof(std::pair <BitVector<2*N>, BitMatrix<N> >), (byte *) &objectUploadPair));
 	}
 
@@ -174,8 +174,8 @@ EMSCRIPTEN_BINDINGS(crypto_module) {
 		.function("getObjectIndexPair", &KryptnosticClientGetter::getObjectIndexPair)
 		.function("getMetadatumAddress", &KryptnosticClientGetter::getMetadatumAddress)
 		.function("getEncryptedSearchToken", &KryptnosticClientGetter::getEncryptedSearchToken)
-		.function("getObjectSharingPair", &KryptnosticClientGetter::getObjectSharingPair)
-		.function("getObjectIndexPairFromSharing", &KryptnosticClientGetter::getObjectIndexPairFromSharing)
+		.function("getObjectSharingPairFromObjectIndexPair", &KryptnosticClientGetter::getObjectSharingPairFromObjectIndexPair)
+		.function("getObjectIndexPairFromObjectSharingPair", &KryptnosticClientGetter::getObjectIndexPairFromObjectSharingPair)
 		;
 }
 #endif
