@@ -174,8 +174,8 @@ EMSCRIPTEN_BINDINGS(crypto_module) {
 		.function("getObjectIndexPair", &KryptnosticClientGetter::getObjectIndexPair)
 		.function("getMetadatumAddress", &KryptnosticClientGetter::getMetadatumAddress)
 		.function("getEncryptedSearchToken", &KryptnosticClientGetter::getEncryptedSearchToken)
-		.function("getObjectSharingPair", &KryptnosticClientGetter::getObjectSharingPair)
-		.function("getObjectIndexPairFromSharing", &KryptnosticClientGetter::getObjectIndexPairFromSharing)
+		.function("getObjectSharingPairFromObjectIndexPair", &KryptnosticClientGetter::getObjectSharingPairFromObjectIndexPair)
+		.function("getObjectIndexPairFromObjectSharingPair", &KryptnosticClientGetter::getObjectIndexPairFromObjectSharingPair)
 		;
 }
 #endif
