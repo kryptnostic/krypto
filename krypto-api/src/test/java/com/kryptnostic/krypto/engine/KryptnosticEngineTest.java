@@ -41,13 +41,13 @@ public class KryptnosticEngineTest {
         r.nextBytes( searchToken );
 
         byte[] encryptedSearchToken = clientEngine.getEncryptedSearchToken( searchToken );
-
+        byte[] encryptedSearchToken2 = clientEngine2.getEncryptedSearchToken( searchToken );
         KryptnosticEngine serverEngine = new KryptnosticEngine(
                 clientEngine.getClientHashFunction(),
                 encryptedSearchToken );
         KryptnosticEngine serverEngine2 = new KryptnosticEngine(
                 clientEngine2.getClientHashFunction(),
-                encryptedSearchToken );
+                encryptedSearchToken2 );
 
         byte[] objectAddressMatrix = clientEngine.getObjectAddressMatrix();
         byte[] objectSearchKey = clientEngine.getObjectSearchKey();
