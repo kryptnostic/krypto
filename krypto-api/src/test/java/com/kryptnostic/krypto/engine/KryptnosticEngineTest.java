@@ -30,10 +30,10 @@ public class KryptnosticEngineTest {
     public void testSearchFlow() {
         KryptnosticEngine clientEngine = new KryptnosticEngine();
         KryptnosticEngine clientEngine2 = new KryptnosticEngine();
-        
+
         clientEngine.initClient();
         clientEngine2.initClient();
-        
+
         Random r = new Random();
 
         byte[] searchToken = new byte[ 16 ];
@@ -66,6 +66,10 @@ public class KryptnosticEngineTest {
         Assert.assertArrayEquals( address, serverAddressDirect );
         Assert.assertArrayEquals( address, serverAddressFromSharing );
         Assert.assertArrayEquals( serverAddressDirect, serverAddressFromSharing );
+        clientEngine.destroyClient();
+        clientEngine2.destroyClient();
+        serverEngine.destroyServer();
+        serverEngine2.destroyServer();
     }
 
     @Test
@@ -130,5 +134,6 @@ public class KryptnosticEngineTest {
         // System.out.println("]");
 
         assertArrayEquals( clientCalculatedAddress, serverCalculatedAddress );
+        ke.destroyServer();
     }
 }

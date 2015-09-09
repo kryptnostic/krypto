@@ -56,6 +56,16 @@ public class KryptnosticEngine {
     }
 
     /**
+     * DONT
+     */
+    native void destroyServer();
+
+    /**
+     * DONT
+     */
+    native void destroyClient();
+
+    /**
      * Constructor
      * Constructs a KryptnosticServer given a
      * client's hash function and an FHE-encrypted search token.

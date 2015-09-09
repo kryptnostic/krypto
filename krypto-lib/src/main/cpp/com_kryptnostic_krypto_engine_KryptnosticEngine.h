@@ -9,6 +9,22 @@ extern "C" {
 #endif
 /*
  * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
+ * Method:    destroyServer
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_com_kryptnostic_krypto_engine_KryptnosticEngine_destroyServer
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
+ * Method:    destroyClient
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_com_kryptnostic_krypto_engine_KryptnosticEngine_destroyClient
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
  * Method:    initKryptnosticService
  * Signature: ([B[B)V
  */
