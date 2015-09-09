@@ -206,7 +206,7 @@ jbyteArray  Java_com_kryptnostic_krypto_engine_KryptnosticEngine_getPrivateKey( 
 	KryptnosticClient<N> * client = getKryptnosticClient<KryptnosticClient<N>>( env, javaContainer );
 	std::pair<BitVector<2*N>,BitMatrix<N>> * objectIndexPair = convertJByteArrayToCppObject<std::pair<BitVector<2*N>,BitMatrix<N>>>( env, objIndxPair );
 
-	std::pair<BitVector<N>,BitMatrix<N>> objectSharingPair = client->getObjectSharingPair( *objectIndexPair );
+	std::pair<BitVector<N>,BitMatrix<N>> objectSharingPair = client->getObjectSharingPairFromObjectIndexPair( *objectIndexPair );
 	jbyteArray finalRay = convertCppObjectToJByteArray< std::pair<BitVector<N>,BitMatrix<N>> >( env, &objectSharingPair );
 	return finalRay;
  }
@@ -220,7 +220,7 @@ jbyteArray  Java_com_kryptnostic_krypto_engine_KryptnosticEngine_getPrivateKey( 
 	KryptnosticClient<N> * client = getKryptnosticClient<KryptnosticClient<N>>( env, javaContainer );
 	std::pair<BitVector<N>,BitMatrix<N>> * objectSharingPair = convertJByteArrayToCppObject<std::pair<BitVector<N>,BitMatrix<N>>>( env, objSharingPair );
 
-	std::pair<BitVector<2*N>,BitMatrix<N>> objectIndexPair = client->getObjectIndexPairFromSharing( *objectSharingPair );
+	std::pair<BitVector<2*N>,BitMatrix<N>> objectIndexPair = client->getObjectIndexPairFromObjectSharingPair( *objectSharingPair );
 	jbyteArray finalRay = convertCppObjectToJByteArray< std::pair<BitVector<2*N>,BitMatrix<N>> >( env, &objectIndexPair );
 	return finalRay;
  }
