@@ -55,6 +55,17 @@ public class KryptnosticEngine {
     public KryptnosticEngine() {
     }
 
+    @Override
+    protected void finalize() throws Throwable {
+        if ( kryptnosticClientPointer != 0) {
+            destroyClient();
+        }
+        if ( kryptnosticServerPointer != 0 ) {
+            destroyServer();
+        }
+        super.finalize();
+    }
+
     /**
      * DONT
      */
