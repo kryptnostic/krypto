@@ -66,3 +66,7 @@ artifacts {
   archives sourcesJar
   archives jar
 }
+
+test{
+  jvmArgs '-Xss7M'
+}
