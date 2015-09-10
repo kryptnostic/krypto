@@ -5,8 +5,6 @@ Krypto
 
 Make sure you install [emscripten](http://kripken.github.io/emscripten-site/) and [cmake](http://www.cmake.org/)
 
-Also make sure to set your JAVA_HOME environment variable to point to your java home.
-
 For mac:
 
 	> ./gradlew buildGoogleTestMac :krypto-lib:build
