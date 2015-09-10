@@ -94,6 +94,13 @@ public:
 		return _spk.getObjectAddressMatrix();
 	}
 
+	/*
+	 * Function:n getObjectIndexPair()
+	 * Returns a serialized ObjectIndexPair
+	 */
+	const std::pair<BitVector<N>, BitMatrix<N> > getObjectIndexPair() const{
+		return _spk.getObjectIndexPair();
+	}
 
 	/*
 	 * Function: getObjectSearchPairFromIndexPair(objectIndexPair)
@@ -101,28 +108,17 @@ public:
 	 * This returns the stuff that you upload to the server to be able to search your own content
 	 * 2.2(5)
 	 */
-	const std::pair <BitVector<2*N>,BitMatrix<N> > getObjectSearchPairFromIndexPair(std::pair<BitVector<N>, BitMatrix<N> > objectIndexPair) const{
-		return _spk.getObjectSearchPairFromIndexPair(objectIndexPair.first, objectIndexPair.second, _pk);
+	const std::pair <BitVector<2*N>,BitMatrix<N> > getObjectSearchPairFromObjectIndexPair(std::pair<BitVector<N>, BitMatrix<N> > objectIndexPair) const{
+		return _spk.getObjectSearchPairFromObjectIndexPair(objectIndexPair, _pk);
 	}
 
 	/*
-	 * DELETE_LATER
-	 * Function: getObjectSearchPair(objectSearchKey, objectAddressMatrix)
-	 * Returns a serialized pair of (FHE-encrypted ObjectSearchKey, ObjectConversionMatrix)
-	 * This returns the stuff that you upload to the server to be able to search your own content
-	 * 2.2(5)
-	 */
-	const std::pair <BitVector<2*N>,BitMatrix<N> > getObjectSearchPair(BitVector<N> objectSearchKey, BitMatrix<N> objectAddressMatrix) const{
-		return _spk.getObjectSearchPair(objectSearchKey, objectAddressMatrix, _pk);
-	}
-
-	/*
-	 * Function: getMetadataAddress(objectAddressMatrix, objectSearchKey, token)
+	 * Function: getMetadataAddress(objectIndexPair, token)
 	 * Client-side address computation on raw object data and token
 	 * Returns the address of the metadatum corresponding to an object and a token
 	 */
-	const BitVector<N> getMetadataAddress(const BitMatrix<N> & objectAddressMatrix, const BitVector<N> & objectSearchKey, const BitVector<N> & token) const{
-		return _spk.getMetadataAddress(objectAddressMatrix, objectSearchKey, token);
+	const BitVector<N> getMetadataAddress(const std::pair<BitVector<N>, BitMatrix<N> > & objectIndexPair, const BitVector<N> & token) const{
+		return _spk.getMetadataAddress(objectIndexPair, token);
 	}
 
 /* Searching */

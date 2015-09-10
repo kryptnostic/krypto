@@ -204,16 +204,17 @@ jbyteArray  Java_com_kryptnostic_krypto_engine_KryptnosticEngine_getPrivateKey( 
 
 /*
  * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
- * Method:    getObjectSearchPair
+ * Method:    getObjectIndexPair
  * Signature: ([B[B)[B
  */
- jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_getObjectSearchPair( JNIEnv * env, jobject javaContainer, jbyteArray objSrchKey, jbyteArray objAddrMtrx){
-	KryptnosticClient<N> * client = getKryptnosticClient<KryptnosticClient<N>>( env, javaContainer );
-	BitVector<N> * objectSearchKey = convertJByteArrayToCppObject< BitVector<N> >( env, objSrchKey );
-	BitMatrix<N> * objectAddressMatrix = convertJByteArrayToCppObject< BitMatrix<N> >( env, objAddrMtrx );
 
-	std::pair<BitVector<2*N>,BitMatrix<N>> objIndexPair = client->getObjectSearchPair( *objectSearchKey, *objectAddressMatrix );
-	jbyteArray finalRay = convertCppObjectToJByteArray< std::pair<BitVector<2*N>,BitMatrix<N>>>( env, &objIndexPair );
+ jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_getObjectSearchPairFromObjectIndexPair( JNIEnv * env, jobject javaContainer, jbyteArray objIndexPair){
+	KryptnosticClient<N> * client = getKryptnosticClient<KryptnosticClient<N>>( env, javaContainer );
+
+	std::pair<BitVector<N>,BitMatrix<N>> * objectIndexPair = convertJByteArrayToCppObject<std::pair<BitVector<N>,BitMatrix<N>>>( env, objIndexPair );
+
+	std::pair<BitVector<2*N>,BitMatrix<N>> objSearchPair = client->getObjectSearchPairFromObjectIndexPair( *objectIndexPair );
+	jbyteArray finalRay = convertCppObjectToJByteArray< std::pair<BitVector<2*N>,BitMatrix<N>>>( env, &objSearchPair );
 	return finalRay;
  }
 
@@ -264,14 +265,13 @@ jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_getEncryptedSear
  * Method:    clientGetMetadatumAddress
  * Signature: ([B[B[B)[B
  */
-jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_clientGetMetadatumAddress( JNIEnv * env, jobject javaContainer, jbyteArray objectAddressMatrix, jbyteArray objectSearchKey, jbyteArray tok ){
-	BitMatrix<N> * objAddrMatrix = convertJByteArrayToCppObject< BitMatrix<N> >( env, objectAddressMatrix );
-	BitVector<N> * objSearchKey = convertJByteArrayToCppObject< BitVector<N> >( env, objectSearchKey );
+jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_clientGetMetadatumAddress( JNIEnv * env, jobject javaContainer, jbyteArray objectIndexPair, jbyteArray tok ){
+	std::pair<BitVector<N>, BitMatrix<N> > * objIndexPair = convertJByteArrayToCppObject< std::pair<BitVector<N>, BitMatrix<N> > >(env, objectIndexPair);
 	BitVector<N> * token = convertJByteArrayToCppObject< BitVector<N> >( env, tok );
 
 	KryptnosticClient<N> * client = getKryptnosticClient<KryptnosticClient<N>>( env, javaContainer );
 
-	BitVector<N> address = client->getMetadataAddress( *objAddrMatrix, *objSearchKey, *token );
+	BitVector<N> address = client->getMetadataAddress( *objIndexPair, *token );
 	jbyteArray finalRay = convertCppObjectToJByteArray< BitVector<N> >( env, &address );
 	return finalRay;
 }
@@ -370,12 +370,12 @@ jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_testObjectConver
  * Method:    testClientMetadataAddress
  * Signature: ([B[B[B[B)[B
  */
-jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_testClientMetadataAddress(JNIEnv * env, jclass javaContainer, jbyteArray spk, jbyteArray oam, jbyteArray osk, jbyteArray token) {
+jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_testClientMetadataAddress(JNIEnv * env, jclass javaContainer, jbyteArray spk, jbyteArray oi, jbyteArray token) {
 	SearchPrivateKey<N> spkActual = *convertJByteArrayToCppObject< SearchPrivateKey<N> >(env, spk);
-	BitMatrix<N> oamActual = *convertJByteArrayToCppObject< BitMatrix<N> >(env, oam);
-	BitVector<N> oskActual = *convertJByteArrayToCppObject< BitVector<N> >(env, osk);
+	std::pair<BitVector<N>, BitMatrix<N> > oiActual = *convertJByteArrayToCppObject< std::pair<BitVector<N>, BitMatrix<N> > >(env, oi);
+
 	BitVector<N> tokenActual = *convertJByteArrayToCppObject< BitVector<N> >(env, token);
-	BitVector<N> address = spkActual.getMetadataAddress(oamActual, oskActual, tokenActual);
+	BitVector<N> address = spkActual.getMetadataAddress(oiActual, tokenActual);
 	return convertCppObjectToJByteArray< BitVector<N> >(env, &address);
 }
 
