@@ -42,13 +42,13 @@ public:
 /* Registration */
 
 	/*
-	 * Function: getMetadataAddress(objectIndexPair)
+	 * Function: getMetadataAddress(objectSearchPair)
 	 * Server-side address computation on encrypted ObjectSearchKey and ObjectConversionMatrix
 	 * Returns the address of metadatum corresponding to a token-object pair
 	 */
-	const BitVector<N> getMetadataAddress(const std::pair <BitVector<2*N>, BitMatrix<N> > &objectIndexPair) const{
-		const BitVector<2*N> & eObjectSearchKey = objectIndexPair.first; //get from pair
-		const BitMatrix<N> & objectConversionMatrix = objectIndexPair.second; //get from pair
+	const BitVector<N> getMetadataAddress(const std::pair <BitVector<2*N>, BitMatrix<N> > &objectSearchPair) const{
+		const BitVector<2*N> & eObjectSearchKey = objectSearchPair.first; //get from pair
+		const BitMatrix<N> & objectConversionMatrix = objectSearchPair.second; //get from pair
 
 		// return cHashFunction(eSearchToken, eObscuredObjectSearchKey);
 		const BitVector<N> & fullEval = _tokenAddressFunction(_concealedF1(eObjectSearchKey)) ^ (_hashMatrixR * eObjectSearchKey);
