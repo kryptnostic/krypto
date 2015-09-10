@@ -67,11 +67,11 @@ public:
 	}
 
 	/*
-	 * Function: getClientHashFunction()
+	 * Function: calculateClientHashFunction()
 	 * Returns a serialized concatenation of the three components
 	 * of the ClientHashFunction
 	 */
-	const val getClientHashFunction() const{
+	const val calculateClientHashFunction() const{
 		ClientHashFunction<N> newClientHashFunction = _kc.getClientHashFunction();
 		return val(memory_view<byte>(sizeof(ClientHashFunction<N>), (byte *) &newClientHashFunction));
 	}
@@ -79,30 +79,30 @@ public:
 /* Indexing */
 
 	/*
-	 * Function: getObjectIndexPair()
+	 * Function: generateObjectIndexPair()
 	 * Returns a serialized ObjectIndexPair
 	 */
-	const val getObjectIndexPair() const{
+	const val generateObjectIndexPair() const{
 		const std::pair<BitVector<N>, BitMatrix<N> > objectIndexPair = _kc.getObjectIndexPair();
 		return val(memory_view<byte>(sizeof(std::pair<BitVector<N>, BitMatrix<N> >), (byte *) &objectIndexPair));
 	}
 
 	/*
-	 * Function: getObjectSearchPairFromObjectIndexPair(objectIndexPair)
+	 * Function: calculateObjectSearchPairFromObjectIndexPair(objectIndexPair)
 	 * Returns a serialized pair of (FHE-encrypted ObjectSearchKey, ObjectAddressMatrix)
 	 */
-	const val getObjectSearchPairFromObjectIndexPair(std::string objectIndexPairStr) const{
+	const val calculateObjectSearchPairFromObjectIndexPair(std::string objectIndexPairStr) const{
 		const std::pair<BitVector<N>, BitMatrix<N> > & objectIndexPair = *reinterpret_cast<const std::pair<BitVector<N>, BitMatrix<N> >* >(objectIndexPairStr.data());
 		std::pair<BitVector<2*N>, BitMatrix<N> > objectSearchPair = _kc.getObjectSearchPairFromObjectIndexPair(objectIndexPair);
 		return val(memory_view<byte>(sizeof(std::pair <BitVector<2*N>,BitMatrix<N> >), (byte *) &objectSearchPair));
 	}
 
 	/*
-	 * Function: getMetadataAddress(objectAddressMatrix, objectSearchKey, token)
+	 * Function: calculateMetadataAddress(objectAddressMatrix, objectSearchKey, token)
 	 * Client-side address computation on raw object data and token
 	 * Returns the address of the metadatum corresponding to an object and a token
 	 */
-	const val getMetadataAddress(std::string objectIndexPairStr, std::string tokenStr) const{
+	const val calculateMetadataAddress(std::string objectIndexPairStr, std::string tokenStr) const{
 		const std::pair<BitVector<N>, BitMatrix<N> > & objectIndexPair = *reinterpret_cast<const std::pair<BitVector<N>, BitMatrix<N> >* >(objectIndexPairStr.data());
 		const BitVector<N> & token = *reinterpret_cast<const BitVector<N>*>(tokenStr.data());
 
@@ -113,10 +113,10 @@ public:
 /* Searching */
 
 	/*
-	 * Function: getEncryptedSearchToken(search token)
+	 * Function: calculateEncryptedSearchToken(search token)
 	 * Returns a serialized FHE-encrypted search token
 	 */
-	const val getEncryptedSearchToken(std::string tokenStr) const{
+	const val calculateEncryptedSearchToken(std::string tokenStr) const{
 		const BitVector<N> & token = *reinterpret_cast<const BitVector<N>*>(tokenStr.data());
 		const BitVector<2*N> eToken = _kc.getEncryptedSearchToken(token);
 		return val(memory_view<byte>(sizeof(BitVector<2*N>), (byte *) &eToken));
@@ -125,23 +125,23 @@ public:
 /* Sharing */
 
 	/*
-	 * Function: getObjectSharePairFromObjectSearchPair(objectSearchPair)
+	 * Function: calculateObjectSharePairFromObjectSearchPair(objectSearchPair)
 	 * Returns a serialized pair of (FHE-encrypted objectSearchKey, objectConversionMatrix)
 	 * Sent by a client to another to share a document
 	 */
-	const val getObjectSharePairFromObjectSearchPair(std::string objectSearchPairStr) const{
+	const val calculateObjectSharePairFromObjectSearchPair(std::string objectSearchPairStr) const{
 		const std::pair< BitVector<2*N>, BitMatrix<N> > & objectSearchPair = *reinterpret_cast<const std::pair<BitVector<2*N>, BitMatrix<N> >* >(objectSearchPairStr.data());
 		std::pair< BitVector<N>, BitMatrix<N> > objectSharePair = _kc.getObjectSharePairFromObjectSearchPair(objectSearchPair);
 		return val(memory_view<byte>(sizeof(std::pair <BitVector<2*N>,BitMatrix<N> >), (byte *) &objectSharePair));
 	}
 
 	/*
-	 * Function: getObjectSearchPairFromObjectSharePair(objectSharePair)
+	 * Function: calculateObjectSearchPairFromObjectSharePair(objectSharePair)
 	 * Returns a serialized pair of (FHE-encrypted objectSearchKey, objectConversionMatrix)
 	 * Performed after the client receives a SharePair from another client
 	 * Assume the two inputs are RSA-decrypted before passing in to C++
 	 */
-	const val getObjectSearchPairFromObjectSharePair(std::string objectSharePairStr) const{
+	const val calculateObjectSearchPairFromObjectSharePair(std::string objectSharePairStr) const{
 		const std::pair< BitVector<N>, BitMatrix<N> > objectSharePair = *reinterpret_cast<const std::pair<BitVector<N>, BitMatrix<N> >* >(objectSharePairStr.data());
 		std::pair< BitVector<2*N>, BitMatrix<N> > objectUploadPair = _kc.getObjectSearchPairFromObjectSharePair(objectSharePair);
 		return val(memory_view<byte>(sizeof(std::pair <BitVector<2*N>, BitMatrix<N> >), (byte *) &objectUploadPair));
@@ -157,13 +157,13 @@ EMSCRIPTEN_BINDINGS(crypto_module) {
 		.constructor<std::string, std::string>()
 		.function("getPrivateKey", &KryptnosticClientGetter::getPrivateKey)
 		.function("getSearchPrivateKey", &KryptnosticClientGetter::getSearchPrivateKey)
-		.function("getClientHashFunction", &KryptnosticClientGetter::getClientHashFunction)
-		.function("getObjectIndexPair", &KryptnosticClientGetter::getObjectIndexPair)
-		.function("getObjectSearchPairFromObjectIndexPair", &KryptnosticClientGetter::getObjectSearchPairFromObjectIndexPair)
-		.function("getMetadataAddress", &KryptnosticClientGetter::getMetadataAddress)
-		.function("getEncryptedSearchToken", &KryptnosticClientGetter::getEncryptedSearchToken)
-		.function("getObjectSharePairFromObjectSearchPair", &KryptnosticClientGetter::getObjectSharePairFromObjectSearchPair)
-		.function("getObjectSearchPairFromObjectSharePair", &KryptnosticClientGetter::getObjectSearchPairFromObjectSharePair)
+		.function("calculateClientHashFunction", &KryptnosticClientGetter::calculateClientHashFunction)
+		.function("generateObjectIndexPair", &KryptnosticClientGetter::generateObjectIndexPair)
+		.function("calculateObjectSearchPairFromObjectIndexPair", &KryptnosticClientGetter::calculateObjectSearchPairFromObjectIndexPair)
+		.function("calculateMetadataAddress", &KryptnosticClientGetter::calculateMetadataAddress)
+		.function("calculateEncryptedSearchToken", &KryptnosticClientGetter::calculateEncryptedSearchToken)
+		.function("calculateObjectSharePairFromObjectSearchPair", &KryptnosticClientGetter::calculateObjectSharePairFromObjectSearchPair)
+		.function("calculateObjectSearchPairFromObjectSharePair", &KryptnosticClientGetter::calculateObjectSearchPairFromObjectSharePair)
 		;
 }
 #endif
