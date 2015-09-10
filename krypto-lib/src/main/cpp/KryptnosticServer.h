@@ -46,7 +46,7 @@ public:
 	 * Server-side address computation on encrypted ObjectSearchKey and ObjectConversionMatrix
 	 * Returns the address of metadatum corresponding to a token-object pair
 	 */
-	const BitVector<N> getMetadataAddress(const std::pair <BitVector<2*N>, BitMatrix<N> > objectIndexPair) const{
+	const BitVector<N> getMetadataAddress(const std::pair <BitVector<2*N>, BitMatrix<N> > &objectIndexPair) const{
 		const BitVector<2*N> & eObjectSearchKey = objectIndexPair.first; //get from pair
 		const BitMatrix<N> & objectConversionMatrix = objectIndexPair.second; //get from pair
 

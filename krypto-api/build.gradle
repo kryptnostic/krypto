@@ -1,6 +1,30 @@
+//Easy semantic version based off describe + tags
+def getVersionName = { ->
+  def stdout = new ByteArrayOutputStream()
+  exec {
+    commandLine 'git', 'describe', '--tags', '--dirty', '--long'
+    standardOutput = stdout
+  }
+  def tagVer = stdout.toString().trim()
+  def semVer = (tagVer =~ /v?([\d\.]+)/)[0][1]
+
+  if (tagVer.contains('dev')) {
+    semVer += "-SNAPSHOT"
+  }
+  return semVer
+}
+
+description = "Kryptnostic JNI Client"
+group = "com.kryptnostic"
+version = getVersionName()
+
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'maven'
+apply from: 'publish.gradle'
+
+sourceCompatibility=JavaVersion.VERSION_1_7
+targetCompatibility=JavaVersion.VERSION_1_7
 
 task GenerateJniHeaders(description: 'Generate the JNI headers for kryptnostic engine', dependsOn: 'classes') << {
     ext.cp = sourceSets.main.output.classesDir
@@ -12,7 +36,11 @@ task GenerateJniHeaders(description: 'Generate the JNI headers for kryptnostic e
     }
 }
 
-jar.dependsOn(':copyBinariesToApi')
+if ( project.hasProperty('developmentMode') && project.developmentMode ) {
+  jar.dependsOn(':krypto:copyBinariesToApi')
+} else {
+  jar.dependsOn(':copyBinariesToApi')
+}
 clean.dependsOn('cleanKryptoLib')
 
 repositories {
@@ -27,4 +55,18 @@ dependencies {
 
 task cleanKryptoLib(type: Delete) {
   delete 'src/main/resources/libmain.dylib'
+}
+
+task sourcesJar(type : Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+  archives sourcesJar
+  archives jar
+}
+
+test{
+  jvmArgs '-Xss7M'
 }

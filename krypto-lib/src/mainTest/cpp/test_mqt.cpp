@@ -102,8 +102,7 @@ TEST(MQTTests, testSetMQT){
     BitVector<sma> v = BitVector<sma>::randomVector();
     cs.setContributions(m, v);
     BitVector<sma> x = BitVector<sma>::randomVector();
-    cout << "Emulating constructor" << endl;
-    cs(x).print();
+    BitVector<sma> csx = cs(x);
 }
 
 TEST(MQTTests, testPartialEval){

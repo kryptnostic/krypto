@@ -8,6 +8,9 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
 public class KryptnosticEngine {
+    public static final String PRIVATE_KEY = "KryptnosticEngine.PrivateKey";
+    public static final String SEARCH_PRIVATE_KEY = "KryptnosticEngine.SearchPrivateKey";
+    public static final String CLIENT_HASH_FUNCTION = "KryptnosticEngine.ClientHashFunction";
 
     static {
         final String osName = System.getProperty( "os.name" ).toLowerCase();
@@ -28,20 +31,170 @@ public class KryptnosticEngine {
         System.load( outputPath.toAbsolutePath().toString() );
     }
 
-    private final long handle;
+    private long kryptnosticServerPointer;
 
-    public KryptnosticEngine( byte[] clientHashFunction, byte[] conversionMatrix, byte[] docSearchKey ) {
-        handle = initKryptnosticEngine( clientHashFunction, conversionMatrix, docSearchKey );
+    protected long getKryptServer(){
+        return kryptnosticServerPointer;
     }
 
-    //
-    //    Constructors
-    //
-    // ryan sends docSearchKey, convMatrix per document & clientHashFunc per session
-    // make a set of Pair<ConvMatrix, docSearchKey>
-    private native long initKryptnosticEngine( byte[] clientHashFunction, byte[] conversionMatrix, byte[] docSearchKey );
+    private long kryptnosticClientPointer;
 
-    // search => call this
-    public native byte[] getAddress( byte[] encSearchToken );
+    /**
+     * VALIDATE HERE OR BEFORE PASSING IN
+     * @param clientHashFunction
+     * @param encObjectSearchToken
+     */
+    public KryptnosticEngine( byte[] clientHashFunction, byte[] encObjectSearchToken ) {
+        // Side effect, sets handle to a pointer to this object on the heap so we can clean it up
+        initKryptnosticService( clientHashFunction, encObjectSearchToken );
+    }
+
+    /**
+     * NEVER DO THIS
+     */
+    public KryptnosticEngine() {
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        if ( kryptnosticClientPointer != 0) {
+            destroyClient();
+        }
+        if ( kryptnosticServerPointer != 0 ) {
+            destroyServer();
+        }
+        super.finalize();
+    }
+
+    /**
+     * DONT
+     */
+    native void destroyServer();
+
+    /**
+     * DONT
+     */
+    native void destroyClient();
+
+    /**
+     * Constructor
+     * Constructs a KryptnosticServer given a
+     * client's hash function and an FHE-encrypted search token.
+     * Calculates the client's hash function evaluated
+     * on the search token without the encrypted ObjectSearchKey
+     **/
+    private native void initKryptnosticService( byte[] clientHashFunction, byte[] encObjectSearchToken );
+
+    /**
+     * Function: getMetadataAddress
+     * Returns a serialized pair of (ObjectSearchKey, ObjectAddressFunction)
+     **/
+    public native byte[] calculateMetadataAddress( byte[] objectIndexPair );
+
+    /**
+     * NEVER CALL THIS FROM THE SERVER
+     * Function: Client.getMetadatumAddress
+     **/
+    public native void initClient();
+
+    /**
+     * NEVER CALL THIS FROM THE SERVER
+     * DONT CALL THIS AND INITCLIENT() IN THE SAME JVM
+     * Function: Client.getMetadatumAddress
+     **/
+    public native void initClient( byte[] privateKey, byte[] searchPrivateKey );
+
+    /**
+     * NEVER CALL THIS FROM THE SERVER
+     **/
+    public native byte[] getSearchPrivateKey( );
+
+    /**
+     * NEVER CALL THIS FROM THE SERVER
+     **/
+    public native byte[] getPrivateKey( );
+
+    /**
+     * NEVER CALL THIS FROM THE SERVER
+     **/
+    /*
+     * Function: getClientHashFunction()
+     * Returns a serialized concatenation of the three components
+     * of the ClientHashFunction
+     */
+    public native byte[] getClientHashFunction();
+
+    /**
+     * NEVER CALL THIS FROM THE SERVER
+     **/
+    /*
+     * Function: getObjectSearchKey()
+     * Returns a serialized ObjectSearchKey
+     */
+    public native byte[] getObjectSearchKey();
+
+    /**
+     * NEVER CALL THIS FROM THE SERVER
+     **/
+    /*
+     * Function: getObjectAddressMatrix()
+     * Returns a serialized ObjectAddressMatrix
+     */
+    public native byte[] getObjectAddressMatrix();
+
+    /**
+     * NEVER CALL THIS FROM THE SERVER
+     **/
+    /*
+     * Function: getObjectIndexPair(objectSearchKey, objectAddressMatrix)
+     * Returns a serialized pair of (FHE-encrypted ObjectSearchKey, ObjectAddressMatrix)
+     */
+    public native byte[] getObjectIndexPair(byte[] objectSearchKey, byte[] objectAddressMatrix);
+
+    /**
+     * NEVER CALL THIS FROM THE SERVER
+     **/
+    /*
+     * Function: getObjectSharingPair(objectIndexPair)
+     * Returns a serialized pair of (FHE-encrypted objectSearchKey, objectConversionMatrix)
+     * Sent by a client to another to share a document
+     */
+    public native byte[] getObjectSharingPair(byte[] objectIndexPair);
+
+    /**
+     * NEVER CALL THIS FROM THE SERVER
+     **/
+    /*
+     * Function: getObjectSharingPair(objectSharingPair)
+     * Returns a serialized pair of (FHE-encrypted objectSearchKey, objectConversionMatrix)
+     * Performed after the client receives a SharingPair from another client
+     * Assume the two inputs are RSA-decrypted before passing in to C++
+     */
+    public native byte[] getObjectIndexPairFromSharing(byte[] objectSharingPair);
+
+    /**
+     * NEVER CALL THIS FROM THE SERVER
+     **/
+    public native byte[] getEncryptedSearchToken( byte[] token );
+
+    /**
+     * NEVER CALL THIS FROM THE SERVER
+     * Function: Client.getMetadatumAddress
+     **/
+    public native byte[] clientGetMetadatumAddress( byte[] objectAddressMatrix, byte[] objectSearchKey, byte[] token );
+
+    protected static native byte[] testBitMatrixConversion( byte[] bytes );
+    protected static native byte[] testBitVectorConversion( byte[] bytes );
+    protected static native byte[] testClientHashFunctionConversion( byte[] bytes );
+
+    protected static native byte[] testPrivateKey();
+    protected static native byte[] testSearchPrivateKey();
+    protected static native byte[] testObjectSearchKey( byte[] spk );
+    protected static native byte[] testObjectAddressMatrix( byte[] spk );
+    protected static native byte[] testObjectConversionMatrix( byte[] spk, byte[] oam );
+    protected static native byte[] testClientMetadataAddress( byte[] spk, byte[] oam, byte[] osk, byte[] token );
+    protected static native byte[] testClientHashFunction( byte[] spk, byte[] pk );
+    protected static native byte[] testEncryptionFHE( byte[] pk, byte[] v );
+
 
 }

@@ -4,6 +4,8 @@
 #include <iostream>
 #include <utility>
 #include "../cpp/PrivateKey.h"
+#include "../cpp/BridgeKey.h"
+#include "../cpp/PublicKey.h"
 #include "../cpp/SearchPrivateKey.h"
 #include "../cpp/MultiQuadTuple.h"
 
@@ -16,14 +18,16 @@ int main(){
 
 	cout << endl;
 
-	cout << "PrivateKey<N>: " << sizeof(PrivateKey<N>) << endl; //12360
-	cout << "SearchPrivateKey<N>: " << sizeof(SearchPrivateKey<N>) << endl; //6144
-	cout << "MultiQuadTuple<N,N>: " << sizeof(MultiQuadTuple<N, N>) << endl; //132112
-	cout << "MultiQuadTuple<2*N,N>: " << sizeof(MultiQuadTuple<2*N, N>) << endl; //526352
-	cout << "MultiQuadTuple<N,2*N>: " << sizeof(MultiQuadTuple<N, 2*N>) << endl; //264224
+	cout << "PrivateKey<N>: " << sizeof(PrivateKey<N>) << endl;
+	cout << "BridgeKey<N>: " << sizeof(BridgeKey<N>) << endl;
+	cout << "PublicKey<N>: " << sizeof(PublicKey<N>) << endl;
+	cout << "SearchPrivateKey<N>: " << sizeof(SearchPrivateKey<N>) << endl;
+	cout << "MultiQuadTuple<N,N>: " << sizeof(MultiQuadTuple<N, N>) << endl;
+	cout << "MultiQuadTuple<2*N,N>: " << sizeof(MultiQuadTuple<2*N, N>) << endl;
+	cout << "MultiQuadTuple<N,2*N>: " << sizeof(MultiQuadTuple<N, 2*N>) << endl;
 
 	cout << endl;
-	cout << "Registeration: " << endl;
+	cout << "Registration: " << endl;
 
 	cout << "getPrivateKey: " << sizeof(PrivateKey<N>) << endl;
 	cout << "getSearchPrivateKey: " << sizeof(SearchPrivateKey<N>) << endl;

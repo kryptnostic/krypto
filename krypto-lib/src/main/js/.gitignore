@@ -1,0 +1,6 @@
+#executables
+sizeof
+
+#debugging files
+*.dSYM
+

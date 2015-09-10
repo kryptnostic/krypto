@@ -9,7 +9,7 @@
   #  -march=native                enables GCC optimization for local CPU instruction sets
   #  -ftemplate-depth=8192        increases the maximum instantiation depth for template classes from 900 to 8192
   #  -I$                          includes libraries
-  CFLAGS  = -g -Wall --std=c++11 -fslp-vectorize-aggressive -march=native -ftemplate-depth=8192 -I$(JAVA_HOME)/include/ -I$(JAVA_HOME)/include/darwin/ -I$(JAVA_HOME)/include/linux/
+  CFLAGS  = -g -Wall --std=c++11 -O3 -fslp-vectorize-aggressive -march=native -ftemplate-depth=8192 -I$(JAVA_HOME)/include/ -I$(JAVA_HOME)/include/darwin/ -I$(JAVA_HOME)/include/linux/
 
   # dependencies
   DEPS1 = ../main/cpp/BitMatrix.h ../main/cpp/BitVector.h ../main/cpp/MultiQuadTuple.h ../main/cpp/MultiQuadTupleChain.h ../main/cpp/PrivateKey.h ../main/cpp/BridgeKey.h ../main/cpp/PublicKey.h
@@ -20,9 +20,10 @@
   TARGET2 = test_local
   TARGET3 = test_KryptnosticClient
   TARGET4 = test_mqt
-  TARGET5 = test_server
+  #TARGET5 = test_server
+  TARGET6 = test_search
 
-  all: $(TARGET1) $(TARGET2) $(TARGET3) $(TARGET4)
+  all: $(TARGET1) $(TARGET2) $(TARGET3) $(TARGET4) $(TARGET6)
 
   $(TARGET1): $(TARGET1).cpp $(DEPS1)
 	$(CC) $(CFLAGS) -o $(TARGET1) $(TARGET1).cpp
@@ -36,8 +37,11 @@
   $(TARGET4): $(TARGET4).cpp $(DEPS1) $(DEPS2)
 	$(CC) $(CFLAGS) -o $(TARGET4) $(TARGET4).cpp
 
-  $(TARGET5): $(TARGET5).cpp $(DEPS1) $(DEPS2)
-	$(CC) $(CFLAGS) -o $(TARGET5) $(TARGET5).cpp
+  #$(TARGET5): $(TARGET5).cpp $(DEPS1) $(DEPS2)
+	#$(CC) $(CFLAGS) -o $(TARGET5) $(TARGET5).cpp
+
+  $(TARGET6): $(TARGET6).cpp $(DEPS1) $(DEPS2)
+	$(CC) $(CFLAGS) -o $(TARGET6) $(TARGET6).cpp
 
   clean:
-	$(RM) $(TARGET1) $(TARGET2) $(TARGET3) $(TARGET4) $(TARGET5)
+	$(RM) $(TARGET1) $(TARGET2) $(TARGET3) $(TARGET4) $(TARGET5) $(TARGET6)

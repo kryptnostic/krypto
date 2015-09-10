@@ -8,7 +8,6 @@
 
 #ifndef krypto_MultiQuadTuple_h
 #define krypto_MultiQuadTuple_h
-#include "BitVector.h"
 #include "BitMatrix.h"
 
 #define NUM_INPUT_MONOMIALS ((NUM_INPUTS * (NUM_INPUTS + 1)) >> 1)
@@ -63,8 +62,6 @@ struct MultiQuadTuple {
     void setAsMatrix(const BitMatrix<NUM_OUTPUTS, NUM_INPUTS> &m){
         _matrix.zero();
         _matrix[0] = m.getCol(NUM_INPUTS - LIMIT);
-        //cout << "NUM_INPUTS: " << NUM_INPUTS << endl;
-        //cout << "LIMIT: " << LIMIT << endl;
         next.setAsMatrix(m);
     }
 
@@ -163,7 +160,7 @@ struct MultiQuadTuple {
      * Evaluates the MultiQuadTuple on an input vector
      */
     const BitVector<NUM_OUTPUTS> operator() (const BitVector<NUM_INPUTS> & input) const {
-        BitVector<NUM_OUTPUTS> result = BitVector<NUM_OUTPUTS>::zeroVector();
+        BitVector<NUM_OUTPUTS> result = next(input);//BitVector<NUM_OUTPUTS>::zeroVector();
         if(input[NUM_INPUTS-LIMIT]){
             for(unsigned int i = 0; i < LIMIT; ++i) {
                 if(input[ i + (NUM_INPUTS-LIMIT) ]) {
@@ -171,7 +168,6 @@ struct MultiQuadTuple {
                 }
             }
         }
-        result ^= next(input);
         return result;
     }
 
