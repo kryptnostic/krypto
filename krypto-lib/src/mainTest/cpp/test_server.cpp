@@ -20,14 +20,14 @@ TEST(KryptnosticServerTest, testInit){
 	ClientHashFunction<> chf = sk.getClientHashFunction(pk);
 	BitVector<> objectSearchKey = sk.getObjectSearchKey();
 	BitMatrix<> objectAddressFunction = sk.getObjectAddressMatrix();
-	std::pair<BitVector<2*N>, BitMatrix<N> > objectIndexPair = sk.getObjectIndexPair(objectSearchKey, objectAddressFunction, pk);
+	std::pair<BitVector<2*N>, BitMatrix<N> > objectSearchPair = sk.getObjectSearchPair(objectSearchKey, objectAddressFunction, pk);
 
 	BitVector<> token = BitVector<>::randomVector();
-	BitVector<> expectedAddress = sk.getMetadatumAddress(objectAddressFunction, objectSearchKey, token);
+	BitVector<> expectedAddress = sk.getMetadataAddress(objectAddressFunction, objectSearchKey, token);
 
 	BitVector<2*N> eToken = pk.encrypt(token);
 	KryptnosticServer<> ks(chf, eToken);
-	BitVector<> actualAddress = ks.getMetadataAddress(objectIndexPair);
+	BitVector<> actualAddress = ks.getMetadataAddress(objectSearchPair);
 
 	ASSERT_TRUE(expectedAddress.equals(actualAddress));
 }

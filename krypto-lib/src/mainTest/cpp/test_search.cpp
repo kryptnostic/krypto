@@ -17,25 +17,25 @@ TEST(SearchKeyTest, testIndexingAndSearch){
 	PrivateKey<N> pk;
 
 	BitVector<N> objectSearchKey = sk.getObjectSearchKey();
-	BitMatrix<N> objectAddressFunction = sk.getObjectAddressMatrix();
+	BitMatrix<N> objectAddressMatrix = sk.getObjectAddressMatrix();
 
-	std::pair<BitVector<2*N>, BitMatrix<N> > objectIndexPair = sk.getObjectIndexPair(objectSearchKey, objectAddressFunction, pk);
+	std::pair<BitVector<2*N>, BitMatrix<N> > objectSearchPair = sk.getObjectSearchPair(objectSearchKey, objectAddressMatrix, pk);
 
 	BitVector<N> token = BitVector<N>::randomVector();
 
-	BitVector<N> metadatumAddress = sk.getMetadatumAddress(objectAddressFunction, objectSearchKey, token);
+	BitVector<N> metadataAddress = sk.getMetadataAddress(objectAddressMatrix, objectSearchKey, token);
 
 	BitVector<2*N> eToken = pk.encrypt(token);
 	BitVector<2*N> eObjectSearchKey = pk.encrypt(objectSearchKey);
 
 	ClientHashFunction<N> chf = sk.getClientHashFunction(pk);
 
-	BitVector<N> calculatedAddress = sk.getObjectConversionMatrix(objectAddressFunction) * chf(eToken, eObjectSearchKey);
+	BitVector<N> calculatedAddress = sk.getObjectConversionMatrix(objectAddressMatrix) * chf(eToken, eObjectSearchKey);
 
-	ASSERT_TRUE(metadatumAddress.equals(calculatedAddress));
+	ASSERT_TRUE(metadataAddress.equals(calculatedAddress));
 }
 
-TEST(SearchKeyTest, testSharing){
+TEST(SearchKeyTest, testShare){
 	SearchPrivateKey<N> sk_src;
 	SearchPrivateKey<N> sk_dst;
 	PrivateKey<N> pk_src;
@@ -43,18 +43,18 @@ TEST(SearchKeyTest, testSharing){
 
 	//source client indexes a new document
 	BitVector<N> objectSearchKey = sk_src.getObjectSearchKey();
-	BitMatrix<N> objectAddressFunction = sk_src.getObjectAddressMatrix();
-	std::pair<BitVector<2*N>, BitMatrix<N> > sourceObjectIndexPair = sk_src.getObjectIndexPair(objectSearchKey, objectAddressFunction, pk_src);
+	BitMatrix<N> objectAddressMatrix = sk_src.getObjectAddressMatrix();
+	std::pair<BitVector<2*N>, BitMatrix<N> > sourceObjectSearchPair = sk_src.getObjectSearchPair(objectSearchKey, objectAddressMatrix, pk_src);
 
 	BitVector<N> token = BitVector<N>::randomVector();
-	BitVector<N> expectedAddress = sk_src.getMetadatumAddress(objectAddressFunction, objectSearchKey, token);
+	BitVector<N> expectedAddress = sk_src.getMetadataAddress(objectAddressMatrix, objectSearchKey, token);
 
 	//source client prepares the sharing pair
-	std::pair<BitVector<N>, BitMatrix<N> > objectSharingPair = sk_src.getObjectSharingPair(sourceObjectIndexPair, pk_src);
+	std::pair<BitVector<N>, BitMatrix<N> > objectSharePair = sk_src.getObjectSharePair(sourceObjectSearchPair, pk_src);
 
 	//destination client receives the sharing pair and prepares the upload pair
-	std::pair<BitVector<2*N>, BitMatrix<N> > destinationObjectIndexPair = sk_dst.getObjectIndexPairFromSharing(objectSharingPair, pk_dst);
-	BitVector<N> calculatedAddress = sk_dst.getMetadatumAddressFromPair(token, destinationObjectIndexPair, pk_dst);
+	std::pair<BitVector<2*N>, BitMatrix<N> > destinationObjectSearchPair = sk_dst.getObjectSearchPairFromObjectSharePair(objectSharePair, pk_dst);
+	BitVector<N> calculatedAddress = sk_dst.getMetadataAddressFromPair(token, destinationObjectSearchPair, pk_dst);
 
 	ASSERT_TRUE(expectedAddress.equals(calculatedAddress));
 }
