@@ -8,7 +8,13 @@ def branch=stdout.toString().trim();
 apply plugin: "maven-publish"
 apply plugin: "signing"
 
-if ( (branch.equals("develop") || branch.equals("master") ) 
+ext {
+    snapshotUrl = "https://oss.sonatype.org/content/repositories/snapshots"
+    releaseUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+    localUrl = "file:/${project.projectDir}/artifacts"
+}
+
+if ( ( branch.equals("develop") || branch.equals("master") )
     && ( System.getenv("bamboo_JAR_SIGNING_KEYRING") != null) 
     && ( System.getenv("bamboo_JAR_SIGNING_PASSWORD")!=null ) 
     && ( System.getenv("bamboo_SONATYPE_USERNAME")!=null ) 
@@ -26,43 +32,75 @@ if ( (branch.equals("develop") || branch.equals("master") )
         sign configurations.pom
     }
 
-    ext {
-        snapshotUrl = "https://oss.sonatype.org/content/repositories/snapshots"
-        releaseUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2"
-        localUrl = "file:/${project.projectDir}/artifacts"
-    }
-
     ext."signing.keyId" = 'FDEB5A45'
     ext."signing.secretKeyRingFile" = "$System.env.bamboo_JAR_SIGNING_KEYRING" 
     ext."signing.password" = "$System.env.bamboo_JAR_SIGNING_PASSWORD"
 
-    publishing {
-        repositories {
-            maven { 
-                url snapshotUrl
-                credentials {
-                    username = "$System.env.bamboo_SONATYPE_USERNAME"
-                    password = "$System.env.bamboo_SONATYPE_PASSWORD"
+    if ( branch.equals("develop") ) {
+        publishing {
+            repositories {
+                maven { 
+                    url snapshotUrl
+                    credentials {
+                        username = "$System.env.bamboo_SONATYPE_USERNAME"
+                        password = "$System.env.bamboo_SONATYPE_PASSWORD"
+                    }
+                }
+            }
+
+            publications {
+                mavenJava(MavenPublication) {
+                    from components.java
+
+                    artifact sourcesJar
+
+                    pom.withXml {
+                        asNode().children().last() + {
+                            resolveStrategy = Closure.DELEGATE_FIRST
+                            name 'krypto'
+                            description 'Kryptnostic C++ cryptographic functions'
+                            url 'https://www.github.com/kryptnostic/krypto'
+                            scm {
+                                url 'https://www.github.com/kryptnostic/krypto'
+                                connection 'https://www.github.com/kryptnostic/krypto'
+                                developerConnection 'https://www.github.com/kryptnostic/krypto'
+                            }
+                        }
+                    }
                 }
             }
         }
+    }
 
-        publications {
-            mavenJava(MavenPublication) {
-                from components.java
+    if ( branch.equals("master") ) {
+        publishing {
+            repositories {
+                maven { 
+                    url releaseUrl
+                    credentials {
+                        username = "$System.env.bamboo_SONATYPE_USERNAME"
+                        password = "$System.env.bamboo_SONATYPE_PASSWORD"
+                    }
+                }
+            }
 
-                artifact sourcesJar
+            publications {
+                mavenJava(MavenPublication) {
+                    from components.java
 
-                pom.withXml {
-                    asNode().children().last() + {
-                        resolveStrategy = Closure.DELEGATE_FIRST
-                        name 'krypto'
-                        description 'Kryptnostic C++ cryptographic functions'
-                        url 'https://www.github.com/kryptnostic/krypto'
-                        scm {
+                    artifact sourcesJar
+
+                    pom.withXml {
+                        asNode().children().last() + {
+                            resolveStrategy = Closure.DELEGATE_FIRST
+                            name 'krypto'
+                            description 'Kryptnostic C++ cryptographic functions'
                             url 'https://www.github.com/kryptnostic/krypto'
-                            connection 'https://www.github.com/kryptnostic/krypto'
-                            developerConnection 'https://www.github.com/kryptnostic/krypto'
+                            scm {
+                                url 'https://www.github.com/kryptnostic/krypto'
+                                connection 'https://www.github.com/kryptnostic/krypto'
+                                developerConnection 'https://www.github.com/kryptnostic/krypto'
+                            }
                         }
                     }
                 }
