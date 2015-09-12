@@ -10,15 +10,23 @@ apply plugin: "signing"
 
 ext {
     snapshotUrl = "https://oss.sonatype.org/content/repositories/snapshots"
+    artifactorySnapshotUrl = "http://artifactory.krypt.int/artifactory/libs-snapshot-local"
+    artifactoryReleaseUrl = "http://artifactory.krypt.int/artifactory/libs-release-local"
     releaseUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2"
     localUrl = "file:/${project.projectDir}/artifacts"
 }
 
-if ( ( branch.equals("develop") || branch.equals("master") )
-    && ( System.getenv("bamboo_JAR_SIGNING_KEYRING") != null) 
-    && ( System.getenv("bamboo_JAR_SIGNING_PASSWORD")!=null ) 
-    && ( System.getenv("bamboo_SONATYPE_USERNAME")!=null ) 
-    && ( System.getenv("bamboo_SONATYPE_PASSWORD")!=null ) ) {
+if( ( (branch.equals("develop") || branch.equals("master") || branch.contains("release/") ) )
+    && ( System.getenv("bamboo_JAR_SIGNING_KEYRING") != null)
+    && ( System.getenv("bamboo_JAR_SIGNING_PASSWORD") !=null )
+    && ( System.getenv("bamboo_SONATYPE_USERNAME") !=null )
+    && ( System.getenv("bamboo_SONATYPE_PASSWORD") !=null )
+    && ( System.getenv("bamboo_ARTIFACTORY_USERNAME") !=null )
+    && ( System.getenv("bamboo_ARTIFACTORY_PASSWORD") != null)) {
+
+    ext."signing.keyId" = 'FDEB5A45'
+    ext."signing.secretKeyRingFile" = "$System.env.bamboo_JAR_SIGNING_KEYRING" 
+    ext."signing.password" = "$System.env.bamboo_JAR_SIGNING_PASSWORD"
 
     configurations {
         pom
@@ -32,74 +40,68 @@ if ( ( branch.equals("develop") || branch.equals("master") )
         sign configurations.pom
     }
 
-    ext."signing.keyId" = 'FDEB5A45'
-    ext."signing.secretKeyRingFile" = "$System.env.bamboo_JAR_SIGNING_KEYRING" 
-    ext."signing.password" = "$System.env.bamboo_JAR_SIGNING_PASSWORD"
-
-    if ( branch.equals("develop") ) {
-        publishing {
-            repositories {
-                maven { 
-                    url snapshotUrl
-                    credentials {
-                        username = "$System.env.bamboo_SONATYPE_USERNAME"
-                        password = "$System.env.bamboo_SONATYPE_PASSWORD"
-                    }
+    publishing {
+        repositories {
+            maven {
+                url branch.equals("master") ? releaseUrl : snapshotUrl
+                credentials {
+                    username = "$System.env.bamboo_SONATYPE_USERNAME"
+                    password = "$System.env.bamboo_SONATYPE_PASSWORD"
                 }
             }
-
-            publications {
-                mavenJava(MavenPublication) {
-                    from components.java
-
-                    artifact sourcesJar
-
-                    pom.withXml {
-                        asNode().children().last() + {
-                            resolveStrategy = Closure.DELEGATE_FIRST
-                            name 'krypto'
-                            description 'Kryptnostic C++ cryptographic functions'
-                            url 'https://www.github.com/kryptnostic/krypto'
-                            scm {
-                                url 'https://www.github.com/kryptnostic/krypto'
-                                connection 'https://www.github.com/kryptnostic/krypto'
-                                developerConnection 'https://www.github.com/kryptnostic/krypto'
-                            }
-                        }
-                    }
+            maven {
+                url branch.equals("master") ? artifactoryReleaseUrl : artifactorySnapshotUrl
+                credentials {
+                    username = "$System.env.bamboo_ARTIFACTORY_USERNAME"
+                    password = "$System.env.bamboo_ARTIFACTORY_PASSWORD"
                 }
             }
         }
-    }
 
-    if ( branch.equals("master") ) {
-        publishing {
-            repositories {
-                maven { 
-                    url releaseUrl
-                    credentials {
-                        username = "$System.env.bamboo_SONATYPE_USERNAME"
-                        password = "$System.env.bamboo_SONATYPE_PASSWORD"
-                    }
-                }
-            }
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
 
-            publications {
-                mavenJava(MavenPublication) {
-                    from components.java
+                artifact sourcesJar
 
-                    artifact sourcesJar
-
-                    pom.withXml {
-                        asNode().children().last() + {
-                            resolveStrategy = Closure.DELEGATE_FIRST
-                            name 'krypto'
-                            description 'Kryptnostic C++ cryptographic functions'
+                pom.withXml {
+                    asNode().children().last() + {
+                        resolveStrategy = Closure.DELEGATE_FIRST
+                        name 'krypto'
+                        description 'Kryptnostic C++ cryptographic functions'
+                        url 'https://www.github.com/kryptnostic/krypto'
+                        scm {
                             url 'https://www.github.com/kryptnostic/krypto'
-                            scm {
-                                url 'https://www.github.com/kryptnostic/krypto'
-                                connection 'https://www.github.com/kryptnostic/krypto'
-                                developerConnection 'https://www.github.com/kryptnostic/krypto'
+                            connection 'https://www.github.com/kryptnostic/krypto'
+                            developerConnection 'https://www.github.com/kryptnostic/krypto'
+                        }
+                        licenses {
+                            license {
+                                name 'The Apache Software License, Version 2.0'
+                                url 'http://www.apache.org/license/LICENSE-2.0.txt'
+                                distribution 'repo'
+                            }
+                        }
+                        developers {
+                            developer {
+                                id 'howpenghui'
+                                name 'Peng Hui How'
+                                email 'peng@kryptnostic.com'
+                            } 
+                            developer {
+                                id 'RobinZ16'
+                                name 'Robin Zhang'
+                                email 'robin@kryptnostic.com'
+                            } 
+                            developer {
+                                id 'makosblade'
+                                name 'Drew Bailey'
+                                email 'drew@kryptnostic.com'
+                            } 
+                            developer {
+                                id 'geekbeast'
+                                name 'Matthew Tamayo-Rios'
+                                email 'matthew@kryptnostic.com'
                             }
                         }
                     }
