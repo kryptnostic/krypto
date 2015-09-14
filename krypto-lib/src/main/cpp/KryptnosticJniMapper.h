@@ -205,7 +205,7 @@ jbyteArray  Java_com_kryptnostic_krypto_engine_KryptnosticEngine_getPrivateKey( 
 /*
  * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
  * Method:    getObjectIndexPair
- * Signature: ([B[B)[B
+ * Signature: ([B)[B
  */
 
  jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_getObjectSearchPairFromObjectIndexPair( JNIEnv * env, jobject javaContainer, jbyteArray objIndexPair){
@@ -263,7 +263,7 @@ jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_getEncryptedSear
 /*
  * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
  * Method:    clientGetMetadatumAddress
- * Signature: ([B[B[B)[B
+ * Signature: ([B[B)[B
  */
 jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_clientGetMetadatumAddress( JNIEnv * env, jobject javaContainer, jbyteArray objectIndexPair, jbyteArray tok ){
 	std::pair<BitVector<N>, BitMatrix<N> > * objIndexPair = convertJByteArrayToCppObject< std::pair<BitVector<N>, BitMatrix<N> > >(env, objectIndexPair);
@@ -368,7 +368,7 @@ jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_testObjectConver
 /*
  * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
  * Method:    testClientMetadataAddress
- * Signature: ([B[B[B[B)[B
+ * Signature: ([B[B[B)[B
  */
 jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_testClientMetadataAddress(JNIEnv * env, jclass javaContainer, jbyteArray spk, jbyteArray oi, jbyteArray token) {
 	SearchPrivateKey<N> spkActual = *convertJByteArrayToCppObject< SearchPrivateKey<N> >(env, spk);
