@@ -11,7 +11,7 @@
 #ifndef __krypto__MultiQuadTuple__
 #define __krypto__MultiQuadTuple__
 
-#include "test_BitMatrix.h"
+#include "embug_BitMatrix.h"
 
 template<unsigned int NUM_INPUTS, unsigned int NUM_OUTPUTS>
 class MultiQuadTuple {
