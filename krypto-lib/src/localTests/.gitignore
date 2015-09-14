@@ -7,6 +7,7 @@ test_mqt
 test_public
 test_jni
 test_search
+embug
 
 #debugging files
 *.dSYM
