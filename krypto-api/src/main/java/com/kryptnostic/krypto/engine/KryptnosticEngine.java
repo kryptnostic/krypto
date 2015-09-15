@@ -86,21 +86,21 @@ public class KryptnosticEngine {
     private native void initKryptnosticService( byte[] clientHashFunction, byte[] encObjectSearchToken );
 
     /**
-     * Function: getMetadataAddress
-     * Returns a serialized pair of (ObjectSearchKey, ObjectAddressFunction)
+     * Function: calculateMetadataAddress
+     * Returns the client-computed metadata address from an ObjectIndexPair
      **/
     public native byte[] calculateMetadataAddress( byte[] objectIndexPair );
 
     /**
      * NEVER CALL THIS FROM THE SERVER
-     * Function: Client.getMetadatumAddress
+     * Function: Client.initClient
      **/
     public native void initClient();
 
     /**
      * NEVER CALL THIS FROM THE SERVER
      * DONT CALL THIS AND INITCLIENT() IN THE SAME JVM
-     * Function: Client.getMetadatumAddress
+     * Function: Client.initClient
      **/
     public native void initClient( byte[] privateKey, byte[] searchPrivateKey );
 
@@ -170,7 +170,7 @@ public class KryptnosticEngine {
 
     /**
      * NEVER CALL THIS FROM THE SERVER
-     * Function: Client.getMetadatumAddress
+     * Function: Client.clientGetMetadatumAddress
      **/
     public native byte[] clientGetMetadatumAddress( byte[] objectIndexPair, byte[] token );
 
@@ -180,8 +180,6 @@ public class KryptnosticEngine {
 
     protected static native byte[] testPrivateKey();
     protected static native byte[] testSearchPrivateKey();
-    protected static native byte[] testObjectSearchKey( byte[] spk );
-    protected static native byte[] testObjectAddressMatrix( byte[] spk );
     protected static native byte[] testObjectIndexPair( byte[] spk );
     protected static native byte[] testObjectSearchPairFromIndexPair( byte[] spk, byte[] oip, byte[] pk );
     protected static native byte[] testClientMetadataAddress( byte[] spk, byte[] oi, byte[] token );

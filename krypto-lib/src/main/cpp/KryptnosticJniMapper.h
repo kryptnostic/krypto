@@ -332,28 +332,6 @@ jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_testObjectIndexP
 
 /*
  * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
- * Method:    testObjectSearchKey
- * Signature: ([B)[B
- */
-jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_testObjectSearchKey(JNIEnv * env, jclass javaContainer, jbyteArray spk) {
-	SearchPrivateKey<N> spkActual = *convertJByteArrayToCppObject< SearchPrivateKey<N> >(env, spk);
-	BitVector<N> osk = spkActual.getObjectSearchKey();
-	return convertCppObjectToJByteArray< BitVector<N> >(env, &osk);
-}
-
-/*
- * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
- * Method:    testObjectAddressMatrix
- * Signature: ([B)[B
- */
-jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_testObjectAddressMatrix(JNIEnv * env, jclass javaContainer, jbyteArray spk) {
-	SearchPrivateKey<N> spkActual = *convertJByteArrayToCppObject< SearchPrivateKey<N> >(env, spk);
-	BitMatrix<N> oam = spkActual.getObjectAddressMatrix();
-	return convertCppObjectToJByteArray< BitMatrix<N> >(env, &oam);
-}
-
-/*
- * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
  * Method:    testObjectSearchPairFromIndexPair
  * Signature: ([B[B[B])[B
  */

@@ -169,22 +169,6 @@ JNIEXPORT jbyteArray JNICALL Java_com_kryptnostic_krypto_engine_KryptnosticEngin
 
 /*
  * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
- * Method:    testObjectSearchKey
- * Signature: ([B)[B
- */
-JNIEXPORT jbyteArray JNICALL Java_com_kryptnostic_krypto_engine_KryptnosticEngine_testObjectSearchKey
-  (JNIEnv *, jclass, jbyteArray);
-
-/*
- * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
- * Method:    testObjectAddressMatrix
- * Signature: ([B)[B
- */
-JNIEXPORT jbyteArray JNICALL Java_com_kryptnostic_krypto_engine_KryptnosticEngine_testObjectAddressMatrix
-  (JNIEnv *, jclass, jbyteArray);
-
-/*
- * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
  * Method:    testObjectIndexPair
  * Signature: ([B)[B
  */

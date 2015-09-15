@@ -109,14 +109,12 @@ public class KryptnosticEngineTest {
         byte[] spk = KryptnosticEngine.testSearchPrivateKey();
         
         byte[] oip = KryptnosticEngine.testObjectIndexPair( spk );
-        byte[] osk = KryptnosticEngine.testObjectSearchKey( spk );
         byte[] osp = KryptnosticEngine.testObjectSearchPairFromIndexPair( spk, oip, pk );
         byte[] token = new byte[ 16 ];
         rand.nextBytes( token );
         byte[] clientCalculatedAddress = KryptnosticEngine.testClientMetadataAddress( spk, oip, token );
 
         byte[] etoken = KryptnosticEngine.testEncryptionFHE( pk, token );
-        byte[] eosk = KryptnosticEngine.testEncryptionFHE( pk, osk );
         byte[] chf = KryptnosticEngine.testClientHashFunction( spk, pk );
 
         KryptnosticEngine ke = new KryptnosticEngine( chf, etoken );
