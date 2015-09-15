@@ -98,7 +98,7 @@ public:
 	}
 
 	/*
-	 * Function: calculateMetadataAddress(objectAddressMatrix, objectSearchKey, token)
+	 * Function: calculateMetadataAddress(objectIndexPair, token)
 	 * Client-side address computation on raw object data and token
 	 * Returns the address of the metadatum corresponding to an object and a token
 	 */
