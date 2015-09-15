@@ -220,10 +220,10 @@ jbyteArray  Java_com_kryptnostic_krypto_engine_KryptnosticEngine_getPrivateKey( 
 
 /*
  * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
- * Method:    getObjectSharePair
+ * Method:    getObjectSharePairFromObjectIndexPair
  * Signature: ([B)[B
  */
- jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_getObjectSharePair( JNIEnv * env, jobject javaContainer, jbyteArray objIndxPair ){
+ jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_getObjectSharePairFromObjectIndexPair( JNIEnv * env, jobject javaContainer, jbyteArray objIndxPair ){
 	KryptnosticClient<N> * client = getKryptnosticClient<KryptnosticClient<N>>( env, javaContainer );
 	std::pair<BitVector<2*N>,BitMatrix<N>> * objectSearchPair = convertJByteArrayToCppObject<std::pair<BitVector<2*N>,BitMatrix<N>>>( env, objIndxPair );
 

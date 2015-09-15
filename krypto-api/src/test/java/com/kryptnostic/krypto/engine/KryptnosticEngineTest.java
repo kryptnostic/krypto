@@ -54,12 +54,12 @@ public class KryptnosticEngineTest {
 
         byte[] address = clientEngine.clientGetMetadatumAddress( objectAddressMatrix, objectSearchKey, searchToken );
 
-        byte[] objectIndexPair = clientEngine.getObjectIndexPair( objectSearchKey, objectAddressMatrix );
+        byte[] objectIndexPair = clientEngine.getObjectSearchPairFromObjectIndexPair( objectSearchKey, objectAddressMatrix );
 
         // Tests sharing
         byte[] sharingPair = clientEngine.getObjectSharingPair( clientEngine.getObjectIndexPair( objectSearchKey,
                 objectAddressMatrix ) );
-        byte[] indexPairFromSharingPair = clientEngine2.getObjectIndexPairFromSharing( sharingPair );
+        byte[] indexPairFromSharingPair = clientEngine2.getObjectIndexPairFromShare( sharingPair );
 
         byte[] serverAddressDirect = serverEngine.calculateMetadataAddress( objectIndexPair );
         byte[] serverAddressFromSharing = serverEngine2.calculateMetadataAddress( indexPairFromSharingPair );

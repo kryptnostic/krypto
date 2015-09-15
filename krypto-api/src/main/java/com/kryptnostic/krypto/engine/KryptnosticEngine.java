@@ -155,22 +155,22 @@ public class KryptnosticEngine {
      * NEVER CALL THIS FROM THE SERVER
      **/
     /*
-     * Function: getObjectSharePair(objectIndexPair)
+     * Function: getObjectSearchPairFromObjectSharePair(objectSearchPair)
      * Returns a serialized pair of (FHE-encrypted objectSearchKey, objectConversionMatrix)
      * Sent by a client to another to share a document
      */
-    public native byte[] getObjectSharePair(byte[] objectIndexPair);
+    public native byte[] getObjectSharePairFromObjectSearchPair(byte[] objectSearchPair);
 
     /**
      * NEVER CALL THIS FROM THE SERVER
      **/
     /*
-     * Function: getObjectSharePair(objectSharePair)
+     * Function: getObjectSearchPairFromObjectSharePair(objectSharePair)
      * Returns a serialized pair of (FHE-encrypted objectSearchKey, objectConversionMatrix)
      * Performed after the client receives a SharePair from another client
-     * Assume the two inputs are RSA-decrypted before passing in to C++
+     * Assume the two inputs are AES-decrypted before passing in to C++
      */
-    public native byte[] getObjectIndexPairFromShare(byte[] objectSharePair);
+    public native byte[] getObjectSearchPairFromObjectSharePair(byte[] objectSharePair);
 
     /**
      * NEVER CALL THIS FROM THE SERVER
