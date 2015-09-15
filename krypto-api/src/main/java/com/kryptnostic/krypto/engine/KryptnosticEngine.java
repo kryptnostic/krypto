@@ -146,31 +146,31 @@ public class KryptnosticEngine {
      * NEVER CALL THIS FROM THE SERVER
      **/
     /*
-     * Function: getObjectIndexPair(objectSearchKey, objectAddressMatrix)
+     * Function: getObjectSearchPairFromObjectIndexPair(objectIndexPair)
      * Returns a serialized pair of (FHE-encrypted ObjectSearchKey, ObjectAddressMatrix)
      */
-    public native byte[] getObjectIndexPair(byte[] objectSearchKey, byte[] objectAddressMatrix);
+    public native byte[] getObjectSearchPairFromObjectIndexPair(byte[] objectIndexPair);
 
     /**
      * NEVER CALL THIS FROM THE SERVER
      **/
     /*
-     * Function: getObjectSharingPair(objectIndexPair)
+     * Function: getObjectSharePair(objectIndexPair)
      * Returns a serialized pair of (FHE-encrypted objectSearchKey, objectConversionMatrix)
      * Sent by a client to another to share a document
      */
-    public native byte[] getObjectSharingPair(byte[] objectIndexPair);
+    public native byte[] getObjectSharePair(byte[] objectIndexPair);
 
     /**
      * NEVER CALL THIS FROM THE SERVER
      **/
     /*
-     * Function: getObjectSharingPair(objectSharingPair)
+     * Function: getObjectSharePair(objectSharePair)
      * Returns a serialized pair of (FHE-encrypted objectSearchKey, objectConversionMatrix)
-     * Performed after the client receives a SharingPair from another client
+     * Performed after the client receives a SharePair from another client
      * Assume the two inputs are RSA-decrypted before passing in to C++
      */
-    public native byte[] getObjectIndexPairFromSharing(byte[] objectSharingPair);
+    public native byte[] getObjectIndexPairFromShare(byte[] objectSharePair);
 
     /**
      * NEVER CALL THIS FROM THE SERVER
@@ -181,7 +181,7 @@ public class KryptnosticEngine {
      * NEVER CALL THIS FROM THE SERVER
      * Function: Client.getMetadatumAddress
      **/
-    public native byte[] clientGetMetadatumAddress( byte[] objectAddressMatrix, byte[] objectSearchKey, byte[] token );
+    public native byte[] clientGetMetadatumAddress( byte[] objectIndexPair, byte[] token );
 
     protected static native byte[] testBitMatrixConversion( byte[] bytes );
     protected static native byte[] testBitVectorConversion( byte[] bytes );
@@ -192,7 +192,7 @@ public class KryptnosticEngine {
     protected static native byte[] testObjectSearchKey( byte[] spk );
     protected static native byte[] testObjectAddressMatrix( byte[] spk );
     protected static native byte[] testObjectConversionMatrix( byte[] spk, byte[] oam );
-    protected static native byte[] testClientMetadataAddress( byte[] spk, byte[] oam, byte[] osk, byte[] token );
+    protected static native byte[] testClientMetadataAddress( byte[] spk, byte[] oi, byte[] token );
     protected static native byte[] testClientHashFunction( byte[] spk, byte[] pk );
     protected static native byte[] testEncryptionFHE( byte[] pk, byte[] v );
 

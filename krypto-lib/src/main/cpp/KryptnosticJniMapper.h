@@ -204,7 +204,7 @@ jbyteArray  Java_com_kryptnostic_krypto_engine_KryptnosticEngine_getPrivateKey( 
 
 /*
  * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
- * Method:    getObjectIndexPair
+ * Method:    getObjectSearchPairFromObjectIndexPair
  * Signature: ([B)[B
  */
 
