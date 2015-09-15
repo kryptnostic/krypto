@@ -128,19 +128,10 @@ public class KryptnosticEngine {
      * NEVER CALL THIS FROM THE SERVER
      **/
     /*
-     * Function: getObjectSearchKey()
-     * Returns a serialized ObjectSearchKey
+     * Function: getObjectIndexPair()
+     * Returns a serialized ObjectSearchKey and ObjectAddressMatrix
      */
-    public native byte[] getObjectSearchKey();
-
-    /**
-     * NEVER CALL THIS FROM THE SERVER
-     **/
-    /*
-     * Function: getObjectAddressMatrix()
-     * Returns a serialized ObjectAddressMatrix
-     */
-    public native byte[] getObjectAddressMatrix();
+    public native byte[] getObjectIndexPair();
 
     /**
      * NEVER CALL THIS FROM THE SERVER
@@ -191,7 +182,8 @@ public class KryptnosticEngine {
     protected static native byte[] testSearchPrivateKey();
     protected static native byte[] testObjectSearchKey( byte[] spk );
     protected static native byte[] testObjectAddressMatrix( byte[] spk );
-    protected static native byte[] testObjectConversionMatrix( byte[] spk, byte[] oam );
+    protected static native byte[] testObjectIndexPair( byte[] spk );
+    protected static native byte[] testObjectSearchPairFromIndexPair( byte[] spk, byte[] oip, byte[] pk );
     protected static native byte[] testClientMetadataAddress( byte[] spk, byte[] oi, byte[] token );
     protected static native byte[] testClientHashFunction( byte[] spk, byte[] pk );
     protected static native byte[] testEncryptionFHE( byte[] pk, byte[] v );
