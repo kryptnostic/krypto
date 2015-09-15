@@ -107,12 +107,12 @@ public class KryptnosticEngine {
     /**
      * NEVER CALL THIS FROM THE SERVER
      **/
-    public native byte[] getSearchPrivateKey( );
+    public native byte[] getSearchPrivateKey();
 
     /**
      * NEVER CALL THIS FROM THE SERVER
      **/
-    public native byte[] getPrivateKey( );
+    public native byte[] getPrivateKey();
 
     /**
      * NEVER CALL THIS FROM THE SERVER

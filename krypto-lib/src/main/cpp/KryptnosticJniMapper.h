@@ -266,12 +266,12 @@ jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_getEncryptedSear
  * Signature: ([B[B)[B
  */
 jbyteArray Java_com_kryptnostic_krypto_engine_KryptnosticEngine_clientGetMetadatumAddress( JNIEnv * env, jobject javaContainer, jbyteArray objectIndexPair, jbyteArray token ){
-	std::pair<BitVector<N>, BitMatrix<N> > * objIndexPair = convertJByteArrayToCppObject< std::pair<BitVector<N>, BitMatrix<N> > >(env, objectIndexPair);
+	std::pair<BitVector<N>, BitMatrix<N> > * objectIndexPairActual = convertJByteArrayToCppObject< std::pair<BitVector<N>, BitMatrix<N> > >(env, objectIndexPair);
 	BitVector<N> * tokenActual = convertJByteArrayToCppObject< BitVector<N> >( env, token );
 
 	KryptnosticClient<N> * client = getKryptnosticClient<KryptnosticClient<N> >( env, javaContainer );
 
-	BitVector<N> address = client->getMetadataAddress( *objIndexPair, *tokenActual );
+	BitVector<N> address = client->getMetadataAddress( *objectIndexPairActual, *tokenActual );
 	jbyteArray finalRay = convertCppObjectToJByteArray< BitVector<N> >( env, &address );
 	return finalRay;
 }
