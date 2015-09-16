@@ -13,14 +13,11 @@ void testAddress() {
 	SearchPrivateKey<N> sk;
 	PrivateKey<N> pk;
 
-	BitVector<N> objectSearchKey = sk.getObjectSearchKey();
-	BitMatrix<N> objectAddressFunction = sk.getObjectAddressMatrix();
-
-	std::pair<BitVector<2*N>, BitMatrix<N> > objectIndexPair = sk.getObjectIndexPair(objectSearchKey, objectAddressFunction, pk);
+	std::pair<BitVector<N>, BitMatrix<N> > objectIndexPair = sk.getObjectIndexPair();
 
 	BitVector<N> token = BitVector<N>::randomVector();
 
-	BitVector<N> metadatumAddress = sk.getMetadatumAddress(objectAddressFunction, objectSearchKey, token);
+	BitVector<N> metadatumAddress = sk.getMetadataAddress(objectIndexPair, token);
 }
 
 
