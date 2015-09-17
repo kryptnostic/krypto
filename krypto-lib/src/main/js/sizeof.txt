@@ -1,53 +1,39 @@
-N: 64 #for JS client's reference
-
-PrivateKey<N>: 49680
-BridgeKey<N>: 70160
-PublicKey<N>: 2318424
-SearchPrivateKey<N>: 1024
-MultiQuadTuple<N,N>: 16648
-MultiQuadTuple<2*N,N>: 66056
-MultiQuadTuple<N,2*N>: 33296
+Search Token: 64
 
 Registration: 
-getPrivateKey: 49680
-getSearchPrivateKey: 1024
+PrivateKey: 49680
+SearchPrivateKey: 1024
 getClientHashFunction: 134160
 
 Indexing: 
-getMetadatumAddress: 8
-getObjectAddressFunction: 1024
-getObjectIndexPair: 528
+MetadataAddress: 8
+ObjectAddressMatrix: 1024
+ObjectIndexPair: 520
 
 Search: 
-getEncryptedSearchToken: 16
+ObjectSearchPair: 528
+EncryptedSearchToken: 16
 
 Sharing: 
-getObjectSharingPair: 528
+ObjectSharePair: 520
 
 /////////////////////////////////////
 
-N: 128 #for JS client's reference
-
-PrivateKey<N>: 329760
-BridgeKey<N>: 411680
-PublicKey<N>: 18448560
-SearchPrivateKey<N>: 4096
-MultiQuadTuple<N,N>: 132112
-MultiQuadTuple<2*N,N>: 526352
-MultiQuadTuple<N,2*N>: 264224
+Search Token: 128
 
 Registration: 
-getPrivateKey: 329760
-getSearchPrivateKey: 4096
+PrivateKey: 329760
+SearchPrivateKey: 4096
 getClientHashFunction: 1060896
 
 Indexing: 
-getMetadatumAddress: 16
-getObjectAddressFunction: 4096
-getObjectIndexPair: 2080
+MetadataAddress: 16
+ObjectAddressMatrix: 4096
+ObjectIndexPair: 2064
 
 Search: 
-getEncryptedSearchToken: 32
+ObjectSearchPair: 2080
+EncryptedSearchToken: 32
 
 Sharing: 
-getObjectSharingPair: 2080
+ObjectSharePair: 2064
