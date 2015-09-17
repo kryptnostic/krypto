@@ -109,13 +109,13 @@ public:
 	}
 
 	/*
-	 * Function: getObjectSharePair(uploaded, pk)
+	 * Function: getObjectSharePairFromObjectSearchPair(objectSearchPair, pk)
 	 * Generates the pair to be shared with another client
 	 * Note: Server encrypts this with sharing destination's RSA public key
 	 * Equation: {R_{user} * d_{doc}, L_{doc}}
 	 */
-	const std::pair<BitVector<N>, BitMatrix<N> > getObjectSharePair(const std::pair<BitVector<2*N>, BitMatrix<N> > & uploaded, const PrivateKey<N> & pk) const{
-		return std::make_pair(_R * pk.decrypt(uploaded.first), uploaded.second * _K);
+	const std::pair<BitVector<N>, BitMatrix<N> > getObjectSharePairFromObjectSearchPair(const std::pair<BitVector<2*N>, BitMatrix<N> > & objectSearchPair, const PrivateKey<N> & pk) const{
+		return std::make_pair(_R * pk.decrypt(objectSearchPair.first), objectSearchPair.second * _K);
 	}
 
 	/*
