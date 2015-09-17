@@ -135,11 +135,11 @@ public:
 
 	/*
 	 * Function: getObjectSharePairFromObjectSearchPair(objectSearchPair)
-	 * Returns a serialized pair of (objectSearchKey, objectConversionMatrix)
+	 * Returns a serialized pair of (obscured ObjectSearchKey, ObjectConversionMatrix)
 	 * Sent by a client to share their stuff with others
 	 */
 	const std::pair< BitVector<N>, BitMatrix<N> > getObjectSharePairFromObjectSearchPair(std::pair< BitVector<2*N>, BitMatrix<N> > objectSearchPair) const{
-		return _spk.getObjectSharePair(objectSearchPair, _pk);
+		return _spk.getObjectSharePairFromObjectSearchPair(objectSearchPair, _pk);
 	}
 
 	/*
