@@ -86,33 +86,33 @@ public class KryptnosticEngine {
     private native void initKryptnosticService( byte[] clientHashFunction, byte[] encObjectSearchToken );
 
     /**
-     * Function: getMetadataAddress
-     * Returns a serialized pair of (ObjectSearchKey, ObjectAddressFunction)
+     * Function: calculateMetadataAddress
+     * Returns the client-computed metadata address from an ObjectIndexPair
      **/
     public native byte[] calculateMetadataAddress( byte[] objectIndexPair );
 
     /**
      * NEVER CALL THIS FROM THE SERVER
-     * Function: Client.getMetadatumAddress
+     * Function: Client.initClient
      **/
     public native void initClient();
 
     /**
      * NEVER CALL THIS FROM THE SERVER
      * DONT CALL THIS AND INITCLIENT() IN THE SAME JVM
-     * Function: Client.getMetadatumAddress
+     * Function: Client.initClient
      **/
     public native void initClient( byte[] privateKey, byte[] searchPrivateKey );
 
     /**
      * NEVER CALL THIS FROM THE SERVER
      **/
-    public native byte[] getSearchPrivateKey( );
+    public native byte[] getSearchPrivateKey();
 
     /**
      * NEVER CALL THIS FROM THE SERVER
      **/
-    public native byte[] getPrivateKey( );
+    public native byte[] getPrivateKey();
 
     /**
      * NEVER CALL THIS FROM THE SERVER
@@ -128,49 +128,40 @@ public class KryptnosticEngine {
      * NEVER CALL THIS FROM THE SERVER
      **/
     /*
-     * Function: getObjectSearchKey()
-     * Returns a serialized ObjectSearchKey
+     * Function: getObjectIndexPair()
+     * Returns a serialized ObjectSearchKey and ObjectAddressMatrix
      */
-    public native byte[] getObjectSearchKey();
+    public native byte[] getObjectIndexPair();
 
     /**
      * NEVER CALL THIS FROM THE SERVER
      **/
     /*
-     * Function: getObjectAddressMatrix()
-     * Returns a serialized ObjectAddressMatrix
-     */
-    public native byte[] getObjectAddressMatrix();
-
-    /**
-     * NEVER CALL THIS FROM THE SERVER
-     **/
-    /*
-     * Function: getObjectIndexPair(objectSearchKey, objectAddressMatrix)
+     * Function: getObjectSearchPairFromObjectIndexPair(objectIndexPair)
      * Returns a serialized pair of (FHE-encrypted ObjectSearchKey, ObjectAddressMatrix)
      */
-    public native byte[] getObjectIndexPair(byte[] objectSearchKey, byte[] objectAddressMatrix);
+    public native byte[] getObjectSearchPairFromObjectIndexPair(byte[] objectIndexPair);
 
     /**
      * NEVER CALL THIS FROM THE SERVER
      **/
     /*
-     * Function: getObjectSharingPair(objectIndexPair)
+     * Function: getObjectSearchPairFromObjectSharePair(objectSearchPair)
      * Returns a serialized pair of (FHE-encrypted objectSearchKey, objectConversionMatrix)
      * Sent by a client to another to share a document
      */
-    public native byte[] getObjectSharingPair(byte[] objectIndexPair);
+    public native byte[] getObjectSharePairFromObjectSearchPair(byte[] objectSearchPair);
 
     /**
      * NEVER CALL THIS FROM THE SERVER
      **/
     /*
-     * Function: getObjectSharingPair(objectSharingPair)
+     * Function: getObjectSearchPairFromObjectSharePair(objectSharePair)
      * Returns a serialized pair of (FHE-encrypted objectSearchKey, objectConversionMatrix)
-     * Performed after the client receives a SharingPair from another client
-     * Assume the two inputs are RSA-decrypted before passing in to C++
+     * Performed after the client receives a SharePair from another client
+     * Assume the two inputs are AES-decrypted before passing in to C++
      */
-    public native byte[] getObjectIndexPairFromSharing(byte[] objectSharingPair);
+    public native byte[] getObjectSearchPairFromObjectSharePair(byte[] objectSharePair);
 
     /**
      * NEVER CALL THIS FROM THE SERVER
@@ -179,9 +170,9 @@ public class KryptnosticEngine {
 
     /**
      * NEVER CALL THIS FROM THE SERVER
-     * Function: Client.getMetadatumAddress
+     * Function: Client.clientGetMetadatumAddress
      **/
-    public native byte[] clientGetMetadatumAddress( byte[] objectAddressMatrix, byte[] objectSearchKey, byte[] token );
+    public native byte[] clientGetMetadatumAddress( byte[] objectIndexPair, byte[] token );
 
     protected static native byte[] testBitMatrixConversion( byte[] bytes );
     protected static native byte[] testBitVectorConversion( byte[] bytes );
@@ -189,10 +180,9 @@ public class KryptnosticEngine {
 
     protected static native byte[] testPrivateKey();
     protected static native byte[] testSearchPrivateKey();
-    protected static native byte[] testObjectSearchKey( byte[] spk );
-    protected static native byte[] testObjectAddressMatrix( byte[] spk );
-    protected static native byte[] testObjectConversionMatrix( byte[] spk, byte[] oam );
-    protected static native byte[] testClientMetadataAddress( byte[] spk, byte[] oam, byte[] osk, byte[] token );
+    protected static native byte[] testObjectIndexPair( byte[] spk );
+    protected static native byte[] testObjectSearchPairFromIndexPair( byte[] spk, byte[] oip, byte[] pk );
+    protected static native byte[] testClientMetadataAddress( byte[] spk, byte[] oi, byte[] token );
     protected static native byte[] testClientHashFunction( byte[] spk, byte[] pk );
     protected static native byte[] testEncryptionFHE( byte[] pk, byte[] v );
 

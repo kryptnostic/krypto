@@ -3,9 +3,7 @@ Krypto
 
 ## Getting Started
 
-Make sure everything is working correctly.
-
-Make sure you install [emscripten](http://kripken.github.io/emscripten-site/)
+Make sure you install [emscripten](http://kripken.github.io/emscripten-site/) and [cmake](http://www.cmake.org/)
 
 For mac:
 
@@ -17,7 +15,7 @@ For linux:
 
 To automagically build a jar for jni access to krypto, run:
 
-	> ./gradlew buildFullJar -Pemhome=<pathToYourEmscriptenIncludeFolder>
+	> ./gradlew buildFullJar
 
 We assume that you have a JAVA_HOME system variable that points at your java home directory
 

@@ -53,6 +53,14 @@ public:
 	}
 
 	/*
+	 * Function: getObjectIndexPair
+	 * Returns a {objectSearchKey, objectAddressMatrix} pair
+	 */
+	const std::pair<BitVector<N>, BitMatrix<N> > getObjectIndexPair() const{
+		return std::make_pair(getObjectSearchKey(), getObjectAddressMatrix());
+	}
+
+	/*
 	 * Function: getObjectConversionMatrix(objectAddressMatrix)
 	 * Returns object(document) conversion matrix given object address function
 	 * Equation: L_{doc} * K_{user}^{-1}
@@ -62,20 +70,21 @@ public:
 	}
 
 	/*
-	 * Function: getMetadatumAddress(objectAddressMatrix, objectSearchKey, token)
+	 * TODO: rename to getMetadataAddress
+	 * Function: getMetadataAddress(objectIndexPair, token)
 	 * Returns the address for metadatum given raw unencrypted data
 	 * Equation: L_{doc} * [I | R_{user}] * (t || d_{doc})
 	 */
-	const BitVector<N> getMetadatumAddress(const BitMatrix<N> & objectAddressMatrix, const BitVector<N> & objectSearchKey, const BitVector<N> &token) const{
-		return objectAddressMatrix * (token ^ (_R * objectSearchKey));
+	const BitVector<N> getMetadataAddress(const std::pair<BitVector<N>, BitMatrix<N> > & objectIndexPair, const BitVector<N> &token) const{
+		return objectIndexPair.second * (token ^ (_R * objectIndexPair.first));
 	}
 
 	/*
-	 * Function: getMetadatumAddressFromPair(token, objectIndexPair, privateKey)
+	 * Function: getMetadataAddressFromPair(token, objectSearchPair, privateKey)
 	 * Test function for computing metdataum address given server-side objects
 	 */
-	const BitVector<N> getMetadatumAddressFromPair(const BitVector<N> &token, const std::pair<BitVector<2*N>, BitMatrix<N> > & objectIndexPair, const PrivateKey<N> & pk) const{
-		return objectIndexPair.second * _K * (token ^ (_R * pk.decrypt(objectIndexPair.first)));
+	const BitVector<N> getMetadataAddressFromPair(const BitVector<N> &token, const std::pair<BitVector<2*N>, BitMatrix<N> > & objectSearchPair, const PrivateKey<N> & pk) const{
+		return objectSearchPair.second * _K * (token ^ (_R * pk.decrypt(objectSearchPair.first)));
 	}
 
 	/*
@@ -89,30 +98,32 @@ public:
 	}
 
 	/*
-	 * Function: getObjectIndexPair(objectSearchKey, objectAddressMatrix, pk)
+	 * Function: getObjectSearchPair(objectIndexPair, pk)
 	 * Generates the (encrypted object search key, object conversion matrix) pair to be stored on server during indexing
 	 * Equation: {E_{user}(d_{doc}), L_{doc} * K_{user}^{-1}}
 	 */
-	const std::pair<BitVector<2*N>, BitMatrix<N> > getObjectIndexPair(const BitVector<N> & objectSearchKey, const BitMatrix<N> & objectAddressMatrix, const PrivateKey<N> & pk) const{
-		return std::make_pair(pk.encrypt(objectSearchKey), getObjectConversionMatrix(objectAddressMatrix));
+	const std::pair<BitVector<2*N>, BitMatrix<N> > getObjectSearchPairFromObjectIndexPair(const std::pair<BitVector<N>, BitMatrix<N> > & objectIndexPair, const PrivateKey<N> & pk) const{
+		const BitVector<2*N> encryptedObjectSearchKey = pk.encrypt(objectIndexPair.first); //FHE-encrypted
+		const BitMatrix<N> objectConversionMatrix = getObjectConversionMatrix(objectIndexPair.second); //L_{object}K_{user}^{-1}
+		return std::make_pair(encryptedObjectSearchKey, objectConversionMatrix);
 	}
 
 	/*
-	 * Function: getObjectSharingPair(uploaded, pk)
+	 * Function: getObjectSharePairFromObjectSearchPair(objectSearchPair, pk)
 	 * Generates the pair to be shared with another client
 	 * Note: Server encrypts this with sharing destination's RSA public key
 	 * Equation: {R_{user} * d_{doc}, L_{doc}}
 	 */
-	const std::pair<BitVector<N>, BitMatrix<N> > getObjectSharingPair(const std::pair<BitVector<2*N>, BitMatrix<N> > & uploaded, const PrivateKey<N> & pk) const{
-		return std::make_pair(_R * pk.decrypt(uploaded.first), uploaded.second * _K);
+	const std::pair<BitVector<N>, BitMatrix<N> > getObjectSharePairFromObjectSearchPair(const std::pair<BitVector<2*N>, BitMatrix<N> > & objectSearchPair, const PrivateKey<N> & pk) const{
+		return std::make_pair(_R * pk.decrypt(objectSearchPair.first), objectSearchPair.second * _K);
 	}
 
 	/*
-	 * Function: getObjectIndexPairFromSharing(shared, pk)
+	 * Function: getObjectSearchPairFromObjectSharePair(shared, pk)
 	 * Generates the (encrypted object search key, object conversion matrix) pair to be stored on server during indexing from sharing
 	 * Equation: {R_{recipient}^{-1} * R_{sender} * d_{doc}, L_{doc} * K_{recipient}^{-1}}
 	 */
-	const std::pair<BitVector<2*N>, BitMatrix<N> > getObjectIndexPairFromSharing(const std::pair<BitVector<N>, BitMatrix<N> > & shared, const PrivateKey<N> & pk) const{
+	const std::pair<BitVector<2*N>, BitMatrix<N> > getObjectSearchPairFromObjectSharePair(const std::pair<BitVector<N>, BitMatrix<N> > & shared, const PrivateKey<N> & pk) const{
 		return std::make_pair(pk.encrypt(_R.solve(shared.first)), getObjectConversionMatrix(shared.second));
 	}
 
