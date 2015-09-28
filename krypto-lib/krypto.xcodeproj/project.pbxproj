@@ -12,8 +12,8 @@
 		3AC8383F1B8CF205003B6E2B /* KryptnosticClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 3AC838381B8CF205003B6E2B /* KryptnosticClient.h */; };
 		3AC838401B8CF205003B6E2B /* KryptnosticJniMapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 3AC838391B8CF205003B6E2B /* KryptnosticJniMapper.h */; };
 		3AC838411B8CF205003B6E2B /* KryptnosticServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 3AC8383A1B8CF205003B6E2B /* KryptnosticServer.h */; };
-		3AC838421B8CF205003B6E2B /* TypeConverter.h in Headers */ = {isa = PBXBuildFile; fileRef = 3AC8383B1B8CF205003B6E2B /* TypeConverter.h */; };
-		3AC838431B8CF205003B6E2B /* UUID.h in Headers */ = {isa = PBXBuildFile; fileRef = 3AC8383C1B8CF205003B6E2B /* UUID.h */; };
+		DB2D5F831BB9010B00539BD1 /* test_search.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DB2D5F811BB9010B00539BD1 /* test_search.cpp */; settings = {ASSET_TAGS = (); }; };
+		DB2D5F841BB9010B00539BD1 /* test_server.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DB2D5F821BB9010B00539BD1 /* test_server.cpp */; settings = {ASSET_TAGS = (); }; };
 		DB2E68691AB0F0E100CA2C07 /* gtest-all.cc in Sources */ = {isa = PBXBuildFile; fileRef = DB2E68671AB0F0E100CA2C07 /* gtest-all.cc */; };
 		DB2E686A1AB0F0E100CA2C07 /* gtest.h in Headers */ = {isa = PBXBuildFile; fileRef = DB2E68681AB0F0E100CA2C07 /* gtest.h */; };
 		DBCB8B551AB0F06E00772347 /* BitMatrix.h in Headers */ = {isa = PBXBuildFile; fileRef = DBCB8B4C1AB0F06E00772347 /* BitMatrix.h */; };
@@ -22,7 +22,6 @@
 		DBCB8B591AB0F06E00772347 /* test_bitvector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DBCB8B521AB0F06E00772347 /* test_bitvector.cpp */; };
 		DBCB8B5A1AB0F06E00772347 /* test_main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DBCB8B531AB0F06E00772347 /* test_main.cpp */; };
 		DBCB8B5B1AB0F06E00772347 /* test_trivial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DBCB8B541AB0F06E00772347 /* test_trivial.cpp */; };
-		DBEE40341B7E63FA0066EE7A /* test_hash.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DBEE40301B7E63FA0066EE7A /* test_hash.cpp */; };
 		DBEE40351B7E63FA0066EE7A /* test_mqt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DBEE40311B7E63FA0066EE7A /* test_mqt.cpp */; };
 		DBEE40361B7E63FA0066EE7A /* test_priv.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DBEE40321B7E63FA0066EE7A /* test_priv.cpp */; };
 		DBEE40371B7E63FA0066EE7A /* test_public.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DBEE40331B7E63FA0066EE7A /* test_public.cpp */; };
@@ -32,7 +31,6 @@
 		DBEE40551B7E65A30066EE7A /* PrivateKey.h in Headers */ = {isa = PBXBuildFile; fileRef = DBEE404E1B7E65A30066EE7A /* PrivateKey.h */; };
 		DBEE40561B7E65A30066EE7A /* PublicKey.h in Headers */ = {isa = PBXBuildFile; fileRef = DBEE404F1B7E65A30066EE7A /* PublicKey.h */; };
 		DBEE406E1B7E73670066EE7A /* SearchPrivateKey.h in Headers */ = {isa = PBXBuildFile; fileRef = DBEE406C1B7E73670066EE7A /* SearchPrivateKey.h */; };
-		DBEE406F1B7E73670066EE7A /* SearchPublicKey.h in Headers */ = {isa = PBXBuildFile; fileRef = DBEE406D1B7E73670066EE7A /* SearchPublicKey.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,8 +49,8 @@
 		3AC838381B8CF205003B6E2B /* KryptnosticClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KryptnosticClient.h; sourceTree = "<group>"; };
 		3AC838391B8CF205003B6E2B /* KryptnosticJniMapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KryptnosticJniMapper.h; sourceTree = "<group>"; };
 		3AC8383A1B8CF205003B6E2B /* KryptnosticServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KryptnosticServer.h; sourceTree = "<group>"; };
-		3AC8383B1B8CF205003B6E2B /* TypeConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TypeConverter.h; sourceTree = "<group>"; };
-		3AC8383C1B8CF205003B6E2B /* UUID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UUID.h; sourceTree = "<group>"; };
+		DB2D5F811BB9010B00539BD1 /* test_search.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_search.cpp; sourceTree = "<group>"; };
+		DB2D5F821BB9010B00539BD1 /* test_server.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_server.cpp; sourceTree = "<group>"; };
 		DB2E68671AB0F0E100CA2C07 /* gtest-all.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "gtest-all.cc"; sourceTree = "<group>"; };
 		DB2E68681AB0F0E100CA2C07 /* gtest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gtest.h; sourceTree = "<group>"; };
 		DBAD36831A3A9EAE00E13DBD /* krypto-cli.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "krypto-cli.xcodeproj"; path = "../krypto-cli/krypto-cli.xcodeproj"; sourceTree = "<group>"; };
@@ -63,7 +61,6 @@
 		DBCB8B521AB0F06E00772347 /* test_bitvector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_bitvector.cpp; sourceTree = "<group>"; };
 		DBCB8B531AB0F06E00772347 /* test_main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_main.cpp; sourceTree = "<group>"; };
 		DBCB8B541AB0F06E00772347 /* test_trivial.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_trivial.cpp; sourceTree = "<group>"; };
-		DBEE40301B7E63FA0066EE7A /* test_hash.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_hash.cpp; sourceTree = "<group>"; };
 		DBEE40311B7E63FA0066EE7A /* test_mqt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_mqt.cpp; sourceTree = "<group>"; };
 		DBEE40321B7E63FA0066EE7A /* test_priv.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_priv.cpp; sourceTree = "<group>"; };
 		DBEE40331B7E63FA0066EE7A /* test_public.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_public.cpp; sourceTree = "<group>"; };
@@ -73,7 +70,6 @@
 		DBEE404E1B7E65A30066EE7A /* PrivateKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrivateKey.h; sourceTree = "<group>"; };
 		DBEE404F1B7E65A30066EE7A /* PublicKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PublicKey.h; sourceTree = "<group>"; };
 		DBEE406C1B7E73670066EE7A /* SearchPrivateKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchPrivateKey.h; sourceTree = "<group>"; };
-		DBEE406D1B7E73670066EE7A /* SearchPublicKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchPublicKey.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -155,10 +151,7 @@
 				3AC838381B8CF205003B6E2B /* KryptnosticClient.h */,
 				3AC838391B8CF205003B6E2B /* KryptnosticJniMapper.h */,
 				3AC8383A1B8CF205003B6E2B /* KryptnosticServer.h */,
-				3AC8383B1B8CF205003B6E2B /* TypeConverter.h */,
-				3AC8383C1B8CF205003B6E2B /* UUID.h */,
 				DBEE406C1B7E73670066EE7A /* SearchPrivateKey.h */,
-				DBEE406D1B7E73670066EE7A /* SearchPublicKey.h */,
 				DBEE40491B7E65A30066EE7A /* BridgeKey.h */,
 				DBEE404C1B7E65A30066EE7A /* MultiQuadTuple.h */,
 				DBEE404D1B7E65A30066EE7A /* MultiQuadTupleChain.h */,
@@ -181,7 +174,8 @@
 		DBCB8B501AB0F06E00772347 /* cpp */ = {
 			isa = PBXGroup;
 			children = (
-				DBEE40301B7E63FA0066EE7A /* test_hash.cpp */,
+				DB2D5F811BB9010B00539BD1 /* test_search.cpp */,
+				DB2D5F821BB9010B00539BD1 /* test_server.cpp */,
 				DBEE40311B7E63FA0066EE7A /* test_mqt.cpp */,
 				DBEE40321B7E63FA0066EE7A /* test_priv.cpp */,
 				DBEE40331B7E63FA0066EE7A /* test_public.cpp */,
@@ -210,13 +204,10 @@
 				3AC838411B8CF205003B6E2B /* KryptnosticServer.h in Headers */,
 				DBCB8B561AB0F06E00772347 /* BitVector.h in Headers */,
 				DBEE40541B7E65A30066EE7A /* MultiQuadTupleChain.h in Headers */,
-				DBEE406F1B7E73670066EE7A /* SearchPublicKey.h in Headers */,
 				DBEE40501B7E65A30066EE7A /* BridgeKey.h in Headers */,
 				3AC8383D1B8CF205003B6E2B /* ClientHashFunction.h in Headers */,
 				DBEE40561B7E65A30066EE7A /* PublicKey.h in Headers */,
-				3AC838431B8CF205003B6E2B /* UUID.h in Headers */,
 				3AC8383E1B8CF205003B6E2B /* com_kryptnostic_krypto_engine_KryptnosticEngine.h in Headers */,
-				3AC838421B8CF205003B6E2B /* TypeConverter.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -296,10 +287,11 @@
 				DBCB8B591AB0F06E00772347 /* test_bitvector.cpp in Sources */,
 				DBCB8B581AB0F06E00772347 /* test_bitmatrix.cpp in Sources */,
 				DBEE40351B7E63FA0066EE7A /* test_mqt.cpp in Sources */,
+				DB2D5F841BB9010B00539BD1 /* test_server.cpp in Sources */,
 				DBCB8B5A1AB0F06E00772347 /* test_main.cpp in Sources */,
 				DBCB8B5B1AB0F06E00772347 /* test_trivial.cpp in Sources */,
+				DB2D5F831BB9010B00539BD1 /* test_search.cpp in Sources */,
 				DBEE40361B7E63FA0066EE7A /* test_priv.cpp in Sources */,
-				DBEE40341B7E63FA0066EE7A /* test_hash.cpp in Sources */,
 				DBEE40371B7E63FA0066EE7A /* test_public.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -411,6 +403,10 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					./contrib,
 				);
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"-ftemplate-depth=8192",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -436,6 +432,10 @@
 				);
 				LLVM_LTO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"-ftemplate-depth=8192",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

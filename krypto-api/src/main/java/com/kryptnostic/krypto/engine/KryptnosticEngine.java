@@ -11,7 +11,7 @@ public class KryptnosticEngine {
     public static final String PRIVATE_KEY = "KryptnosticEngine.PrivateKey";
     public static final String SEARCH_PRIVATE_KEY = "KryptnosticEngine.SearchPrivateKey";
     public static final String CLIENT_HASH_FUNCTION = "KryptnosticEngine.ClientHashFunction";
-
+    
     static {
         final String osName = System.getProperty( "os.name" ).toLowerCase();
         final String libraryName = "libmain";

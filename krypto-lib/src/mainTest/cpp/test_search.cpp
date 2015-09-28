@@ -49,7 +49,7 @@ TEST(SearchKeyTest, testShare){
 	BitVector<N> expectedAddress = sk_src.getMetadataAddress(objectIndexPair, token);
 
 	//source client prepares the sharing pair
-	std::pair<BitVector<N>, BitMatrix<N> > objectSharePair = sk_src.getObjectSharePair(sourceObjectSearchPair, pk_src);
+	std::pair<BitVector<N>, BitMatrix<N> > objectSharePair = sk_src.getObjectSharePairFromObjectSearchPair(sourceObjectSearchPair, pk_src);
 
 	//destination client receives the sharing pair and prepares the upload pair
 	std::pair<BitVector<2*N>, BitMatrix<N> > destinationObjectSearchPair = sk_dst.getObjectSearchPairFromObjectSharePair(objectSharePair, pk_dst);
