@@ -1,6 +1,7 @@
 package com.kryptnostic.krypto.engine;
 
-import java.nio.ByteBuffer;
+import static org.junit.Assert.assertArrayEquals;
+
 import java.util.Random;
 
 import org.junit.After;
@@ -9,8 +10,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import static org.junit.Assert.assertArrayEquals;
 
 public class KryptnosticEngineTest {
 
@@ -25,7 +24,7 @@ public class KryptnosticEngineTest {
 
     @After
     public void tearDown() throws Exception {}
-    
+
     @Test
     public void testBitVectorConversions() throws Exception {
         Random rand = new Random();
@@ -69,26 +68,38 @@ public class KryptnosticEngineTest {
 
         byte[] encryptedSearchToken = clientEngine.getEncryptedSearchToken( searchToken );
         byte[] encryptedSearchToken2 = clientEngine2.getEncryptedSearchToken( searchToken );
+
+        Assert.assertEquals( 32, encryptedSearchToken.length );
+        Assert.assertEquals( 32, encryptedSearchToken2.length );
+
         KryptnosticEngine serverEngine = new KryptnosticEngine(
                 clientEngine.getClientHashFunction(),
                 encryptedSearchToken );
         KryptnosticEngine serverEngine2 = new KryptnosticEngine(
                 clientEngine2.getClientHashFunction(),
                 encryptedSearchToken2 );
-        
+
         byte[] objectIndexPair = clientEngine.getObjectIndexPair();
+
+        Assert.assertEquals( KryptnosticEngine.CLIENT_HASH_FUNCTION_LENGTH, objectIndexPair.length );
 
         byte[] address = clientEngine.clientGetMetadatumAddress( objectIndexPair, searchToken );
 
+        Assert.assertEquals( 16, objectIndexPair.length );
+
         byte[] objectSearchPair = clientEngine.getObjectSearchPairFromObjectIndexPair( objectIndexPair );
 
+        Assert.assertEquals( KryptnosticEngine.SEARCH_PAIR_LENGTH, objectSearchPair.length );
         // Tests sharing
         byte[] objectSharePair = clientEngine.getObjectSharePairFromObjectSearchPair( objectSearchPair );
         byte[] objectSearchPair2 = clientEngine2.getObjectSearchPairFromObjectSharePair( objectSharePair );
 
+        Assert.assertEquals( KryptnosticEngine.SHARE_PAIR_LENGTH, objectSharePair.length );
+        Assert.assertEquals( KryptnosticEngine.SEARCH_PAIR_LENGTH, objectSearchPair2.length );
+        
         byte[] serverAddressDirect = serverEngine.calculateMetadataAddress( objectSearchPair );
         byte[] serverAddressFromSharing = serverEngine2.calculateMetadataAddress( objectSearchPair2 );
-        
+
         Assert.assertArrayEquals( address, serverAddressDirect );
         Assert.assertArrayEquals( address, serverAddressFromSharing );
         Assert.assertArrayEquals( serverAddressDirect, serverAddressFromSharing );
@@ -101,13 +112,13 @@ public class KryptnosticEngineTest {
     @Test
     public void testSearchFlow() throws Exception {
         Random rand = new Random();
-        
+
         byte[] searchToken = new byte[ 16 ];
         rand.nextBytes( searchToken );
-        
+
         byte[] pk = KryptnosticEngine.testPrivateKey();
         byte[] spk = KryptnosticEngine.testSearchPrivateKey();
-        
+
         byte[] oip = KryptnosticEngine.testObjectIndexPair( spk );
         byte[] osp = KryptnosticEngine.testObjectSearchPairFromIndexPair( spk, oip, pk );
         byte[] token = new byte[ 16 ];

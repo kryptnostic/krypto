@@ -13,3 +13,5 @@ gtest-1.7.0/cmake_install.cmake
 gtest-1.7.0/libgtest.a
 gtest-1.7.0/libgtest_main.a
 krypto-lib/krypto.xcodeproj/project.xcworkspace/xcuserdata/mtamayo.xcuserdatad/UserInterfaceState.xcuserstate
+krypto-api/src/main/resources/libmain.dylib
+
