@@ -81,11 +81,11 @@ public class KryptnosticEngineTest {
 
         byte[] objectIndexPair = clientEngine.getObjectIndexPair();
 
-        Assert.assertEquals( KryptnosticEngine.CLIENT_HASH_FUNCTION_LENGTH, objectIndexPair.length );
+        Assert.assertEquals( KryptnosticEngine.INDEX_PAIR_LENGTH, objectIndexPair.length );
 
         byte[] address = clientEngine.clientGetMetadatumAddress( objectIndexPair, searchToken );
 
-        Assert.assertEquals( 16, objectIndexPair.length );
+        Assert.assertEquals( 16, address.length );
 
         byte[] objectSearchPair = clientEngine.getObjectSearchPairFromObjectIndexPair( objectIndexPair );
 
