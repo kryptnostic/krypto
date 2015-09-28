@@ -10,7 +10,6 @@
 		DBEE40581B7E69A70066EE7A /* libkrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DBEE40571B7E69A70066EE7A /* libkrypto.a */; };
 		DBEE40611B7E71C70066EE7A /* test_bitmatrix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DBEE40591B7E71C70066EE7A /* test_bitmatrix.cpp */; };
 		DBEE40621B7E71C70066EE7A /* test_bitvector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DBEE405A1B7E71C70066EE7A /* test_bitvector.cpp */; };
-		DBEE40631B7E71C70066EE7A /* test_hash.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DBEE405B1B7E71C70066EE7A /* test_hash.cpp */; };
 		DBEE40641B7E71C70066EE7A /* test_main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DBEE405C1B7E71C70066EE7A /* test_main.cpp */; };
 		DBEE40651B7E71C70066EE7A /* test_mqt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DBEE405D1B7E71C70066EE7A /* test_mqt.cpp */; };
 		DBEE40661B7E71C70066EE7A /* test_priv.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DBEE405E1B7E71C70066EE7A /* test_priv.cpp */; };
@@ -35,7 +34,6 @@
 		DBEE40571B7E69A70066EE7A /* libkrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libkrypto.a; path = "../../../Library/Developer/Xcode/DerivedData/krypto-gtuwxarymtkevfancbsoikmjbcmz/Build/Products/Debug/libkrypto.a"; sourceTree = "<group>"; };
 		DBEE40591B7E71C70066EE7A /* test_bitmatrix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_bitmatrix.cpp; sourceTree = "<group>"; };
 		DBEE405A1B7E71C70066EE7A /* test_bitvector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_bitvector.cpp; sourceTree = "<group>"; };
-		DBEE405B1B7E71C70066EE7A /* test_hash.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_hash.cpp; sourceTree = "<group>"; };
 		DBEE405C1B7E71C70066EE7A /* test_main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_main.cpp; sourceTree = "<group>"; };
 		DBEE405D1B7E71C70066EE7A /* test_mqt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_mqt.cpp; sourceTree = "<group>"; };
 		DBEE405E1B7E71C70066EE7A /* test_priv.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_priv.cpp; sourceTree = "<group>"; };
@@ -69,7 +67,6 @@
 			children = (
 				DBEE40591B7E71C70066EE7A /* test_bitmatrix.cpp */,
 				DBEE405A1B7E71C70066EE7A /* test_bitvector.cpp */,
-				DBEE405B1B7E71C70066EE7A /* test_hash.cpp */,
 				DBEE405C1B7E71C70066EE7A /* test_main.cpp */,
 				DBEE405D1B7E71C70066EE7A /* test_mqt.cpp */,
 				DBEE405E1B7E71C70066EE7A /* test_priv.cpp */,
@@ -165,7 +162,6 @@
 				DBEE40661B7E71C70066EE7A /* test_priv.cpp in Sources */,
 				DBEE40681B7E71C70066EE7A /* test_trivial.cpp in Sources */,
 				DBEE40641B7E71C70066EE7A /* test_main.cpp in Sources */,
-				DBEE40631B7E71C70066EE7A /* test_hash.cpp in Sources */,
 				DBEE40671B7E71C70066EE7A /* test_public.cpp in Sources */,
 				DBEE40621B7E71C70066EE7A /* test_bitvector.cpp in Sources */,
 			);

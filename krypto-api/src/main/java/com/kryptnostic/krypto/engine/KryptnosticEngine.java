@@ -15,7 +15,7 @@ public class KryptnosticEngine {
     public static final int    INDEX_PAIR_LENGTH           = 2064;
     public static final int    SHARE_PAIR_LENGTH           = 2064;
     public static final int    SEARCH_PAIR_LENGTH          = 2080;
-
+    
     static {
         final String osName = System.getProperty( "os.name" ).toLowerCase();
         final String libraryName = "libmain";
