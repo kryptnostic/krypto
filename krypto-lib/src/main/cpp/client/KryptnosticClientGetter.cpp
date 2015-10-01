@@ -132,7 +132,7 @@ public:
 	const val calculateObjectSharePairFromObjectSearchPair(std::string objectSearchPairStr) const{
 		const std::pair< BitVector<2*N>, BitMatrix<N> > & objectSearchPair = *reinterpret_cast<const std::pair<BitVector<2*N>, BitMatrix<N> >* >(objectSearchPairStr.data());
 		std::pair< BitVector<N>, BitMatrix<N> > objectSharePair = _kc.getObjectSharePairFromObjectSearchPair(objectSearchPair);
-		return val(memory_view<byte>(sizeof(std::pair <BitVector<2*N>,BitMatrix<N> >), (byte *) &objectSharePair));
+		return val(memory_view<byte>(sizeof(std::pair <BitVector<N>,BitMatrix<N> >), (byte *) &objectSharePair));
 	}
 
 	/*
