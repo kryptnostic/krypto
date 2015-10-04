@@ -42,7 +42,7 @@ public:
      * Constructs a KryptnosticClient given private and public keys
      * Used for future logins (not registeration)
      */
-	KryptnosticClient(PrivateKey<N> pk, SearchPrivateKey<N> spk) :
+	KryptnosticClient(const PrivateKey<N> & pk, const SearchPrivateKey<N> & spk) :
 	_pk(pk),
 	_spk(spk)
 	{}
