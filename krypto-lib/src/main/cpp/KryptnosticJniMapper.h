@@ -83,6 +83,7 @@ void setKryptnosticClient( JNIEnv *env, jobject javaContainer, T *t) {
  */
 void Java_com_kryptnostic_krypto_engine_KryptnosticEngine_destroyServer( JNIEnv * env, jobject javaContainer ){
 	KryptnosticServer<N> * serv = getKryptnosticServer<KryptnosticServer<N> >( env, javaContainer );
+	setKryptnosticServer( env, javaContainer, reinterpret_cast<KryptnosticServer<N>*>( 0 ) );
 	delete serv;
 }
 
@@ -93,6 +94,7 @@ void Java_com_kryptnostic_krypto_engine_KryptnosticEngine_destroyServer( JNIEnv 
  */
 void Java_com_kryptnostic_krypto_engine_KryptnosticEngine_destroyClient( JNIEnv * env, jobject javaContainer ){
 	KryptnosticClient<N> * client = getKryptnosticClient<KryptnosticClient<N> >( env, javaContainer );
+	setKryptnosticClient( env, javaContainer, reinterpret_cast<KryptnosticClient<N>*>( 0 ) );
 	delete client;
 }
 
