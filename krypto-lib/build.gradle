@@ -30,9 +30,7 @@ model {
         }
     }
     flavors {
-        debug
         release
-        failing
     }
     platforms {
         x86 {
@@ -80,10 +78,6 @@ tasks.withType(GenerateMetadataFileTask) {
 binaries.withType(GoogleTestTestSuiteBinarySpec) {
     lib library: "googleTest", linkage: "static"
     lib library: "main", linkage: "static"
-
-    if (flavor == flavors.failing) {
-        cppCompiler.define "PLUS_BROKEN"
-    }
 }
 
 tasks.withType(RunTestExecutable) {
