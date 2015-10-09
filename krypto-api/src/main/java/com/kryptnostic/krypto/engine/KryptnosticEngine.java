@@ -7,6 +7,14 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
+/**
+ * Anything that tests this must run with a larger than default stack size using the following VM argument:
+ * -Xss7m
+ * We've found 7 megs to be the smallest effective size
+ *
+ * @author Drew Bailey
+ *
+ */
 public class KryptnosticEngine {
     public static final String PRIVATE_KEY                 = "KryptnosticEngine.PrivateKey";
     public static final String SEARCH_PRIVATE_KEY          = "KryptnosticEngine.SearchPrivateKey";
@@ -15,7 +23,7 @@ public class KryptnosticEngine {
     public static final int    INDEX_PAIR_LENGTH           = 2064;
     public static final int    SHARE_PAIR_LENGTH           = 2064;
     public static final int    SEARCH_PAIR_LENGTH          = 2080;
-    
+
     static {
         final String osName = System.getProperty( "os.name" ).toLowerCase();
         final String libraryName = "libmain";
@@ -46,7 +54,7 @@ public class KryptnosticEngine {
 
     /**
      * VALIDATE HERE OR BEFORE PASSING IN
-     * 
+     *
      * @param clientHashFunction
      * @param encObjectSearchToken
      */
