@@ -75,6 +75,10 @@ public:
 			}
 
 			A.set(minorIndex, r); //first row of minor set to e_r
+			BitVector<ROWS> randomVector = BitVector<ROWS>::randomVector(); //used to extract random values
+			for (int row = minorIndex + 1; row < ROWS; row++) {
+				if (randomVector[row]) A.set(row, r); //sets random bits below e_r in r-th column
+			}
 
 			for (auto it = usedRows.cbegin(); it != usedRows.cend(); ++it) {
 				v.clear(*it); //set intersection of row with prev cols to 0
@@ -1058,11 +1062,11 @@ public:
      */
 	void printRow(unsigned int rowIndex) const {
 		if (DEBUG) assert(inRowBound(rowIndex));
-		cout << get(rowIndex, 0);
+		cout << "|" << get(rowIndex, 0);
 		for (unsigned int i = 1; i < COLS; ++i) {
 			cout << " " << get(rowIndex, i);
 		}
-		cout << endl;
+		cout << "|" << endl;
 	}
 
 	void printRows(unsigned int startRowIndex, unsigned int endRowIndex) const{
