@@ -40,7 +40,7 @@ task buildGoogleTest(type: Exec) {
 }
 
 task copyBinariesToApi(type: Copy, dependsOn: 'krypto-lib:build') {
-    from 'krypto-lib/build/binaries/mainSharedLibrary/release/'
+    from 'krypto-lib/build/binaries/mainSharedLibrary/'
     into 'krypto-api/src/main/resources/'
     include( '**/*.so', '**/*.dylib' )
 }
