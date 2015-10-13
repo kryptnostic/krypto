@@ -25,35 +25,35 @@ class KryptnosticClient {
 
 public:
 
-/* Constructors */
+  /* Constructors */
 
   /*
-     * Constructor: ()
-     * Constructs a KryptnosticClient from scratch
-     * Used for first time registration
-     */
+   * Constructor: ()
+   * Constructs a KryptnosticClient from scratch
+   * Used for first time registration
+   */
   KryptnosticClient() :
   _pk(),
   _spk()
   {}
 
   /*
-     * Constructor: (privateKey, searchPrivateKey)
-     * Constructs a KryptnosticClient given private and public keys
-     * Used for future logins (not registeration)
-     */
+   * Constructor: (privateKey, searchPrivateKey)
+   * Constructs a KryptnosticClient given private and public keys
+   * Used for future logins (not registeration)
+   */
   KryptnosticClient(const PrivateKey<N> & pk, const SearchPrivateKey<N> & spk) :
   _pk(pk),
   _spk(spk)
   {}
 
-/* Registration */
+  /* Registration */
 
   /*
    * Function: getPrivateKey()
    * Returns a serialized private key
    */
-  const PrivateKey<N> getPrivateKey() const{
+  const PrivateKey<N> getPrivateKey() const {
     return _pk;
   }
 
@@ -61,7 +61,7 @@ public:
    * Function: getSearchPrivateKey()
    * Returns a serialized search private key
    */
-  const SearchPrivateKey<N> getSearchPrivateKey() const{
+  const SearchPrivateKey<N> getSearchPrivateKey() const {
     return _spk;
   }
 
@@ -70,18 +70,18 @@ public:
    * Returns a serialized concatenation of the three components
    * of the ClientHashFunction
    */
-  const ClientHashFunction<N> getClientHashFunction() const{
+  const ClientHashFunction<N> getClientHashFunction() const {
     return _spk.getClientHashFunction(_pk);
   }
 
-/* Indexing */
+  /* Indexing */
 
   /*
    * Function: getObjectSearchKey()
    * Returns a serialized ObjectSearchKey
    * 2.2(2)
    */
-  const BitVector<N> getObjectSearchKey() const{
+  const BitVector<N> getObjectSearchKey() const {
     return _spk.getObjectSearchKey();
   }
 
@@ -90,7 +90,7 @@ public:
    * Returns a serialized ObjectAddressMatrix
    * 2.2(3)
    */
-  const BitMatrix<N> getObjectAddressMatrix() const{
+  const BitMatrix<N> getObjectAddressMatrix() const {
     return _spk.getObjectAddressMatrix();
   }
 
@@ -98,7 +98,7 @@ public:
    * Function:n getObjectIndexPair()
    * Returns a serialized ObjectIndexPair
    */
-  const std::pair<BitVector<N>, BitMatrix<N> > getObjectIndexPair() const{
+  const std::pair<BitVector<N>, BitMatrix<N>> getObjectIndexPair() const {
     return _spk.getObjectIndexPair();
   }
 
@@ -108,8 +108,15 @@ public:
    * This returns the stuff that you upload to the server to be able to search your own content
    * 2.2(5)
    */
-  const std::pair <BitVector<2*N>,BitMatrix<N> > getObjectSearchPairFromObjectIndexPair(std::pair<BitVector<N>, BitMatrix<N> > objectIndexPair) const{
+  const std::pair <BitVector<2*N>,BitMatrix<N>> getObjectSearchPairFromObjectIndexPair(std::pair<BitVector<N>, BitMatrix<N>> objectIndexPair) const {
     return _spk.getObjectSearchPairFromObjectIndexPair(objectIndexPair, _pk);
+  }
+
+  /*
+   * Function: getObjectIndexPairFromObjectSearchPair(objectSearchPair)
+   */
+  const std::pair<BitVector<N>, BitMatrix<N>> getObjectIndexPairFromObjectSearchPair(std::pair<BitVector<2*N>, BitMatrix<N>> objectSearchPair) const {
+    return _spk.getObjectIndexPairFromObjectSearchPair(objectSearchPair, _pk);
   }
 
   /*
@@ -117,11 +124,11 @@ public:
    * Client-side address computation on raw object data and token
    * Returns the address of the metadatum corresponding to an object and a token
    */
-  const BitVector<N> getMetadataAddress(const std::pair<BitVector<N>, BitMatrix<N> > & objectIndexPair, const BitVector<N> & token) const{
+  const BitVector<N> getMetadataAddress(const std::pair<BitVector<N>, BitMatrix<N>> & objectIndexPair, const BitVector<N> & token) const {
     return _spk.getMetadataAddress(objectIndexPair, token);
   }
 
-/* Searching */
+  /* Searching */
 
   /*
    * Function: getEncryptedSearchToken(search token)
@@ -131,14 +138,14 @@ public:
     return _pk.encrypt(token);
   }
 
-/* Sharing */
+  /* Sharing */
 
   /*
    * Function: getObjectSharePairFromObjectSearchPair(objectSearchPair)
    * Returns a serialized pair of (obscured ObjectSearchKey, ObjectConversionMatrix)
    * Sent by a client to share their stuff with others
    */
-  const std::pair< BitVector<N>, BitMatrix<N> > getObjectSharePairFromObjectSearchPair(std::pair< BitVector<2*N>, BitMatrix<N> > objectSearchPair) const{
+  const std::pair< BitVector<N>, BitMatrix<N>> getObjectSharePairFromObjectSearchPair(std::pair<BitVector<2*N>, BitMatrix<N>> objectSearchPair) const {
     return _spk.getObjectSharePairFromObjectSearchPair(objectSearchPair, _pk);
   }
 
@@ -149,7 +156,7 @@ public:
    * Assume the two inputs are RSA-decrypted before passing in to C++
    * 2.4(3)
    */
-  const std::pair< BitVector<2*N>, BitMatrix<N> > getObjectSearchPairFromObjectSharePair(std::pair< BitVector<N>, BitMatrix<N> > objectSharePair) const{
+  const std::pair<BitVector<2*N>, BitMatrix<N>> getObjectSearchPairFromObjectSharePair(std::pair<BitVector<N>, BitMatrix<N>> objectSharePair) const {
     return _spk.getObjectSearchPairFromObjectSharePair(objectSharePair, _pk);
   }
 
