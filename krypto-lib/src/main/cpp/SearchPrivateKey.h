@@ -32,14 +32,14 @@ public:
   _R(BitMatrix<N>::randomInvertibleMatrix())
   {}
 
-/* Getters */
+  /* Getters */
 
   /*
    * Function: getObjectSearchKey()
    * Returns a random object search key to be serialized
    * Equation: d_{doc}
    */
-  const BitVector<N> getObjectSearchKey() const{
+  const BitVector<N> getObjectSearchKey() const {
     return BitVector<N>::randomVector();
   }
 
@@ -48,7 +48,7 @@ public:
    * Returns a random object address matrix L_i
    * Equation: L_{doc}
    */
-  const BitMatrix<N> getObjectAddressMatrix() const{
+  const BitMatrix<N> getObjectAddressMatrix() const {
     return BitMatrix<N>::randomInvertibleMatrix();
   }
 
@@ -56,7 +56,7 @@ public:
    * Function: getObjectIndexPair
    * Returns a {objectSearchKey, objectAddressMatrix} pair
    */
-  const std::pair<BitVector<N>, BitMatrix<N> > getObjectIndexPair() const{
+  const std::pair<BitVector<N>, BitMatrix<N>> getObjectIndexPair() const {
     return std::make_pair(getObjectSearchKey(), getObjectAddressMatrix());
   }
 
@@ -65,7 +65,7 @@ public:
    * Returns object(document) conversion matrix given object address function
    * Equation: L_{doc} * K_{user}^{-1}
    */
-  const BitMatrix<N> getObjectConversionMatrix(const BitMatrix<N> & objectAddressMatrix) const{
+  const BitMatrix<N> getObjectConversionMatrix(const BitMatrix<N> & objectAddressMatrix) const {
     return objectAddressMatrix * _K.inv();
   }
 
@@ -75,7 +75,7 @@ public:
    * Returns the address for metadatum given raw unencrypted data
    * Equation: L_{doc} * [I | R_{user}] * (t || d_{doc})
    */
-  const BitVector<N> getMetadataAddress(const std::pair<BitVector<N>, BitMatrix<N> > & objectIndexPair, const BitVector<N> &token) const{
+  const BitVector<N> getMetadataAddress(const std::pair<BitVector<N>, BitMatrix<N>> & objectIndexPair, const BitVector<N> &token) const {
     return objectIndexPair.second * (token ^ (_R * objectIndexPair.first));
   }
 
@@ -83,7 +83,7 @@ public:
    * Function: getMetadataAddressFromPair(token, objectSearchPair, privateKey)
    * Test function for computing metdataum address given server-side objects
    */
-  const BitVector<N> getMetadataAddressFromPair(const BitVector<N> &token, const std::pair<BitVector<2*N>, BitMatrix<N> > & objectSearchPair, const PrivateKey<N> & pk) const{
+  const BitVector<N> getMetadataAddressFromPair(const BitVector<N> &token, const std::pair<BitVector<2*N>, BitMatrix<N>> & objectSearchPair, const PrivateKey<N> & pk) const {
     return objectSearchPair.second * _K * (token ^ (_R * pk.decrypt(objectSearchPair.first)));
   }
 
@@ -91,7 +91,7 @@ public:
    * Function: getClientHashFunction(pk)
    * Given a private key, generates a client hash function with a random matrix C
    */
-  const ClientHashFunction<N> getClientHashFunction(const PrivateKey<N> & pk) const{
+  const ClientHashFunction<N> getClientHashFunction(const PrivateKey<N> & pk) const {
     ClientHashFunction<N> h;
     h.initialize(BitMatrix<N>::randomInvertibleMatrix(), _K * BitMatrix<N, 2*N>::augH(BitMatrix<N>::identityMatrix(), _R), pk);
     return h;
@@ -102,10 +102,18 @@ public:
    * Generates the (encrypted object search key, object conversion matrix) pair to be stored on server during indexing
    * Equation: {E_{user}(d_{doc}), L_{doc} * K_{user}^{-1}}
    */
-  const std::pair<BitVector<2*N>, BitMatrix<N> > getObjectSearchPairFromObjectIndexPair(const std::pair<BitVector<N>, BitMatrix<N> > & objectIndexPair, const PrivateKey<N> & pk) const{
+  const std::pair<BitVector<2*N>, BitMatrix<N>> getObjectSearchPairFromObjectIndexPair(const std::pair<BitVector<N>, BitMatrix<N>> & objectIndexPair, const PrivateKey<N> & pk) const {
     const BitVector<2*N> encryptedObjectSearchKey = pk.encrypt(objectIndexPair.first); //FHE-encrypted
     const BitMatrix<N> objectConversionMatrix = getObjectConversionMatrix(objectIndexPair.second); //L_{object}K_{user}^{-1}
     return std::make_pair(encryptedObjectSearchKey, objectConversionMatrix);
+  }
+
+  /*
+   * Function: getObjectIndexPairFromObjectSearchPair(objectSearchPair, pk)
+   * Equation: {d_{doc}, L_{doc}} = {D_{user}(objectSearchPair_1), objectSearchPair_2 * K_{user}}
+   */
+  const std::pair<BitVector<N>, BitMatrix<N>> getObjectIndexPairFromObjectSearchPair(const std::pair<BitVector<2*N>, BitMatrix<N>> & objectSearchPair, const PrivateKey<N> & pk) const {
+    return std::make_pair(pk.decrypt(objectSearchPair.first), objectSearchPair.second * _K);
   }
 
   /*
@@ -114,22 +122,22 @@ public:
    * Note: Server encrypts this with sharing destination's RSA public key
    * Equation: {R_{user} * d_{doc}, L_{doc}}
    */
-  const std::pair<BitVector<N>, BitMatrix<N> > getObjectSharePairFromObjectSearchPair(const std::pair<BitVector<2*N>, BitMatrix<N> > & objectSearchPair, const PrivateKey<N> & pk) const{
+  const std::pair<BitVector<N>, BitMatrix<N>> getObjectSharePairFromObjectSearchPair(const std::pair<BitVector<2*N>, BitMatrix<N>> & objectSearchPair, const PrivateKey<N> & pk) const {
     return std::make_pair(_R * pk.decrypt(objectSearchPair.first), objectSearchPair.second * _K);
   }
 
   /*
-   * Function: getObjectSearchPairFromObjectSharePair(shared, pk)
+   * Function: getObjectSearchPairFromObjectSharePair(objectSharePair, pk)
    * Generates the (encrypted object search key, object conversion matrix) pair to be stored on server during indexing from sharing
    * Equation: {R_{recipient}^{-1} * R_{sender} * d_{doc}, L_{doc} * K_{recipient}^{-1}}
    */
-  const std::pair<BitVector<2*N>, BitMatrix<N> > getObjectSearchPairFromObjectSharePair(const std::pair<BitVector<N>, BitMatrix<N> > & shared, const PrivateKey<N> & pk) const{
-    return std::make_pair(pk.encrypt(_R.solve(shared.first)), getObjectConversionMatrix(shared.second));
+  const std::pair<BitVector<2*N>, BitMatrix<N>> getObjectSearchPairFromObjectSharePair(const std::pair<BitVector<N>, BitMatrix<N>> & objectSharePair, const PrivateKey<N> & pk) const {
+    return std::make_pair(pk.encrypt(_R.solve(objectSharePair.first)), getObjectConversionMatrix(objectSharePair.second));
   }
 
 private:
-  BitMatrix<N> _K; //user-specific front protection
-  BitMatrix<N> _R; //user-specific hash auxiliary matrix
+  BitMatrix<N> _K; // user-specific front protection
+  BitMatrix<N> _R; // user-specific hash auxiliary matrix
 };
 
 #endif/* defined(__krypto__SearchPrivateKey__) */
