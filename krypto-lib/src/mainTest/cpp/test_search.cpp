@@ -12,7 +12,7 @@ using namespace testing;
 
 #define N 64
 
-TEST(SearchKeyTest, testIndexingAndSearch){
+TEST(SearchPrivateKeyTest, testIndexingAndSearch){
 	SearchPrivateKey<N> sk;
 	PrivateKey<N> pk;
 
@@ -34,7 +34,7 @@ TEST(SearchKeyTest, testIndexingAndSearch){
 	ASSERT_TRUE(metadataAddress.equals(calculatedAddress));
 }
 
-TEST(SearchKeyTest, testShare){
+TEST(SearchPrivateKeyTest, testShare){
 	SearchPrivateKey<N> sk_src;
 	SearchPrivateKey<N> sk_dst;
 	PrivateKey<N> pk_src;
@@ -49,11 +49,24 @@ TEST(SearchKeyTest, testShare){
 	BitVector<N> expectedAddress = sk_src.getMetadataAddress(objectIndexPair, token);
 
 	//source client prepares the sharing pair
-	std::pair<BitVector<N>, BitMatrix<N> > objectSharePair = sk_src.getObjectSharePair(sourceObjectSearchPair, pk_src);
+	std::pair<BitVector<N>, BitMatrix<N> > objectSharePair = sk_src.getObjectSharePairFromObjectSearchPair(sourceObjectSearchPair, pk_src);
 
 	//destination client receives the sharing pair and prepares the upload pair
 	std::pair<BitVector<2*N>, BitMatrix<N> > destinationObjectSearchPair = sk_dst.getObjectSearchPairFromObjectSharePair(objectSharePair, pk_dst);
 	BitVector<N> calculatedAddress = sk_dst.getMetadataAddressFromPair(token, destinationObjectSearchPair, pk_dst);
 
 	ASSERT_TRUE(expectedAddress.equals(calculatedAddress));
+}
+
+TEST(SearchPrivateKeyTest, testGetObjectIndexPairFromObjectSearchPair) {
+
+  PrivateKey<N> pk;
+  SearchPrivateKey<N> spk;
+
+  std::pair<BitVector<N>, BitMatrix<N>> objectIndexPair1 = spk.getObjectIndexPair();
+  std::pair<BitVector<2*N>, BitMatrix<N>> objectSearchPair = spk.getObjectSearchPairFromObjectIndexPair(objectIndexPair1, pk);
+  std::pair<BitVector<N>, BitMatrix<N>> objectIndexPair2 = spk.getObjectIndexPairFromObjectSearchPair(objectSearchPair, pk);
+
+  ASSERT_TRUE(objectIndexPair2.first.equals(objectIndexPair1.first));
+  ASSERT_TRUE(objectIndexPair2.second.equals(objectIndexPair1.second));
 }

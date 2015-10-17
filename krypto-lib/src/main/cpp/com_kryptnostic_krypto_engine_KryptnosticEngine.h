@@ -7,6 +7,14 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+#undef com_kryptnostic_krypto_engine_KryptnosticEngine_CLIENT_HASH_FUNCTION_LENGTH
+#define com_kryptnostic_krypto_engine_KryptnosticEngine_CLIENT_HASH_FUNCTION_LENGTH 0L
+#undef com_kryptnostic_krypto_engine_KryptnosticEngine_INDEX_PAIR_LENGTH
+#define com_kryptnostic_krypto_engine_KryptnosticEngine_INDEX_PAIR_LENGTH 2064L
+#undef com_kryptnostic_krypto_engine_KryptnosticEngine_SHARE_PAIR_LENGTH
+#define com_kryptnostic_krypto_engine_KryptnosticEngine_SHARE_PAIR_LENGTH 2064L
+#undef com_kryptnostic_krypto_engine_KryptnosticEngine_SEARCH_PAIR_LENGTH
+#define com_kryptnostic_krypto_engine_KryptnosticEngine_SEARCH_PAIR_LENGTH 2080L
 /*
  * Class:     com_kryptnostic_krypto_engine_KryptnosticEngine
  * Method:    destroyServer

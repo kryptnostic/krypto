@@ -9,7 +9,7 @@ using namespace std;
 #define L 1
 #define M 1 
 #define H 2 
-#define N 1
+#define N 64
 #define DEBUG false
 
 void testEvaluateMQT(MultiQuadTuple<N, M> &f, BitVector<N> &x){ //f:N->M
@@ -175,7 +175,10 @@ int main(int argc, char **argv) {
 	// testRightCompose(f, x);
 	// testEvaluateMQT(f, x);
 
-	PrivateKey<N> pk;
+	//PrivateKey<N> pk;
+
+	BitMatrix<N> randomInvertible = BitMatrix<N>::randomInvertibleMatrix();
+	randomInvertible.print();
 
  	// testBridgeKeyInstantiation(pk);
 	// testPublicKey(pk);
