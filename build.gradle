@@ -23,6 +23,16 @@ if (osname.contains('windows')) {
     // assemble.dependsOn buildGoogleTest
 }
 
+
+ext.jniHeadersTask = ':krypto-api:GenerateJniHeaders'
+ext.jarTask = ':krypto-api:jar'
+if( project.hasProperty('developmentMode') && project.developmentMode ) {
+    ext.jniHeadersTask = ":krypto${jniHeadersTask}"
+    ext.jarTask = ":krypto${jarTask}"
+}
+
+ext.depends = ["${jniHeadersTask}", "${gtestTask}" , "${jarTask}"]
+
 task wrapper(type: Wrapper) {
     gradleVersion = '2.4'
 }
@@ -45,7 +55,7 @@ task copyBinariesToApi(type: Copy, dependsOn: 'krypto-lib:build') {
     include( '**/*.so', '**/*.dylib' )
 }
 
-task buildFullJar(dependsOn: [':krypto-api:GenerateJniHeaders', "${gtestTask}" , ':krypto-api:jar'] ) << {
+task buildFullJar(dependsOn: depends ) << {
     // run build lib
     tasks.getByPath(':krypto-lib:build').execute()
     // move libs
