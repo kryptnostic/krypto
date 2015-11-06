@@ -131,6 +131,12 @@ public:
     return val(memory_view<byte>(sizeof(BitVector<2*N>), (byte *) &eToken));
   }
 
+  const val calculateDecryptedSearchToken(std::string tokenStr) const {
+    const BitVector<2*N> & token = *reinterpret_cast<const BitVector<2*N>*>(tokenStr.data());
+    const BitVector<N> eToken = _kc.decryptSearchToken(token);
+    return val(memory_view<byte>(sizeof(BitVector<N>), (byte *) &eToken));
+  }
+
   /* Sharing */
 
   /*

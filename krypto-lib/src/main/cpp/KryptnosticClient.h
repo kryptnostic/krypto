@@ -138,6 +138,14 @@ public:
     return _pk.encrypt(token);
   }
 
+  /*
+   * Function: decryptSearchToken(encryptedToken)
+   * Returns a decrypted search token
+   */
+  const BitVector<N> decryptSearchToken(const BitVector<2*N> & encryptedToken) const{
+    return _pk.decrypt(encryptedToken);
+  }
+
   /* Sharing */
 
   /*
