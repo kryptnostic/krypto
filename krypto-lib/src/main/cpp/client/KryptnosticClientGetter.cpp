@@ -178,6 +178,7 @@ EMSCRIPTEN_BINDINGS(crypto_module) {
     .function("calculateObjectIndexPairFromObjectSearchPair", &KryptnosticClientGetter::calculateObjectIndexPairFromObjectSearchPair)
     .function("calculateMetadataAddress", &KryptnosticClientGetter::calculateMetadataAddress)
     .function("calculateEncryptedSearchToken", &KryptnosticClientGetter::calculateEncryptedSearchToken)
+    .function("calculateDecryptedSearchToken", &KryptnosticClientGetter::calculateDecryptedSearchToken)
     .function("calculateObjectSharePairFromObjectSearchPair", &KryptnosticClientGetter::calculateObjectSharePairFromObjectSearchPair)
     .function("calculateObjectSearchPairFromObjectSharePair", &KryptnosticClientGetter::calculateObjectSearchPairFromObjectSharePair)
     ;
