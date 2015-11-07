@@ -26,6 +26,32 @@ apply from: 'publish.gradle'
 sourceCompatibility=JavaVersion.VERSION_1_7
 targetCompatibility=JavaVersion.VERSION_1_7
 
+ext.kryptoCentosUrl = 'http://bamboo.krypt.int/artifact/KRYP-KRYPTO/shared/build-latestSuccessful/CentOS-shared-lib/krypto-api/build/resources/main/libmain.so'
+ext.staticLibDirectory = '/src/main/resources'
+
+task getAllStaticLibs(description: 'Download any versions of the c++ crypto library that arent built as part of this build') << {
+  if ( System.getenv("bamboo_SONATYPE_USERNAME") != null ) {
+    // if building on bamboo, don't need to download the centos library
+    return
+  }
+
+  new ByteArrayOutputStream().withStream { os ->
+    def result = exec {
+      commandLine 'pwd'
+      standardOutput os
+    }
+    ext.currentDir = os.toString().trim()
+  }
+
+  exec {
+    commandLine 'wget', '-N', '-P', "${currentDir}${staticLibDirectory}", "${kryptoCentosUrl}"
+  }
+
+  exec {
+    commandLine 'chmod', '+x', "${currentDir}${staticLibDirectory}/libmain.so"
+  }
+}
+
 task GenerateJniHeaders(description: 'Generate the JNI headers for kryptnostic engine', dependsOn: 'classes') << {
     ext.cp = sourceSets.main.output.classesDir
     ext.resourcesOut = "../krypto-lib/src/main/cpp/"
@@ -38,8 +64,10 @@ task GenerateJniHeaders(description: 'Generate the JNI headers for kryptnostic e
 
 if ( project.hasProperty('developmentMode') && project.developmentMode ) {
   jar.dependsOn(':krypto:copyBinariesToApi')
+  jar.dependsOn('getAllStaticLibs')
 } else {
   jar.dependsOn(':copyBinariesToApi')
+  jar.dependsOn('getAllStaticLibs')
 }
 clean.dependsOn('cleanKryptoLib')
 
@@ -55,6 +83,7 @@ dependencies {
 
 task cleanKryptoLib(type: Delete) {
   delete 'src/main/resources/libmain.dylib'
+  delete 'src/main/resources/libmain.so'
 }
 
 task sourcesJar(type : Jar) {
