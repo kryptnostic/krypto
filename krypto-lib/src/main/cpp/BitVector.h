@@ -437,6 +437,18 @@ public:
         return result;
     }
 
+    /*
+     * Function: rightShift(n)
+     * Returns a BitVector with the values of the current BitVector
+     * shifted to the right by n and preceeding zeros
+     */
+    const BitVector<NUM_BITS> rightShift(unsigned int n){
+        BitVector<NUM_BITS> result = BitVector<NUM_BITS>::zeroVector();
+        for(unsigned int i = n; i < NUM_BITS; ++i)
+            result.set(i, get(i - n));
+        return result;        
+    }
+
 /* Print */
 
     /*

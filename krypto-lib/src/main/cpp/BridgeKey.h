@@ -105,6 +105,25 @@ public:
 		return BitMatrix<2*N, 4*N>::augH(X, Y);
 	}
 
+/* Shift Matrices */
+	/*
+	 * Function: getLeftShiftMatrix
+	 * Returns a matrix LS used for homomorphic left shift
+	 * Dimension of Z: 2*(N * 2^6) by 4*(N * 2^6)
+	 */
+	const BitMatrix<2*N, 4*N> getLeftShiftMatrix() const{
+		return getLMMZ(BitMatrix<N>::leftShiftMatrix());
+	}	
+
+	/*
+	 * Function: getRightShiftMatrix
+	 * Returns a matrix RS used for homomorphic right shift
+	 * Dimension of Z: 2*(N * 2^6) by 4*(N * 2^6)
+	 */
+	const BitMatrix<2*N, 4*N> getRightShiftMatrix() const{
+		return getLMMZ(BitMatrix<N>::rightShiftMatrix());
+	}	
+
 /* Binary unified code */
 
 	/*

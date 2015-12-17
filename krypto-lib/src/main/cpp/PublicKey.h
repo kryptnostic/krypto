@@ -21,6 +21,8 @@ template<unsigned int N>
 class PublicKey{
 public:
 	PublicKey(const BridgeKey<N> &bk) :
+	_ls(bk.getLeftShiftMatrix()),
+	_rs(bk.getRightShiftMatrix()),
 	_gu1(bk.getUnaryG1()),
 	_gu2(bk.getUnaryG2()),
 	_gb1(bk.getBinaryG1()),
@@ -42,11 +44,15 @@ public:
 		return _AND(x, y, binaryT(x, y));
 	}
 
-	/*
-	const BitVector<2*N> homomorphicSHIFT(const BitVector<2*N> &x, const BitVector<2*N> &y) const{
-		//TODO
+	//single left shift (if the leftmost bit of x is nonzero, it'll be zeroed)
+	const BitVector<2*N> homomorphicLEFTSHIFT(const BitVector<2*N> &x) const{
+		return homomorphicLMM(_ls, x);
 	}
-	*/
+
+	//single right shift (if the rightmost bit of x is nonzero, it'll be zeroed)
+	const BitVector<2*N> homomorphicRIGHTSHIFT(const BitVector<2*N> &x) const{
+		return homomorphicLMM(_rs, x);
+	}
 
 	/*
 	const BitVector<2*N> homomorphicADD(const BitVector<2*N> &x, const BitVector<2*N> &y) const{
@@ -55,6 +61,8 @@ public:
 	*/
 
 private:
+	const BitMatrix<2*N, 4*N> _ls;
+	const BitMatrix<2*N, 4*N> _rs;
 	const MultiQuadTuple<2*N, 2*N> _gu1;
 	const MultiQuadTuple<2*N, 2*N> _gu2;
 	const MultiQuadTuple<4*N, 3*N> _gb1;
