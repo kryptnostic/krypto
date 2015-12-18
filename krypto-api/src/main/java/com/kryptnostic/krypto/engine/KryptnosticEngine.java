@@ -19,7 +19,7 @@ public class KryptnosticEngine {
     public static final String PRIVATE_KEY                 = "KryptnosticEngine.PrivateKey";
     public static final String SEARCH_PRIVATE_KEY          = "KryptnosticEngine.SearchPrivateKey";
     public static final String CLIENT_HASH_FUNCTION        = "KryptnosticEngine.ClientHashFunction";
-    public static final int    CLIENT_HASH_FUNCTION_LENGTH = 0;
+    public static final int    CLIENT_HASH_FUNCTION_LENGTH = 1060896;
     public static final int    INDEX_PAIR_LENGTH           = 2064;
     public static final int    SHARE_PAIR_LENGTH           = 2064;
     public static final int    SEARCH_PAIR_LENGTH          = 2080;
