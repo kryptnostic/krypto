@@ -94,7 +94,7 @@ public:
      * Operator: &
      * Returns a BitVector with values resulting from bitwise AND
      */
-    BitVector<NUM_BITS> operator&(const BitVector<NUM_BITS> & rhs) const {
+    const BitVector<NUM_BITS> operator&(const BitVector<NUM_BITS> & rhs) const {
         BitVector<NUM_BITS> result;
         for (unsigned int i = 0; i < _KBV_N_; ++i) {
             result._bits[i] = _bits[i] & rhs._bits[i];
@@ -106,7 +106,7 @@ public:
      * Operator: |
      * Returns a BitVector with values resulting from bitwise OR
      */
-    BitVector<NUM_BITS> operator|(const BitVector<NUM_BITS> & rhs) {
+    const BitVector<NUM_BITS> operator|(const BitVector<NUM_BITS> & rhs) {
         BitVector<NUM_BITS> result;
         for (unsigned int i = 0; i < _KBV_N_; ++i) {
             result._bits[i] = _bits[i] | rhs._bits[i];
@@ -118,12 +118,35 @@ public:
      * Operator: ^
      * Returns a BitVector with values resulting from bitwise XOR
      */
-    BitVector<NUM_BITS> operator^(const BitVector<NUM_BITS> & rhs) const {
+    const BitVector<NUM_BITS> operator^(const BitVector<NUM_BITS> & rhs) const {
         BitVector<NUM_BITS> result;
         for (unsigned int i = 0; i < _KBV_N_; ++i) {
             result._bits[i] = _bits[i] ^ rhs._bits[i];
         }
         return result;
+    }
+
+    /*
+     * Operator: +
+     * Returns a BitVector with values resulting from add with carry on
+     */
+
+    const BitVector<NUM_BITS> operator+(const BitVector<NUM_BITS> & rhs) const{
+        BitVector<NUM_BITS> currentLHS;
+        for(int i = 0; i < _KBV_N_; ++i)
+            currentLHS._bits[i] = _bits[i];
+        BitVector<NUM_BITS> currentRHS = rhs;
+        
+        BitVector<NUM_BITS> sum = currentLHS ^ currentRHS;
+        BitVector<NUM_BITS> carry = currentLHS & currentRHS;
+        
+        while (!carry.isZero()) {
+            currentLHS = sum;
+            currentRHS = carry.leftShift(1); //this can be accelerated later;
+            sum = currentLHS ^ currentRHS; 
+            carry = currentLHS & currentRHS; 
+        }
+        return sum;
     }
 
     /*
@@ -405,7 +428,7 @@ public:
      * containing a specified half of the values of the current BitVector
      * Assumes that the length of the current Bitvector is divisible by 2
      */
-    BitVector<(NUM_BITS >> 1)> proj2(unsigned int part) const{//part = 0 or 1
+    const BitVector<(NUM_BITS >> 1)> proj2(unsigned int part) const{//part = 0 or 1
         BitVector<(NUM_BITS>>1)> result;
         unsigned int M = (_KBV_N_ >> 1);
         memcpy(result.elements(), _bits+(part*M), M*sizeof(unsigned long long));
@@ -418,7 +441,7 @@ public:
      * containing a specified third of the values of the current BitVector
      * Assumes that the length of the current Bitvector is divisible by 2
      */
-    BitVector<(NUM_BITS/3)> proj3(unsigned int part) const{//part = 0, 1, or 2
+    const BitVector<(NUM_BITS/3)> proj3(unsigned int part) const{//part = 0, 1, or 2
         BitVector<(NUM_BITS/3)> result;
         unsigned int M = (_KBV_N_/3);
         memcpy(result.elements(), _bits+(part*M), M*sizeof(unsigned long long));
@@ -444,7 +467,7 @@ public:
      */
     const BitVector<NUM_BITS> rightShift(unsigned int n){
         BitVector<NUM_BITS> result = BitVector<NUM_BITS>::zeroVector();
-        for(unsigned int i = n; i < NUM_BITS; ++i)
+        for(unsigned int i = NUM_BITS; i >= n; --i)
             result.set(i, get(i - n));
         return result;        
     }
@@ -453,7 +476,7 @@ public:
 
     /*
      * Function: print()
-     * Prints the values of the current BitVector
+     * Prints the values of the current BitVector, starting from the most significant bit
      * Ex. [1, 0, 0, 1, 0, 1, 1, 0]
      */
     void print() const {
