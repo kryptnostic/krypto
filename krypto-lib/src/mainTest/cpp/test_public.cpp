@@ -143,21 +143,14 @@ TEST(PublicKeyTest, testMULT){
 	PublicKey<N> pub(bk);
 	BitVector<N> x = BitVector<N>::zeroVector();
 	x.set(N - 1);
-	x.set(N - 5);
+	x.set(N - 4); //...1001
 	BitVector<N> y = BitVector<N>::zeroVector();
-	y.set(N - 1);
-	std::cout << "x:" << endl;
-	x.print();
-	std::cout << "y:" << endl;
-	y.print();
+	y.set(N - 2);
+	y.set(N - 3); //...0110
 	BitVector<2*N> encryptedX = pk.encrypt(x);
 	BitVector<2*N> encryptedY = pk.encrypt(y);	
 	BitVector<2*N> encryptedProd = pub.homomorphicMULT(encryptedX, encryptedY);
 	BitVector<N> actualProd = pk.decrypt(encryptedProd);
-	std::cout << "Actual product: " << endl;
-	actualProd.print();
 	BitVector<N> expectedProd = x * y;
-	std::cout << "Expected product: " << endl;
-	expectedProd.print();
-	//ASSERT_TRUE(actualProd.equals(expectedProd)); 
+	ASSERT_TRUE(actualProd.equals(expectedProd));
 }

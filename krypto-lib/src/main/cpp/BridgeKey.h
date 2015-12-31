@@ -109,7 +109,7 @@ public:
 	/*
 	 * Function: getLeftShiftMatrix
 	 * Returns a matrix LS used for homomorphic left shift
-	 * Dimension of Z: 2*(N * 2^6) by 4*(N * 2^6)
+	 * Dimension of LS: 2*(N * 2^6) by 4*(N * 2^6)
 	 */
 	const BitMatrix<2*N, 4*N> getLeftShiftMatrix() const{
 		return getLMMZ(BitMatrix<N>::leftShiftMatrix());
@@ -118,11 +118,23 @@ public:
 	/*
 	 * Function: getRightShiftMatrix
 	 * Returns a matrix RS used for homomorphic right shift
-	 * Dimension of Z: 2*(N * 2^6) by 4*(N * 2^6)
+	 * Dimension of RS: 2*(N * 2^6) by 4*(N * 2^6)
 	 */
 	const BitMatrix<2*N, 4*N> getRightShiftMatrix() const{
 		return getLMMZ(BitMatrix<N>::rightShiftMatrix());
 	}	
+
+	/* 
+	 * Function: getRightColumnMatrix
+	 * Returns a matrix that is the encrypted version of [ 0 | ... | 0 | 1 ] 
+	 * where each of {0,1} here is a column
+	 * Dimension: 2*(N * 2^6) by 4*(N * 2^6)
+	 */
+	const BitMatrix<2*N, 4*N> getRightColumnMatrix() const{
+		BitMatrix<N> M = BitMatrix<N>::zeroMatrix();
+		for(int i = 0; i < N; ++i) M.set(i, N - 1);
+		return getLMMZ(M);
+	}
 
 /* Binary unified code */
 

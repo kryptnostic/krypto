@@ -23,6 +23,7 @@ public:
 	PublicKey(const BridgeKey<N> &bk) :
 	_ls(bk.getLeftShiftMatrix()),
 	_rs(bk.getRightShiftMatrix()),
+	_rc(bk.getRightColumnMatrix()),
 	_gu1(bk.getUnaryG1()),
 	_gu2(bk.getUnaryG2()),
 	_gb1(bk.getBinaryG1()),
@@ -72,12 +73,15 @@ public:
 	//integer multiplication in base 2
 	//const BitVector<4*N> homomorphicMULT(const BitVector<2*N> &x, const BitVector<2*N> &y) const
 	const BitVector<2*N> homomorphicMULT(const BitVector<2*N> &x, const BitVector<2*N> &y) const{
-		BitVector<2*N> result = BitVector<2*N>::zeroVector();
 		BitVector<2*N> shiftedX = x;
-		for(int i = 0; i < 2*N; ++i){
-			if(y.get(2*N - 1 - i))
-				result = homomorphicADD(result, shiftedX);
-			shiftedX = homomorphicLEFTSHIFT(shiftedX);
+		BitVector<2*N> result = homomorphicAND(homomorphicLMM(_rc, shiftedX), y);
+		for(int i = 1; i < 2*N; ++i){
+			shiftedX = homomorphicRIGHTSHIFT(shiftedX);
+			BitVector<2*N> intermediate = homomorphicAND(homomorphicLMM(_rc, shiftedX), y);
+			for(int j = 0; j < i; ++j){
+				intermediate = homomorphicLEFTSHIFT(intermediate);
+			}
+			result = homomorphicADD(result, intermediate);
 		}
 		return result;
 	}
@@ -85,6 +89,7 @@ public:
 private:
 	const BitMatrix<2*N, 4*N> _ls;
 	const BitMatrix<2*N, 4*N> _rs;
+	const BitMatrix<2*N, 4*N> _rc;
 	const MultiQuadTuple<2*N, 2*N> _gu1;
 	const MultiQuadTuple<2*N, 2*N> _gu2;
 	const MultiQuadTuple<4*N, 3*N> _gb1;
