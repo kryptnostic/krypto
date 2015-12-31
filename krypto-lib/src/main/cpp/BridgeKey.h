@@ -124,6 +124,12 @@ public:
 		return getLMMZ(BitMatrix<N>::rightShiftMatrix());
 	}	
 
+	const BitMatrix<2*N, 4*N> getLeftColumnMatrix() const{
+		BitMatrix<N> M = BitMatrix<N>::zeroMatrix();
+		for(int i = 0; i < N; ++i) M.set(i, 0);
+		return getLMMZ(M);
+	}
+
 	/* 
 	 * Function: getRightColumnMatrix
 	 * Returns a matrix that is the encrypted version of [ 0 | ... | 0 | 1 ] 
