@@ -54,6 +54,7 @@ public:
 		return homomorphicLMM(_rs, x);
 	}
 
+	//add with carry over (aka integer addition in base 2)
 	const BitVector<2*N> homomorphicADD(const BitVector<2*N> &x, const BitVector<2*N> &y) const{
 		BitVector<2*N> currentLHS = x;
 		BitVector<2*N> currentRHS = y;
@@ -66,6 +67,19 @@ public:
 			carry = homomorphicAND(currentLHS, currentRHS);
 		}
 		return sum;
+	}
+
+	//integer multiplication in base 2
+	//const BitVector<4*N> homomorphicMULT(const BitVector<2*N> &x, const BitVector<2*N> &y) const
+	const BitVector<2*N> homomorphicMULT(const BitVector<2*N> &x, const BitVector<2*N> &y) const{
+		BitVector<2*N> result = BitVector<2*N>::zeroVector();
+		BitVector<2*N> shiftedX = x;
+		for(int i = 0; i < 2*N; ++i){
+			if(y.get(2*N - 1 - i))
+				result = homomorphicADD(result, shiftedX);
+			shiftedX = homomorphicLEFTSHIFT(shiftedX);
+		}
+		return result;
 	}
 
 private:

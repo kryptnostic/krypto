@@ -130,7 +130,6 @@ public:
      * Operator: +
      * Returns a BitVector with values resulting from add with carry on
      */
-
     const BitVector<NUM_BITS> operator+(const BitVector<NUM_BITS> & rhs) const{
         BitVector<NUM_BITS> currentLHS;
         for(int i = 0; i < _KBV_N_; ++i)
@@ -147,6 +146,26 @@ public:
             carry = currentLHS & currentRHS; 
         }
         return sum;
+    }
+
+    /*
+     * Operator: *
+     * Returns a BitVector with values resulting from integer multiplication in base 2
+     */
+    const BitVector<NUM_BITS> operator*(const BitVector<NUM_BITS> & rhs) const{
+        BitVector<NUM_BITS> shiftedLHS;
+        for (unsigned int i = 0; i <_KBV_N_; ++i) {
+            shiftedLHS._bits[i] = _bits[i];
+        }        
+        BitVector<NUM_BITS> prod;
+        prod.zero();
+        for(int i = 0; i < NUM_BITS; ++i){
+            if(rhs.get(NUM_BITS - 1 - i)){
+                prod = prod + shiftedLHS; 
+            }
+            shiftedLHS = shiftedLHS.leftShift(1);
+        }
+        return prod;
     }
 
     /*
