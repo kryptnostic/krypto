@@ -84,6 +84,28 @@ void testAND() {
  	cout << "Average time elapsed over " << OPRUNS * TESTRUNS << " operations of AND: " << double(diff) / (CLOCKS_PER_SEC * OPRUNS * TESTRUNS) << " sec" << endl;
 }
 
+void testSHIFT() {
+ 	PrivateKey<N> pk;
+	BridgeKey<N> bk(pk);
+	PublicKey<N> pub(bk);
+	clock_t diff = 0;
+
+	for (int run = 0; run < TESTRUNS; ++run) {
+		BitVector<N> x = BitVector<N>::randomSmallVector();
+		BitVector<2*N> encryptedX = pk.encrypt(x);
+
+		clock_t begin = clock();
+
+		for (int i = 0; i < OPRUNS; ++i) {
+			BitVector<2*N> encryptedSHIFT = pub.homomorphicLEFTSHIFT(encryptedX);
+		}
+
+ 		clock_t end = clock();
+ 		diff += (end - begin);
+ 	}
+ 	cout << "Average time elapsed over " << OPRUNS * TESTRUNS << " operations of SHIFT: " << double(diff) / (CLOCKS_PER_SEC * OPRUNS * TESTRUNS) << " sec" << endl;
+}
+
 void testADD() {
  	PrivateKey<N> pk;
 	BridgeKey<N> bk(pk);
@@ -113,6 +135,7 @@ void testMULT() {
 	BridgeKey<N> bk(pk);
 	PublicKey<N> pub(bk);
 	clock_t diff = 0;
+	int count = 0;
 
 	for (int run = 0; run < TESTRUNS; ++run) {
 		BitVector<N> x = BitVector<N>::randomVectorLeadingZeroes(N/2);
@@ -123,7 +146,9 @@ void testMULT() {
 		clock_t begin = clock();
 
 		for (int i = 0; i < OPRUNS; ++i) {
-			BitVector<2*N> encryptedADD = pub.homomorphicMULT(encryptedX, encryptedY);
+			BitVector<2*N> encryptedMULT = pub.homomorphicMULT(encryptedX, encryptedY);
+			++count;
+			std::cout << "Count: " << count << endl;
 		}
 
  		clock_t end = clock();
@@ -174,6 +199,7 @@ int main(int argc, char **argv) {
 	testLMM();
 	testXOR();
 	testAND();
+	testSHIFT();
 	testADD();
 	testMULT();
 	testClientRuns();
