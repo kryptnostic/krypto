@@ -122,3 +122,17 @@ TEST(PublicKeyTest, testRIGHTSHIFT){
 
 	ASSERT_TRUE(unecryptedRS.equals(x.rightShift(1)));
 }
+
+TEST(PublicKeyTest, testADD){
+	PrivateKey<N> pk;
+	BridgeKey<N> bk(pk);
+	PublicKey<N> pub(bk);
+	BitVector<N> x = BitVector<N>::randomVectorLeadingZeroes(2);
+	BitVector<N> y = BitVector<N>::randomVectorLeadingZeroes(2);
+	BitVector<2*N> encryptedX = pk.encrypt(x);
+	BitVector<2*N> encryptedY = pk.encrypt(y);	
+	BitVector<2*N> encryptedSum = pub.homomorphicADD(encryptedX, encryptedY);
+	BitVector<N> actualSum = pk.decrypt(encryptedSum);
+	BitVector<N> expectedSum = x + y;
+	ASSERT_TRUE(actualSum.equals(expectedSum)); 
+}

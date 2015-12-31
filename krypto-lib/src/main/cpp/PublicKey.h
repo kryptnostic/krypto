@@ -54,11 +54,19 @@ public:
 		return homomorphicLMM(_rs, x);
 	}
 
-	/*
 	const BitVector<2*N> homomorphicADD(const BitVector<2*N> &x, const BitVector<2*N> &y) const{
-		//TODO
+		BitVector<2*N> currentLHS = x;
+		BitVector<2*N> currentRHS = y;
+		BitVector<2*N> sum = homomorphicXOR(currentLHS, currentRHS);
+		BitVector<2*N> carry = homomorphicAND(currentLHS, currentRHS);
+		for(int i = 0; i < 2*N; ++i){
+			currentLHS = sum;
+			currentRHS = homomorphicLEFTSHIFT(carry);
+			sum = homomorphicXOR(currentLHS, currentRHS);
+			carry = homomorphicAND(currentLHS, currentRHS);
+		}
+		return sum;
 	}
-	*/
 
 private:
 	const BitMatrix<2*N, 4*N> _ls;
