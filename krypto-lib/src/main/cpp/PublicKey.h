@@ -62,7 +62,7 @@ public:
 		BitVector<2*N> currentRHS = y;
 		BitVector<2*N> sum = homomorphicXOR(currentLHS, currentRHS);
 		BitVector<2*N> carry = homomorphicAND(currentLHS, currentRHS);
-		for(int i = 0; i < 2*N; ++i){
+		for(int i = 1; i < N; ++i){
 			currentLHS = sum;
 			currentRHS = homomorphicLEFTSHIFT(carry);
 			sum = homomorphicXOR(currentLHS, currentRHS);
