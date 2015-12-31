@@ -141,12 +141,8 @@ TEST(PublicKeyTest, testMULT){
 	PrivateKey<N> pk;
 	BridgeKey<N> bk(pk);
 	PublicKey<N> pub(bk);
-	BitVector<N> x = BitVector<N>::zeroVector();
-	x.set(N - 1);
-	x.set(N - 4); //...1001
-	BitVector<N> y = BitVector<N>::zeroVector();
-	y.set(N - 2);
-	y.set(N - 3); //...0110
+	BitVector<N> x = BitVector<N>::randomVectorLeadingZeroes(N/2);
+	BitVector<N> y = BitVector<N>::randomVectorLeadingZeroes(N/2);
 	BitVector<2*N> encryptedX = pk.encrypt(x);
 	BitVector<2*N> encryptedY = pk.encrypt(y);	
 	BitVector<2*N> encryptedProd = pub.homomorphicMULT(encryptedX, encryptedY);

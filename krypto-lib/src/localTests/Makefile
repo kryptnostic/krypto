@@ -18,12 +18,12 @@
   # the build target executables:
   TARGET1 = test_speed
   TARGET2 = test_local
-  TARGET3 = test_KryptnosticClient
+  #TARGET3 = test_KryptnosticClient
   TARGET4 = test_mqt
   #TARGET5 = test_server
   TARGET6 = test_search
 
-  all: $(TARGET1) $(TARGET2) $(TARGET3) $(TARGET4) $(TARGET6)
+  all: $(TARGET1) $(TARGET2) $(TARGET4) $(TARGET6)
 
   $(TARGET1): $(TARGET1).cpp $(DEPS1)
 	$(CC) $(CFLAGS) -o $(TARGET1) $(TARGET1).cpp
@@ -31,8 +31,8 @@
   $(TARGET2): $(TARGET2).cpp $(DEPS1)
 	$(CC) $(CFLAGS) -o $(TARGET2) $(TARGET2).cpp
 
-  $(TARGET3): $(TARGET3).cpp $(DEPS1) $(DEPS2)
-	$(CC) $(CFLAGS) -o $(TARGET3) $(TARGET3).cpp
+  #$(TARGET3): $(TARGET3).cpp $(DEPS1) $(DEPS2)
+	#$(CC) $(CFLAGS) -o $(TARGET3) $(TARGET3).cpp
 
   $(TARGET4): $(TARGET4).cpp $(DEPS1) $(DEPS2)
 	$(CC) $(CFLAGS) -o $(TARGET4) $(TARGET4).cpp
@@ -44,4 +44,4 @@
 	$(CC) $(CFLAGS) -o $(TARGET6) $(TARGET6).cpp
 
   clean:
-	$(RM) $(TARGET1) $(TARGET2) $(TARGET3) $(TARGET4) $(TARGET5) $(TARGET6)
+	$(RM) $(TARGET1) $(TARGET2) $(TARGET4) $(TARGET6)
