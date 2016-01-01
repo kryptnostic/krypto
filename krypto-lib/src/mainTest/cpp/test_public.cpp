@@ -148,9 +148,5 @@ TEST(PublicKeyTest, testMULT){
 	BitVector<2*N> encryptedProd = pub.homomorphicMULT(encryptedX, encryptedY);
 	BitVector<N> actualProd = pk.decrypt(encryptedProd);
 	BitVector<N> expectedProd = x * y;
-	std::cout << "Actual product:" << endl;
-	actualProd.print();
-	std::cout << "Expected product:" << endl;
-	expectedProd.print();
 	ASSERT_TRUE(actualProd.equals(expectedProd));
 }

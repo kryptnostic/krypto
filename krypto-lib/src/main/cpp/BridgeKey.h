@@ -365,7 +365,6 @@ private:
 			contrib.set(0, j, prod);
 			if(Y1.get(j, level)){
 				for (unsigned int i = 1; i < threeN - level; ++i) { //rows
-					bool prod1 = Y2.get(j, level + i);
 					contrib.set(i, j, Y2.get(j, level + i));
 				}
 			}
@@ -464,7 +463,6 @@ private:
 				contrib.set(count, j, prod);
 				if(Y1.get(j, level)){
 					for (unsigned int i = 1; i < threeN - level; ++i) { //rows
-						bool prod1 = Y2.get(j, level + i);
 						contrib.set(i+count, j, Y2.get(j, level + i));
 					}
 				}

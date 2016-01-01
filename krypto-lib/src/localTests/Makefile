@@ -16,6 +16,7 @@
   DEPS2 = ../main/cpp/ClientHashFunction.h ../main/cpp/SearchPrivateKey.h ../main/cpp/KryptnosticClient.h ../main/cpp/KryptnosticServer.h
 
   # the build target executables:
+  TARGET0 = test_speed_temp
   TARGET1 = test_speed
   TARGET2 = test_local
   #TARGET3 = test_KryptnosticClient
@@ -23,10 +24,10 @@
   #TARGET5 = test_server
   TARGET6 = test_search
 
-  all: $(TARGET1) $(TARGET2) $(TARGET4) $(TARGET6)
+  all: $(TARGET0)#$(TARGET1) $(TARGET2) $(TARGET4) $(TARGET6)
 
-  $(TARGET1): $(TARGET1).cpp $(DEPS1)
-	$(CC) $(CFLAGS) -o $(TARGET1) $(TARGET1).cpp
+  $(TARGET0): $(TARGET1).cpp $(DEPS1)
+	$(CC) $(CFLAGS) -o $(TARGET0) $(TARGET1).cpp
 
   $(TARGET2): $(TARGET2).cpp $(DEPS1)
 	$(CC) $(CFLAGS) -o $(TARGET2) $(TARGET2).cpp

@@ -141,7 +141,7 @@ public:
         
         while (!carry.isZero()) {
             currentLHS = sum;
-            currentRHS = carry.leftShift(1); //this can be accelerated later;
+            currentRHS = carry.leftShift(); //this can be accelerated later;
             sum = currentLHS ^ currentRHS; 
             carry = currentLHS & currentRHS; 
         }
@@ -163,7 +163,7 @@ public:
             if(rhs.get(NUM_BITS - 1 - i)){
                 prod = prod + shiftedLHS; 
             }
-            shiftedLHS = shiftedLHS.leftShift(1);
+            shiftedLHS = shiftedLHS.leftShift();
         }
         return prod;
     }
@@ -465,6 +465,30 @@ public:
         unsigned int M = (_KBV_N_/3);
         memcpy(result.elements(), _bits+(part*M), M*sizeof(unsigned long long));
         return result;
+    }
+
+    /*
+     * Function: leftShift()
+     * Returns a BitVector with the values of the current BitVector
+     * shifted to the left once and trailing zeroes
+     */
+    const BitVector<NUM_BITS> leftShift(){
+        BitVector<NUM_BITS> result = BitVector<NUM_BITS>::zeroVector();
+        for(unsigned int i = 0; i < NUM_BITS - 1; ++i)
+            result.set(i, get(i + 1));
+        return result;
+    }
+
+    /*
+     * Function: rightShift()
+     * Returns a BitVector with the values of the current BitVector
+     * shifted to the right once and preceeding zeros
+     */
+    const BitVector<NUM_BITS> rightShift(){
+        BitVector<NUM_BITS> result = BitVector<NUM_BITS>::zeroVector();
+        for(unsigned int i = NUM_BITS; i >= 1; --i)
+            result.set(i, get(i - 1));
+        return result;        
     }
 
     /*
