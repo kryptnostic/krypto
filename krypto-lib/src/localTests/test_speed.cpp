@@ -148,9 +148,9 @@ void testMULT() {
 		}
 
  		auto end = chrono::steady_clock::now();
- 		diff += (end - begin).count();
+ 		diff += (end - begin).count()/double(OPRUNS * TESTRUNS);
  	}
- 	cout << "Average time elapsed over " << OPRUNS * TESTRUNS << " operations of MULT: " << diff/double(OPRUNS * TESTRUNS) << " nanos" << endl;
+ 	cout << "Average time elapsed over " << OPRUNS * TESTRUNS << " operations of MULT: " << diff << " nanos" << endl;
 }
 
 void testClientRuns() {
@@ -182,10 +182,10 @@ void testPublicKeyRuns() {
 		PublicKey<N> pub(bk);
 		auto end_i = chrono::steady_clock::now();
 
-		diff += (end_i - begin_i).count();
+		diff += (end_i - begin_i).count()/double(TESTRUNS);
 	}
 
- 	cout << "Average time elapsed over " << TESTRUNS << " runs of public key generation: " << diff/double(TESTRUNS) << " nanos" << endl;
+ 	cout << "Average time elapsed over " << TESTRUNS << " runs of public key generation: " << diff << " nanos" << endl;
 }
 
 int main(int argc, char **argv) {

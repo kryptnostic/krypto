@@ -71,8 +71,10 @@ public:
 	const MultiQuadTuple<2*N, 2*N> getUnaryG2() const{
 		const MultiQuadTupleChain<N,2> & f = _pk.getf();
 
-		const BitMatrix<N, 2*N> & matTop = _Cu1.inv().splitV2(0);
-		const BitMatrix<N, 2*N> & matBot = _Cu1.inv().splitV2(1);
+		const BitMatrix<2*N> Cu1i = _Cu1.inv();
+
+		const BitMatrix<N, 2*N> & matTop = Cu1i.splitV2(0);
+		const BitMatrix<N, 2*N> & matBot = Cu1i.splitV2(1);
 
 		const MultiQuadTuple<2*N, N> & top = f.get(1) * matTop;
 		const MultiQuadTuple<2*N, N> & bot = f.get(1) * matBot;
