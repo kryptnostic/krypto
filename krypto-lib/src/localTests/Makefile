@@ -23,7 +23,7 @@
   #TARGET5 = test_server
   TARGET6 = test_search
 
-  all: $(TARGET1) #$(TARGET2) $(TARGET4) $(TARGET6)
+  all: $(TARGET1) $(TARGET2) $(TARGET4) $(TARGET6)
 
   $(TARGET1): $(TARGET1).cpp $(DEPS1)
 	$(CC) $(CFLAGS) -o $(TARGET1) $(TARGET1).cpp
