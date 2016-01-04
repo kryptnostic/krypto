@@ -24,7 +24,6 @@ public:
 	_ls(bk.getLeftShiftMatrix()),
 	_rs(bk.getRightShiftMatrix()),
 	_lc(bk.getLeftColumnMatrix()),
-	//_rc(bk.getRightColumnMatrix()),
 	_gu1(bk.getUnaryG1()),
 	_gu2(bk.getUnaryG2()),
 	_gb1(bk.getBinaryG1()),
@@ -82,12 +81,11 @@ public:
 		}
 		return result;
 	}
-//*/
+
 private:
 	const BitMatrix<2*N, 4*N> _ls;
 	const BitMatrix<2*N, 4*N> _rs;
 	const BitMatrix<2*N, 4*N> _lc;
-	//const BitMatrix<2*N, 4*N> _rc;
 	const MultiQuadTuple<2*N, 2*N> _gu1;
 	const MultiQuadTuple<2*N, 2*N> _gu2;
 	const MultiQuadTuple<4*N, 3*N> _gb1;
