@@ -97,3 +97,31 @@ TEST(BitVectorTests, test_shift) {
     }
     ASSERT_TRUE(shift);
 }
+
+TEST(BitVectorTests, test_add) {
+    BitVector<64> x = BitVector<64>::randomSmallVector();
+    BitVector<64> y = BitVector<64>::randomSmallVector();
+    std::cout << "x: " << endl;
+    x.print();
+    std::cout << "y: " << endl;
+    y.print();
+    std::cout << "x + y: " << endl;
+    BitVector<64> sum = x + y;
+    sum.print(); 
+    ASSERT_TRUE(true);
+}
+
+TEST(BitVectorTests, test_mult) {
+    BitVector<64> x = BitVector<64>::zeroVector();
+    BitVector<64> y = BitVector<64>::zeroVector();
+    x.set(63); x.set(60);
+    y.set(62); y.set(61);
+    std::cout << "x: " << endl;
+    x.print();
+    std::cout << "y: " << endl;
+    y.print();
+    std::cout << "x * y: " << endl;
+    BitVector<64> sum = x * y;
+    sum.print(); 
+    ASSERT_TRUE(true);
+}
