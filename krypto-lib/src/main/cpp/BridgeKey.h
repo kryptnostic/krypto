@@ -71,8 +71,10 @@ public:
 	const MultiQuadTuple<2*N, 2*N> getUnaryG2() const{
 		const MultiQuadTupleChain<N,2> & f = _pk.getf();
 
-		const BitMatrix<N, 2*N> & matTop = _Cu1.inv().splitV2(0);
-		const BitMatrix<N, 2*N> & matBot = _Cu1.inv().splitV2(1);
+		const BitMatrix<2*N> Cu1i = _Cu1.inv();
+
+		const BitMatrix<N, 2*N> & matTop = Cu1i.splitV2(0);
+		const BitMatrix<N, 2*N> & matBot = Cu1i.splitV2(1);
 
 		const MultiQuadTuple<2*N, N> & top = f.get(1) * matTop;
 		const MultiQuadTuple<2*N, N> & bot = f.get(1) * matBot;
@@ -103,6 +105,43 @@ public:
 		const BitMatrix<N, 2*N> & YBot = BitMatrix<N, 2*N>::augH(zeroN, zeroN);
 		const BitMatrix<2*N> & Y = _M * BitMatrix<2*N>::augV(YTop, YBot) * _Cu2.inv();
 		return BitMatrix<2*N, 4*N>::augH(X, Y);
+	}
+
+/* Shift Matrices */
+	/*
+	 * Function: getLeftShiftMatrix
+	 * Returns a matrix LS used for homomorphic left shift
+	 * Dimension of LS: 2*(N * 2^6) by 4*(N * 2^6)
+	 */
+	const BitMatrix<2*N, 4*N> getLeftShiftMatrix() const{
+		return getLMMZ(BitMatrix<N>::leftShiftMatrix());
+	}	
+
+	/*
+	 * Function: getRightShiftMatrix
+	 * Returns a matrix RS used for homomorphic right shift
+	 * Dimension of RS: 2*(N * 2^6) by 4*(N * 2^6)
+	 */
+	const BitMatrix<2*N, 4*N> getRightShiftMatrix() const{
+		return getLMMZ(BitMatrix<N>::rightShiftMatrix());
+	}	
+
+	const BitMatrix<2*N, 4*N> getLeftColumnMatrix() const{
+		BitMatrix<N> M = BitMatrix<N>::zeroMatrix();
+		for(int i = 0; i < N; ++i) M.set(i, 0);
+		return getLMMZ(M);
+	}
+
+	/* 
+	 * Function: getRightColumnMatrix
+	 * Returns a matrix that is the encrypted version of [ 0 | ... | 0 | 1 ] 
+	 * where each of {0,1} here is a column
+	 * Dimension: 2*(N * 2^6) by 4*(N * 2^6)
+	 */
+	const BitMatrix<2*N, 4*N> getRightColumnMatrix() const{
+		BitMatrix<N> M = BitMatrix<N>::zeroMatrix();
+		for(int i = 0; i < N; ++i) M.set(i, N - 1);
+		return getLMMZ(M);
 	}
 
 /* Binary unified code */
@@ -328,7 +367,6 @@ private:
 			contrib.set(0, j, prod);
 			if(Y1.get(j, level)){
 				for (unsigned int i = 1; i < threeN - level; ++i) { //rows
-					bool prod1 = Y2.get(j, level + i);
 					contrib.set(i, j, Y2.get(j, level + i));
 				}
 			}
@@ -427,7 +465,6 @@ private:
 				contrib.set(count, j, prod);
 				if(Y1.get(j, level)){
 					for (unsigned int i = 1; i < threeN - level; ++i) { //rows
-						bool prod1 = Y2.get(j, level + i);
 						contrib.set(i+count, j, Y2.get(j, level + i));
 					}
 				}

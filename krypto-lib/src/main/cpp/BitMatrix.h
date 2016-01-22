@@ -42,6 +42,30 @@ public:
 		return result;
 	}
 
+	/*
+	 * Function: leftShiftMatrix()
+	 * Returns a matrix that serves the purpose of left shift upon multiplication.
+	 */
+	static const BitMatrix<ROWS> leftShiftMatrix() {
+		BitMatrix<ROWS> result = BitMatrix<ROWS>::zeroMatrix();
+		for(int i = 0; i < ROWS - 1; ++i){
+			result.set(i, i+1);
+		}
+		return result;
+	} 
+
+	/*
+	 * Function: rightShiftMatrix()
+	 * Returns a matrix that serves the purpose of right shift upon multiplication.
+	 */
+	static const BitMatrix<ROWS> rightShiftMatrix() {
+		BitMatrix<ROWS> result = BitMatrix<ROWS>::zeroMatrix();
+		for(int i = 1; i < ROWS; ++i){
+			result.set(i, i-1);
+		}
+		return result;
+	} 
+
     /*
      * Function: randomMatrix(numRows)
      * Returns a random BitMatrix with a given number of rows
