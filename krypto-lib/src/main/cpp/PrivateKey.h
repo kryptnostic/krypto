@@ -33,8 +33,6 @@ public:
      * Constructs a PrivateKey with randomly initialized private variables
      */
 	PrivateKey():
-		_A(BitMatrix<N>::randomInvertibleMatrix()),
-		_B(BitMatrix<N>::randomInvertibleMatrix()),
 		_M(BitMatrix<2*N>::randomInvertibleMatrix()),
 		_f(MultiQuadTupleChain<N,2>::randomMultiQuadTupleChain()){
 		generateObfuscationMatrixChains();
@@ -46,8 +44,8 @@ public:
      */
 	const BitVector<2*N> encrypt(const BitVector<N> &m) const{//returns x = E(m, r) given a plaintext m
 		const BitVector<N> & r = BitVector<N>::randomVector();
-		const BitVector<N> & top = (_B * m) ^ (r ^ _f(r));
-		const BitVector<N> & bottom = _A * r;
+		const BitVector<N> & top = m ^ _f(r);
+		const BitVector<N> & bottom = r;
 		return _M * BitVector<N>::vCat(top, bottom);
 	}
 
@@ -59,20 +57,11 @@ public:
 		const BitVector<2*N> & mix = _M.solve(x);
 		BitVector<N> x1, x2;
 		mix.proj(x1, x2);
-		const BitVector<N> & Aix2 = _A.solve(x2);
-		const BitVector<N> & fAix2 = _f(Aix2);
-		return _B.solve(x1 ^ (Aix2 ^ fAix2));
+		const BitVector<N> & fx2 = _f(x2);
+		return x1 ^ fx2;
 	}
 
 protected:
-	const BitMatrix<N> getA() const{
-		return _A;
-	}
-
-	const BitMatrix<N> getB() const{
-		return _B;
-	}
-
 	const BitMatrix<2*N> getM() const{
 		return _M;
 	}
@@ -98,7 +87,6 @@ protected:
 	}
 
 private:
-	const BitMatrix<N> _A, _B; //SL_n(F_2)
 	const BitMatrix<2*N> _M; //SL_{2n}(F_2)
 	MultiQuadTupleChain<N,2> _f; //{f_1,...,f_L} random quadratic function tuples
 	BitMatrix<2*N> _Cu[2]; //chain of obfuscation matrix for unary operations
