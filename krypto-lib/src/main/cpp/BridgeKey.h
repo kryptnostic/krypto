@@ -30,8 +30,6 @@ public:
 	BridgeKey(const PrivateKey<N> &pk) :
 	_pk(pk),
 	_R(BitMatrix<N>::randomInvertibleMatrix()),
-	_Rx(BitMatrix<N>::randomInvertibleMatrix()),
-	_Ry(BitMatrix<N>::randomInvertibleMatrix()),
 	_M(pk.getM()),
 	_Cu1(pk.getUnaryObf1()),
 	_Cu2(pk.getUnaryObf2()),
@@ -40,8 +38,6 @@ public:
 	_Ai(pk.getA().inv()),
 	_Bi(pk.getB().inv()),
 	_ARAi(pk.getA() * _R * _Ai),
-	_ARxAi(pk.getA() * _Rx * _Ai),
-	_ARyAi(pk.getA() * _Ry * _Ai),
 	_AiM2(_Ai.template pMult<2*N, 2*N>(_M.inv(), N))
 	{}
 
@@ -190,24 +186,30 @@ public:
 		return aug.template rMult<3*N>(_Cb2);
 	}
 
-
 /* XOR */
 	struct H_XOR {
 		BitMatrix<2*N> _Xx, _Xy;
 		BitMatrix<2*N, 3*N> _Y;
-		void initialize(const BitMatrix<2*N> & Xx, const BitMatrix<2*N> & Xy, const BitMatrix<2*N, 3*N> & Y){
+		MultiQuadTuple<4*N, 3*N> _gb1;
+		MultiQuadTuple<3*N, 3*N> _gb2;
+		void initialize(const BitMatrix<2*N> & Xx, const BitMatrix<2*N> & Xy, const BitMatrix<2*N, 3*N> & Y, const MultiQuadTuple<4*N, 3*N> & gb1, const MultiQuadTuple<3*N, 3*N> & gb2){
 			_Xx = Xx;
 			_Xy = Xy;
 			_Y = Y;
+			_gb1 = gb1;
+			_gb2 = gb2;
 		}
-		const BitVector<2*N> operator()(const BitVector<2*N> &x, const BitVector<2*N> &y, const BitVector<3*N> & t) const{
+		const BitVector<2*N> operator()(const BitVector<2*N> &x, const BitVector<2*N> &y) const{
+			const BitVector<4*N> & concatXY = BitVector<4*N>::template vCat<2*N, 2*N>(x, y);
+			const BitVector<3*N> & t = _gb2(_gb1(concatXY));
 			return (_Xx * x) ^ (_Xy * y) ^ (_Y * t);
 		}
 	};
 
 	const H_XOR getXOR() const{
 		H_XOR result;
-		result.initialize(getXORXx(), getXORXy(), getXORY());
+		refreshParam();
+		result.initialize(getXORXx(), getXORXy(), getXORY(), getBinaryG1(), getBinaryG2());
 		return result;
 	}
 
@@ -217,16 +219,20 @@ public:
 		BitMatrix<2*N, 3*N> _MY3;
 		MultiQuadTuple<7*N, N> _z;
 		BitMatrix<2*N> _Z1, _Z2;
-		void initialize(const BitMatrix<2*N, N> & MB, const BitMatrix<2*N, 3*N> & MY3,
-			const MultiQuadTuple<7*N, N> & z,
-			const BitMatrix<2*N> & Z1, const BitMatrix<2*N> & Z2){
+		MultiQuadTuple<4*N, 3*N> _gb1;
+		MultiQuadTuple<3*N, 3*N> _gb2;
+		void initialize(const BitMatrix<2*N, N> & MB, const BitMatrix<2*N, 3*N> & MY3, const MultiQuadTuple<7*N, N> & z, const BitMatrix<2*N> & Z1, const BitMatrix<2*N> & Z2, const MultiQuadTuple<4*N, 3*N> & gb1, const MultiQuadTuple<3*N, 3*N> & gb2){
 			_MB = MB;
 			_MY3 = MY3;
 			_z = z;
 			_Z1 = Z1;
 			_Z2 = Z2;
+			_gb1 = gb1;
+			_gb2 = gb2;
 		}
-		const BitVector<2*N> operator()(const BitVector<2*N> &x, const BitVector<2*N> &y, const BitVector<3*N> & t) const{
+		const BitVector<2*N> operator()(const BitVector<2*N> &x, const BitVector<2*N> &y) const{
+			const BitVector<4*N> & concatXY = BitVector<4*N>::template vCat<2*N, 2*N>(x, y);
+			const BitVector<3*N> & t = _gb2(_gb1(concatXY));
 			const BitVector<7*N> & coordinates = BitVector<7*N>::vCat(x, y, t);
 			return (_MB * _z(coordinates)) ^ (_MY3 * t) ^ (_Z1 * x) ^ (_Z2 * y);
 		}
@@ -234,17 +240,18 @@ public:
 
 	const H_AND getAND() const{
 		H_AND result;
+		refreshParam();
 		const BitMatrix<2*N, N> & MB = _M.template pMult(_pk.getB(), 0, 0, N);
 		const BitMatrix<2*N, 3*N> & MY3 = _M * BitMatrix<2*N, 3*N>::augV(_Cb2.inv().splitV3(2), BitMatrix<N, 3*N>::zeroMatrix());
-		result.initialize(MB, MY3, getANDz(), getANDZ1(), getANDZ2());
+		result.initialize(MB, MY3, getANDz(), getANDZ1(), getANDZ2(), getBinaryG1(), getBinaryG2());
 		return result;
 	}
 
 private:
 	const PrivateKey<N> _pk;
 	const BitMatrix<N> _R;
-	const BitMatrix<N> _Rx;
-	const BitMatrix<N> _Ry;
+	BitMatrix<N> _Rx;
+	BitMatrix<N> _Ry;
 	const BitMatrix<2*N> _M;
 	const BitMatrix<2*N> _Cu1;
 	const BitMatrix<2*N> _Cu2;
@@ -253,11 +260,27 @@ private:
 	const BitMatrix<N> _Ai;
 	const BitMatrix<N> _Bi;
 	const BitMatrix<N> _ARAi;
-	const BitMatrix<N> _ARxAi;
-	const BitMatrix<N> _ARyAi;
+	BitMatrix<N> _ARxAi;
+	BitMatrix<N> _ARyAi;
 	const BitMatrix<N, 2*N> _AiM2;
 	static const unsigned int twoN = N << 1;
 	static const unsigned int threeN = 3 * N;
+
+	/*
+	 * Function: Refresh and re-randomise Rx, Ry and all associated variables
+	 * Returns void
+	 */
+	void refreshParam() {
+		// re-randomise Rx, Ry
+		_Rx.copy(BitMatrix<N>::randomInvertibleMatrix());
+		_Ry.copy(BitMatrix<N>::randomInvertibleMatrix());
+
+		// carry out all necessary modifications
+		const BitMatrix<N> & conjugateRx = _pk.getA() * _Rx * _Ai;
+		const BitMatrix<N> & conjugateRy = _pk.getA() * _Ry * _Ai;
+		_ARxAi.copy(conjugateRx);
+		_ARyAi.copy(conjugateRy);
+	}
 
 /* Helper Functions for getXOR */
 
