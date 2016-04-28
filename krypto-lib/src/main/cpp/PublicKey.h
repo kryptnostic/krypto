@@ -86,8 +86,8 @@ private:
 	const BitMatrix<2*N, 4*N> _lc;
 	const MultiQuadTuple<2*N, 2*N> _gu1;
 	const MultiQuadTuple<2*N, 2*N> _gu2;
-	const typename BridgeKey<N>::H_XOR _XOR;
-	const typename BridgeKey<N>::H_AND _AND;
+	typename BridgeKey<N>::H_XOR _XOR;
+	typename BridgeKey<N>::H_AND _AND;
 };
 
 #endif
