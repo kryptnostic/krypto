@@ -37,12 +37,40 @@ public:
 		return _ADD(x, y);
 	}
 
+	/* 
+	 * Function: homomorphically adds two arrays of ciphertexts
+	 */
+	const mat_ZZ_p homomorphicADD(const mat_ZZ_p & x, const mat_ZZ_p & y) const {
+		unsigned int rows = (unsigned int) x.NumRows();
+		mat_ZZ_p result;
+		result.SetDims(rows, 2);
+		for (int i = 0; i < rows; ++i)
+		{
+			result[i] = _ADD(x[i], y[i]);
+		}
+		return result;
+	}
+
 	/*
 	 * Function: computes e(d(x) * d(y)) given ciphertext x, y homomorphically
 	 * Return: e(d(x) * d(y))
 	 */
 	const vec_ZZ_p homomorphicMULT(const vec_ZZ_p & x, const vec_ZZ_p & y) const {
 		return _MULT(x, y);
+	}
+
+	/*
+	 * Function: homomorphically mult two arrays of ciphertexts
+	 */
+	const mat_ZZ_p homomorphicMULT(const mat_ZZ_p & x, const mat_ZZ_p & y) const{
+		unsigned int rows = (unsigned int) x.NumRows();
+		mat_ZZ_p result;
+		result.SetDims(rows, 2);
+		for (int i = 0; i < rows; ++i)
+		{
+			result[i] = _MULT(x[i], y[i]);
+		}
+		return result;
 	}
 
 private:

@@ -122,24 +122,7 @@ public:
 			return result;
 		}
 	};
-
-	/*
-	 * Function: Initilise H_MULT structure
-	 * Return: H_MULT structure
-	 */
-	// const H_MULT getMULT() const {
-	// 	H_MULT result;
-
-	// 	// for NTL 9.5.0, the determinant calculation provided can't produce the correct value
-	// 	// so let's just suck it up and actually calculate it
-	// 	// it's only a 2x2 matrix anyway (lucky us!!)
-	// 	const ZZ_p deti = inv((_M(1,1) * _M(2,2)) - (_M(2,1) * _M(1,2)));
-	// 	result.initialise(_n, _e, 
-	// 		inv(_M(1,1) + _M(1,2)), _M(2,2) * power(_M(1,1) * deti, _e + 1), 2 * _M(1,1) * power(_M(1,1) * deti, 2 * _e),
-	// 		inv(_M(2,1) + _M(2,2)), _M(1,2) * power(_M(2,1) * deti, _e + 1), 2 * _M(2,1) * power(_M(2,1) * deti, 2 * _e));
-
-	// 	return result;
-	// }
+	
 	const H_MULT getMULT() const {
 		H_MULT result;
 		ZZ_p R = random_ZZ_p();

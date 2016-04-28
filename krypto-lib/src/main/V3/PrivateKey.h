@@ -79,6 +79,21 @@ public:
 		return decryptVector(1) - power(decryptVector(2), e);
 	}
 
+	/*
+	 * Function: decrypts an array of ciphertexts 
+	 * Returns: D(c)
+	 */
+	const vec_ZZ_p decrypt(const mat_ZZ_p & c) const {
+		ZZ_p::init(n);
+		unsigned int rows = (unsigned int) c.NumRows();
+		vec_ZZ_p result;
+		for (int i = 0; i < rows; ++i)
+		{
+			result.append(decrypt(c[i]));
+		}
+		return result;
+	}
+
 protected:
 	/*
 	 * Some protected functions for getting various components of PrivateKey
