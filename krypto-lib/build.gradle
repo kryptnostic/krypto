@@ -1,14 +1,23 @@
-apply plugin: "eclipse-cdt"
 apply plugin: "google-test"
 apply plugin: "cpp"
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.4'
+    gradleVersion = '2.14'
 }
 
 ext.home=System.env.'JAVA_HOME'
 
 model {
+    /*
+     Code below moved here due to: https://docs.gradle.org/2.9/release-notes#the-binaries-container-is-no-longer-accessible-as-a-project-extension
+    */
+    binaries { 
+        withType(GoogleTestTestSuiteBinarySpec) { 
+            lib library: "googleTest", linkage: "static"
+            lib library: "main", linkage: "static"
+        }
+    }
+
 	toolChains {
         clang(Clang) {
             eachPlatform {
@@ -73,11 +82,6 @@ model {
 
 tasks.withType(GenerateMetadataFileTask) {
 
-}
-
-binaries.withType(GoogleTestTestSuiteBinarySpec) {
-    lib library: "googleTest", linkage: "static"
-    lib library: "main", linkage: "static"
 }
 
 tasks.withType(RunTestExecutable) {
