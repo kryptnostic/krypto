@@ -30,7 +30,7 @@ model {
                 cppCompiler.withArguments { args ->
                     args << "-g"
                     args << "-Wall"
-                    args << "-O3"
+                    args << "-O2"
                     args << "-std=c++11"
                     args << "-fslp-vectorize-aggressive"
                     args << "-march=native"
