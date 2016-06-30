@@ -11,10 +11,16 @@ model {
     /*
      Code below moved here due to: https://docs.gradle.org/2.9/release-notes#the-binaries-container-is-no-longer-accessible-as-a-project-extension
     */
-    binaries { 
-        withType(GoogleTestTestSuiteBinarySpec) { 
+
+    binaries {
+        withType(GoogleTestTestSuiteBinarySpec) {
             lib library: "googleTest", linkage: "static"
             lib library: "main", linkage: "static"
+
+            if (targetPlatform.operatingSystem.linux) {
+                cppCompiler.args '-pthread'
+                linker.args '-pthread'
+            }
         }
     }
 
