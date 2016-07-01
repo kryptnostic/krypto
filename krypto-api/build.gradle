@@ -26,7 +26,7 @@ apply from: 'publish.gradle'
 sourceCompatibility=JavaVersion.VERSION_1_7
 targetCompatibility=JavaVersion.VERSION_1_7
 
-ext.kryptoCentosUrl = 'http://bamboo.krypt.int/artifact/KRYP-KRYPTO/shared/build-latestSuccessful/CentOS-shared-lib/krypto-api/build/resources/main/libmain.so'
+ext.kryptoCentosUrl = 'http://bamboo.krypt.int/artifact/KRYP-KRYPTO/shared/build-latestSuccessful/CentOS-shared-lib/krypto-lib/build/libs/main/shared/libmain.so'
 ext.staticLibDirectory = '/src/main/resources'
 
 task getAllStaticLibs(description: 'Download any versions of the c++ crypto library that arent built as part of this build') << {
