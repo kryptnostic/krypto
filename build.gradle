@@ -23,7 +23,6 @@ if (osname.contains('windows')) {
     // assemble.dependsOn buildGoogleTest
 }
 
-
 ext.jniHeadersTask = ':krypto-api:GenerateJniHeaders'
 ext.jarTask = ':krypto-api:jar'
 if( project.hasProperty('developmentMode') && project.developmentMode ) {
@@ -50,7 +49,7 @@ task buildGoogleTest(type: Exec) {
 }
 
 task copyBinariesToApi(type: Copy, dependsOn: 'krypto-lib:build') {
-    from 'krypto-lib/build/binaries/mainSharedLibrary/'
+    from 'krypto-lib/build/libs/main/shared/'
     into 'krypto-api/src/main/resources/'
     include( '**/*.so', '**/*.dylib' )
 }
