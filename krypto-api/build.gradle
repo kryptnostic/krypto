@@ -21,7 +21,7 @@ version = getVersionName()
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'maven'
-apply from: 'publish.gradle'
+apply from: "https://raw.githubusercontent.com/kryptnostic/gradles/master/publish.gradle"
 
 task wrapper(type: Wrapper) {
   gradleVersion = '2.14'
@@ -88,16 +88,6 @@ dependencies {
 task cleanKryptoLib(type: Delete) {
   delete 'src/main/resources/libmain.dylib'
   delete 'src/main/resources/libmain.so'
-}
-
-task sourcesJar(type : Jar) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-
-artifacts {
-  archives sourcesJar
-  archives jar
 }
 
 test{
