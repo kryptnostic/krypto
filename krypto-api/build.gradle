@@ -90,16 +90,6 @@ task cleanKryptoLib(type: Delete) {
   delete 'src/main/resources/libmain.so'
 }
 
-task sourcesJar(type : Jar) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-
-artifacts {
-  archives sourcesJar
-  archives jar
-}
-
 test{
   jvmArgs '-Xss7M'
 }
