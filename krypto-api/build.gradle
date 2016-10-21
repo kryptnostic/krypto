@@ -21,11 +21,7 @@ version = getVersionName()
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'maven'
-apply from: "https://raw.githubusercontent.com/kryptnostic/gradles/master/publish.gradle"
-
-task wrapper(type: Wrapper) {
-  gradleVersion = '2.14'
-}
+apply from: "https://raw.githubusercontent.com/kryptnostic/gradles/master/kryptnostic.gradle"
 
 sourceCompatibility=JavaVersion.VERSION_1_7
 targetCompatibility=JavaVersion.VERSION_1_7
@@ -74,12 +70,6 @@ if ( project.hasProperty('developmentMode') && project.developmentMode ) {
   jar.dependsOn('getAllStaticLibs')
 }
 clean.dependsOn('cleanKryptoLib')
-
-repositories {
-  maven {
-    url 'http://repo.maven.apache.org/maven2'
-  }
-}
 
 dependencies {
   testCompile "junit:junit:4.12"
