@@ -47,9 +47,9 @@ task getAllStaticLibs(description: 'Download any versions of the c++ crypto libr
   //  commandLine 'wget', '-N', '-P', "${currentDir}${staticLibDirectory}", "${kryptoCentosUrl}"
   //}
 
-  exec {
-    commandLine 'chmod', '+x', "${currentDir}${staticLibDirectory}/libmain.so"
-  }
+  //exec {
+  //  commandLine 'chmod', '+x', "${currentDir}${staticLibDirectory}/libmain.so"
+  //}
 }
 
 task GenerateJniHeaders(description: 'Generate the JNI headers for kryptnostic engine', dependsOn: 'classes') << {
