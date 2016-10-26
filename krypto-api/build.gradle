@@ -77,7 +77,7 @@ dependencies {
 
 task cleanKryptoLib(type: Delete) {
   delete 'src/main/resources/libmain.dylib'
-  delete 'src/main/resources/libmain.so'
+  //delete 'src/main/resources/libmain.so'
 }
 
 test{
